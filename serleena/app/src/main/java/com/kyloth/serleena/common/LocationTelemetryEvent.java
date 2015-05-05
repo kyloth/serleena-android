@@ -63,7 +63,7 @@ public class LocationTelemetryEvent extends TelemetryEvent {
      * @param location      Posizione geografica campionata dall'evento.
      */
     public LocationTelemetryEvent(Date timestamp, GeoPoint location) {
-        this.timestamp = timestamp;
+        super(timestamp);
         this.location = location;
     }
 

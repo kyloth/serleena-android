@@ -63,7 +63,7 @@ public class HeartRateTelemetryEvent extends TelemetryEvent {
      * @param heartRate     Battito cardiaco campionato.
      */
     public HeartRateTelemetryEvent(Date timestamp, int heartRate) {
-        this.timestamp = timestamp;
+        super(timestamp);
         this.heartRate = heartRate;
     }
 

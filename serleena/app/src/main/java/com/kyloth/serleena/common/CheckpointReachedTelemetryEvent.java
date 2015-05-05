@@ -64,7 +64,7 @@ public class CheckpointReachedTelemetryEvent extends TelemetryEvent {
      * @param checkpointNumber  Numero del checkpoint raggiunto.
      */
     public CheckpointReachedTelemetryEvent(Date timestamp, int checkpointNumber) {
-        this.timestamp = timestamp;
+        super(timestamp);
         this.checkpointNumber = checkpointNumber;
     }
 
