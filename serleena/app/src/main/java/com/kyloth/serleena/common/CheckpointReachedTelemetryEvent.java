@@ -77,4 +77,22 @@ public abstract class CheckpointReachedTelemetryEvent extends TelemetryEvent {
         return checkpointNumber;
     }
 
+
+    /**
+     * Overriding del metodo equals() della superclasse Object.
+     *
+     * @param o Oggetto da comparare.
+     * @return  True se entrambi gli oggetti hanno tipo CheckpointReachedTelemetryEvent e si
+     *          riferiscono al medesimo evento, quindi con uguale timestamp e numero di checkpoint
+     *          superato. False altrimenti.
+     */
+    public boolean equals(Object o) {
+        if (o instanceof CheckpointReachedTelemetryEvent) {
+            CheckpointReachedTelemetryEvent other = (CheckpointReachedTelemetryEvent) o;
+            return this.checkpointNumber() == other.checkpointNumber() &&
+                    this.timestamp().equals(other.timestamp());
+        }
+        return false;
+    }
+
 }
