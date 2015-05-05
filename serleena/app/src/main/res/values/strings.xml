@@ -6,4 +6,6 @@
     <string name="action_settings">Settings</string>
 
     <string name="heartDesc">Cuore</string>
+    <string name="weatherDesc">Indicazione meteo</string>
+
 </resources>
