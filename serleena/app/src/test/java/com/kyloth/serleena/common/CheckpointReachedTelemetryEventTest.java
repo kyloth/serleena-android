@@ -28,6 +28,18 @@
 ///////////////////////////////////////////////////////////////////////////////
 
 
+/**
+ * Name: CheckpointReachedTelemetryEventTest.java
+ * Package: com.kyloth.serleena.common
+ * Author: Filippo Sestini
+ * Date: 2015-05-05
+ *
+ * History:
+ * Version  Programmer          Date        Changes
+ * 1.0.0    Filippo Sestini     2015-05-05  Creazione file e scrittura di codice e documentazione
+ *                                          in Javadoc.
+ */
+
 package com.kyloth.serleena.common;
 
 import com.kyloth.serleena.common.*;
@@ -37,8 +49,23 @@ import dalvik.annotation.TestTargetClass;
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.MatcherAssert.assertThat;
 
+/**
+ * Contiene i test di unità per la classe CheckpointReachedTelemetryEvent.
+ *
+ * @author Filippo Sestini <sestini.filippo@gmail.com>
+ * @version 1.0.0
+ * @since 2015-05-05
+ * @see com.kyloth.serleena.common.CheckpointReachedTelemetryEvent
+ */
 public class CheckpointReachedTelemetryEventTest {
 
+    /**
+     * Testa la correttezza dei metodi "getter" della classe.
+     *
+     * Vengono testati i valori restituiti dai metodi della classe. In particolare, si verifica che
+     * i valori passati al costruttore nella creazione dell'oggetto vengano correttamente restituiti
+     * dai metodi.
+     */
     @Test
     public void testCheckpointReachedTelemetryEventGetters() {
         Date date = new Date(2015, 5, 5, 2, 27);
@@ -52,6 +79,9 @@ public class CheckpointReachedTelemetryEventTest {
         org.junit.Assert.assertTrue(!(event.checkpointNumber() == 50));
     }
 
+    /**
+     * Testa la correttezza del metodo equals().
+     */
     @Test
     public void testEqualsMethod() {
         Date date1 = new Date(2015, 5, 5, 2, 27);
