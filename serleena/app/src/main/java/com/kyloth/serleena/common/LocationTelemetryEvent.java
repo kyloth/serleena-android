@@ -76,4 +76,21 @@ public class LocationTelemetryEvent extends TelemetryEvent {
         return location;
     }
 
+    /**
+     * Overriding del metodo equals() della superclasse Object.
+     *
+     * @param o Oggetto da comparare.
+     * @return True se entrambi gli oggetti hanno tipo LocationTelemetryEvent e si riferiscono al
+     *         medesimo evento, quindi con uguale timestamp e posizione geografica campionata.
+     *         False altrimenti.
+     */
+    public boolean equals(Object o) {
+        if (o instanceof LocationTelemetryEvent) {
+            LocationTelemetryEvent other = (LocationTelemetryEvent) o;
+            return this.location().equals(other.location()) &&
+                this.timestamp().equals(other.timestamp());
+        }
+        return false;
+    }
+
 }
