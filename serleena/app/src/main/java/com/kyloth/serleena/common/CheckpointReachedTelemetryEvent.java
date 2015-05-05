@@ -53,7 +53,7 @@ import java.util.Date;
  * @version 1.0
  * @since   2015-05-05
  */
-public abstract class CheckpointReachedTelemetryEvent extends TelemetryEvent {
+public class CheckpointReachedTelemetryEvent extends TelemetryEvent {
 
     private int checkpointNumber;
 
@@ -64,7 +64,7 @@ public abstract class CheckpointReachedTelemetryEvent extends TelemetryEvent {
      * @param checkpointNumber  Numero del checkpoint raggiunto.
      */
     public CheckpointReachedTelemetryEvent(Date timestamp, int checkpointNumber) {
-        this.timestamp = timestamp;
+        super(timestamp);
         this.checkpointNumber = checkpointNumber;
     }
 
