@@ -99,6 +99,8 @@ public class LocationTelemetryEventTest {
 
         org.junit.Assert.assertTrue(event1.equals(event2));
         org.junit.Assert.assertTrue(!(event1.equals(event3)));
+        org.junit.Assert.assertTrue(!(event1.equals(new Object())));
+        org.junit.Assert.assertTrue(!(event1.equals(null)));
     }
 
 }
