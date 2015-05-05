@@ -90,7 +90,7 @@ public class CheckpointReachedTelemetryEvent extends TelemetryEvent {
      *          checkpoint superato. False altrimenti.
      */
     public boolean equals(Object o) {
-        if (o instanceof CheckpointReachedTelemetryEvent) {
+        if (o != null && o instanceof CheckpointReachedTelemetryEvent) {
             CheckpointReachedTelemetryEvent other =
                     (CheckpointReachedTelemetryEvent) o;
             return this.checkpointNumber() == other.checkpointNumber() &&
