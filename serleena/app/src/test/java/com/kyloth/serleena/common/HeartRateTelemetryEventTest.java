@@ -28,6 +28,18 @@
 ///////////////////////////////////////////////////////////////////////////////
 
 
+/**
+ * Name: HeartRateTelemetryEventTest.java
+ * Package: com.kyloth.serleena.common
+ * Author: Filippo Sestini
+ * Date: 2015-05-05
+ *
+ * History:
+ * Version  Programmer          Date        Changes
+ * 1.0.0    Filippo Sestini     2015-05-05  Creazione file e scrittura di codice e documentazione
+ *                                          in Javadoc.
+ */
+
 package com.kyloth.serleena.common;
 
 import com.kyloth.serleena.common.GeoPoint;
@@ -39,8 +51,23 @@ import dalvik.annotation.TestTargetClass;
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.MatcherAssert.assertThat;
 
+/**
+ * Contiene i test di unità per la classe HeartRateTelemetryEvent.
+ *
+ * @author Filippo Sestini <sestini.filippo@gmail.com>
+ * @version 1.0.0
+ * @since 2015-05-05
+ * @see com.kyloth.serleena.common.HeartRateTelemetryEvent
+ */
 public class HeartRateTelemetryEventTest {
 
+    /**
+     * Testa la correttezza dei metodi "getter" della classe.
+     *
+     * Vengono testati i valori restituiti dai metodi della classe. In particolare, si verifica che
+     * i valori passati al costruttore nella creazione dell'oggetto vengano correttamente restituiti
+     * dai metodi.
+     */
     @Test
     public void testHeartRateTelemetryEventGetters() {
         Date date = new Date(2015, 5, 5, 2, 27);
@@ -54,6 +81,9 @@ public class HeartRateTelemetryEventTest {
         org.junit.Assert.assertTrue(!(event.heartRate() == 50));
     }
 
+    /**
+     * Testa la correttezza del metodo equals().
+     */
     @Test
     public void testEqualsMethod() {
         Date date1 = new Date(2015, 5, 5, 2, 27);
