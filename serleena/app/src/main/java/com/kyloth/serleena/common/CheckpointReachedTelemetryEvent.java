@@ -36,8 +36,8 @@
  *
  * History:
  * Version  Programmer          Date        Changes
- * 1.0.0    Filippo Sestini     2015-05-05  Creazione file e scrittura di codice e documentazione
- *                                          in Javadoc.
+ * 1.0.0    Filippo Sestini     2015-05-05  Creazione file e scrittura di codice
+ *                                          e documentazione in Javadoc.
  */
 
 package com.kyloth.serleena.common;
@@ -45,9 +45,10 @@ package com.kyloth.serleena.common;
 import java.util.Date;
 
 /**
- * Rappresenta un evento di tracciamento che registra il raggiungimento di un checkpoint durante lo
- * svolgimento di un persorso da parte dell'utente. E` individuato dall'istante di campionamento e
- * dal numero del checkpoint raggiunto.
+ * Rappresenta un evento di tracciamento che registra il raggiungimento di un
+ * checkpoint durante lo svolgimento di un persorso da parte dell'utente.
+ * E` individuato dall'istante di campionamento e dal numero del checkpoint
+ * raggiunto.
  *
  * @author  Filippo Sestini <sestini.filippo@gmail.com>
  * @version 1.0
@@ -60,10 +61,11 @@ public class CheckpointReachedTelemetryEvent extends TelemetryEvent {
     /**
      * Crea un nuovo evento di tracciamento di raggiungimento di un checkpoint.
      *
-     * @param timestamp         Istante di tempo in cui l'evento è stato campionato.
+     * @param timestamp         Istante di tempo di campionamento.
      * @param checkpointNumber  Numero del checkpoint raggiunto.
      */
-    public CheckpointReachedTelemetryEvent(Date timestamp, int checkpointNumber) {
+    public CheckpointReachedTelemetryEvent(Date timestamp,
+                                           int checkpointNumber) {
         super(timestamp);
         this.checkpointNumber = checkpointNumber;
     }
@@ -82,13 +84,15 @@ public class CheckpointReachedTelemetryEvent extends TelemetryEvent {
      * Overriding del metodo equals() della superclasse Object.
      *
      * @param o Oggetto da comparare.
-     * @return  True se entrambi gli oggetti hanno tipo CheckpointReachedTelemetryEvent e si
-     *          riferiscono al medesimo evento, quindi con uguale timestamp e numero di checkpoint
-     *          superato. False altrimenti.
+     * @return  True se l'oggetto da comparare è false, entrambi gli oggetti
+     *          hanno tipo CheckpointReachedTelemetryEvent e si riferiscono al
+     *          medesimo evento, quindi con uguale timestamp e numero di
+     *          checkpoint superato. False altrimenti.
      */
     public boolean equals(Object o) {
         if (o instanceof CheckpointReachedTelemetryEvent) {
-            CheckpointReachedTelemetryEvent other = (CheckpointReachedTelemetryEvent) o;
+            CheckpointReachedTelemetryEvent other =
+                    (CheckpointReachedTelemetryEvent) o;
             return this.checkpointNumber() == other.checkpointNumber() &&
                     this.timestamp().equals(other.timestamp());
         }
