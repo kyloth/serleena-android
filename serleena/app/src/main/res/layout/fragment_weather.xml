@@ -3,7 +3,22 @@
     android:layout_height="match_parent" tools:context="com.kyloth.serleena.WeatherFragment">
 
     <!-- TODO: Update blank fragment layout -->
-    <TextView android:layout_width="match_parent" android:layout_height="match_parent"
-        android:text="@string/hello_blank_fragment" />
 
+    <ImageView
+        android:layout_width="134dp"
+        android:layout_height="134dp"
+        android:id="@+id/imageView2"
+        android:layout_gravity="center_horizontal|top"
+        android:src="@drawable/sun"
+        android:contentDescription="@string/weatherDesc" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="122dp"
+        android:textAppearance="?android:attr/textAppearanceLarge"
+        android:text="15° C"
+        android:id="@+id/textView4"
+        android:layout_gravity="center"
+        android:gravity="bottom"
+        android:textSize="25dp" />
 </FrameLayout>
