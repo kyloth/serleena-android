@@ -86,7 +86,7 @@ public class HeartRateTelemetryEvent extends TelemetryEvent {
      *         False altrimenti.
      */
     public boolean equals(Object o) {
-        if (o instanceof HeartRateTelemetryEvent) {
+        if (o != null && o instanceof HeartRateTelemetryEvent) {
             HeartRateTelemetryEvent other = (HeartRateTelemetryEvent) o;
             return this.heartRate() == other.heartRate() &&
                     this.timestamp().equals(other.timestamp());
