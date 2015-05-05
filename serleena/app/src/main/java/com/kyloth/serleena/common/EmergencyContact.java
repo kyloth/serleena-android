@@ -93,7 +93,7 @@ public class EmergencyContact {
      *          valore del contatto. False altrimenti.
      */
     public boolean equals(Object o) {
-        if (o instanceof EmergencyContact) {
+        if (o != null && o instanceof EmergencyContact) {
             EmergencyContact other = (EmergencyContact) o;
             return this.name.equals(other.name) &&
                 this.value.equals(other.value);
