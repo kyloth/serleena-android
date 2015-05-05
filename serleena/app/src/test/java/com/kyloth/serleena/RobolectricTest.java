@@ -40,6 +40,7 @@ import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.MatcherAssert.assertThat;
 
 public class RobolectricTest {
+    /*
     @Test
     public void testIt() {
         Activity activity =
@@ -53,4 +54,5 @@ public class RobolectricTest {
         // to show that all works correctly ;)
         assertThat(resultsText, equalTo("Foo"));
     }
+    */
 }
