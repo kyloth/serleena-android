@@ -3,7 +3,20 @@
     android:layout_height="match_parent" tools:context="com.kyloth.serleena.CompassScreen">
 
     <!-- TODO: Update blank fragment layout -->
-    <TextView android:layout_width="match_parent" android:layout_height="match_parent"
-        android:text="@string/hello_blank_fragment" />
 
+    <ImageView
+        android:layout_width="133dp"
+        android:layout_height="106dp"
+        android:id="@+id/imageViewCompass"
+        android:layout_gravity="center_horizontal|top"
+        android:background="@drawable/Dark_Green_Arrow_Up" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="61dp"
+        android:text="Nord"
+        android:id="@+id/textView2"
+        android:layout_gravity="center_horizontal|bottom"
+        android:gravity="top"
+        android:textSize="30dp" />
 </FrameLayout>
