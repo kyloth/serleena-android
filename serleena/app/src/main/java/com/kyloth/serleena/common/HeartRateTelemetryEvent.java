@@ -76,4 +76,22 @@ public class HeartRateTelemetryEvent extends TelemetryEvent {
         return heartRate;
     }
 
+
+    /**
+     * Overriding del metodo equals() della superclasse Object.
+     *
+     * @param o Oggetto da comparare.
+     * @return True se entrambi gli oggetti hanno tipo HeartRateTelemetryEvent e si riferiscono al
+     *         medesimo evento, quindi con uguale timestamp e battito cardiaco campionato.
+     *         False altrimenti.
+     */
+    public boolean equals(Object o) {
+        if (o instanceof HeartRateTelemetryEvent) {
+            HeartRateTelemetryEvent other = (HeartRateTelemetryEvent) o;
+            return this.heartRate() == other.heartRate() &&
+                    this.timestamp().equals(other.timestamp());
+        }
+        return false;
+    }
+
 }
