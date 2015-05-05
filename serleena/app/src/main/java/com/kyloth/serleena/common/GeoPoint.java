@@ -82,4 +82,20 @@ public class GeoPoint
     public double longitude() {
         return longitude;
     }
+
+    /**
+     * Overriding del metodo equals() della superclasse Object.
+     *
+     * @param o Oggetto da comparare.
+     * @return True se entrambi gli oggetti hanno tipo GeoPoint e si riferiscono al medesimo punto
+     *         geografico, quindi con uguali valori di latitudine e longitudine. False altrimenti.
+     */
+    public boolean equals(Object o) {
+        if (o instanceof GeoPoint) {
+            GeoPoint other = (GeoPoint) o;
+            return this.latitude() == other.latitude() && this.longitude() == other.longitude();
+        }
+        return false;
+    }
+
 }
