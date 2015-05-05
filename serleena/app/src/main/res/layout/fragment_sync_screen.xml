@@ -6,7 +6,7 @@
         android:layout_width="172dp"
         android:layout_height="89dp"
         android:text="Sincronizza"
-        android:id="@+id/button"
+        android:id="@+id/button_sync"
         android:layout_gravity="center_horizontal|top"
         android:textSize="20dp"
         android:elegantTextHeight="false"
@@ -17,7 +17,7 @@
         android:layout_height="69dp"
         android:textAppearance="?android:attr/textAppearanceMedium"
         android:text="Token"
-        android:id="@+id/textView2"
+        android:id="@+id/textview_token"
         android:layout_gravity="center"
         android:gravity="bottom|center" />
 
