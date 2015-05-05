@@ -91,7 +91,7 @@ public class GeoPoint
      *         geografico, quindi con uguali valori di latitudine e longitudine. False altrimenti.
      */
     public boolean equals(Object o) {
-        if (o instanceof GeoPoint) {
+        if (o != null && o instanceof GeoPoint) {
             GeoPoint other = (GeoPoint) o;
             return this.latitude() == other.latitude() && this.longitude() == other.longitude();
         }
