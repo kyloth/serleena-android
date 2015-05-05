@@ -85,7 +85,7 @@ public class LocationTelemetryEvent extends TelemetryEvent {
      *         False altrimenti.
      */
     public boolean equals(Object o) {
-        if (o instanceof LocationTelemetryEvent) {
+        if (o != null && o instanceof LocationTelemetryEvent) {
             LocationTelemetryEvent other = (LocationTelemetryEvent) o;
             return this.location().equals(other.location()) &&
                 this.timestamp().equals(other.timestamp());
