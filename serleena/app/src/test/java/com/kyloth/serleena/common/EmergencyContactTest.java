@@ -56,7 +56,6 @@ import static org.hamcrest.MatcherAssert.assertThat;
  * @author Filippo Sestini <sestini.filippo@gmail.com>
  * @version 1.0.0
  * @since 2015-05-05
- * @see LocationTelemetryEvent
  */
 public class EmergencyContactTest {
 
