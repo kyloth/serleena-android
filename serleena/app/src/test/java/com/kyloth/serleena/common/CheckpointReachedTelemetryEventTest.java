@@ -44,6 +44,8 @@ package com.kyloth.serleena.common;
 
 import com.kyloth.serleena.common.*;
 import org.junit.Test;
+
+import java.lang.Object;
 import java.util.Date;
 import dalvik.annotation.TestTargetClass;
 import static org.hamcrest.CoreMatchers.is;
@@ -101,6 +103,8 @@ public class CheckpointReachedTelemetryEventTest {
 
         org.junit.Assert.assertTrue(event1.equals(event2));
         org.junit.Assert.assertTrue(!(event1.equals(event3)));
+        org.junit.Assert.assertTrue(!(event1.equals(new Object())));
+        org.junit.Assert.assertTrue(!(event1.equals(null)));
     }
 
 }
