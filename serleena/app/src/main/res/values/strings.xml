@@ -38,4 +38,16 @@
     <string name="screen_menu_contact_image">Contatti autorità locali</string>
     <string name="screen_menu_contact_text">CONTATTI</string>
 
+    <string name="screen_menu_weather_image">Previsioni metereologiche</string>
+    <string name="screen_menu_weather_text">METEO</string>
+
+    <string name="screen_menu_cardio_image">Fitness</string>
+    <string name="screen_menu_cardio_text">CARDIO</string>
+
+    <string name="screen_menu_compass_image">Bussola</string>
+    <string name="screen_menu_compass_text">BUSSOLA</string>
+
+    <string name="screen_menu_sync_image">Bussola</string>
+    <string name="screen_menu_sync_text">SYNC</string>
+
 </resources>
