@@ -64,30 +64,6 @@ public interface IPersistenceDataSource {
     public Iterable<IExperienceStorage> getExperiences();
 
     /**
-     * Restituisce i Percorsi memorizzati nella sorgente dati.
-     *
-     * @return Insieme enumerabile di Percorsi.
-     */
-    public Iterable<ITrackStorage> getTracks();
-
-    /**
-     * Restituisce i tracciamenti memorizzati nella sorgente dati.
-     *
-     * @return Insieme enumerabile di Tracciamenti.
-     */
-    public Iterable<ITelemetryStorage> getTelemetries();
-
-    /**
-     * Restituisce le previsioni metereologiche relative a una
-     * specifica posizione geografica memorizzate nella sorgente dati.
-     *
-     * @param location Posizione geografica di cui si vogliono ottenere le
-     *                 previsioni.
-     * @return Insieme enumerabile di oggetti IWeatherStorage.
-     */
-    public Iterable<IWeatherStorage> getWeatherInfo(GeoPoint location);
-
-    /**
      * Restituisce le previsioni metereologiche relative a una
      * specifica data e posizione geografica memorizzate nella sorgente dati.
      *
