@@ -74,8 +74,7 @@ public class SerleenaDatabase extends SQLiteOpenHelper {
     private static final String CREATE_TABLE_EXPERIENCES =
         "CREATE TABLE " + TABLE_EXPERIENCES + "(" +
         "experience_id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, " +
-        "experience_name TEXT NOT NULL, " +
-        "FOREIGN KEY(experience_rect) REFERENCES rects(rect_id))";
+        "experience_name TEXT NOT NULL)";
 
     private static final String CREATE_TABLE_TRACKS =
         "CREATE TABLE " + TABLE_TRACKS + "(" +
