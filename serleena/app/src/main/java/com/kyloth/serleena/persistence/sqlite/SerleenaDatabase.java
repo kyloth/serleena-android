@@ -71,6 +71,9 @@ public class SerleenaDatabase extends SQLiteOpenHelper {
     public static final String TABLE_USER_POINTS = "user_points";
     private static final int DATABASE_VERSION = 1;
 
+    public static final String EVENT_TYPE_HEARTRATE = "event_heartrate";
+    public static final String EVENT_TYPE_CHECKPOINT = "event_checkpoint";
+
     private static final String CREATE_TABLE_EXPERIENCES =
         "CREATE TABLE " + TABLE_EXPERIENCES + "(" +
         "experience_id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, " +
