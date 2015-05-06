@@ -321,11 +321,16 @@ public class SerleenaSQLiteDataSource implements ISerleenaSQLiteDataSource {
                         "rect_ne_corner_longitude",
                         "rect_sw_corner_latitude", "rect_sw_corner_longitude" },
                 where, null, null, null, null);
-        int pathIndex = result.getColumnIndex("raster_path");
-        int ne_lat_index = result.getColumnIndex("rect_ne_corner_latitude");
-        int ne_lon_index = result.getColumnIndex("rect_ne_corner_longitude");
-        int sw_lat_index = result.getColumnIndex("rect_sw_corner_latitude");
-        int sw_lon_index = result.getColumnIndex("rect_sw_corner_longitude");
+
+        int pathIndex = result.getColumnIndexOrThrow("raster_path");
+        int ne_lat_index =
+                result.getColumnIndexOrThrow("rect_ne_corner_latitude");
+        int ne_lon_index =
+                result.getColumnIndexOrThrow("rect_ne_corner_longitude");
+        int sw_lat_index =
+                result.getColumnIndexOrThrow("rect_sw_corner_latitude");
+        int sw_lon_index =
+                result.getColumnIndexOrThrow("rect_sw_corner_longitude");
 
         Bitmap bmp = null;
         GeoPoint p1 = null;
