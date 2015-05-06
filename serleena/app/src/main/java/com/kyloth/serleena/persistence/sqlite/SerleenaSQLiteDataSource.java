@@ -390,6 +390,51 @@ public class SerleenaSQLiteDataSource implements ISerleenaSQLiteDataSource {
     }
 
     /**
+     * Restituisce le previsioni, comprensive di condizione metereologica e
+     * temperatura, per una posizione geografica e un intervallo di tempo
+     * specificati.
+     *
+     * @param location Posizione geografica di cui si vogliono ottenere le
+     *                 previsioni.
+     * @param startTime Inizio dell'intervallo di tempo di cui si vogliono
+     *                  ottenere le previsioni, in UNIX time.
+     * @param endTime Fine dell'intervallo di tempo di cui si vogliono
+     *                ottenere le previsioni, in UNIX time.
+     * @return Previsioni metereologiche.
+     */
+    private SimpleWeather getForecast(GeoPoint location, int startTime,
+                                      int endTime) {
+        SQLiteDatabase db = dbHelper.getReadableDatabase();
+
+        String where =
+                "weather_end >= = " + startTime + " AND " +
+                "weather_start <= " + endTime + " AND " +
+                "(weather_ne_corner_latitude + 90) >= " +
+                (location.latitude() + 90) + " AND " +
+                "(weather_ne_corner_longitude + 180) >= " +
+                (location.longitude() + 180) + " AND " +
+                "(weather_sw_corner_latitude + 90) <= " +
+                (location.latitude() + 90) + " AND " +
+                "(weather_sw_corner_longitude + 180) <= " +
+                (location.longitude() + 180);
+
+        Cursor result = db.query(dbHelper.TABLE_WEATHER_FORECASTS,
+                new String[] { "weather_condition", "wheather_temperature" },
+                where, null, null, null, null);
+
+        int conditionIndex = result.getColumnIndex("weather_condition");
+        int temperatureIndex = result.getColumnIndex("weather_temperature");
+
+        if (result.moveToNext()) {
+            WeatherForecastEnum forecast =
+                    WeatherForecastEnum.valueOf(result.getString(conditionIndex));
+            int temperature = result.getInt(temperatureIndex);
+            return new SimpleWeather(forecast, temperature);
+        } else
+            return null;
+    }
+
+    /**
      * Rappresenta una previsione metereologica in un istante di tempo,
      * comprensiva di condizione e temperatura previste.
      */
