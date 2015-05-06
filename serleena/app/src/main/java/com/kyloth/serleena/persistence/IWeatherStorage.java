@@ -42,6 +42,8 @@
 
 package com.kyloth.serleena.persistence;
 
+import java.util.Date;
+
 /**
  * Interfaccia implementata da un oggetto che realizza la persistenza di
  * previsioni meteorologiche.
@@ -53,17 +55,52 @@ package com.kyloth.serleena.persistence;
 public interface IWeatherStorage {
 
     /**
-     * Restituisce la condizione metereologica associata all'oggetto previsione.
+     * Restituisce la previsione metereologica prevista per la mattina.
      *
-     * @return Valore enumerazione rappresentante la condizione metereologica.
+     * @return Previsione metereologica.
      */
-    public WeatherForecastEnum getForecast();
+    public WeatherForecastEnum getMorningForecast();
 
     /**
-     * Restituisce la temperatura associata all'oggetto previsione.
+     * Restituisce la previsione metereologica prevista per il pomeriggio.
+     *
+     * @return Previsione metereologica.
+     */
+    public WeatherForecastEnum getAfternoonForecast();
+
+    /**
+     * Restituisce la previsione metereologica prevista per la sera.
+     *
+     * @return Previsione metereologica.
+     */
+    public WeatherForecastEnum getNightForecast();
+
+    /**
+     * Restituisce la temperatura prevista per la mattina.
      *
      * @return Valore della temperatura in gradi centigradi.
      */
-    public int getTemperature();
+    public int getMorningTemperature();
+
+    /**
+     * Restituisce la temperatura prevista per il pomeriggio.
+     *
+     * @return Valore della temperatura in gradi centigradi.
+     */
+    public int getAfternoonTemperature();
+
+    /**
+     * Restituisce la temperatura prevista per la sera.
+     *
+     * @return Valore della temperatura in gradi centigradi.
+     */
+    public int getNightTemperature();
+
+    /**
+     * Restituisce la data a cui si riferiscono le previsioni.
+     *
+     * @return Data delle previsioni.
+     */
+    public Date date();
 
 }
