@@ -2,12 +2,10 @@
     xmlns:tools="http://schemas.android.com/tools" android:layout_width="match_parent"
     android:layout_height="match_parent" tools:context="com.kyloth.serleena.WeatherFragment">
 
-    <!-- TODO: Update blank fragment layout -->
-
     <ImageView
         android:layout_width="134dp"
         android:layout_height="134dp"
-        android:id="@+id/imageView2"
+        android:id="@+id/weather_image"
         android:layout_gravity="center_horizontal|top"
         android:src="@drawable/sun"
         android:contentDescription="@string/weatherDesc" />
@@ -17,7 +15,7 @@
         android:layout_height="122dp"
         android:textAppearance="?android:attr/textAppearanceLarge"
         android:text="15° C"
-        android:id="@+id/textView4"
+        android:id="@+id/weather_temperature"
         android:layout_gravity="center"
         android:gravity="bottom"
         android:textSize="25dp" />
@@ -26,7 +24,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="06/05/2015"
-        android:id="@+id/textView5"
+        android:id="@+id/weather_day"
         android:layout_gravity="center_horizontal|bottom"
         android:textSize="22dp" />
 </FrameLayout>
