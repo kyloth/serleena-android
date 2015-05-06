@@ -83,6 +83,11 @@ public class SerleenaSQLiteDataSource implements ISerleenaSQLiteDataSource {
     SerleenaDatabase dbHelper;
     Context context;
 
+    public SerleenaSQLiteDataSource(Context context, SerleenaDatabase dbHelper) {
+        this.dbHelper = dbHelper;
+        this.context = context;
+    }
+
     /**
      * Implementazione di ISerleenaSQLiteDataSource.getTracks().
      *
