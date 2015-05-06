@@ -32,4 +32,10 @@
 <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_map_fragment">Hello MapFragment</string>
 
+    <string name="screen_menu_exp_image">Esperienza</string>
+    <string name="screen_menu_exp_text">ESPERIENZA</string>
+
+    <string name="screen_menu_contact_image">Contatti autorità locali</string>
+    <string name="screen_menu_contact_text">CONTATTI</string>
+
 </resources>
