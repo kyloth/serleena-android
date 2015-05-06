@@ -72,8 +72,7 @@ public class SQLiteDAOTrack implements ITrackStorage {
      */
     @Override
     public void createTelemetry(Iterable<TelemetryEvent> events) {
-        /*dataSource.createTelemetry(events, this);*/
-        throw new UnsupportedOperationException();
+        dataSource.createTelemetry(events, this);
     }
 
     /**
