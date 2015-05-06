@@ -58,6 +58,8 @@
     <string name="exp_per_text">STATO PERCORSO</string>
     <string name="exp_track_image">Impostazioni tracciamento</string>
     <string name="exp_track_text">IMPOSTA TRACKING</string>
+    <string name="exp_map_image">Mappa</string>
+    <string name="exp_map_text">MAPPA</string>
 
 
 </resources>
