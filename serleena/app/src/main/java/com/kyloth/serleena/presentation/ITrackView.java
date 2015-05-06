@@ -107,6 +107,13 @@ public interface ITrackView {
 	void setCheckpointNo(int n);
 
 	/**
+	 * Imposta il numero complessivo dei checkpoint del percorso.
+	 *
+	 * @since 1.0
+	 */
+	void setTotalCheckpoints(int n);
+
+	/**
 	 * Informa la vista se il Tracciamento e' abilitato o meno.
 	 *
 	 * @since 1.0
