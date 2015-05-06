@@ -57,7 +57,6 @@ import com.kyloth.serleena.persistence.ITelemetryStorage;
 public class SQLiteDAOTelemetry implements ITelemetryStorage {
 
     int id;
-    ISerleenaSQLiteDataSource dataSource;
     Iterable<TelemetryEvent> events;
 
     /**
@@ -65,12 +64,9 @@ public class SQLiteDAOTelemetry implements ITelemetryStorage {
      *
      * @param id ID della riga della tabella del database a cui corrisponde
      *           l'oggetto.
-     * @param dataSource Sorgente
      * @param events Eventi che costituiscono il Tracciamento.
      */
-    public SQLiteDAOTelemetry(int id, Iterable<TelemetryEvent> events,
-            ISerleenaSQLiteDataSource dataSource) {
-        this.dataSource = dataSource;
+    public SQLiteDAOTelemetry(int id, Iterable<TelemetryEvent> events) {
         this.events = events;
         this.id = id;
     }
