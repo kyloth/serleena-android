@@ -111,4 +111,70 @@ public class SerleenaSQLiteDataSource implements ISerleenaSQLiteDataSource {
         return list;
     }
 
+    /**
+     * Restituisce gli eventi di Tracciamento associati al Tracciamento
+     * specificato, memorizzati nel database SQLite.
+     *
+     * @param id ID del Tracciamento di cui si vogliono ottenere gli eventi.
+     * @return Insieme enumerabile di eventi di Tracciamento.
+     */
+    private Iterable<TelemetryEvent> getTelemetryEvents(int id) {
+        SimpleDateFormat parser = SerleenaDatabase.DATE_FORMAT;
+        SQLiteDatabase db = dbHelper.getReadableDatabase();
+        ArrayList<TelemetryEvent> list = new ArrayList<TelemetryEvent>();
+
+        String where = "eventhc_telem = " + id;
+        Cursor result = db.query(dbHelper.TABLE_TELEM_EVENTS_HEART_CHECKP,
+                new String[] { "eventhc_timestamp", "eventhc_value",
+                "eventhc_type" }, where, null, null, null, null);
+
+        int timestampIndex = result.getColumnIndexOrThrow("eventhc_timestamp");
+        int valueIndex = result.getColumnIndexOrThrow("eventhc_value");
+        int typeIndex = result.getColumnIndexOrThrow("eventhc_type");
+
+        while (result.moveToNext()) {
+            Date d = parser.parse(result.getString(timestampIndex),
+                    new ParsePosition(0));
+            int value = Integer.parseInt(result.getString(valueIndex));
+            String type = result.getString(typeIndex);
+
+            TelemetryEvent event = null;
+            switch (type) {
+                case SerleenaDatabase.EVENT_TYPE_CHECKPOINT:
+                    event = new CheckpointReachedTelemetryEvent(d, value);
+                    break;
+                case SerleenaDatabase.EVENT_TYPE_HEARTRATE:
+                    event = new HeartRateTelemetryEvent(d, value);
+                    break;
+                default:
+                   /*throw new Exception();*/
+            }
+
+            list.add(event);
+        }
+
+        where = "eventl_telem = " + id;
+        result = db.query(dbHelper.TABLE_TELEM_EVENTS_LOCATION,
+                new String[] { "eventl_timestamp", "eventl_latitude",
+                        "eventhl_longitude" }, where, null, null, null, null);
+
+        timestampIndex = result.getColumnIndexOrThrow("eventl_timestamp");
+        int latitudeIndex = result.getColumnIndexOrThrow("eventl_latitude");
+        int longitudeIndex = result.getColumnIndexOrThrow("eventl_longitude");
+
+        while (result.moveToNext()) {
+            Date d = parser.parse(result.getString(timestampIndex),
+                    new ParsePosition(0));
+            double latitude = result.getDouble(latitudeIndex);
+            double longitude = result.getDouble(longitudeIndex);
+            GeoPoint location = new GeoPoint(latitude, longitude);
+
+            list.add(new LocationTelemetryEvent(d, location));
+        }
+
+        result.close();
+
+        return list;
+    }
+
 }
