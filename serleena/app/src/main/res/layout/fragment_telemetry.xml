@@ -7,7 +7,8 @@
     <ImageView
         android:layout_width="124dp"
         android:layout_height="118dp"
-        android:id="@+id/imageView"
+        android:contentDescription="@string/telemetry_image"
+        android:id="@+id/telemetry_image"
         android:layout_gravity="center_horizontal|top"
         android:src="@drawable/red_button"
         android:layout_marginTop="10dp" />
@@ -16,8 +17,8 @@
         android:layout_width="154dp"
         android:layout_height="72dp"
         android:text="@string/telemetry_status"
-        android:id="@+id/textView2"
+        android:id="@+id/telemetry_status"
         android:layout_gravity="center_horizontal|bottom"
         android:gravity="center_vertical|center"
-        android:textSize="26dp" />
+        android:textSize="26sp" />
 </FrameLayout>
