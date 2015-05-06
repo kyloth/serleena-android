@@ -103,26 +103,24 @@ public class SerleenaDatabase extends SQLiteOpenHelper {
         "eventhc_type TEXT NOT NULL, " +
         "FOREIGN KEY(eventhc_telem) REFERENCES telemetries(telem_id))";
 
-    private static final String CREATE_TABLE_RECTS =
-        "CREATE TABLE " + TABLE_RECTS + "(" +
-        "rect_id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, " +
-        "rect_ne_corner_x REAL NOT NULL, " +
-        "rect_ne_corner_y REAL NOT NULL, " +
-        "rect_sw_corner_x REAL NOT NULL, " +
-        "rect_sw_corner_y REAL NOT NULL)";
-
     private static final String CREATE_TABLE_RASTER_MAPS =
         "CREATE TABLE " + TABLE_RASTER_MAPS + "(" +
         "raster_id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, " +
         "raster_path TEXT NOT NULL, " +
-        "FOREIGN KEY(raster_rect) REFERENCES rects(rect_id))";
+        "raster_ne_corner_latitude REAL NOT NULL, " +
+        "raster_ne_corner_longitude REAL NOT NULL, " +
+        "raster_sw_corner_latitude REAL NOT NULL, " +
+        "raster_sw_corner_longitude REAL NOT NULL)";
 
     private static final String CREATE_TABLE_CONTACTS =
         "CREATE TABLE " + TABLE_CONTACTS + "(" +
         "contact_id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, " +
         "contact_name TEXT NOT NULL, " +
         "contact_value TEXT NOT NULL, " +
-        "FOREIGN KEY(contact_rect) REFERENCES rects(rect_id))";
+        "contact_ne_corner_latitude REAL NOT NULL, " +
+        "contact_ne_corner_longitude REAL NOT NULL, " +
+        "contact_sw_corner_latitude REAL NOT NULL, " +
+        "contact_sw_corner_longitude REAL NOT NULL)";
 
     private static final String CREATE_TABLE_WEATHER_FORECASTS =
         "CREATE TABLE " + TABLE_WEATHER_FORECASTS + "(" +
@@ -131,7 +129,10 @@ public class SerleenaDatabase extends SQLiteOpenHelper {
         "weather_end TEXT NOT NULL, " +
         "weather_condition TEXT NOT NULL, " +
         "weather_temperature INTEGER NOT NULL, " +
-        "FOREIGN KEY(weather_rect) REFERENCES rects(rect_id))";
+        "weather_ne_corner_latitude REAL NOT NULL, " +
+        "weather_ne_corner_longitude REAL NOT NULL, " +
+        "weather_sw_corner_latitude REAL NOT NULL, " +
+        "weather_sw_corner_longitude REAL NOT NULL)";
 
     private static final String CREATE_TABLE_USER_POINTS =
         "CREATE TABLE " + TABLE_USER_POINTS + "(" +
@@ -170,7 +171,6 @@ public class SerleenaDatabase extends SQLiteOpenHelper {
         db.execSQL(CREATE_TABLE_TELEMETRIES);
         db.execSQL(CREATE_TABLE_TELEM_EVENTS_HEART_CHECKP);
         db.execSQL(CREATE_TABLE_TELEM_EVENTS_LOCATION);
-        db.execSQL(CREATE_TABLE_RECTS);
         db.execSQL(CREATE_TABLE_RASTER_MAPS);
         db.execSQL(CREATE_TABLE_CONTACTS);
         db.execSQL(CREATE_TABLE_WEATHER_FORECASTS);
@@ -194,7 +194,6 @@ public class SerleenaDatabase extends SQLiteOpenHelper {
         db.execSQL("DROP TABLE IF EXISTS " + TABLE_TELEMETRIES);
         db.execSQL("DROP TABLE IF EXISTS " + TABLE_TELEM_EVENTS_HEART_CHECKP);
         db.execSQL("DROP TABLE IF EXISTS " + TABLE_TELEM_EVENTS_LOCATION);
-        db.execSQL("DROP TABLE IF EXISTS " + TABLE_RECTS);
         db.execSQL("DROP TABLE IF EXISTS " + TABLE_RASTER_MAPS);
         db.execSQL("DROP TABLE IF EXISTS " + TABLE_CONTACTS);
         db.execSQL("DROP TABLE IF EXISTS " + TABLE_WEATHER_FORECASTS);
