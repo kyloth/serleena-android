@@ -143,6 +143,24 @@ public class SerleenaSQLiteDataSource implements ISerleenaSQLiteDataSource {
     }
 
     /**
+     * Implementazione di ISerleenaSQLiteDataSource.addUserPoint().
+     *
+     * @param experience Esperienza a cui aggiungere il punto utente.
+     * @param point Punto utente da aggiungere.
+     */
+    @Override
+    public void addUserPoint(SQLiteDAOExperience experience, UserPoint point) {
+        ContentValues values = new ContentValues();
+        SQLiteDatabase db = dbHelper.getWritableDatabase();
+
+        values.put("userpoint_x", point.latitude());
+        values.put("userpoint_y", point.longitude());
+        values.put("userpoint_experience", experience.id());
+
+        db.insert(dbHelper.TABLE_USER_POINTS, null, values);
+    }
+
+    /**
      * Restituisce gli eventi di Tracciamento associati al Tracciamento
      * specificato, memorizzati nel database SQLite.
      *
