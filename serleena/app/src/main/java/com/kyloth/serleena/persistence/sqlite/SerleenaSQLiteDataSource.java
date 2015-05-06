@@ -161,6 +161,65 @@ public class SerleenaSQLiteDataSource implements ISerleenaSQLiteDataSource {
     }
 
     /**
+     * Implementazione di ISerleenaSQLiteDataSource.createTelemetry().
+     *
+     * @param events Eventi di tracciamento da cui costruire il Tracciamento.
+     * @param track Percorso a cui associare il Tracciamento.
+     */
+    @Override
+    public void createTelemetry(Iterable<TelemetryEvent> events,
+                                SQLiteDAOTrack track) {
+        SQLiteDatabase db = dbHelper.getWritableDatabase();
+        SimpleDateFormat format = dbHelper.DATE_FORMAT;
+
+        ContentValues values = new ContentValues();
+        values.put("telem_track", track.id());
+        long newId = db.insert(dbHelper.TABLE_TELEMETRIES, null, values);
+
+
+        for (TelemetryEvent event : events) {
+            values = new ContentValues();
+
+            if (event instanceof LocationTelemetryEvent) {
+
+                LocationTelemetryEvent eventl = (LocationTelemetryEvent) event;
+                values.put("eventl_timestamp",
+                        format.format(eventl.timestamp()));
+                values.put("eventl_latitude", eventl.location().latitude());
+                values.put("eventl_longitude", eventl.location().longitude());
+                values.put("eventl_telem", newId);
+                db.insert(dbHelper.TABLE_TELEM_EVENTS_LOCATION, null, values);
+
+            } else if (event instanceof HeartRateTelemetryEvent) {
+
+                HeartRateTelemetryEvent eventh =
+                        (HeartRateTelemetryEvent) event;
+                values.put("eventhc_timestamp",
+                        format.format(eventh.timestamp()));
+                values.put("eventhc_value", eventh.heartRate());
+                values.put("eventhc_type", dbHelper.EVENT_TYPE_HEARTRATE);
+                values.put("eventhc_telem", newId);
+                db.insert(dbHelper.TABLE_TELEM_EVENTS_HEART_CHECKP, null,
+                        values);
+
+            } else if (event instanceof CheckpointReachedTelemetryEvent) {
+
+                CheckpointReachedTelemetryEvent eventc =
+                        (CheckpointReachedTelemetryEvent) event;
+                values.put("eventhc_timestamp",
+                        format.format(eventc.timestamp()));
+                values.put("eventhc_value", eventc.checkpointNumber());
+                values.put("eventhc_type", dbHelper.EVENT_TYPE_CHECKPOINT);
+                values.put("eventhc_telem", newId);
+                db.insert(dbHelper.TABLE_TELEM_EVENTS_HEART_CHECKP, null,
+                        values);
+
+            }
+
+        }
+    }
+
+    /**
      * Restituisce gli eventi di Tracciamento associati al Tracciamento
      * specificato, memorizzati nel database SQLite.
      *
