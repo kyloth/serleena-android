@@ -82,4 +82,33 @@ public class SerleenaSQLiteDataSource implements ISerleenaSQLiteDataSource {
 
     SerleenaDatabase dbHelper;
 
+    /**
+     * Implementazione di ISerleenaSQLiteDataSource.getTracks().
+     *
+     * Viene eseguita una query sul database per ottenere gli ID di tutti i
+     * Percorsi associati all'Esperienza specificata, da cui vengono creati
+     * rispettivi oggetti SQLiteDAOTrack.
+     *
+     * @param experience Esperienza di cui si vogliono ottenere i Percorsi.
+     * @return Insieme enumerabile di Percorsi.
+     */
+    @Override
+    public Iterable<SQLiteDAOTrack> getTracks(SQLiteDAOExperience experience) {
+        SQLiteDatabase db = dbHelper.getReadableDatabase();
+        String where = "track_experience = " + experience.id();
+        Cursor result = db.query(dbHelper.TABLE_TRACKS,
+                new String[] { "track_id" }, where, null, null, null, null);
+
+        ArrayList<SQLiteDAOTrack> list = new ArrayList<SQLiteDAOTrack>();
+        int columnIndex = result.getColumnIndexOrThrow("track_id");
+
+        while (result.moveToNext()) {
+            int trackId = result.getInt(columnIndex);
+            list.add(new SQLiteDAOTrack(trackId, this));
+        }
+
+        result.close();
+        return list;
+    }
+
 }
