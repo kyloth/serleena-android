@@ -220,6 +220,34 @@ public class SerleenaSQLiteDataSource implements ISerleenaSQLiteDataSource {
     }
 
     /**
+     * Implementazione di IPersistenceDataSource.getExperiences().
+     *
+     * Ritorna un'enumerazione di tutte le Esperienze presenti nel database,
+     * dietro interfaccia IExperienceStorage.
+     *
+     * @return Insieme enumerabile di Esperienze.
+     * @see com.kyloth.serleena.persistence.IPersistenceDataSource
+     */
+    @Override
+    public Iterable<IExperienceStorage> getExperiences() {
+        SQLiteDatabase db = dbHelper.getReadableDatabase();
+        Cursor result = db.query(dbHelper.TABLE_EXPERIENCES,
+                new String[] { "experience_id" }, null, null, null, null, null);
+
+        int idIndex = result.getColumnIndex("experience_id");
+        ArrayList<IExperienceStorage> list =
+                new ArrayList<IExperienceStorage>();
+
+        while (result.moveToNext()) {
+            int id = result.getInt(idIndex);
+            list.add(new SQLiteDAOExperience(id, this));
+        }
+
+        result.close();
+        return list;
+    }
+
+    /**
      * Restituisce gli eventi di Tracciamento associati al Tracciamento
      * specificato, memorizzati nel database SQLite.
      *
