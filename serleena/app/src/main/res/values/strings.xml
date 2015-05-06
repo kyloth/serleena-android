@@ -20,5 +20,6 @@
     <string name="contact_value">113</string>
 
     <string name="telemetry_status">OFF</string>
+    <string name="telemetry_image">Pulsante rosso</string>
 
 </resources>
