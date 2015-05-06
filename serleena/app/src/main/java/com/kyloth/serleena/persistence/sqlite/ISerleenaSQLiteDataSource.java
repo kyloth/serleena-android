@@ -56,4 +56,14 @@ import com.kyloth.serleena.common.UserPoint;
  */
 public interface ISerleenaSQLiteDataSource {
 
+    /**
+     * Aggiunge al database un nuovo Tracciamento associato al Percorso
+     * specificato.
+     *
+     * @param events Eventi di tracciamento da cui costruire il Tracciamento.
+     * @param track Percorso a cui associare il Tracciamento.
+     */
+    public void createTelemetry(Iterable<TelemetryEvent> events,
+                                SQLiteDAOTrack track);
+
 }
