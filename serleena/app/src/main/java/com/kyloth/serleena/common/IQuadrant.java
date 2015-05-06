@@ -42,7 +42,7 @@
 
 package com.kyloth.serleena.common;
 
-import android.media.Image;
+import android.graphics.Bitmap;
 
 /**
  * Rappresenta l’interfaccia di un quadrante come una regione sulla mappa, comprensiva di
@@ -60,6 +60,6 @@ public interface IQuadrant extends IRegion {
      *
      * @return Immagine raster della mappa.
      */
-    public Image getRaster();
+    public Bitmap getRaster();
 
 }
