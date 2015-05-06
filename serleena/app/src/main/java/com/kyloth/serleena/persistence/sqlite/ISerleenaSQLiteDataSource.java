@@ -65,6 +65,14 @@ public interface ISerleenaSQLiteDataSource {
     public Iterable<SQLiteDAOTrack> getTracks(SQLiteDAOExperience experience);
 
     /**
+     * Restituisce i Tracciamenti associati a uno specifico Percorso.
+     *
+     * @param track Percorso di cui si vogliono ottenere i Tracciamenti.
+     * @return Insieme enumerabile di Tracciamenti.
+     */
+    public Iterable<SQLiteDAOTelemetry> getTelemetries(SQLiteDAOTrack track);
+
+    /**
      * Aggiunge al database un nuovo Tracciamento associato al Percorso
      * specificato.
      *
