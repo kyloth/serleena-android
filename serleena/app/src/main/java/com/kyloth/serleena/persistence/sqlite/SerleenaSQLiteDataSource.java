@@ -324,7 +324,7 @@ public class SerleenaSQLiteDataSource implements ISerleenaSQLiteDataSource {
     }
 
     /**
-     * Restituisce gli eventi di Tracciamento associati al Tracciamento
+     * Restituisce gli eventi di Tracciamento associati al Tracciamento con ID
      * specificato, memorizzati nel database SQLite.
      *
      * @param id ID del Tracciamento di cui si vogliono ottenere gli eventi.
