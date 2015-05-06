@@ -57,6 +57,14 @@ import com.kyloth.serleena.common.UserPoint;
 public interface ISerleenaSQLiteDataSource {
 
     /**
+     * Restituisce i Percorsi associati a una specifica esperienza.
+     *
+     * @param experience Esperienza di cui si vogliono ottenere i Percorsi.
+     * @return Insieme enumerabile di Percorsi.
+     */
+    public Iterable<SQLiteDAOTrack> getTracks(SQLiteDAOExperience experience);
+
+    /**
      * Aggiunge al database un nuovo Tracciamento associato al Percorso
      * specificato.
      *
