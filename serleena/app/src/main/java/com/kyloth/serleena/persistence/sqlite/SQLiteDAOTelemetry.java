@@ -58,6 +58,7 @@ public class SQLiteDAOTelemetry implements ITelemetryStorage {
 
     int id;
     ISerleenaSQLiteDataSource dataSource;
+    Iterable<TelemetryEvent> events;
 
     /**
      * Crea un nuovo oggetto SQLiteDAOTelemetry.
@@ -65,9 +66,12 @@ public class SQLiteDAOTelemetry implements ITelemetryStorage {
      * @param id ID della riga della tabella del database a cui corrisponde
      *           l'oggetto.
      * @param dataSource Sorgente
+     * @param events Eventi che costituiscono il Tracciamento.
      */
-    public SQLiteDAOTelemetry(int id, ISerleenaSQLiteDataSource dataSource) {
+    public SQLiteDAOTelemetry(int id, Iterable<TelemetryEvent> events,
+            ISerleenaSQLiteDataSource dataSource) {
         this.dataSource = dataSource;
+        this.events = events;
         this.id = id;
     }
 
@@ -78,7 +82,7 @@ public class SQLiteDAOTelemetry implements ITelemetryStorage {
      */
     @Override
     public Iterable<TelemetryEvent> getEvents() {
-        throw new UnsupportedOperationException();
+        return events;
     }
 
     /**
