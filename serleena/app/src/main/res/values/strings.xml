@@ -29,4 +29,7 @@
     <string name="track_time_elapsed">00:43:20</string>
     <string name="track_ghost_time">00:41:13</string>
 
+<!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_map_fragment">Hello MapFragment</string>
+
 </resources>
