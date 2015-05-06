@@ -87,7 +87,7 @@
             android:layout_height="61sp"
             android:id="@+id/exp_map_image"
             android:layout_column="1"
-            android:background="@drawable/map"
+            android:background="@drawable/map2"
             android:adjustViewBounds="false"
             android:contentDescription="@string/exp_map_image" />
 
