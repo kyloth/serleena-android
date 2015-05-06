@@ -102,7 +102,7 @@ public class SerleenaSQLiteDataSource implements ISerleenaSQLiteDataSource {
     public Iterable<SQLiteDAOTrack> getTracks(SQLiteDAOExperience experience) {
         SQLiteDatabase db = dbHelper.getReadableDatabase();
         String where = "track_experience = " + experience.id();
-        Cursor result = db.query(dbHelper.TABLE_TRACKS,
+        Cursor result = db.query(SerleenaDatabase.TABLE_TRACKS,
                 new String[] { "track_id" }, where, null, null, null, null);
 
         ArrayList<SQLiteDAOTrack> list = new ArrayList<SQLiteDAOTrack>();
@@ -131,7 +131,7 @@ public class SerleenaSQLiteDataSource implements ISerleenaSQLiteDataSource {
     public Iterable<SQLiteDAOTelemetry> getTelemetries(SQLiteDAOTrack track) {
         SQLiteDatabase db = dbHelper.getReadableDatabase();
         String where = "telem_track = " + track.id();
-        Cursor result = db.query(dbHelper.TABLE_TELEMETRIES,
+        Cursor result = db.query(SerleenaDatabase.TABLE_TELEMETRIES,
                 new String[] { "telem_id" }, where, null, null, null, null);
 
         ArrayList<SQLiteDAOTelemetry> list = new
@@ -163,7 +163,7 @@ public class SerleenaSQLiteDataSource implements ISerleenaSQLiteDataSource {
         values.put("userpoint_y", point.longitude());
         values.put("userpoint_experience", experience.id());
 
-        db.insert(dbHelper.TABLE_USER_POINTS, null, values);
+        db.insert(SerleenaDatabase.TABLE_USER_POINTS, null, values);
     }
 
     /**
@@ -176,11 +176,11 @@ public class SerleenaSQLiteDataSource implements ISerleenaSQLiteDataSource {
     public void createTelemetry(Iterable<TelemetryEvent> events,
                                 SQLiteDAOTrack track) {
         SQLiteDatabase db = dbHelper.getWritableDatabase();
-        SimpleDateFormat format = dbHelper.DATE_FORMAT;
+        SimpleDateFormat format = SerleenaDatabase.DATE_FORMAT;
 
         ContentValues values = new ContentValues();
         values.put("telem_track", track.id());
-        long newId = db.insert(dbHelper.TABLE_TELEMETRIES, null, values);
+        long newId = db.insert(SerleenaDatabase.TABLE_TELEMETRIES, null, values);
 
 
         for (TelemetryEvent event : events) {
@@ -194,7 +194,7 @@ public class SerleenaSQLiteDataSource implements ISerleenaSQLiteDataSource {
                 values.put("eventl_latitude", eventl.location().latitude());
                 values.put("eventl_longitude", eventl.location().longitude());
                 values.put("eventl_telem", newId);
-                db.insert(dbHelper.TABLE_TELEM_EVENTS_LOCATION, null, values);
+                db.insert(SerleenaDatabase.TABLE_TELEM_EVENTS_LOCATION, null, values);
 
             } else if (event instanceof HeartRateTelemetryEvent) {
 
@@ -203,9 +203,9 @@ public class SerleenaSQLiteDataSource implements ISerleenaSQLiteDataSource {
                 values.put("eventhc_timestamp",
                         format.format(eventh.timestamp()));
                 values.put("eventhc_value", eventh.heartRate());
-                values.put("eventhc_type", dbHelper.EVENT_TYPE_HEARTRATE);
+                values.put("eventhc_type", SerleenaDatabase.EVENT_TYPE_HEARTRATE);
                 values.put("eventhc_telem", newId);
-                db.insert(dbHelper.TABLE_TELEM_EVENTS_HEART_CHECKP, null,
+                db.insert(SerleenaDatabase.TABLE_TELEM_EVENTS_HEART_CHECKP, null,
                         values);
 
             } else if (event instanceof CheckpointReachedTelemetryEvent) {
@@ -215,9 +215,9 @@ public class SerleenaSQLiteDataSource implements ISerleenaSQLiteDataSource {
                 values.put("eventhc_timestamp",
                         format.format(eventc.timestamp()));
                 values.put("eventhc_value", eventc.checkpointNumber());
-                values.put("eventhc_type", dbHelper.EVENT_TYPE_CHECKPOINT);
+                values.put("eventhc_type", SerleenaDatabase.EVENT_TYPE_CHECKPOINT);
                 values.put("eventhc_telem", newId);
-                db.insert(dbHelper.TABLE_TELEM_EVENTS_HEART_CHECKP, null,
+                db.insert(SerleenaDatabase.TABLE_TELEM_EVENTS_HEART_CHECKP, null,
                         values);
 
             }
@@ -237,7 +237,7 @@ public class SerleenaSQLiteDataSource implements ISerleenaSQLiteDataSource {
     @Override
     public Iterable<IExperienceStorage> getExperiences() {
         SQLiteDatabase db = dbHelper.getReadableDatabase();
-        Cursor result = db.query(dbHelper.TABLE_EXPERIENCES,
+        Cursor result = db.query(SerleenaDatabase.TABLE_EXPERIENCES,
                 new String[] { "experience_id" }, null, null, null, null, null);
 
         int idIndex = result.getColumnIndex("experience_id");
@@ -380,7 +380,7 @@ public class SerleenaSQLiteDataSource implements ISerleenaSQLiteDataSource {
         ArrayList<TelemetryEvent> list = new ArrayList<TelemetryEvent>();
 
         String where = "eventhc_telem = " + id;
-        Cursor result = db.query(dbHelper.TABLE_TELEM_EVENTS_HEART_CHECKP,
+        Cursor result = db.query(SerleenaDatabase.TABLE_TELEM_EVENTS_HEART_CHECKP,
                 new String[] { "eventhc_timestamp", "eventhc_value",
                 "eventhc_type" }, where, null, null, null, null);
 
@@ -410,7 +410,7 @@ public class SerleenaSQLiteDataSource implements ISerleenaSQLiteDataSource {
         }
 
         where = "eventl_telem = " + id;
-        result = db.query(dbHelper.TABLE_TELEM_EVENTS_LOCATION,
+        result = db.query(SerleenaDatabase.TABLE_TELEM_EVENTS_LOCATION,
                 new String[] { "eventl_timestamp", "eventl_latitude",
                         "eventhl_longitude" }, where, null, null, null, null);
 
@@ -462,7 +462,7 @@ public class SerleenaSQLiteDataSource implements ISerleenaSQLiteDataSource {
                 "(weather_sw_corner_longitude + 180) <= " +
                 (location.longitude() + 180);
 
-        Cursor result = db.query(dbHelper.TABLE_WEATHER_FORECASTS,
+        Cursor result = db.query(SerleenaDatabase.TABLE_WEATHER_FORECASTS,
                 new String[] { "weather_condition", "wheather_temperature" },
                 where, null, null, null, null);
 
