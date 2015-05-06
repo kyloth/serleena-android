@@ -81,6 +81,7 @@ import java.util.Date;
 public class SerleenaSQLiteDataSource implements ISerleenaSQLiteDataSource {
 
     SerleenaDatabase dbHelper;
+    Context context;
 
     /**
      * Implementazione di ISerleenaSQLiteDataSource.getTracks().
