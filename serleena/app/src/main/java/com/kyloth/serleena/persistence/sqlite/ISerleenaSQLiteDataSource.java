@@ -73,6 +73,15 @@ public interface ISerleenaSQLiteDataSource {
     public Iterable<SQLiteDAOTelemetry> getTelemetries(SQLiteDAOTrack track);
 
     /**
+     * Aggiunge un nuovo punto utente al database, associato all'Esperienza
+     * specificata.
+     *
+     * @param experience Esperienza a cui aggiungere il punto utente.
+     * @param point Punto utente da aggiungere.
+     */
+    public void addUserPoint(SQLiteDAOExperience experience, UserPoint point);
+
+    /**
      * Aggiunge al database un nuovo Tracciamento associato al Percorso
      * specificato.
      *
