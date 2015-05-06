@@ -42,6 +42,7 @@
 
 package com.kyloth.serleena.persistence;
 
+import com.kyloth.serleena.common.EmergencyContact;
 import com.kyloth.serleena.common.GeoPoint;
 import com.kyloth.serleena.common.IQuadrant;
 import java.util.Date;
@@ -81,5 +82,15 @@ public interface IPersistenceDataSource {
      * @return Oggetto IQuadrant relativo alla posizione specificata.
      */
     public IQuadrant getQuadrant(GeoPoint location);
+
+    /**
+     * Restituisce i contatti di emergenza di autorità locali al punto
+     * geografico specificato.
+     *
+     * @param location Punto geografico del cui intorno si vogliono ottenere
+     *                 i contatti di autorità locali.
+     * @return Insieme enumerabile di contatti.
+     */
+    public Iterable<EmergencyContact> getContacts(GeoPoint location);
 
 }
