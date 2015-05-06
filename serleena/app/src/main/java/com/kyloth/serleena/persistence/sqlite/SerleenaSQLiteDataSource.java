@@ -254,6 +254,76 @@ public class SerleenaSQLiteDataSource implements ISerleenaSQLiteDataSource {
     }
 
     /**
+     * Restituisce il quadrante i cui limiti comprendono la posizione
+     * geografica specificata.
+     *
+     * @param location Posizione geografica che ricade nei limiti del quadrante.
+     * @return Oggetto IQuadrant.
+     */
+    @Override
+    public IQuadrant getQuadrant(GeoPoint location) {
+        SQLiteDatabase db = dbHelper.getReadableDatabase();
+        String query = "SELECT * FROM " + dbHelper.TABLE_RASTER_MAPS +
+                " raster INNER JOIN " + dbHelper.TABLE_RECTS + " rect " +
+                "ON raster.raster_rect = rect.rect_id " +
+                "WHERE (rect.rect_ne_corner_latitude + 90) >= " +
+                (location.latitude() + 90) + " AND " +
+                "(rect.rect_ne_corner_longitude + 180) >= " +
+                (location.longitude() + 180) + " AND " +
+                "(rect.rect_sw_corner_latitude + 90) <= " +
+                (location.latitude() + 90) + " AND " +
+                "(rect.rect_sw_corner_longitude + 180) <= " +
+                (location.longitude() + 180);
+
+        Cursor result = db.rawQuery(query, null);
+        int pathIndex = result.getColumnIndex("raster_path");
+        int ne_lat_index = result.getColumnIndex("rect_ne_corner_latitude");
+        int ne_lon_index = result.getColumnIndex("rect_ne_corner_longitude");
+        int sw_lat_index = result.getColumnIndex("rect_sw_corner_latitude");
+        int sw_lon_index = result.getColumnIndex("rect_sw_corner_longitude");
+
+        Bitmap bmp = null;
+        GeoPoint p1 = null;
+        GeoPoint p2 = null;
+
+        if (pathIndex > -1) {
+            String fileName = result.getString(pathIndex);
+            File file = new File(context.getFilesDir(), fileName);
+
+            if(file.exists())
+                bmp = BitmapFactory.decodeFile(file.getAbsolutePath());
+
+            p1 = new GeoPoint(result.getDouble(ne_lat_index),
+                    result.getDouble(ne_lon_index));
+            p2 = new GeoPoint(result.getDouble(sw_lat_index),
+                    result.getDouble(sw_lon_index));
+        }
+
+        final Bitmap finalBmp = bmp;
+        final GeoPoint finalP1 = p1;
+        final GeoPoint finalP2 = p2;
+
+        result.close();
+
+        return new IQuadrant() {
+            @Override
+            public Bitmap getRaster() {
+                return finalBmp;
+            }
+
+            @Override
+            public GeoPoint getFirstPoint() {
+                return finalP1;
+            }
+
+            @Override
+            public GeoPoint getSecondPoint() {
+                return finalP2;
+            }
+        };
+    }
+
+    /**
      * Restituisce gli eventi di Tracciamento associati al Tracciamento
      * specificato, memorizzati nel database SQLite.
      *
