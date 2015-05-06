@@ -44,6 +44,7 @@ package com.kyloth.serleena.persistence.sqlite;
 
 import com.kyloth.serleena.common.TelemetryEvent;
 import com.kyloth.serleena.common.UserPoint;
+import com.kyloth.serleena.persistence.IPersistenceDataSource;
 
 /**
  * Descrive l’interfaccia di un Data Access Object per accesso a basso livello
@@ -54,7 +55,7 @@ import com.kyloth.serleena.common.UserPoint;
  * @version 1.0.0
  * @since 2015-05-06
  */
-public interface ISerleenaSQLiteDataSource {
+public interface ISerleenaSQLiteDataSource extends IPersistenceDataSource {
 
     /**
      * Restituisce i Percorsi associati a una specifica esperienza.
