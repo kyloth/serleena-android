@@ -50,4 +50,14 @@
     <string name="screen_menu_sync_image">Bussola</string>
     <string name="screen_menu_sync_text">SYNC</string>
 
+    <string name="exp_sel_exp_image">Selezione esperienza</string>
+    <string name="exp_sel_exp_text">SELEZIONA ESPERIENZA</string>
+    <string name="exp_sel_per_image">Selezione percorso</string>
+    <string name="exp_sel_per_text">SELEZIONA PERCORSO</string>
+    <string name="exp_per_image">Informazioni sul percorso</string>
+    <string name="exp_per_text">STATO PERCORSO</string>
+    <string name="exp_track_image">Impostazioni tracciamento</string>
+    <string name="exp_track_text">IMPOSTA TRACKING</string>
+
+
 </resources>
