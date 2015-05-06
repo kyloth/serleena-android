@@ -1,9 +1,86 @@
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<TableLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools" android:layout_width="match_parent"
     android:layout_height="match_parent" tools:context="com.kyloth.serleena.ExpMenuFragment">
 
-    <!-- TODO: Update blank fragment layout -->
-    <TextView android:layout_width="match_parent" android:layout_height="match_parent"
-        android:text="@string/hello_blank_fragment" />
+    <TableRow
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent">
 
-</FrameLayout>
+        <ImageView
+            android:layout_width="61sp"
+            android:layout_height="61sp"
+            android:id="@+id/exp_sel_exp_image"
+            android:layout_column="0"
+            android:background="@drawable/sel_exp"
+            android:contentDescription="@string/exp_sel_exp_image" />
+
+        <TextView
+            android:layout_width="100sp"
+            android:layout_height="61sp"
+            android:text="@string/exp_sel_exp_text"
+            android:id="@+id/exp_sel_exp_text"
+            android:layout_column="1"
+            android:gravity="center" />
+
+        <ImageView
+            android:layout_width="61sp"
+            android:layout_height="61sp"
+            android:id="@+id/exp_sel_per_image"
+            android:layout_column="2"
+            android:background="@drawable/percorso"
+            android:contentDescription="@string/exp_sel_per_image" />
+
+        <TextView
+            android:layout_width="90sp"
+            android:layout_height="wrap_content"
+            android:text="@string/exp_sel_per_text"
+            android:id="@+id/exp_sel_per_text"
+            android:layout_column="3"
+            android:gravity="center" />
+    </TableRow>
+
+    <TableRow
+        android:layout_width="80sp"
+        android:layout_height="61sp"
+        android:paddingTop="1sp">
+
+        <ImageView
+            android:layout_width="61sp"
+            android:layout_height="61sp"
+            android:id="@+id/exp_per_image"
+            android:layout_column="0"
+            android:background="@drawable/stopwatch"
+            android:contentDescription="@string/exp_per_image" />
+
+        <TextView
+            android:layout_width="90sp"
+            android:layout_height="wrap_content"
+            android:text="@string/exp_per_text"
+            android:id="@+id/exp_per_text"
+            android:layout_column="1"
+            android:gravity="center" />
+
+        <ImageView
+            android:layout_width="61sp"
+            android:layout_height="61sp"
+            android:id="@+id/exp_track_image"
+            android:layout_column="2"
+            android:background="@drawable/onOff" />
+
+        <TextView
+            android:layout_width="90sp"
+            android:layout_height="wrap_content"
+            android:text="@string/exp_track_text"
+            android:id="@+id/exp_track_text"
+            android:layout_column="3"
+            android:gravity="center" />
+
+    </TableRow>
+
+    <TableRow
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent">
+
+    </TableRow>
+
+</TableLayout>
