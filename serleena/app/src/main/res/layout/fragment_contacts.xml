@@ -19,7 +19,7 @@
         android:id="@+id/contact_name"
         android:layout_gravity="center"
         android:gravity="bottom|center"
-        android:textSize="26dp" />
+        android:textSize="26sp" />
 
     <TextView
         android:layout_width="180dp"
@@ -27,6 +27,6 @@
         android:text="@string/contact_value"
         android:id="@+id/contact_value"
         android:layout_gravity="center_horizontal|bottom"
-        android:textSize="30dp"
+        android:textSize="30sp"
         android:gravity="center_vertical|center" />
 </FrameLayout>

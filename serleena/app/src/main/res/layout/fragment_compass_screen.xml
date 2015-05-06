@@ -18,5 +18,5 @@
         android:id="@+id/compass_text"
         android:layout_gravity="center_horizontal|bottom"
         android:gravity="top"
-        android:textSize="30dp" />
+        android:textSize="30sp" />
 </FrameLayout>

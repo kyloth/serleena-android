@@ -19,6 +19,7 @@
         android:text="@string/heart_rate"
         android:id="@+id/heart_rate"
         android:layout_gravity="center"
-        android:gravity="bottom" />
+        android:gravity="bottom"
+        android:textSize="25sp" />
 
 </FrameLayout>
