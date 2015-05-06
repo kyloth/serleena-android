@@ -43,7 +43,7 @@ import android.widget.ListAdapter;
 import android.widget.TextView;
 
 
-import com.kyloth.serleena.dummy.DummyContent;
+import com.kyloth.serleena.dummy.DummyTrack;
 
 /**
  * A fragment representing a list of Items.
@@ -105,8 +105,8 @@ public class TrackSelectionFragment extends Fragment implements AbsListView.OnIt
         }
 
         // TODO: Change Adapter to display your content
-        mAdapter = new ArrayAdapter<DummyContent.DummyItem>(getActivity(),
-                android.R.layout.simple_list_item_1, android.R.id.text1, DummyContent.ITEMS);
+        mAdapter = new ArrayAdapter<DummyTrack.DummyItem>(getActivity(),
+                android.R.layout.simple_list_item_1, android.R.id.text1, DummyTrack.ITEMS);
     }
 
     @Override
@@ -147,7 +147,7 @@ public class TrackSelectionFragment extends Fragment implements AbsListView.OnIt
         if (null != mListener) {
             // Notify the active callbacks interface (the activity, if the
             // fragment is attached to one) that an item has been selected.
-            mListener.onFragmentInteraction(DummyContent.ITEMS.get(position).id);
+            mListener.onFragmentInteraction(DummyTrack.ITEMS.get(position).id);
         }
     }
 
