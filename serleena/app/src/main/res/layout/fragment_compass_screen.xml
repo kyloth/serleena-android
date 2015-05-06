@@ -7,7 +7,7 @@
     <ImageView
         android:layout_width="133dp"
         android:layout_height="106dp"
-        android:id="@+id/imageViewCompass"
+        android:id="@+id/compass_image"
         android:layout_gravity="center_horizontal|top"
         android:background="@drawable/Dark_Green_Arrow_Up" />
 
@@ -15,7 +15,7 @@
         android:layout_width="wrap_content"
         android:layout_height="61dp"
         android:text="Nord"
-        android:id="@+id/textView2"
+        android:id="@+id/compass_text"
         android:layout_gravity="center_horizontal|bottom"
         android:gravity="top"
         android:textSize="30dp" />
