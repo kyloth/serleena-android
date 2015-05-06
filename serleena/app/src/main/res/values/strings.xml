@@ -21,5 +21,6 @@
 
     <string name="telemetry_status">OFF</string>
     <string name="telemetry_image">Pulsante rosso</string>
+    <string name="sync_button_text">Sincronizza</string>
 
 </resources>
