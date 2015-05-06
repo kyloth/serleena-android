@@ -51,6 +51,7 @@ import android.graphics.BitmapFactory;
 import android.media.Image;
 
 import com.kyloth.serleena.common.CheckpointReachedTelemetryEvent;
+import com.kyloth.serleena.common.EmergencyContact;
 import com.kyloth.serleena.common.GeoPoint;
 import com.kyloth.serleena.common.HeartRateTelemetryEvent;
 import com.kyloth.serleena.common.IQuadrant;
@@ -371,6 +372,44 @@ public class SerleenaSQLiteDataSource implements ISerleenaSQLiteDataSource {
                 return finalP2;
             }
         };
+    }
+
+    /**
+     * Implementazione di IPersistenceDataSource.getContacts().
+     *
+     * @param location Punto geografico del cui intorno si vogliono ottenere
+     *                 i contatti di autorità locali.
+     * @return Insieme enumerabile di contatti di emergenza.
+     */
+    @Override
+    public Iterable<EmergencyContact> getContacts(GeoPoint location) {
+        SimpleDateFormat parser = SerleenaDatabase.DATE_FORMAT;
+        SQLiteDatabase db = dbHelper.getReadableDatabase();
+        ArrayList<EmergencyContact> list = new ArrayList<EmergencyContact>();
+
+        String where = "(contact_ne_corner_latitude + 90) >= " +
+                (location.latitude() + 90) + " AND " +
+                "(contact_ne_corner_longitude + 180) >= " +
+                (location.longitude() + 180) + " AND " +
+                "(contact_sw_corner_latitude + 90) <= " +
+                (location.latitude() + 90) + " AND " +
+                "(contact_sw_corner_longitude + 180) <= " +
+                (location.longitude() + 180);
+        Cursor result = db.query(SerleenaDatabase.TABLE_CONTACTS,
+                new String[] { "contact_name", "contact_value" }, where,
+                null, null, null, null);
+
+        int nameIndex = result.getColumnIndexOrThrow("contact_name");
+        int valueIndex = result.getColumnIndexOrThrow("contact_value");
+
+        while (result.moveToNext()) {
+            String name = result.getString(nameIndex);
+            String value = result.getString(valueIndex);
+            list.add(new EmergencyContact(name, value));
+        }
+
+        result.close();
+        return list;
     }
 
     /**
