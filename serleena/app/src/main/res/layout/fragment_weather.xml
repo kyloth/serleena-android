@@ -14,7 +14,7 @@
         android:layout_width="wrap_content"
         android:layout_height="122dp"
         android:textAppearance="?android:attr/textAppearanceLarge"
-        android:text="15° C"
+        android:text="@string/weather_temperature"
         android:id="@+id/weather_temperature"
         android:layout_gravity="center"
         android:gravity="bottom"
@@ -23,7 +23,7 @@
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="06/05/2015"
+        android:text="@string/weather_day"
         android:id="@+id/weather_day"
         android:layout_gravity="center_horizontal|bottom"
         android:textSize="22dp" />

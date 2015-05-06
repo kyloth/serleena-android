@@ -3,8 +3,8 @@
     android:layout_height="match_parent" tools:context="com.kyloth.serleena.SyncFragment">
 
     <Button
-        android:layout_width="172dp"
-        android:layout_height="89dp"
+        android:layout_width="186dp"
+        android:layout_height="112dp"
         android:text="Sincronizza"
         android:id="@+id/button_sync"
         android:layout_gravity="center_horizontal|top"
@@ -14,11 +14,12 @@
 
     <TextView
         android:layout_width="174dp"
-        android:layout_height="69dp"
+        android:layout_height="102dp"
         android:textAppearance="?android:attr/textAppearanceMedium"
-        android:text="Token"
+        android:text="@string/sync_token"
         android:id="@+id/textview_token"
         android:layout_gravity="center"
-        android:gravity="bottom|center" />
+        android:gravity="bottom|center"
+        android:textSize="25dp" />
 
 </FrameLayout>

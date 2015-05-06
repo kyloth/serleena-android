@@ -16,7 +16,7 @@
         android:layout_width="wrap_content"
         android:layout_height="106dp"
         android:textAppearance="?android:attr/textAppearanceLarge"
-        android:text="BPM"
+        android:text="@string/heart_rate"
         android:id="@+id/heart_rate"
         android:layout_gravity="center"
         android:gravity="bottom" />
