@@ -47,6 +47,8 @@ import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteDatabase.CursorFactory;
 import android.database.sqlite.SQLiteOpenHelper;
 
+import java.text.SimpleDateFormat;
+
 /**
  * Supporta la creazione e l'apertura del database SQLite utilizzato
  * dall'applicazione serleena, secondo quando prescritto dal framework Android.
@@ -73,6 +75,9 @@ public class SerleenaDatabase extends SQLiteOpenHelper {
 
     public static final String EVENT_TYPE_HEARTRATE = "event_heartrate";
     public static final String EVENT_TYPE_CHECKPOINT = "event_checkpoint";
+
+    public static final SimpleDateFormat DATE_FORMAT =
+            new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
 
     private static final String CREATE_TABLE_EXPERIENCES =
         "CREATE TABLE " + TABLE_EXPERIENCES + "(" +
