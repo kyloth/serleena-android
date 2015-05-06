@@ -307,19 +307,20 @@ public class SerleenaSQLiteDataSource implements ISerleenaSQLiteDataSource {
     @Override
     public IQuadrant getQuadrant(GeoPoint location) {
         SQLiteDatabase db = dbHelper.getReadableDatabase();
-        String query = "SELECT * FROM " + dbHelper.TABLE_RASTER_MAPS +
-                " raster INNER JOIN " + dbHelper.TABLE_RECTS + " rect " +
-                "ON raster.raster_rect = rect.rect_id " +
-                "WHERE (rect.rect_ne_corner_latitude + 90) >= " +
+        String where = "(raster_ne_corner_latitude + 90) >= " +
                 (location.latitude() + 90) + " AND " +
-                "(rect.rect_ne_corner_longitude + 180) >= " +
+                "(raster_ne_corner_longitude + 180) >= " +
                 (location.longitude() + 180) + " AND " +
-                "(rect.rect_sw_corner_latitude + 90) <= " +
+                "(raster_sw_corner_latitude + 90) <= " +
                 (location.latitude() + 90) + " AND " +
-                "(rect.rect_sw_corner_longitude + 180) <= " +
+                "(raster_sw_corner_longitude + 180) <= " +
                 (location.longitude() + 180);
 
-        Cursor result = db.rawQuery(query, null);
+        Cursor result = db.query(SerleenaDatabase.TABLE_RASTER_MAPS,
+                new String[] { "raster_path", "rect_ne_corner_latitude",
+                        "rect_ne_corner_longitude",
+                        "rect_sw_corner_latitude", "rect_sw_corner_longitude" },
+                where, null, null, null, null);
         int pathIndex = result.getColumnIndex("raster_path");
         int ne_lat_index = result.getColumnIndex("rect_ne_corner_latitude");
         int ne_lon_index = result.getColumnIndex("rect_ne_corner_longitude");
