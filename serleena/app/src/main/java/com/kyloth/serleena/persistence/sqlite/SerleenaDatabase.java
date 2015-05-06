@@ -57,19 +57,18 @@ import android.database.sqlite.SQLiteOpenHelper;
  */
 public class SerleenaDatabase extends SQLiteOpenHelper {
 
-    private static final String DATABASE_NAME = "serleena.kyloth.db";
-    private static final String TABLE_EXPERIENCES = "experiences";
-    private static final String TABLE_TRACKS = "tracks";
-    private static final String TABLE_TELEMETRIES = "telemetries";
-    private static final String TABLE_TELEM_EVENTS_HEART_CHECKP =
+    public static final String DATABASE_NAME = "serleena.kyloth.db";
+    public static final String TABLE_EXPERIENCES = "experiences";
+    public static final String TABLE_TRACKS = "tracks";
+    public static final String TABLE_TELEMETRIES = "telemetries";
+    public static final String TABLE_TELEM_EVENTS_HEART_CHECKP =
         "telemetry_events_heart_checkp";
-    private static final String TABLE_TELEM_EVENTS_LOCATION =
+    public static final String TABLE_TELEM_EVENTS_LOCATION =
         "telemetry_events_location";
-    private static final String TABLE_RECTS = "rects";
-    private static final String TABLE_RASTER_MAPS = "raster_maps";
-    private static final String TABLE_CONTACTS = "contacts";
-    private static final String TABLE_WEATHER_FORECASTS = "weather_forecasts";
-    private static final String TABLE_USER_POINTS = "user_points";
+    public static final String TABLE_RASTER_MAPS = "raster_maps";
+    public static final String TABLE_CONTACTS = "contacts";
+    public static final String TABLE_WEATHER_FORECASTS = "weather_forecasts";
+    public static final String TABLE_USER_POINTS = "user_points";
     private static final int DATABASE_VERSION = 1;
 
     private static final String CREATE_TABLE_EXPERIENCES =
