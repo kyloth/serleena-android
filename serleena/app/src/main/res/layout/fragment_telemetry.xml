@@ -3,7 +3,21 @@
     android:layout_height="match_parent" tools:context="com.kyloth.serleena.TelemetryFragment">
 
     <!-- TODO: Update blank fragment layout -->
-    <TextView android:layout_width="match_parent" android:layout_height="match_parent"
-        android:text="@string/hello_blank_fragment" />
 
+    <ImageView
+        android:layout_width="124dp"
+        android:layout_height="118dp"
+        android:id="@+id/imageView"
+        android:layout_gravity="center_horizontal|top"
+        android:src="@drawable/red_button"
+        android:layout_marginTop="10dp" />
+
+    <TextView
+        android:layout_width="154dp"
+        android:layout_height="72dp"
+        android:text="@string/telemetry_status"
+        android:id="@+id/textView2"
+        android:layout_gravity="center_horizontal|bottom"
+        android:gravity="center_vertical|center"
+        android:textSize="26dp" />
 </FrameLayout>
