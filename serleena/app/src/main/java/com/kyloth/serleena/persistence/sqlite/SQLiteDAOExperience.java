@@ -29,78 +29,75 @@
 
 
 /**
- * Name: IWeatherStorage.java
- * Package: com.kyloth.serleena.persistence
+ * Name: SQLiteDAOExperience.java
+ * Package: com.kyloth.serleena.persistence.sqlite
  * Author: Filippo Sestini
- * Date: 2015-05-05
+ * Date: 2015-05-06
  *
  * History:
  * Version  Programmer          Date        Changes
- * 1.0.0    Filippo Sestini     2015-05-05  Creazione file e scrittura di codice
+ * 1.0.0    Filippo Sestini     2015-05-06  Creazione file e scrittura di codice
  *                                          e documentazione in Javadoc.
  */
 
-package com.kyloth.serleena.persistence;
+package com.kyloth.serleena.persistence.sqlite;
 
-import java.util.Date;
+import com.kyloth.serleena.common.UserPoint;
+import com.kyloth.serleena.persistence.*;
 
 /**
- * Interfaccia implementata da un oggetto che realizza la persistenza di
- * previsioni meteorologiche.
+ * Implementazione di IExperienceStorage per la persistenza su database
+ * SQLite.
  *
  * @author Filippo Sestini <sestini.filippo@gmail.com>
  * @version 1.0.0
- * @since 2015-05-05
+ * @since 2015-05-06
  */
-public interface IWeatherStorage {
+class SQLiteDAOExperience implements IExperienceStorage
+{
+
+    private int id;
+    private ISerleenaSQLiteDataSource dataSource;
 
     /**
-     * Restituisce la previsione metereologica prevista per la mattina.
+     * Crea una nuova istanza di SQLiteDAOExperience.
      *
-     * @return Previsione metereologica.
+     * @param   id              Id dell'oggetto nella tabella di appartenenza.
+     * @param   dataSource      La sorgente di dati SQL a cui questo oggetto è
+     *                          associato.
      */
-    public WeatherForecastEnum getMorningForecast();
+    public SQLiteDAOExperience(int id, ISerleenaSQLiteDataSource dataSource) {
+        this.id = id;
+        this.dataSource = dataSource;
+    }
 
     /**
-     * Restituisce la previsione metereologica prevista per il pomeriggio.
+     * Implementazione di IExperienceStorage.getTracks().
      *
-     * @return Previsione metereologica.
+     * @return Insieme enumerabile di Percorsi.
      */
-    public WeatherForecastEnum getAfternoonForecast();
+    public Iterable<ITrackStorage> getTracks() {
+        /*return dataSource.getTracks(this);*/
+        throw new UnsupportedOperationException();
+    }
 
     /**
-     * Restituisce la previsione metereologica prevista per la sera.
+     * Implementazione di IExperienceStorage.addUserPoint().
      *
-     * @return Previsione metereologica.
+     * @param p     Punto geografico associato al punto utente.
      */
-    public WeatherForecastEnum getNightForecast();
+    public void addUserPoint(UserPoint p) {
+        /*dataSource.addUserPoint(this, p);*/
+        throw new UnsupportedOperationException();
+    }
 
     /**
-     * Restituisce la temperatura prevista per la mattina.
+     * Restituisce l'ID dell'oggetto nella tabella di appartenenza.
      *
-     * @return Valore della temperatura in gradi centigradi.
+     * @return ID dell'oggetto esperienza.
      */
-    public int getMorningTemperature();
-
-    /**
-     * Restituisce la temperatura prevista per il pomeriggio.
-     *
-     * @return Valore della temperatura in gradi centigradi.
-     */
-    public int getAfternoonTemperature();
-
-    /**
-     * Restituisce la temperatura prevista per la sera.
-     *
-     * @return Valore della temperatura in gradi centigradi.
-     */
-    public int getNightTemperature();
-
-    /**
-     * Restituisce la data a cui si riferiscono le previsioni.
-     *
-     * @return Data delle previsioni.
-     */
-    public Date date();
+    public int id() {
+        return this.id;
+    }
 
 }

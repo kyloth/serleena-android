@@ -29,78 +29,69 @@
 
 
 /**
- * Name: IWeatherStorage.java
- * Package: com.kyloth.serleena.persistence
+ * Name: SQLiteDAOTrack.java
+ * Package: com.kyloth.serleena.persistence.sqlite
  * Author: Filippo Sestini
- * Date: 2015-05-05
+ * Date: 2015-05-06
  *
  * History:
  * Version  Programmer          Date        Changes
- * 1.0.0    Filippo Sestini     2015-05-05  Creazione file e scrittura di codice
+ * 1.0.0    Filippo Sestini     2015-05-06  Creazione file e scrittura di codice
  *                                          e documentazione in Javadoc.
  */
 
-package com.kyloth.serleena.persistence;
+package com.kyloth.serleena.persistence.sqlite;
 
-import java.util.Date;
+import com.kyloth.serleena.common.TelemetryEvent;
+import com.kyloth.serleena.persistence.ITelemetryStorage;
+import com.kyloth.serleena.persistence.ITrackStorage;
 
 /**
- * Interfaccia implementata da un oggetto che realizza la persistenza di
- * previsioni meteorologiche.
+ * Implementazione di persistence.ITrackStorage per la persistenza su
+ * database SQLite integrato in Android.
  *
  * @author Filippo Sestini <sestini.filippo@gmail.com>
  * @version 1.0.0
- * @since 2015-05-05
+ * @since 2015-05-06
+ * @see com.kyloth.serleena.persistence.ITrackStorage
  */
-public interface IWeatherStorage {
+public class SQLiteDAOTrack implements ITrackStorage {
+
+    private int id;
+    private ISerleenaSQLiteDataSource dataSource;
+
+    public SQLiteDAOTrack(int id, ISerleenaSQLiteDataSource dataSource) {
+        this.id = id;
+        this.dataSource = dataSource;
+    }
 
     /**
-     * Restituisce la previsione metereologica prevista per la mattina.
+     * Implementazione di ITrackStorage.createTelemetry().
      *
-     * @return Previsione metereologica.
+     * @param events Eventi da cui creare il Tracciamento.
      */
-    public WeatherForecastEnum getMorningForecast();
+    @Override
+    public void createTelemetry(Iterable<TelemetryEvent> events) {
+        dataSource.createTelemetry(events, this);
+    }
 
     /**
-     * Restituisce la previsione metereologica prevista per il pomeriggio.
+     * Implementazione di ITrackStorage.getTelemetries().
      *
-     * @return Previsione metereologica.
+     * @return Tracciamenti associati al Percorso.
      */
-    public WeatherForecastEnum getAfternoonForecast();
+    @Override
+    public Iterable<ITelemetryStorage> getTelemetries() {
+        return null;
+    }
 
     /**
-     * Restituisce la previsione metereologica prevista per la sera.
+     * Restituisce l'ID dell'oggetto nella tabella di appartenenza.
      *
-     * @return Previsione metereologica.
+     * @return ID dell'oggetto esperienza.
      */
-    public WeatherForecastEnum getNightForecast();
-
-    /**
-     * Restituisce la temperatura prevista per la mattina.
-     *
-     * @return Valore della temperatura in gradi centigradi.
-     */
-    public int getMorningTemperature();
-
-    /**
-     * Restituisce la temperatura prevista per il pomeriggio.
-     *
-     * @return Valore della temperatura in gradi centigradi.
-     */
-    public int getAfternoonTemperature();
-
-    /**
-     * Restituisce la temperatura prevista per la sera.
-     *
-     * @return Valore della temperatura in gradi centigradi.
-     */
-    public int getNightTemperature();
-
-    /**
-     * Restituisce la data a cui si riferiscono le previsioni.
-     *
-     * @return Data delle previsioni.
-     */
-    public Date date();
+    public int id() {
+        return id;
+    }
 
 }
