@@ -254,6 +254,50 @@ public class SerleenaSQLiteDataSource implements ISerleenaSQLiteDataSource {
     }
 
     /**
+     * Implementazione di IPersistenceDataStorage.getWeatherInfo().
+     *
+     * @param location Posizione geografica di cui si vogliono ottenere le
+     *                 previsioni.
+     * @param date Data di cui si vogliono ottenere le previsioni.
+     * @return Previsioni metereologiche.
+     */
+    @Override
+    public IWeatherStorage getWeatherInfo(GeoPoint location, Date date) {
+        if (date == null)
+            return null;
+
+        Date morningTime = new Date(date.getYear(), date.getMonth(),
+                date.getDay(), 6, 0);
+        Date afternoonTime = new Date(date.getYear(), date.getMonth(),
+                date.getDay(), 14, 0);
+        Date nightTime = new Date(date.getYear(), date.getMonth(),
+                date.getDay(), 21, 0);
+
+        int morningStart = Math.round(morningTime.getTime() / 1000);
+        int morningEnd = Math.round(afternoonTime.getTime() / 1000);
+
+        int afternoonStart = Math.round(afternoonTime.getTime() / 1000);
+        int afternoonEnd = Math.round(nightTime.getTime() / 1000);
+
+        int nightStart = Math.round(nightTime.getTime() / 1000);
+        int nightEnd = Math.round(morningTime.getTime() / 1000);
+
+        SimpleWeather morning = getForecast(location, morningStart, morningEnd);
+        SimpleWeather afternoon =
+                getForecast(location, afternoonStart, afternoonEnd);
+        SimpleWeather night = getForecast(location, nightStart, nightEnd);
+
+        if (morning != null && afternoon != null && night != null) {
+            return new SQLiteDAOWeather(morning.forecast(),
+                    afternoon.forecast(), night.forecast(),
+                    morning.temperature(), afternoon.temperature(),
+                    night.temperature(), date);
+        }
+
+        return null;
+    }
+
+    /**
      * Restituisce il quadrante i cui limiti comprendono la posizione
      * geografica specificata.
      *
