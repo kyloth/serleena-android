@@ -65,7 +65,8 @@
             android:layout_height="61sp"
             android:id="@+id/exp_track_image"
             android:layout_column="2"
-            android:background="@drawable/onOff" />
+            android:background="@drawable/onOff"
+            android:contentDescription="@string/exp_track_image" />
 
         <TextView
             android:layout_width="90sp"
@@ -81,6 +82,22 @@
         android:layout_width="fill_parent"
         android:layout_height="fill_parent">
 
+        <ImageView
+            android:layout_width="61sp"
+            android:layout_height="61sp"
+            android:id="@+id/exp_map_image"
+            android:layout_column="1"
+            android:background="@drawable/map"
+            android:adjustViewBounds="false"
+            android:contentDescription="@string/exp_map_image" />
+
+        <TextView
+            android:layout_width="61sp"
+            android:layout_height="61sp"
+            android:text="@string/exp_map_text"
+            android:id="@+id/exp_map_text"
+            android:layout_column="2"
+            android:gravity="center" />
     </TableRow>
 
 </TableLayout>
