@@ -112,6 +112,37 @@ public class SerleenaSQLiteDataSource implements ISerleenaSQLiteDataSource {
     }
 
     /**
+     * Implementazione di ISerleenaSQLiteDataSource.getTelemetries().
+     *
+     * Viene eseguita una query sul database per ottenere gli ID di tutti i
+     * Tracciamenti associati al Percorso specificato, da cui vengono creati
+     * rispettivi oggetti SQLiteDAOTelemetry.
+     *
+     * @param track Percorso di cui si vogliono ottenere i Tracciamenti.
+     * @return Insieme enumerabile di Tracciamenti.
+     */
+    @Override
+    public Iterable<SQLiteDAOTelemetry> getTelemetries(SQLiteDAOTrack track) {
+        SQLiteDatabase db = dbHelper.getReadableDatabase();
+        String where = "telem_track = " + track.id();
+        Cursor result = db.query(dbHelper.TABLE_TELEMETRIES,
+                new String[] { "telem_id" }, where, null, null, null, null);
+
+        ArrayList<SQLiteDAOTelemetry> list = new
+                ArrayList<SQLiteDAOTelemetry>();
+        int columnIndex = result.getColumnIndexOrThrow("telem_id");
+
+        while (result.moveToNext()) {
+            int telemId = result.getInt(columnIndex);
+            Iterable<TelemetryEvent> events = getTelemetryEvents(telemId);
+            list.add(new SQLiteDAOTelemetry(telemId, events));
+        }
+
+        result.close();
+        return list;
+    }
+
+    /**
      * Restituisce gli eventi di Tracciamento associati al Tracciamento
      * specificato, memorizzati nel database SQLite.
      *
