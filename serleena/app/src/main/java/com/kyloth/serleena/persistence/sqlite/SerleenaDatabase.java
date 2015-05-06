@@ -47,6 +47,8 @@ import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteDatabase.CursorFactory;
 import android.database.sqlite.SQLiteOpenHelper;
 
+import java.text.SimpleDateFormat;
+
 /**
  * Supporta la creazione e l'apertura del database SQLite utilizzato
  * dall'applicazione serleena, secondo quando prescritto dal framework Android.
@@ -57,26 +59,30 @@ import android.database.sqlite.SQLiteOpenHelper;
  */
 public class SerleenaDatabase extends SQLiteOpenHelper {
 
-    private static final String DATABASE_NAME = "serleena.kyloth.db";
-    private static final String TABLE_EXPERIENCES = "experiences";
-    private static final String TABLE_TRACKS = "tracks";
-    private static final String TABLE_TELEMETRIES = "telemetries";
-    private static final String TABLE_TELEM_EVENTS_HEART_CHECKP =
+    public static final String DATABASE_NAME = "serleena.kyloth.db";
+    public static final String TABLE_EXPERIENCES = "experiences";
+    public static final String TABLE_TRACKS = "tracks";
+    public static final String TABLE_TELEMETRIES = "telemetries";
+    public static final String TABLE_TELEM_EVENTS_HEART_CHECKP =
         "telemetry_events_heart_checkp";
-    private static final String TABLE_TELEM_EVENTS_LOCATION =
+    public static final String TABLE_TELEM_EVENTS_LOCATION =
         "telemetry_events_location";
-    private static final String TABLE_RECTS = "rects";
-    private static final String TABLE_RASTER_MAPS = "raster_maps";
-    private static final String TABLE_CONTACTS = "contacts";
-    private static final String TABLE_WEATHER_FORECASTS = "weather_forecasts";
-    private static final String TABLE_USER_POINTS = "user_points";
+    public static final String TABLE_RASTER_MAPS = "raster_maps";
+    public static final String TABLE_CONTACTS = "contacts";
+    public static final String TABLE_WEATHER_FORECASTS = "weather_forecasts";
+    public static final String TABLE_USER_POINTS = "user_points";
     private static final int DATABASE_VERSION = 1;
+
+    public static final String EVENT_TYPE_HEARTRATE = "event_heartrate";
+    public static final String EVENT_TYPE_CHECKPOINT = "event_checkpoint";
+
+    public static final SimpleDateFormat DATE_FORMAT =
+            new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
 
     private static final String CREATE_TABLE_EXPERIENCES =
         "CREATE TABLE " + TABLE_EXPERIENCES + "(" +
         "experience_id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, " +
-        "experience_name TEXT NOT NULL, " +
-        "FOREIGN KEY(experience_rect) REFERENCES rects(rect_id))";
+        "experience_name TEXT NOT NULL)";
 
     private static final String CREATE_TABLE_TRACKS =
         "CREATE TABLE " + TABLE_TRACKS + "(" +
@@ -105,35 +111,36 @@ public class SerleenaDatabase extends SQLiteOpenHelper {
         "eventhc_type TEXT NOT NULL, " +
         "FOREIGN KEY(eventhc_telem) REFERENCES telemetries(telem_id))";
 
-    private static final String CREATE_TABLE_RECTS =
-        "CREATE TABLE " + TABLE_RECTS + "(" +
-        "rect_id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, " +
-        "rect_ne_corner_x REAL NOT NULL, " +
-        "rect_ne_corner_y REAL NOT NULL, " +
-        "rect_sw_corner_x REAL NOT NULL, " +
-        "rect_sw_corner_y REAL NOT NULL)";
-
     private static final String CREATE_TABLE_RASTER_MAPS =
         "CREATE TABLE " + TABLE_RASTER_MAPS + "(" +
         "raster_id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, " +
         "raster_path TEXT NOT NULL, " +
-        "FOREIGN KEY(raster_rect) REFERENCES rects(rect_id))";
+        "raster_ne_corner_latitude REAL NOT NULL, " +
+        "raster_ne_corner_longitude REAL NOT NULL, " +
+        "raster_sw_corner_latitude REAL NOT NULL, " +
+        "raster_sw_corner_longitude REAL NOT NULL)";
 
     private static final String CREATE_TABLE_CONTACTS =
         "CREATE TABLE " + TABLE_CONTACTS + "(" +
         "contact_id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, " +
         "contact_name TEXT NOT NULL, " +
         "contact_value TEXT NOT NULL, " +
-        "FOREIGN KEY(contact_rect) REFERENCES rects(rect_id))";
+        "contact_ne_corner_latitude REAL NOT NULL, " +
+        "contact_ne_corner_longitude REAL NOT NULL, " +
+        "contact_sw_corner_latitude REAL NOT NULL, " +
+        "contact_sw_corner_longitude REAL NOT NULL)";
 
     private static final String CREATE_TABLE_WEATHER_FORECASTS =
         "CREATE TABLE " + TABLE_WEATHER_FORECASTS + "(" +
         "weather_id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, " +
-        "weather_start TEXT NOT NULL, " +
-        "weather_end TEXT NOT NULL, " +
+        "weather_start INTEGER NOT NULL, " +
+        "weather_end INTEGER INTEGER NULL, " +
         "weather_condition TEXT NOT NULL, " +
         "weather_temperature INTEGER NOT NULL, " +
-        "FOREIGN KEY(weather_rect) REFERENCES rects(rect_id))";
+        "weather_ne_corner_latitude REAL NOT NULL, " +
+        "weather_ne_corner_longitude REAL NOT NULL, " +
+        "weather_sw_corner_latitude REAL NOT NULL, " +
+        "weather_sw_corner_longitude REAL NOT NULL)";
 
     private static final String CREATE_TABLE_USER_POINTS =
         "CREATE TABLE " + TABLE_USER_POINTS + "(" +
@@ -172,7 +179,6 @@ public class SerleenaDatabase extends SQLiteOpenHelper {
         db.execSQL(CREATE_TABLE_TELEMETRIES);
         db.execSQL(CREATE_TABLE_TELEM_EVENTS_HEART_CHECKP);
         db.execSQL(CREATE_TABLE_TELEM_EVENTS_LOCATION);
-        db.execSQL(CREATE_TABLE_RECTS);
         db.execSQL(CREATE_TABLE_RASTER_MAPS);
         db.execSQL(CREATE_TABLE_CONTACTS);
         db.execSQL(CREATE_TABLE_WEATHER_FORECASTS);
@@ -196,7 +202,6 @@ public class SerleenaDatabase extends SQLiteOpenHelper {
         db.execSQL("DROP TABLE IF EXISTS " + TABLE_TELEMETRIES);
         db.execSQL("DROP TABLE IF EXISTS " + TABLE_TELEM_EVENTS_HEART_CHECKP);
         db.execSQL("DROP TABLE IF EXISTS " + TABLE_TELEM_EVENTS_LOCATION);
-        db.execSQL("DROP TABLE IF EXISTS " + TABLE_RECTS);
         db.execSQL("DROP TABLE IF EXISTS " + TABLE_RASTER_MAPS);
         db.execSQL("DROP TABLE IF EXISTS " + TABLE_CONTACTS);
         db.execSQL("DROP TABLE IF EXISTS " + TABLE_WEATHER_FORECASTS);
