@@ -24,4 +24,9 @@
     <string name="telemetry_image">Pulsante rosso</string>
     <string name="sync_button_text">Sincronizza</string>
 
+    <string name="track_checkpoint_partial">1/5</string>
+    <string name="track_checkpoint_next">5° SE -- 200m</string>
+    <string name="track_time_elapsed">00:43:20</string>
+    <string name="track_ghost_time">00:41:13</string>
+
 </resources>
