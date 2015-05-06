@@ -389,4 +389,20 @@ public class SerleenaSQLiteDataSource implements ISerleenaSQLiteDataSource {
         return list;
     }
 
+    /**
+     * Rappresenta una previsione metereologica in un istante di tempo,
+     * comprensiva di condizione e temperatura previste.
+     */
+    private class SimpleWeather {
+        private WeatherForecastEnum forecast;
+        private int temperature;
+
+        public SimpleWeather(WeatherForecastEnum forecast, int temperature) {
+            this.forecast = forecast;
+            this.temperature = temperature;
+        }
+        public WeatherForecastEnum forecast() { return forecast; }
+        public int temperature() { return temperature; }
+    }
+
 }
