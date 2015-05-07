@@ -118,6 +118,38 @@ public class HeadingManager implements IHeadingManager, SensorEventListener {
     }
 
     /**
+     * Implmentazione di IHeadingManager.attachObserver().
+     *
+     * @param observer IHeadingObserver da registrare.
+     * @param interval Intervallo di tempo, in secondi,
+     *                 ogni qual volta si vuole notificare l'observer.
+     */
+    @Override
+    @TargetApi(19)
+    public void attachObserver(final IHeadingObserver observer, int interval) {
+        Runnable task = new Runnable() {
+            @Override
+            public void run() {
+                notifyObserver(observer);
+            }
+        };
+
+        ScheduledFuture sf = scheduledPool.schedule(task, interval,
+                TimeUnit.SECONDS);
+        observers.put(observer, sf);
+
+        if (observers.size() == 1) {
+            SensorManager sm = (SensorManager)
+                    context.getSystemService(Context.SENSOR_SERVICE);
+            Sensor aSensor = sm.getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
+            Sensor mfSensor = sm.getDefaultSensor(Sensor.TYPE_MAGNETIC_FIELD);
+
+            sm.registerListener(this, aSensor, SensorManager.SENSOR_DELAY_UI);
+            sm.registerListener(this, mfSensor, SensorManager.SENSOR_DELAY_UI);
+        }
+    }
+
+    /**
      * Calcola l'orientamento del dispositivo.
      *
      * Utilizza i dati raw forniti dai sensori accelerometro e campo magnetico
