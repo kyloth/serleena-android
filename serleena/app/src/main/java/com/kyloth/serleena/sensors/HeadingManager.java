@@ -86,6 +86,26 @@ public class HeadingManager implements IHeadingManager, SensorEventListener {
     }
 
     /**
+     * Implementazione di SensorEventListener.onSensorChanged().
+     *
+     * Viene chiamato ogni volta che sono disponibili dati aggiornati dai
+     * sensori a cui l'oggetto si è registrato.
+     *
+     * @param sensorEvent Evento di un sensore.
+     * @see android.hardware.SensorEventListener
+     */
+    @Override
+    public void onSensorChanged(SensorEvent sensorEvent) {
+        if (sensorEvent.sensor.getType() == Sensor.TYPE_ACCELEROMETER)
+            accelerometerValues = sensorEvent.values;
+        else if (sensorEvent.sensor.getType() == Sensor.TYPE_MAGNETIC_FIELD)
+            magneticFieldValues = sensorEvent.values;
+        else return;
+
+        latestOrientation = computeOrientation();
+    }
+
+    /**
      * Calcola l'orientamento del dispositivo.
      *
      * Utilizza i dati raw forniti dai sensori accelerometro e campo magnetico
