@@ -7,7 +7,7 @@
         android:layout_height="118dp"
         android:id="@+id/heart_image"
         android:layout_gravity="center_horizontal|top"
-        android:src="@drawable/heartImage"
+        android:src="@drawable/heart_image"
         android:contentDescription="@string/heartDesc"  />
 
     <TextView

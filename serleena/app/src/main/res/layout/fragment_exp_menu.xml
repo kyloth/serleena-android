@@ -65,7 +65,7 @@
             android:layout_height="61sp"
             android:id="@+id/exp_track_image"
             android:layout_column="2"
-            android:background="@drawable/onOff"
+            android:background="@drawable/on_off"
             android:contentDescription="@string/exp_track_image" />
 
         <TextView

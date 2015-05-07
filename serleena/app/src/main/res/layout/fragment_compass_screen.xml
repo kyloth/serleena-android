@@ -7,7 +7,7 @@
         android:layout_height="106dp"
         android:id="@+id/compass_image"
         android:layout_gravity="center_horizontal|top"
-        android:background="@drawable/Dark_Green_Arrow_Up" />
+        android:background="@drawable/dark_green_arrow_up" />
 
     <TextView
         android:layout_width="wrap_content"
