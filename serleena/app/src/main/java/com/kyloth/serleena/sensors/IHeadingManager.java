@@ -82,6 +82,8 @@ public interface IHeadingManager {
     /**
      * Metodo "notify" basato sull'omonimo metodo della classe "Subject" del
      * Design Pattern "Observer".
+     *
+     * @param observer Oggetto IHeadingObserver da notificare.
      */
-    public void notifyObservers();
+    public void notifyObserver(IHeadingObserver observer);
 }
