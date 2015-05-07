@@ -106,6 +106,18 @@ public class HeadingManager implements IHeadingManager, SensorEventListener {
     }
 
     /**
+     * Implementazione di SensorEventListener.onAccuracyChanged().
+     *
+     * @param sensor Sensore la cui precisione è variata.
+     * @param accuracy Nuovo valore di precisione del sensore.
+     * @see android.hardware.SensorEventListener
+     */
+    @Override
+    public void onAccuracyChanged(Sensor sensor, int accuracy) {
+
+    }
+
+    /**
      * Calcola l'orientamento del dispositivo.
      *
      * Utilizza i dati raw forniti dai sensori accelerometro e campo magnetico
