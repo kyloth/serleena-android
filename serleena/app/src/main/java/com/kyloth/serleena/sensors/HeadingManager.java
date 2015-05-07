@@ -85,4 +85,15 @@ public class HeadingManager implements IHeadingManager, SensorEventListener {
         this.context = context;
     }
 
+    /**
+     * Implementazione del pattern Singleton.
+     *
+     * @return Singola istanza della classe HeadingManager.
+     */
+    public static HeadingManager getInstance(Context context) {
+        if (instance == null)
+            instance = new HeadingManager(context);
+        return instance;
+    }
+
 }
