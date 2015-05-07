@@ -40,7 +40,16 @@
  */
 
 package com.kyloth.serleena.presentation;
+
+/*
+!!! TODO !!!
 import com.kyloth.serleena.common.SyncStatusEnum;
+
+DEFINIRE IL VERO SYNCSTATUSENUM!!!
+!!! TODO !!!
+*/
+
+enum SyncStatusEnum { };
 
 /**
  * Interfaccia della vista per la schermata Sincronizzazione
