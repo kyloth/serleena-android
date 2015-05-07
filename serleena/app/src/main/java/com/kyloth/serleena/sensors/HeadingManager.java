@@ -170,6 +170,16 @@ public class HeadingManager implements IHeadingManager, SensorEventListener {
     }
 
     /**
+     * Implementazione di IHeadingManager.getSingleUpdate().
+     *
+     * @return Orientamento in gradi rispetto ai punti cardinali.
+     */
+    @Override
+    public double getSingleUpdate() {
+        return latestOrientation;
+    }
+
+    /**
      * Calcola l'orientamento del dispositivo.
      *
      * Utilizza i dati raw forniti dai sensori accelerometro e campo magnetico
