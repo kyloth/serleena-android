@@ -150,6 +150,26 @@ public class HeadingManager implements IHeadingManager, SensorEventListener {
     }
 
     /**
+     * Implementazione di IHeadingManager.detachObserver().
+     *
+     * @param observer IHeadingObserver la cui registrazione come "observer" di
+     *                 questo oggetto sarà cancellata.
+     */
+    @Override
+    @TargetApi(19)
+    public void detachObserver(IHeadingObserver observer) {
+        ScheduledFuture sf = observers.get(observer);
+        sf.cancel(true);
+        observers.remove(observer);
+
+        if (observers.size() == 0) {
+            SensorManager sm = (SensorManager)
+                    context.getSystemService(Context.SENSOR_SERVICE);
+            sm.unregisterListener(this);
+        }
+    }
+
+    /**
      * Calcola l'orientamento del dispositivo.
      *
      * Utilizza i dati raw forniti dai sensori accelerometro e campo magnetico
