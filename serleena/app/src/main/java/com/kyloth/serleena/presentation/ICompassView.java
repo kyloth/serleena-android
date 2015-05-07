@@ -58,7 +58,7 @@ public interface ICompassView {
 	 *                modulo 360.0.
 	 * @since 1.0
 	 */
-	void setHeading(float heading);
+	void setHeading(double heading);
 
 	/**
 	 * Lega un presenter alla vista.
