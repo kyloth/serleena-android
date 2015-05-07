@@ -86,6 +86,29 @@ public class HeadingManager implements IHeadingManager, SensorEventListener {
     }
 
     /**
+     * Calcola l'orientamento del dispositivo.
+     *
+     * Utilizza i dati raw forniti dai sensori accelerometro e campo magnetico
+     * per calcolare l'orientamento del dispositivo.
+     *
+     * @return Gradi di rotazione sull'asse azimuth.
+     */
+    @TargetApi(19)
+    private double computeOrientation() {
+        float[] values = new float[3];
+        float[] R = new float[9];
+        SensorManager.getRotationMatrix(R, null, accelerometerValues,
+                magneticFieldValues);
+        SensorManager.getOrientation(R, values);
+
+        values[0] = (float) Math.toDegrees(values[0]); // Azimuth
+        values[1] = (float) Math.toDegrees(values[1]); // Pitch
+        values[2] = (float) Math.toDegrees(values[2]); // Roll
+
+        return values[0];
+    }
+
+    /**
      * Implementazione del pattern Singleton.
      *
      * @return Singola istanza della classe HeadingManager.
