@@ -74,4 +74,15 @@ public class HeadingManager implements IHeadingManager, SensorEventListener {
     private ScheduledThreadPoolExecutor scheduledPool;
     private Context context;
 
+    /**
+     * Crea un nuovo oggetto HeadingManager.
+     *
+     * @param context Oggetto Context in cui viene eseguito l'HeadingManager.
+     */
+    public HeadingManager(Context context) {
+        observers = new HashMap<IHeadingObserver, ScheduledFuture>();
+        latestOrientation = 0;
+        this.context = context;
+    }
+
 }
