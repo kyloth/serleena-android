@@ -180,6 +180,16 @@ public class HeadingManager implements IHeadingManager, SensorEventListener {
     }
 
     /**
+     * Implementazione di IHeadingManager.notifyObserver().
+     *
+     * @param observer Oggetto IHeadingObserver da notificare.
+     */
+    @Override
+    public void notifyObserver(IHeadingObserver observer) {
+        observer.onHeadingUpdate(latestOrientation);
+    }
+
+    /**
      * Calcola l'orientamento del dispositivo.
      *
      * Utilizza i dati raw forniti dai sensori accelerometro e campo magnetico
