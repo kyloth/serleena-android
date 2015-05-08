@@ -63,4 +63,9 @@ public class WakeupManager extends BroadcastReceiver implements IWakeupManager {
     private Context context;
     private WakeupSchedule schedule;
 
+    public WakeupManager(Context context) {
+        this.context = context;
+        this.schedule = new WakeupSchedule();
+    }
+
 }
