@@ -45,6 +45,8 @@ package com.kyloth.serleena.persistence.sqlite;
 import com.kyloth.serleena.common.UserPoint;
 import com.kyloth.serleena.persistence.*;
 
+import java.util.ArrayList;
+
 /**
  * Implementazione di IExperienceStorage per la persistenza su database
  * SQLite.
@@ -77,8 +79,10 @@ class SQLiteDAOExperience implements IExperienceStorage
      * @return Insieme enumerabile di Percorsi.
      */
     public Iterable<ITrackStorage> getTracks() {
-        /*return dataSource.getTracks(this);*/
-        throw new UnsupportedOperationException();
+        ArrayList<ITrackStorage> list = new ArrayList<ITrackStorage>();
+        for (SQLiteDAOTrack t : dataSource.getTracks(this))
+            list.add(t);
+        return list;
     }
 
     /**
@@ -87,8 +91,7 @@ class SQLiteDAOExperience implements IExperienceStorage
      * @param p     Punto geografico associato al punto utente.
      */
     public void addUserPoint(UserPoint p) {
-        /*dataSource.addUserPoint(this, p);*/
-        throw new UnsupportedOperationException();
+        dataSource.addUserPoint(this, p);
     }
 
     /**
