@@ -93,4 +93,17 @@ public class WakeupManager extends BroadcastReceiver implements IWakeupManager {
         schedule.add(uuid, observer, alarmIntent);
     }
 
+    /**
+     * Implementa IWakeupManager.detachObserver().
+     *
+     * @param observer IWakeupObserver la cui registrazione come "observer" di
+     */
+    @Override
+    public void detachObserver(IWakeupObserver observer) {
+        AlarmManager alarmManager =
+                (AlarmManager) context.getSystemService (Context.ALARM_SERVICE);
+        alarmManager.cancel(schedule.getIntent(observer));
+        schedule.remove(observer);
+    }
+
 }
