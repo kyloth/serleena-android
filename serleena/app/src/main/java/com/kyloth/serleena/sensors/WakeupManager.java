@@ -106,4 +106,14 @@ public class WakeupManager extends BroadcastReceiver implements IWakeupManager {
         schedule.remove(observer);
     }
 
+    /**
+     * Implementa IWakeupManager.notifyObserver().
+     *
+     * @param observer Oggetto "observer" da notificare.
+     */
+    @Override
+    public void notifyObserver(IWakeupObserver observer) {
+        observer.onWakeup();
+    }
+
 }
