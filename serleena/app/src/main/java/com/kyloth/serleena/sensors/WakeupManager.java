@@ -60,10 +60,12 @@ import java.util.UUID;
  */
 public class WakeupManager extends BroadcastReceiver implements IWakeupManager {
 
+    private static WakeupManager instance;
+
     private Context context;
     private WakeupSchedule schedule;
 
-    public WakeupManager(Context context) {
+    private WakeupManager(Context context) {
         this.context = context;
         this.schedule = new WakeupSchedule();
     }
@@ -126,6 +128,20 @@ public class WakeupManager extends BroadcastReceiver implements IWakeupManager {
     public void onReceive(Context context, Intent intent) {
         String uuid = intent.getStringExtra("ALARM_UUID");
         notifyObserver(schedule.getObserver(uuid));
+    }
+
+    /**
+     * Restituisce la singola istanza della classe.
+     *
+     * Implementa il pattern Singleton.
+     *
+     * @param context Contesto dell'applicazione.
+     * @return Istanza della classe.
+     */
+    public static WakeupManager getInstance(Context context) {
+        if (instance == null)
+            instance = new WakeupManager(context);
+        return instance;
     }
 
 }
