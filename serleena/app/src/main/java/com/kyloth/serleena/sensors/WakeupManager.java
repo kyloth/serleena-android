@@ -116,4 +116,16 @@ public class WakeupManager extends BroadcastReceiver implements IWakeupManager {
         observer.onWakeup();
     }
 
+    /**
+     * Ridefinisce BroadcastReceiver.onReceive().
+     *
+     * @param context Contesto dell'applicazione.
+     * @param intent Intent oggetto dell'evento.
+     */
+    @Override
+    public void onReceive(Context context, Intent intent) {
+        String uuid = intent.getStringExtra("ALARM_UUID");
+        notifyObserver(schedule.getObserver(uuid));
+    }
+
 }
