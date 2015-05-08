@@ -74,13 +74,25 @@ public class HeadingManager implements IHeadingManager, SensorEventListener {
     private Map<IHeadingObserver, ScheduledFuture> observers;
     private ScheduledThreadPoolExecutor scheduledPool;
     private Context context;
+    private Sensor magnetometer;
+    private Sensor accelerometer;
 
     /**
      * Crea un nuovo oggetto HeadingManager.
      *
      * @param context Oggetto Context in cui viene eseguito l'HeadingManager.
      */
-    public HeadingManager(Context context) {
+    public HeadingManager(Context context) throws SensorNotAvailableException {
+        SensorManager sm = (SensorManager)
+                context.getSystemService(Context.SENSOR_SERVICE);
+        accelerometer = sm.getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
+        magnetometer = sm.getDefaultSensor(Sensor.TYPE_MAGNETIC_FIELD);
+
+        if (accelerometer == null)
+            throw new SensorNotAvailableException("accelerometer");
+        if (magnetometer == null)
+            throw new SensorNotAvailableException("magnetometer");
+
         observers = new HashMap<IHeadingObserver, ScheduledFuture>();
         latestOrientation = 0;
         this.context = context;
@@ -154,11 +166,10 @@ public class HeadingManager implements IHeadingManager, SensorEventListener {
         if (observers.size() == 1) {
             SensorManager sm = (SensorManager)
                     context.getSystemService(Context.SENSOR_SERVICE);
-            Sensor aSensor = sm.getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
-            Sensor mfSensor = sm.getDefaultSensor(Sensor.TYPE_MAGNETIC_FIELD);
-
-            sm.registerListener(this, aSensor, SensorManager.SENSOR_DELAY_UI);
-            sm.registerListener(this, mfSensor, SensorManager.SENSOR_DELAY_UI);
+            sm.registerListener(this, accelerometer,
+                    SensorManager.SENSOR_DELAY_UI);
+            sm.registerListener(this, magnetometer,
+                    SensorManager.SENSOR_DELAY_UI);
         }
     }
 
@@ -230,7 +241,8 @@ public class HeadingManager implements IHeadingManager, SensorEventListener {
      *
      * @return Singola istanza della classe HeadingManager.
      */
-    public static HeadingManager getInstance(Context context) {
+    public static HeadingManager getInstance(Context context)
+            throws SensorNotAvailableException {
         if (instance == null)
             instance = new HeadingManager(context);
         return instance;
