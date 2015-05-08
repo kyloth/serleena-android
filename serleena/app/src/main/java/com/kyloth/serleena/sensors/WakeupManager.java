@@ -60,4 +60,7 @@ import java.util.UUID;
  */
 public class WakeupManager extends BroadcastReceiver implements IWakeupManager {
 
+    private Context context;
+    private WakeupSchedule schedule;
+
 }
