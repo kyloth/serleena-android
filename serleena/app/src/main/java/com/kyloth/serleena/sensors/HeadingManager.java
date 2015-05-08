@@ -82,7 +82,7 @@ public class HeadingManager implements IHeadingManager, SensorEventListener {
      *
      * @param context Oggetto Context in cui viene eseguito l'HeadingManager.
      */
-    public HeadingManager(Context context) throws SensorNotAvailableException {
+    private HeadingManager(Context context) throws SensorNotAvailableException {
         SensorManager sm = (SensorManager)
                 context.getSystemService(Context.SENSOR_SERVICE);
         accelerometer = sm.getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
