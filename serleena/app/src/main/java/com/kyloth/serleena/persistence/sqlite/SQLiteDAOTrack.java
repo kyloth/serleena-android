@@ -46,6 +46,8 @@ import com.kyloth.serleena.common.TelemetryEvent;
 import com.kyloth.serleena.persistence.ITelemetryStorage;
 import com.kyloth.serleena.persistence.ITrackStorage;
 
+import java.util.ArrayList;
+
 /**
  * Implementazione di persistence.ITrackStorage per la persistenza su
  * database SQLite integrato in Android.
@@ -82,7 +84,10 @@ public class SQLiteDAOTrack implements ITrackStorage {
      */
     @Override
     public Iterable<ITelemetryStorage> getTelemetries() {
-        return null;
+        ArrayList<ITelemetryStorage> list = new ArrayList<ITelemetryStorage>();
+        for (SQLiteDAOTelemetry t : dataSource.getTelemetries(this))
+            list.add(t);
+        return list;
     }
 
     /**
