@@ -68,4 +68,29 @@ public class WakeupManager extends BroadcastReceiver implements IWakeupManager {
         this.schedule = new WakeupSchedule();
     }
 
+    /**
+     * Implementa IWakeupManager.attachObserver().
+     *
+     * @param observer IWakeupObserver da registrare.
+     * @param interval Intervallo di tempo per la notifica all'oggetto
+     *                 "observer".
+     */
+    @Override
+    public void attachObserver(IWakeupObserver observer, int interval) {
+        int alarmType = AlarmManager.RTC_WAKEUP;
+        int millis = interval * 1000;
+        String uuid = UUID.randomUUID().toString();
+
+        AlarmManager alarmManager =
+                (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
+        Intent intentToFire = new Intent(context, WakeupManager.class);
+        intentToFire.putExtra("ALARM_UUID", uuid);
+
+        PendingIntent alarmIntent =
+                PendingIntent.getBroadcast(context, 0, intentToFire, 0);
+        alarmManager.setRepeating(alarmType, millis, millis, alarmIntent);
+
+        schedule.add(uuid, observer, alarmIntent);
+    }
+
 }
