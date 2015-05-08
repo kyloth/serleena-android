@@ -48,6 +48,7 @@ import android.hardware.Sensor;
 import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
+import android.os.AsyncTask;
 
 import java.util.Map;
 import java.util.HashMap;
@@ -88,8 +89,9 @@ public class HeadingManager implements IHeadingManager, SensorEventListener {
     /**
      * Implementazione di SensorEventListener.onSensorChanged().
      *
-     * Viene chiamato ogni volta che sono disponibili dati aggiornati dai
-     * sensori a cui l'oggetto si è registrato.
+     * Il metodo viene chiamato ogni volta che sono disponibili dati aggiornati
+     * dai sensori a cui l'oggetto si è registrato. Questi dati vengono
+     * prelevati dai sensori e elaborati in modo asincrono.
      *
      * @param sensorEvent Evento di un sensore.
      * @see android.hardware.SensorEventListener
@@ -102,7 +104,18 @@ public class HeadingManager implements IHeadingManager, SensorEventListener {
             magneticFieldValues = sensorEvent.values;
         else return;
 
-        latestOrientation = computeOrientation();
+        AsyncTask<Void, Void, Double> t = new AsyncTask<Void, Void, Double>() {
+            @Override
+            protected Double doInBackground(Void... params) {
+                return computeOrientation();
+            }
+            @Override
+            protected void onPostExecute(Double result) {
+                latestOrientation = result;
+            }
+        };
+
+        t.execute();
     }
 
     /**
