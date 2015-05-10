@@ -153,7 +153,7 @@ public class SerleenaDatabase extends SQLiteOpenHelper {
         "userpoint_y REAL NOT NULL, " +
         "userpoint_experience INTEGER NOT NULL, " +
         "FOREIGN KEY(userpoint_experience) REFERENCES " +
-        "experiences(experience_id)";
+        "experiences(experience_id))";
 
     /**
      * Crea un oggetto SerleenaDatabase.
