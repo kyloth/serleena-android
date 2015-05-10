@@ -38,6 +38,7 @@
  * Version  Programmer          Date        Changes
  * 1.0.0    Filippo Sestini     2015-05-05  Creazione file e scrittura di codice
  *                                          e documentazione in Javadoc.
+ * 1.0.1    Tobia Tesan         2015-05-06  Aggiunti ON DELETE
  */
 
 package com.kyloth.serleena.persistence.sqlite;
@@ -89,13 +90,13 @@ public class SerleenaDatabase extends SQLiteOpenHelper {
         "track_id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, " +
         "track_name TEXT NOT NULL, " +
         "track_experience INTEGER NOT NULL, " +
-        "FOREIGN KEY(track_experience) REFERENCES experiences(experience_id))";
+        "FOREIGN KEY(track_experience) REFERENCES " + TABLE_EXPERIENCES + " (experience_id) ON DELETE CASCADE)";
 
     private static final String CREATE_TABLE_TELEMETRIES =
         "CREATE TABLE " + TABLE_TELEMETRIES + "(" +
         "telem_id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, " +
         "telem_track INTEGER NOT NULL, " +
-        "FOREIGN KEY(telem_track) REFERENCES tracks(track_id))";
+        "FOREIGN KEY(telem_track) REFERENCES " + TABLE_TRACKS + "(track_id) ON DELETE CASCADE)";
 
     private static final String CREATE_TABLE_TELEM_EVENTS_LOCATION =
         "CREATE TABLE " + TABLE_TELEM_EVENTS_LOCATION + "(" +
@@ -104,7 +105,7 @@ public class SerleenaDatabase extends SQLiteOpenHelper {
         "eventl_latitude REAL NOT NULL, " +
         "eventl_longitude REAL NOT NULL, " +
         "eventl_telem INTEGER NOT NULL, " +
-        "FOREIGN KEY(eventl_telem) REFERENCES telemetries(telem_id))";
+        "FOREIGN KEY(eventl_telem) REFERENCES " + TABLE_TELEMETRIES + "(telem_id) ON DELETE CASCADE)";
 
     private static final String CREATE_TABLE_TELEM_EVENTS_HEART_CHECKP =
         "CREATE TABLE " + TABLE_TELEM_EVENTS_HEART_CHECKP + "(" +
@@ -113,7 +114,7 @@ public class SerleenaDatabase extends SQLiteOpenHelper {
         "eventhc_value INTEGER NOT NULL, " +
         "eventhc_type TEXT NOT NULL, " +
         "eventhc_telem INTEGER NOT NULL, " +
-        "FOREIGN KEY(eventhc_telem) REFERENCES telemetries(telem_id))";
+        "FOREIGN KEY(eventhc_telem) REFERENCES " + TABLE_TELEMETRIES + "(telem_id) ON DELETE CASCADE)";
 
     private static final String CREATE_TABLE_RASTER_MAPS =
         "CREATE TABLE " + TABLE_RASTER_MAPS + "(" +
@@ -152,8 +153,8 @@ public class SerleenaDatabase extends SQLiteOpenHelper {
         "userpoint_x REAL NOT NULL, " +
         "userpoint_y REAL NOT NULL, " +
         "userpoint_experience INTEGER NOT NULL, " +
-        "FOREIGN KEY(userpoint_experience) REFERENCES " +
-        "experiences(experience_id))";
+        "FOREIGN KEY(userpoint_experience) REFERENCES " + TABLE_EXPERIENCES +
+        "(experience_id) ON DELETE CASCADE)";
 
     /**
      * Crea un oggetto SerleenaDatabase.
