@@ -39,6 +39,7 @@
  * 1.0.0    Filippo Sestini     2015-05-05  Creazione file e scrittura di codice
  *                                          e documentazione in Javadoc.
  * 1.0.1    Tobia Tesan         2015-05-06  Aggiunti ON DELETE
+ * 1.0.2    Tobia Tesan         2015-05-06  Aggiunto onConfigure.
  */
 
 package com.kyloth.serleena.persistence.sqlite;
@@ -189,6 +190,20 @@ public class SerleenaDatabase extends SQLiteOpenHelper {
         db.execSQL(CREATE_TABLE_CONTACTS);
         db.execSQL(CREATE_TABLE_WEATHER_FORECASTS);
         db.execSQL(CREATE_TABLE_USER_POINTS);
+    }
+
+    /**
+     * Configura la connessione al database.
+     *
+     * E' chiamato prima di onCreate, onUpgrade, etc.
+     *
+     * @author Tobia Tesan <tobia.tesan@gmail.com>
+     * @param db Il database.
+     * @since 1.0.2
+     */
+    @Override
+    public void onConfigure(SQLiteDatabase db) {
+        db.setForeignKeyConstraintsEnabled(true);
     }
 
     /**
