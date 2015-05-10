@@ -88,11 +88,13 @@ public class SerleenaDatabase extends SQLiteOpenHelper {
         "CREATE TABLE " + TABLE_TRACKS + "(" +
         "track_id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, " +
         "track_name TEXT NOT NULL, " +
+        "track_experience INTEGER NOT NULL, " +
         "FOREIGN KEY(track_experience) REFERENCES experiences(experience_id))";
 
     private static final String CREATE_TABLE_TELEMETRIES =
         "CREATE TABLE " + TABLE_TELEMETRIES + "(" +
         "telem_id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, " +
+        "telem_track INTEGER NOT NULL, " +
         "FOREIGN KEY(telem_track) REFERENCES tracks(track_id))";
 
     private static final String CREATE_TABLE_TELEM_EVENTS_LOCATION =
@@ -101,6 +103,7 @@ public class SerleenaDatabase extends SQLiteOpenHelper {
         "eventl_timestamp TEXT NOT NULL, " +
         "eventl_latitude REAL NOT NULL, " +
         "eventl_longitude REAL NOT NULL, " +
+        "eventl_telem INTEGER NOT NULL, " +
         "FOREIGN KEY(eventl_telem) REFERENCES telemetries(telem_id))";
 
     private static final String CREATE_TABLE_TELEM_EVENTS_HEART_CHECKP =
@@ -109,6 +112,7 @@ public class SerleenaDatabase extends SQLiteOpenHelper {
         "eventhc_timestamp TEXT NOT NULL, " +
         "eventhc_value INTEGER NOT NULL, " +
         "eventhc_type TEXT NOT NULL, " +
+        "eventhc_telem INTEGER NOT NULL, " +
         "FOREIGN KEY(eventhc_telem) REFERENCES telemetries(telem_id))";
 
     private static final String CREATE_TABLE_RASTER_MAPS =
@@ -147,6 +151,7 @@ public class SerleenaDatabase extends SQLiteOpenHelper {
         "userpoint_id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL," +
         "userpoint_x REAL NOT NULL, " +
         "userpoint_y REAL NOT NULL, " +
+        "userpoint_experience INTEGER NOT NULL, " +
         "FOREIGN KEY(userpoint_experience) REFERENCES " +
         "experiences(experience_id)";
 
