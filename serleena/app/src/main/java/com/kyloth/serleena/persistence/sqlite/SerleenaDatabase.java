@@ -40,6 +40,8 @@
  *                                          e documentazione in Javadoc.
  * 1.0.1    Tobia Tesan         2015-05-06  Aggiunti ON DELETE
  * 1.0.2    Tobia Tesan         2015-05-06  Aggiunto onConfigure.
+ * 1.0.3    Filippo Sestini     2015-05-11  Aggiunta tabella 'checkpoints' al
+ *                                          database.
  */
 
 package com.kyloth.serleena.persistence.sqlite;
@@ -73,6 +75,7 @@ public class SerleenaDatabase extends SQLiteOpenHelper {
     public static final String TABLE_CONTACTS = "contacts";
     public static final String TABLE_WEATHER_FORECASTS = "weather_forecasts";
     public static final String TABLE_USER_POINTS = "user_points";
+    public static final String TABLE_CHECKPOINTS = "checkpoints";
     private static final int DATABASE_VERSION = 1;
 
     public static final String EVENT_TYPE_HEARTRATE = "event_heartrate";
@@ -157,6 +160,15 @@ public class SerleenaDatabase extends SQLiteOpenHelper {
         "FOREIGN KEY(userpoint_experience) REFERENCES " + TABLE_EXPERIENCES +
         "(experience_id) ON DELETE CASCADE)";
 
+    private static final String CREATE_TABLE_CHECKPOINTS =
+        "CREATE TABLE " + TABLE_CHECKPOINTS + "(" +
+        "checkpoint_id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, " +
+        "checkpoint_num INTEGER NOT NULL, " +
+        "checkpoint_latitude REAL NOT NULL, " +
+        "checkpoint_longitude REAL NOT NULL, " +
+        "checkpoint_track INTEGER NOT NULL, " +
+        "FOREIGN KEY(checkpoint_track) REFERENCES " + TABLE_TRACKS + "(track_id) ON DELETE CASCADE)";
+
     /**
      * Crea un oggetto SerleenaDatabase.
      *
@@ -190,6 +202,7 @@ public class SerleenaDatabase extends SQLiteOpenHelper {
         db.execSQL(CREATE_TABLE_CONTACTS);
         db.execSQL(CREATE_TABLE_WEATHER_FORECASTS);
         db.execSQL(CREATE_TABLE_USER_POINTS);
+        db.execSQL(CREATE_TABLE_CHECKPOINTS);
     }
 
     /**
@@ -227,6 +240,7 @@ public class SerleenaDatabase extends SQLiteOpenHelper {
         db.execSQL("DROP TABLE IF EXISTS " + TABLE_CONTACTS);
         db.execSQL("DROP TABLE IF EXISTS " + TABLE_WEATHER_FORECASTS);
         db.execSQL("DROP TABLE IF EXISTS " + TABLE_USER_POINTS);
+        db.execSQL("DROP TABLE IF EXISTS " + TABLE_CHECKPOINTS);
 
         onCreate(db);
     }
