@@ -102,7 +102,8 @@ public class WakeupManager extends BroadcastReceiver implements IWakeupManager {
 
         PendingIntent alarmIntent =
                 PendingIntent.getBroadcast(context, 0, intentToFire, 0);
-        alarmManager.setRepeating(alarmType, millis, millis, alarmIntent);
+        alarmManager.setInexactRepeating(alarmType, millis, millis,
+                alarmIntent);
 
         schedule.add(uuid, observer, alarmIntent);
     }
