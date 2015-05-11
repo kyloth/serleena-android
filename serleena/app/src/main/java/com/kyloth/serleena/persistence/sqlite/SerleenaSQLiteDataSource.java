@@ -114,7 +114,8 @@ public class SerleenaSQLiteDataSource implements ISerleenaSQLiteDataSource {
 
         while (result.moveToNext()) {
             int trackId = result.getInt(columnIndex);
-            list.add(new SQLiteDAOTrack(trackId, this));
+            list.add(new SQLiteDAOTrack(getCheckpoints(trackId) ,trackId,
+                    this));
         }
 
         result.close();
