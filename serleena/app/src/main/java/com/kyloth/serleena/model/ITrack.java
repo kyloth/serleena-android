@@ -41,6 +41,8 @@
 
 package com.kyloth.serleena.model;
 
+import com.kyloth.serleena.common.Checkpoint;
+import com.kyloth.serleena.common.ImmutableList;
 import com.kyloth.serleena.common.TelemetryEvent;
 
 /**
@@ -67,4 +69,12 @@ public interface ITrack {
 	 * @since   1.0
 	 */
 	void createTelemetry(Iterable<TelemetryEvent> events);
+
+    /**
+     * Restituisce i Checkpoint che compongono il percorso.
+     *
+     * @return Insieme di Checkpoint.
+     */
+    public ImmutableList<Checkpoint> getCheckpoints();
+
 }
