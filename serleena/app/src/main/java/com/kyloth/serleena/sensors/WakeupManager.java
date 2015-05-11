@@ -67,6 +67,16 @@ public class WakeupManager extends BroadcastReceiver implements IWakeupManager {
     private Context context;
     private WakeupSchedule schedule;
 
+    /**
+     * Crea un oggetto WakeupManager.
+     *
+     * Il costruttore è privato per realizzare correttamente il pattern
+     * Singleton, forzando l'accesso alla sola istanza esposta dai
+     * metodi Singleton e impedendo al codice client di costruire istanze
+     * arbitrariamente.
+     *
+     * @param context Contesto dell'applicazione.
+     */
     private WakeupManager(Context context) {
         this.context = context;
         this.schedule = new WakeupSchedule();
