@@ -81,9 +81,6 @@ public class SerleenaDatabase extends SQLiteOpenHelper {
     public static final String EVENT_TYPE_HEARTRATE = "event_heartrate";
     public static final String EVENT_TYPE_CHECKPOINT = "event_checkpoint";
 
-    public static final SimpleDateFormat DATE_FORMAT =
-            new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
-
     private static final String CREATE_TABLE_EXPERIENCES =
         "CREATE TABLE " + TABLE_EXPERIENCES + "(" +
         "experience_id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, " +
@@ -105,7 +102,7 @@ public class SerleenaDatabase extends SQLiteOpenHelper {
     private static final String CREATE_TABLE_TELEM_EVENTS_LOCATION =
         "CREATE TABLE " + TABLE_TELEM_EVENTS_LOCATION + "(" +
         "eventl_id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, " +
-        "eventl_timestamp TEXT NOT NULL, " +
+        "eventl_timestamp INTEGER NOT NULL, " +
         "eventl_latitude REAL NOT NULL, " +
         "eventl_longitude REAL NOT NULL, " +
         "eventl_telem INTEGER NOT NULL, " +
@@ -114,7 +111,7 @@ public class SerleenaDatabase extends SQLiteOpenHelper {
     private static final String CREATE_TABLE_TELEM_EVENTS_HEART_CHECKP =
         "CREATE TABLE " + TABLE_TELEM_EVENTS_HEART_CHECKP + "(" +
         "eventhc_id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, " +
-        "eventhc_timestamp TEXT NOT NULL, " +
+        "eventhc_timestamp INTEGER NOT NULL, " +
         "eventhc_value INTEGER NOT NULL, " +
         "eventhc_type TEXT NOT NULL, " +
         "eventhc_telem INTEGER NOT NULL, " +
