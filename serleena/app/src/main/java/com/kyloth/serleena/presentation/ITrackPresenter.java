@@ -57,12 +57,4 @@ public interface ITrackPresenter extends IPresenter {
 	 * @since 1.0
 	 */
 	void advanceCheckpoint();
-
-	/**
-	 * Richiede al Model di abbandonare il percorso in fase di
-	 * attraversamento.
-	 *
-	 * @since 1.0
-	 */
-	void abortTrack();
 }
