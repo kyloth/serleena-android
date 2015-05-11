@@ -75,13 +75,15 @@ public interface IHeadingManager {
      * Permette di ottenere un aggiornamento dei dati di orientamento su
      * richiesta esplicita.
      *
-     * @return Ritorna un valore double rappresentante l'orientamento rispetto
-     *         ai punti cardinali.
+     * @return Orientamento in gradi rispetto ai punti cardinali.
      */
     public double getSingleUpdate();
+
     /**
      * Metodo "notify" basato sull'omonimo metodo della classe "Subject" del
      * Design Pattern "Observer".
+     *
+     * @param observer Oggetto IHeadingObserver da notificare.
      */
-    public void notifyObservers();
+    public void notifyObserver(IHeadingObserver observer);
 }
