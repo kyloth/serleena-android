@@ -42,6 +42,8 @@
 
 package com.kyloth.serleena.persistence;
 
+import com.kyloth.serleena.common.Checkpoint;
+import com.kyloth.serleena.common.ImmutableList;
 import com.kyloth.serleena.common.TelemetryEvent;
 
 /**
@@ -68,4 +70,12 @@ public interface ITrackStorage {
      * @return Insieme enumerabile di Tracciamenti.
      */
     public Iterable<ITelemetryStorage> getTelemetries();
+
+    /**
+     * Restituisce i Checkpoint che compongono il percorso.
+     *
+     * @return Insieme di Checkpoint.
+     */
+    public ImmutableList<Checkpoint> getCheckpoints();
+
 }
