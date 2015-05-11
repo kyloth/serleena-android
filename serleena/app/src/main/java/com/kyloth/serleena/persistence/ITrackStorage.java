@@ -54,7 +54,18 @@ import com.kyloth.serleena.common.TelemetryEvent;
  */
 public interface ITrackStorage {
 
+    /**
+     * Aggiunge un Tracciamento al Percorso, costruendolo da un elenco di
+     * eventi di Tracciamento.
+     *
+     * @param events Elenco di eventi di Tracciamento.
+     */
     public void createTelemetry(Iterable<TelemetryEvent> events);
 
+    /**
+     * Restituisce i Tracciamenti che compongono il Percorso.
+     *
+     * @return Insieme enumerabile di Tracciamenti.
+     */
     public Iterable<ITelemetryStorage> getTelemetries();
 }
