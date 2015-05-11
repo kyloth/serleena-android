@@ -74,4 +74,12 @@ public interface IExperience {
 	 * @since   1.0
 	 */
 	void addUserPoints(UserPoint point);
+
+    /**
+     * Restituisce il nome dell'esperienza.
+     *
+     * @return Nome dell'esperienza.
+     */
+    public String getName();
+
 }
