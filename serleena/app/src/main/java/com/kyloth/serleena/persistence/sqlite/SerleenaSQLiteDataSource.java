@@ -50,11 +50,14 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.media.Image;
 
+import com.kyloth.serleena.common.Checkpoint;
 import com.kyloth.serleena.common.CheckpointReachedTelemetryEvent;
 import com.kyloth.serleena.common.EmergencyContact;
 import com.kyloth.serleena.common.GeoPoint;
 import com.kyloth.serleena.common.HeartRateTelemetryEvent;
 import com.kyloth.serleena.common.IQuadrant;
+import com.kyloth.serleena.common.ImmutableList;
+import com.kyloth.serleena.common.ListAdapter;
 import com.kyloth.serleena.common.LocationTelemetryEvent;
 import com.kyloth.serleena.common.TelemetryEvent;
 import com.kyloth.serleena.common.UserPoint;
@@ -116,6 +119,35 @@ public class SerleenaSQLiteDataSource implements ISerleenaSQLiteDataSource {
 
         result.close();
         return list;
+    }
+
+    /**
+     * Restituisce i checkpoint di un Percorso.
+     *
+     * @param trackId ID del percorso di cui si vogliono ottenere i Checkpoint.
+     * @return Elenco di checkpoint del Percorso specificato.
+     */
+    private ImmutableList<Checkpoint> getCheckpoints(int trackId) {
+        SQLiteDatabase db = dbHelper.getReadableDatabase();
+        String where = "checkpoint_track = " + trackId;
+        String orderBy = "checkpoint_num ASC";
+
+        Cursor result = db.query(SerleenaDatabase.TABLE_CHECKPOINTS,
+                new String[] { "checkpoint_latitude", "checkpoint_longitude"},
+                where, null, null, null, orderBy);
+
+        ArrayList<Checkpoint> list = new ArrayList<Checkpoint>();
+        int latIndex = result.getColumnIndexOrThrow("checkpoint_latitude");
+        int lonIndex = result.getColumnIndexOrThrow("checkpoint_longitude");
+
+        while (result.moveToNext()) {
+            double lat = result.getDouble(latIndex);
+            double lon = result.getDouble(lonIndex);
+            list.add(new Checkpoint(lat, lon));
+        }
+
+        result.close();
+        return new ListAdapter<Checkpoint>(list);
     }
 
     /**
