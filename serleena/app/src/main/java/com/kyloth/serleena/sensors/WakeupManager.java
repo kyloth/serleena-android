@@ -60,6 +60,8 @@ import java.util.UUID;
  */
 public class WakeupManager extends BroadcastReceiver implements IWakeupManager {
 
+    private static final String ALARM_UUID = "ALARM_UUID";
+
     private static WakeupManager instance;
 
     private Context context;
@@ -86,7 +88,7 @@ public class WakeupManager extends BroadcastReceiver implements IWakeupManager {
         AlarmManager alarmManager =
                 (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
         Intent intentToFire = new Intent(context, WakeupManager.class);
-        intentToFire.putExtra("ALARM_UUID", uuid);
+        intentToFire.putExtra(ALARM_UUID, uuid);
 
         PendingIntent alarmIntent =
                 PendingIntent.getBroadcast(context, 0, intentToFire, 0);
@@ -126,7 +128,7 @@ public class WakeupManager extends BroadcastReceiver implements IWakeupManager {
      */
     @Override
     public void onReceive(Context context, Intent intent) {
-        String uuid = intent.getStringExtra("ALARM_UUID");
+        String uuid = intent.getStringExtra(ALARM_UUID);
         notifyObserver(schedule.getObserver(uuid));
     }
 
