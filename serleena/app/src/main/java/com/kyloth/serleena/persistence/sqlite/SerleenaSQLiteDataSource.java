@@ -210,7 +210,6 @@ public class SerleenaSQLiteDataSource implements ISerleenaSQLiteDataSource {
     public void createTelemetry(Iterable<TelemetryEvent> events,
                                 SQLiteDAOTrack track) {
         SQLiteDatabase db = dbHelper.getWritableDatabase();
-        SimpleDateFormat format = SerleenaDatabase.DATE_FORMAT;
 
         ContentValues values = new ContentValues();
         values.put("telem_track", track.id());
@@ -224,7 +223,7 @@ public class SerleenaSQLiteDataSource implements ISerleenaSQLiteDataSource {
 
                 LocationTelemetryEvent eventl = (LocationTelemetryEvent) event;
                 values.put("eventl_timestamp",
-                        format.format(eventl.timestamp()));
+                    new Double(eventl.timestamp().getTime() / 1000).intValue());
                 values.put("eventl_latitude", eventl.location().latitude());
                 values.put("eventl_longitude", eventl.location().longitude());
                 values.put("eventl_telem", newId);
@@ -235,7 +234,7 @@ public class SerleenaSQLiteDataSource implements ISerleenaSQLiteDataSource {
                 HeartRateTelemetryEvent eventh =
                         (HeartRateTelemetryEvent) event;
                 values.put("eventhc_timestamp",
-                        format.format(eventh.timestamp()));
+                        new Double(eventh.timestamp().getTime() / 1000).intValue());
                 values.put("eventhc_value", eventh.heartRate());
                 values.put("eventhc_type", SerleenaDatabase.EVENT_TYPE_HEARTRATE);
                 values.put("eventhc_telem", newId);
@@ -247,7 +246,7 @@ public class SerleenaSQLiteDataSource implements ISerleenaSQLiteDataSource {
                 CheckpointReachedTelemetryEvent eventc =
                         (CheckpointReachedTelemetryEvent) event;
                 values.put("eventhc_timestamp",
-                        format.format(eventc.timestamp()));
+                    new Double(eventc.timestamp().getTime() / 1000).intValue());
                 values.put("eventhc_value", eventc.checkpointNumber());
                 values.put("eventhc_type", SerleenaDatabase.EVENT_TYPE_CHECKPOINT);
                 values.put("eventhc_telem", newId);
@@ -416,7 +415,6 @@ public class SerleenaSQLiteDataSource implements ISerleenaSQLiteDataSource {
      */
     @Override
     public Iterable<EmergencyContact> getContacts(GeoPoint location) {
-        SimpleDateFormat parser = SerleenaDatabase.DATE_FORMAT;
         SQLiteDatabase db = dbHelper.getReadableDatabase();
         ArrayList<EmergencyContact> list = new ArrayList<EmergencyContact>();
 
@@ -453,7 +451,6 @@ public class SerleenaSQLiteDataSource implements ISerleenaSQLiteDataSource {
      * @return Insieme enumerabile di eventi di Tracciamento.
      */
     private Iterable<TelemetryEvent> getTelemetryEvents(int id) {
-        SimpleDateFormat parser = SerleenaDatabase.DATE_FORMAT;
         SQLiteDatabase db = dbHelper.getReadableDatabase();
         ArrayList<TelemetryEvent> list = new ArrayList<TelemetryEvent>();
 
@@ -467,8 +464,7 @@ public class SerleenaSQLiteDataSource implements ISerleenaSQLiteDataSource {
         int typeIndex = result.getColumnIndexOrThrow("eventhc_type");
 
         while (result.moveToNext()) {
-            Date d = parser.parse(result.getString(timestampIndex),
-                    new ParsePosition(0));
+            Date d = new Date(result.getInt(timestampIndex) * 1000);
             int value = Integer.parseInt(result.getString(valueIndex));
             String type = result.getString(typeIndex);
 
@@ -497,8 +493,7 @@ public class SerleenaSQLiteDataSource implements ISerleenaSQLiteDataSource {
         int longitudeIndex = result.getColumnIndexOrThrow("eventl_longitude");
 
         while (result.moveToNext()) {
-            Date d = parser.parse(result.getString(timestampIndex),
-                    new ParsePosition(0));
+            Date d = new Date(result.getInt(timestampIndex) * 1000);
             double latitude = result.getDouble(latitudeIndex);
             double longitude = result.getDouble(longitudeIndex);
             GeoPoint location = new GeoPoint(latitude, longitude);
