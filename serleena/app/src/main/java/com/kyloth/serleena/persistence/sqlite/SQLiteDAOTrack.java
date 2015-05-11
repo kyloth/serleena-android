@@ -60,7 +60,7 @@ import java.util.zip.CheckedOutputStream;
  * @since 2015-05-06
  * @see com.kyloth.serleena.persistence.ITrackStorage
  */
-public class SQLiteDAOTrack implements ITrackStorage {
+class SQLiteDAOTrack implements ITrackStorage {
 
     private int id;
     private ISerleenaSQLiteDataSource dataSource;
