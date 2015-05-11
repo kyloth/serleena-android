@@ -58,6 +58,7 @@ import java.util.ArrayList;
 class SQLiteDAOExperience implements IExperienceStorage
 {
 
+    private String name;
     private int id;
     private ISerleenaSQLiteDataSource dataSource;
 
@@ -68,9 +69,11 @@ class SQLiteDAOExperience implements IExperienceStorage
      * @param   dataSource      La sorgente di dati SQL a cui questo oggetto è
      *                          associato.
      */
-    public SQLiteDAOExperience(int id, ISerleenaSQLiteDataSource dataSource) {
+    public SQLiteDAOExperience(String name, int id,
+            ISerleenaSQLiteDataSource dataSource) {
         this.id = id;
         this.dataSource = dataSource;
+        this.name = name;
     }
 
     /**
