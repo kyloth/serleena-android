@@ -72,6 +72,8 @@ public interface IWakeupManager {
     /**
      * Metodo "notify" basato sull'omonimo metodo della classe "Subject" del
      * Design Pattern "Observer".
+     *
+     * @param observer Oggetto "observer" da notificare.
      */
-    public void notifyObservers();
+    public void notifyObserver(IWakeupObserver observer);
 }
