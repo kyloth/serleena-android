@@ -271,15 +271,19 @@ public class SerleenaSQLiteDataSource implements ISerleenaSQLiteDataSource {
     public Iterable<IExperienceStorage> getExperiences() {
         SQLiteDatabase db = dbHelper.getReadableDatabase();
         Cursor result = db.query(SerleenaDatabase.TABLE_EXPERIENCES,
-                new String[] { "experience_id" }, null, null, null, null, null);
+                new String[] { "experience_id", "experience_name" }, null,
+                null, null, null, null);
 
-        int idIndex = result.getColumnIndex("experience_id");
+        int idIndex = result.getColumnIndexOrThrow("experience_id");
+        int nameIndex = result.getColumnIndexOrThrow("experience_name");
+
         ArrayList<IExperienceStorage> list =
                 new ArrayList<IExperienceStorage>();
 
         while (result.moveToNext()) {
             int id = result.getInt(idIndex);
-            list.add(new SQLiteDAOExperience(id, this));
+            String name = result.getString(nameIndex);
+            list.add(new SQLiteDAOExperience(name, id, this));
         }
 
         result.close();
