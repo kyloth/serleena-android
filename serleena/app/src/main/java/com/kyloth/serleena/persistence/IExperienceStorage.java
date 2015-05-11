@@ -67,4 +67,11 @@ public interface IExperienceStorage {
      */
     public void addUserPoint(UserPoint p);
 
+    /**
+     * Restituisce il nome dell'esperienza.
+     *
+     * @return Nome dell'esperienza.
+     */
+    public String getName();
+
 }
