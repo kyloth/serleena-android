@@ -98,6 +98,16 @@ class SQLiteDAOExperience implements IExperienceStorage
     }
 
     /**
+     * Implementa IExperienceStorage.getName().
+     *
+     * @return Nome dell'Esperienza.
+     */
+    @Override
+    public String getName() {
+        return name;
+    }
+
+    /**
      * Restituisce l'ID dell'oggetto nella tabella di appartenenza.
      *
      * @return ID dell'oggetto esperienza.
