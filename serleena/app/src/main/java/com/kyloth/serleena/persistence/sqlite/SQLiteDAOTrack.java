@@ -42,11 +42,14 @@
 
 package com.kyloth.serleena.persistence.sqlite;
 
+import com.kyloth.serleena.common.Checkpoint;
+import com.kyloth.serleena.common.ImmutableList;
 import com.kyloth.serleena.common.TelemetryEvent;
 import com.kyloth.serleena.persistence.ITelemetryStorage;
 import com.kyloth.serleena.persistence.ITrackStorage;
 
 import java.util.ArrayList;
+import java.util.zip.CheckedOutputStream;
 
 /**
  * Implementazione di persistence.ITrackStorage per la persistenza su
@@ -61,8 +64,11 @@ public class SQLiteDAOTrack implements ITrackStorage {
 
     private int id;
     private ISerleenaSQLiteDataSource dataSource;
+    private ImmutableList<Checkpoint> checkpoints;
 
-    public SQLiteDAOTrack(int id, ISerleenaSQLiteDataSource dataSource) {
+    public SQLiteDAOTrack(ImmutableList<Checkpoint> checkpoints, int id,
+                          ISerleenaSQLiteDataSource
+            dataSource) {
         this.id = id;
         this.dataSource = dataSource;
     }
@@ -88,6 +94,11 @@ public class SQLiteDAOTrack implements ITrackStorage {
         for (SQLiteDAOTelemetry t : dataSource.getTelemetries(this))
             list.add(t);
         return list;
+    }
+
+    @Override
+    public ImmutableList<Checkpoint> getCheckpoints() {
+        return checkpoints;
     }
 
     /**
