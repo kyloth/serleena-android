@@ -116,6 +116,92 @@ public class SerleenaDatabaseTest {
 	}
 
 	/*
+	 * TABLE_TRACKS
+	 */
+
+	/**
+	 * Verifica che sia possibile aggiungere correttamente un Percorso
+	 */
+	@Test
+	public void testAddTrack() {
+		ContentValues values;
+
+		long id = makeExperience();
+
+		ArrayList<String> names = new ArrayList<String>();
+
+		names.addAll(basicStrings);
+		names.addAll(nastyStrings);
+		names.addAll(invalidStrings);
+
+		for (String name : names) {
+			values = new ContentValues();
+			values.put("track_experience", id);
+			values.put("track_name", name);
+			db.insertOrThrow(SerleenaDatabase.TABLE_TRACKS, null, values);
+		}
+
+	}
+
+	/**
+	 * Verifica che non sia possibile aggiungere un Percorso senza nome
+	 */
+	@Test(expected = SQLException.class)
+	public void testTrackNoNameFails() {
+		ContentValues values = (new ContentValues());
+		values.put("track_name", (String) null);
+		db.insertOrThrow(SerleenaDatabase.TABLE_TRACKS, null, values);
+	}
+
+	/**
+	 * Verifica che non sia possibile aggiungere un percorso che fa riferimento a un'Esperiezna
+	 * inesistente.
+	 */
+	@Test(expected = SQLException.class)
+	public void testTrackWrongID() {
+		long id = makeExperience();
+		// Questo dovrebbe rompere l'integrita' referenziale?
+		id += 123;
+		ContentValues values;
+		values = new ContentValues();
+		values.put("track_experience", id);
+		values.put("track_name", "bar");
+		db.insertOrThrow(SerleenaDatabase.TABLE_TRACKS, null, values);
+	}
+
+	/**
+	 * Verifica che non sia possibile aggiungere un percorso che non fa riferimento ad alcuna
+	 * Esperienza
+	 */
+	@Test(expected = SQLException.class)
+	public void testTrackNoExpFails() {
+		ContentValues values = (new ContentValues());
+		values.put("track_name", "foo");
+		db.insertOrThrow(SerleenaDatabase.TABLE_TRACKS, null, values);
+	}
+
+	/**
+	 * Verifica che l'eliminazione di un'Esperienza elimini i suoi Percorsi.
+	 */
+	public void testTrackCascade() {
+		ContentValues values;
+		long id = makeExperience();
+		values = new ContentValues();
+		values.put("track_experience", id);
+		values.put("track_name", "bar");
+		db.insertOrThrow(SerleenaDatabase.TABLE_TRACKS, null, values);
+		db.delete(SerleenaDatabase.TABLE_EXPERIENCES, "id = " + id, null);
+		Cursor query = db.query(SerleenaDatabase.TABLE_TRACKS,
+								null,
+								"track_experience = " + id,
+								null,
+								null,
+								null,
+								null);
+		assertTrue(query.getCount() == 0);
+	}
+
+	/*
 	 * Util
 	 */
 
