@@ -50,46 +50,60 @@ package com.kyloth.serleena.sensors;
  * @version 1.0.0
  */
 public interface ISensorManager {
+
     /**
      * Restituisce un Manager per ottenere dati sulla posizione
      * dell'Escursionista.
      *
-     * @return Restituisce un oggetto di tipo ILocationManager.
+     * @return Oggetto di tipo ILocationManager.
      */
     public ILocationManager getLocationSource();
+
+    /**
+     * Restituisce un Manager per ottenere dati sulla posizione
+     * dell'Escursionista anche quando il dispositivo è il sleep mode.
+     *
+     * @return Oggetto ILocationManager.
+     */
+    public ILocationManager getWakefulLocationSource();
+
     /**
      * Restituisce un Manager per ottenere dati sull'orientamento
      * dell'Escursionista rispetto ai punti cardinali.
      *
-     * @return Restituisce un oggetto di tipo IHeadingManager.
+     * @return Oggetto di tipo IHeadingManager.
      */
     public IHeadingManager getHeadingSource();
+
     /**
      * Restituisce un Manager per ottenere dati sul battito cardiaco
      * dell'Escursionista.
      *
-     * @return Restituisce un oggetto di tipo IHeartRateManager.
+     * @return Oggetto di tipo IHeartRateManager.
      */
     public IHeartRateManager getHeartRateSource();
+
     /**
      * Restituisce un Manager per permettere la notifica a determinati
      * oggetti al raggiungimento di particolari punti geografici.
      *
-     * @return Restituisce un oggetto di tipo ILocationReachedManager.
+     * @return Oggetto di tipo ILocationReachedManager.
      */
     public ILocationReachedManager getLocationReachedSource();
+
     /**
      * Restituisce un Manager per ottenere notifiche di wakeup del
      * processore utilizzando RTC.
      *
-     * @return Restituisce un oggetto di tipo IWakeupManager.
+     * @return Oggetto di tipo IWakeupManager.
      */
     public IWakeupManager getWakeupSource();
+
     /**
      * Restituisce un Manager per offire servizi di registrazione del
      * Tracciamento dell'Escursionista.
      *
-     * @return Restituisce un oggetto di tipo ITelemetryManager.
+     * @return Oggetto di tipo ITelemetryManager.
      */
     public ITelemetryManager getTelemetryManager();
 }
