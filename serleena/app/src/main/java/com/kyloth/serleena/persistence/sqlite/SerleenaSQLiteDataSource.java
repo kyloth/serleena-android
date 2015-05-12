@@ -38,6 +38,8 @@
  * Version  Programmer          Date        Changes
  * 1.0.0    Filippo Sestini     2015-05-06  Creazione file e scrittura di codice
  *                                          e documentazione in Javadoc.
+ * 1.0.1    Tobia Tesan         2015-05-07  Aggiunta di getIJ
+ * 1.0.1    Tobia Tesan         2015-05-07  Aggiunta di getPath
  */
 
 package com.kyloth.serleena.persistence.sqlite;
@@ -74,6 +76,8 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 
+import static java.lang.Math.floor;
+
 /**
  * Classe concreta contenente l’implementazione del data source per l’accesso al
  * database SQLite dell’applicazione.
@@ -83,6 +87,11 @@ import java.util.Date;
  * @since 2015-05-06
  */
 public class SerleenaSQLiteDataSource implements ISerleenaSQLiteDataSource {
+    final static int QUADRANT_LATSIZE = 10;
+    final static int QUADRANT_LONGSIZE = 10;
+    final static int TOT_LAT_QUADRANTS = 360 / QUADRANT_LATSIZE;
+    final static int TOT_LONG_QUADRANTS = 180 / QUADRANT_LONGSIZE;
+    final static String RASTER_PATH = "raster/";
 
     SerleenaDatabase dbHelper;
     Context context;
@@ -90,6 +99,32 @@ public class SerleenaSQLiteDataSource implements ISerleenaSQLiteDataSource {
     public SerleenaSQLiteDataSource(Context context, SerleenaDatabase dbHelper) {
         this.dbHelper = dbHelper;
         this.context = context;
+    }
+
+    /**
+     * Ritorna il percorso del file per il quadrante i,j-esimo.
+     *
+     * @return Il path
+     */
+    public static String getRasterPath(int i, int j) {
+        return RASTER_PATH + i + "_" + j;
+    }
+
+    /**
+     * Ritorna la coppia i,j che identifica il quadrante a cui appartiene un punto.
+     *
+     * @param p Il punto geografico
+     * @return Un array int [2] di due punti i,j che identifica il quadrante.
+     */
+    public static int[] getIJ(GeoPoint p) {
+        assert(p.latitude() >= -90);
+        assert(p.latitude() <= +90);
+        assert(p.longitude() >= -180);
+        assert(p.longitude() <= +180);
+        int ij[] = new int[2];
+        ij[0] = (int)(floor((p.longitude() + 180) / QUADRANT_LATSIZE) % TOT_LAT_QUADRANTS);
+        ij[1] = (int)(floor((p.latitude() + 90) / QUADRANT_LATSIZE) % TOT_LAT_QUADRANTS);
+        return ij;
     }
 
     /**
@@ -343,59 +378,37 @@ public class SerleenaSQLiteDataSource implements ISerleenaSQLiteDataSource {
      */
     @Override
     public IQuadrant getQuadrant(GeoPoint location) {
-        SQLiteDatabase db = dbHelper.getReadableDatabase();
-        String where = "(raster_ne_corner_latitude + 90) >= " +
-                (location.latitude() + 90) + " AND " +
-                "(raster_ne_corner_longitude + 180) >= " +
-                (location.longitude() + 180) + " AND " +
-                "(raster_sw_corner_latitude + 90) <= " +
-                (location.latitude() + 90) + " AND " +
-                "(raster_sw_corner_longitude + 180) <= " +
-                (location.longitude() + 180);
 
-        Cursor result = db.query(SerleenaDatabase.TABLE_RASTER_MAPS,
-                new String[] { "raster_path", "rect_ne_corner_latitude",
-                        "rect_ne_corner_longitude",
-                        "rect_sw_corner_latitude", "rect_sw_corner_longitude" },
-                where, null, null, null, null);
+        int[] ij = getIJ(location);
 
-        int pathIndex = result.getColumnIndexOrThrow("raster_path");
-        int ne_lat_index =
-                result.getColumnIndexOrThrow("rect_ne_corner_latitude");
-        int ne_lon_index =
-                result.getColumnIndexOrThrow("rect_ne_corner_longitude");
-        int sw_lat_index =
-                result.getColumnIndexOrThrow("rect_sw_corner_latitude");
-        int sw_lon_index =
-                result.getColumnIndexOrThrow("rect_sw_corner_longitude");
+        assert(ij[0] < TOT_LONG_QUADRANTS);
+        assert(ij[1] < TOT_LAT_QUADRANTS);
 
-        Bitmap bmp = null;
-        GeoPoint p1 = null;
-        GeoPoint p2 = null;
-
-        if (pathIndex > -1) {
-            String fileName = result.getString(pathIndex);
-            File file = new File(context.getFilesDir(), fileName);
-
-            if(file.exists())
-                bmp = BitmapFactory.decodeFile(file.getAbsolutePath());
-
-            p1 = new GeoPoint(result.getDouble(ne_lat_index),
-                    result.getDouble(ne_lon_index));
-            p2 = new GeoPoint(result.getDouble(sw_lat_index),
-                    result.getDouble(sw_lon_index));
-        }
-
-        final Bitmap finalBmp = bmp;
-        final GeoPoint finalP1 = p1;
-        final GeoPoint finalP2 = p2;
-
-        result.close();
+        final String fileName = getRasterPath(ij[0], ij[1]);
+        final GeoPoint finalP1 = new GeoPoint(ij[0] * QUADRANT_LONGSIZE,
+                                              ij[1] * QUADRANT_LATSIZE);
+        final GeoPoint finalP2 = new GeoPoint((ij[0] + 1) * QUADRANT_LONGSIZE,
+                                              (ij[1] + 1) * QUADRANT_LATSIZE);
 
         return new IQuadrant() {
+            String path = fileName;
+            Bitmap bmp;
             @Override
             public Bitmap getRaster() {
-                return finalBmp;
+                if (bmp == null) {
+                    File file = new File(context.getFilesDir(), fileName);
+                    if (file.exists()) {
+                        bmp = BitmapFactory.decodeFile(file.getAbsolutePath());
+                    } else {
+                        throw new RuntimeException();
+                        //TODO Gestirla meglio
+                    }
+                }
+                return bmp;
+            }
+
+            public String getPath() {
+                return path;
             }
 
             @Override
@@ -431,7 +444,7 @@ public class SerleenaSQLiteDataSource implements ISerleenaSQLiteDataSource {
                 "(contact_sw_corner_longitude + 180) <= " +
                 (location.longitude() + 180);
         Cursor result = db.query(SerleenaDatabase.TABLE_CONTACTS,
-                new String[] { "contact_name", "contact_value" }, where,
+                new String[]{"contact_name", "contact_value"}, where,
                 null, null, null, null);
 
         int nameIndex = result.getColumnIndexOrThrow("contact_name");

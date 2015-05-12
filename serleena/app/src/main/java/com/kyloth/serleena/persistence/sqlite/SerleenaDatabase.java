@@ -42,6 +42,7 @@
  * 1.0.2    Tobia Tesan         2015-05-06  Aggiunto onConfigure.
  * 1.0.3    Filippo Sestini     2015-05-11  Aggiunta tabella 'checkpoints' al
  *                                          database.
+ * 1.0.4    Tobia Tesan         2015-05-12  Rimossa TABLE_RASTER_MAPS
  */
 
 package com.kyloth.serleena.persistence.sqlite;
@@ -71,7 +72,6 @@ public class SerleenaDatabase extends SQLiteOpenHelper {
         "telemetry_events_heart_checkp";
     public static final String TABLE_TELEM_EVENTS_LOCATION =
         "telemetry_events_location";
-    public static final String TABLE_RASTER_MAPS = "raster_maps";
     public static final String TABLE_CONTACTS = "contacts";
     public static final String TABLE_WEATHER_FORECASTS = "weather_forecasts";
     public static final String TABLE_USER_POINTS = "user_points";
@@ -116,15 +116,6 @@ public class SerleenaDatabase extends SQLiteOpenHelper {
         "eventhc_type TEXT NOT NULL, " +
         "eventhc_telem INTEGER NOT NULL, " +
         "FOREIGN KEY(eventhc_telem) REFERENCES " + TABLE_TELEMETRIES + "(telem_id) ON DELETE CASCADE)";
-
-    private static final String CREATE_TABLE_RASTER_MAPS =
-        "CREATE TABLE " + TABLE_RASTER_MAPS + "(" +
-        "raster_id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, " +
-        "raster_path TEXT NOT NULL, " +
-        "raster_ne_corner_latitude REAL NOT NULL, " +
-        "raster_ne_corner_longitude REAL NOT NULL, " +
-        "raster_sw_corner_latitude REAL NOT NULL, " +
-        "raster_sw_corner_longitude REAL NOT NULL)";
 
     private static final String CREATE_TABLE_CONTACTS =
         "CREATE TABLE " + TABLE_CONTACTS + "(" +
@@ -195,7 +186,6 @@ public class SerleenaDatabase extends SQLiteOpenHelper {
         db.execSQL(CREATE_TABLE_TELEMETRIES);
         db.execSQL(CREATE_TABLE_TELEM_EVENTS_HEART_CHECKP);
         db.execSQL(CREATE_TABLE_TELEM_EVENTS_LOCATION);
-        db.execSQL(CREATE_TABLE_RASTER_MAPS);
         db.execSQL(CREATE_TABLE_CONTACTS);
         db.execSQL(CREATE_TABLE_WEATHER_FORECASTS);
         db.execSQL(CREATE_TABLE_USER_POINTS);
@@ -233,7 +223,6 @@ public class SerleenaDatabase extends SQLiteOpenHelper {
         db.execSQL("DROP TABLE IF EXISTS " + TABLE_TELEMETRIES);
         db.execSQL("DROP TABLE IF EXISTS " + TABLE_TELEM_EVENTS_HEART_CHECKP);
         db.execSQL("DROP TABLE IF EXISTS " + TABLE_TELEM_EVENTS_LOCATION);
-        db.execSQL("DROP TABLE IF EXISTS " + TABLE_RASTER_MAPS);
         db.execSQL("DROP TABLE IF EXISTS " + TABLE_CONTACTS);
         db.execSQL("DROP TABLE IF EXISTS " + TABLE_WEATHER_FORECASTS);
         db.execSQL("DROP TABLE IF EXISTS " + TABLE_USER_POINTS);
