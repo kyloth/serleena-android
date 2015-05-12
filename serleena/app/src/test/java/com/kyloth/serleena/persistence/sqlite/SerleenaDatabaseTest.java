@@ -81,6 +81,43 @@ public class SerleenaDatabaseTest {
 		db = sh.getReadableDatabase();
 	}
 
+	/*
+	 * Util
+	 */
+
+	/**
+	 * Metodo di utilita' per creare un'esperienza.
+	 */
+	private long makeExperience() {
+		ContentValues values;
+		values = new ContentValues();
+		values.put("experience_name", "foo");
+		return db.insertOrThrow(SerleenaDatabase.TABLE_EXPERIENCES, null, values);
+	}
+
+	/**
+	 * Metodo di utilita' per creare un percorso in un DB vuoto.
+	 * Crea automaticamente l'esperienza richiesta.
+	 */
+	private long makeTrack() {
+		ContentValues values;
+		values = new ContentValues();
+		values.put("track_name", "foo");
+		values.put("track_experience", makeExperience());
+		return db.insertOrThrow(SerleenaDatabase.TABLE_TRACKS, null, values);
+	}
+
+	/**
+	 * Metodo di utilita' per creare un tracciamento in un DB vuoto.
+	 * Crea automaticamente il percorso e l'esperienza richiesta.
+	 */
+	private long makeTelemetry() {
+		ContentValues values;
+		values = new ContentValues();
+		values.put("telem_track", makeTrack());
+		return db.insertOrThrow(SerleenaDatabase.TABLE_TELEMETRIES, null, values);
+	}
+
 	@Before
 	public void setup() throws URISyntaxException {
 		sh = new SerleenaDatabase(RuntimeEnvironment.application, "sample.db", null, 1);
