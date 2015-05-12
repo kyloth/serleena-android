@@ -222,4 +222,28 @@ public class WakefulLocationManager implements ILocationManager {
         observer.onLocationUpdate(lastKnownLocation);
     }
 
+    /**
+     * Regola la frequenza delle richieste di aggiornamento sulla posizione
+     * utente in base agli observer correntemente registrati e le loro
+     * esigenze in termini di tempo.
+     */
+    private void adjustGpsUpdateRate() {
+        if (observers.size() == 0) {
+            gpsUpdateInterval = Integer.MAX_VALUE;
+            wm.detachObserver(gpsUpdateObserver);
+        } else {
+            int minInterval = Integer.MAX_VALUE;
+
+            for (int interval : intervals.values())
+                if (interval < minInterval)
+                    minInterval = interval;
+
+            if (minInterval != gpsUpdateInterval) {
+                wm.detachObserver(gpsUpdateObserver);
+                wm.attachObserver(gpsUpdateObserver, minInterval, false);
+                gpsUpdateInterval = minInterval;
+            }
+        }
+    }
+
 }
