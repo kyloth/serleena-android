@@ -88,9 +88,12 @@ public class WakeupManager extends BroadcastReceiver implements IWakeupManager {
      * @param observer IWakeupObserver da registrare.
      * @param interval Intervallo di tempo per la notifica all'oggetto
      *                 "observer".
+     * @param oneTimeOnly True se il wakeup avviene una sola volta,
+     *                    false se il wakeup è ripetuto.
      */
     @Override
-    public void attachObserver(IWakeupObserver observer, int interval) {
+    public void attachObserver(IWakeupObserver observer, int interval,
+                               boolean oneTimeOnly) {
         int alarmType = AlarmManager.RTC_WAKEUP;
         int millis = interval * 1000;
         String uuid = UUID.randomUUID().toString();
@@ -102,10 +105,14 @@ public class WakeupManager extends BroadcastReceiver implements IWakeupManager {
 
         PendingIntent alarmIntent =
                 PendingIntent.getBroadcast(context, 0, intentToFire, 0);
-        alarmManager.setInexactRepeating(alarmType, millis, millis,
-                alarmIntent);
 
-        schedule.add(uuid, observer, alarmIntent);
+        if (oneTimeOnly)
+            alarmManager.set(alarmType, millis, alarmIntent);
+        else
+            alarmManager.setInexactRepeating(alarmType, millis, millis,
+                    alarmIntent);
+
+        schedule.add(uuid, observer, alarmIntent, oneTimeOnly);
     }
 
     /**
@@ -128,6 +135,9 @@ public class WakeupManager extends BroadcastReceiver implements IWakeupManager {
      */
     @Override
     public void notifyObserver(IWakeupObserver observer) {
+        if (schedule.isOneTimeOnly(observer))
+            detachObserver(observer);
+
         observer.onWakeup();
     }
 
