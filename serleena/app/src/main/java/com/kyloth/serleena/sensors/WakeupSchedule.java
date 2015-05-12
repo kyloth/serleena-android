@@ -46,6 +46,7 @@ class WakeupSchedule {
     Map<String, IWakeupObserver> uuidMap;
     Map<IWakeupObserver, PendingIntent> obsMap;
     Map<PendingIntent, String> intentMap;
+    Map<IWakeupObserver, Boolean> onetimeMap;
 
     public WakeupSchedule() {
         uuidMap = new HashMap<String, IWakeupObserver>();
@@ -62,13 +63,19 @@ class WakeupSchedule {
     }
 
     public void add(String uuid, IWakeupObserver observer,
-                    PendingIntent alarmIntent) {
+                    PendingIntent alarmIntent, boolean oneTimeOnly) {
         intentMap.put(obsMap.put(uuidMap.put(uuid, observer),
                 alarmIntent), uuid);
+        onetimeMap.put(observer, oneTimeOnly);
     }
 
     public void remove(IWakeupObserver observer) {
         uuidMap.remove(intentMap.remove(obsMap.remove(observer)));
+        onetimeMap.remove(observer);
+    }
+
+    public boolean isOneTimeOnly(IWakeupObserver observer) {
+        return onetimeMap.get(observer);
     }
 
 }
