@@ -64,4 +64,15 @@ import java.util.Map;
  */
 public class WakefulLocationManager implements ILocationManager {
 
+    private static WakefulLocationManager instance;
+
+    private PowerManager pm;
+    private WakeupManager wm;
+    private NormalLocationManager nlm;
+    private Map<ILocationObserver, IWakeupObserver> observers;
+    private IWakeupObserver gpsUpdateObserver;
+    private int gpsUpdateInterval;
+    private Map<ILocationObserver, Integer> intervals;
+    private GeoPoint lastKnownLocation;
+
 }
