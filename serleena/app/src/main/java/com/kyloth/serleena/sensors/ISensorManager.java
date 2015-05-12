@@ -58,6 +58,15 @@ public interface ISensorManager {
      * @return Oggetto di tipo ILocationManager.
      */
     public ILocationManager getLocationSource();
+
+    /**
+     * Restituisce un Manager per ottenere dati sulla posizione
+     * dell'Escursionista anche quando il dispositivo è il sleep mode.
+     *
+     * @return Oggetto ILocationManager.
+     */
+    public ILocationManager getWakefulLocationSource();
+
     /**
      * Restituisce un Manager per ottenere dati sull'orientamento
      * dell'Escursionista rispetto ai punti cardinali.
