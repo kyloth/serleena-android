@@ -167,4 +167,42 @@ public class WakefulLocationManager implements ILocationManager {
         adjustGpsUpdateRate();
     }
 
+    /**
+     * Implementa ILocationManager.getSingleUpdate().
+     *
+     * Il metodo garantisce che il processore non entri in sleep mode
+     * finchè non vengono ottenuti i dati dal modulo GPS,
+     * o comunque fino allo scadere di un timeout.
+     * L'observer riceve in ogni caso una callback. Nel caso non sia stato
+     * possibile ottenere dati aggiornati dal GPS, vengono comunicati gli
+     * ultimi disponibili.
+     *
+     * @param observer Oggetto ILocationObserver a cui comunicare i dati. Se
+     *                 null, viene sollevata un'eccezione
+     *                 IllegalArgumentException.
+     * @throws java.lang.IllegalArgumentException
+     */
+    @Override
+    public void getSingleUpdate(final ILocationObserver observer)
+            throws IllegalArgumentException {
+
+        if (observer == null)
+            throw new IllegalArgumentException("Illegal null observer");
+
+        final android.os.PowerManager.WakeLock wakeLock =
+                pm.newWakeLock(PowerManager.PARTIAL_WAKE_LOCK, "MyWakelockTag");
+        wakeLock.acquire();
+
+        ILocationObserver myObs = new ILocationObserver() {
+            @Override
+            public void onLocationUpdate(GeoPoint loc) {
+                lastKnownLocation = loc;
+                notifyObserver(observer);
+                wakeLock.release();
+            }
+        };
+
+        nlm.getSingleUpdate(myObs);
+    }
+
 }
