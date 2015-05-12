@@ -183,6 +183,7 @@ public class SerleenaDatabaseTest {
 	/**
 	 * Verifica che l'eliminazione di un'Esperienza elimini i suoi Percorsi.
 	 */
+	@Test
 	public void testTrackCascade() {
 		ContentValues values;
 		long id = makeExperience();
@@ -424,6 +425,7 @@ public class SerleenaDatabaseTest {
 	/**
 	 * Verifica che sia possibile aggiungere correttamente un Contatto.
 	 */
+	@Test
 	public void testAddContact() {
 		ContentValues values;
 		values = new ContentValues();
@@ -483,6 +485,7 @@ public class SerleenaDatabaseTest {
 	/**
 	 * Verifica che sia possibile aggiungere correttamente un Forecast.
 	 */
+	@Test
 	public void testAddForecast() {
 		ContentValues values;
 		values = new ContentValues();
@@ -547,6 +550,7 @@ public class SerleenaDatabaseTest {
 	/**
 	 * Verifica che sia possibile aggiungere correttamente un Punto Utente
 	 */
+	@Test
 	public void testAddUserPoint() {
 		ContentValues values;
 		values = new ContentValues();
@@ -586,6 +590,7 @@ public class SerleenaDatabaseTest {
 	 * Verifica che non sia possibile aggiungere un Punto Utente che fa riferimento ad una
 	 * Esperienza inesistente.
 	 */
+	@Test
 	public void testUserPointCascade() {
 		ContentValues values;
 		long id = makeExperience();
@@ -606,6 +611,7 @@ public class SerleenaDatabaseTest {
 	/**
 	 * Verifica che sia possibile aggiungere correttamente un Checkpoint.
 	 */
+	@Test
 	public void testAddCheckpoint() {
 		ContentValues values;
 		values = new ContentValues();
@@ -647,6 +653,7 @@ public class SerleenaDatabaseTest {
 	/**
 	 * Verifica che l'eliminazione di un Percorso ne elimini i Checkpoint.
 	 */
+	@Test
 	public void testCheckpointCascade() {
 		ContentValues values;
 		values = new ContentValues();
