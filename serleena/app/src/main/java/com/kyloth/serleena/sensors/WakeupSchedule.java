@@ -38,7 +38,7 @@ import java.util.Map;
 /**
  * Rappresenta i wakeup pianificati utilizzando WakeupManager.
  *
- * @author Filippo Sestini <sestini.filippo@gmail.com
+ * @author Filippo Sestini <sestini.filippo@gmail.com>
  * @version 1.0.0
  */
 class WakeupSchedule {
@@ -52,6 +52,7 @@ class WakeupSchedule {
         uuidMap = new HashMap<String, IWakeupObserver>();
         obsMap = new HashMap<IWakeupObserver, PendingIntent>();
         intentMap = new HashMap<PendingIntent, String>();
+        onetimeMap = new HashMap<IWakeupObserver, Boolean>();
     }
 
     public PendingIntent getIntent(IWakeupObserver observer) {
