@@ -50,6 +50,7 @@ package com.kyloth.serleena.sensors;
  * @version 1.0.0
  */
 public interface ISensorManager {
+
     /**
      * Restituisce un Manager per ottenere dati sulla posizione
      * dell'Escursionista.
@@ -64,6 +65,7 @@ public interface ISensorManager {
      * @return Oggetto di tipo IHeadingManager.
      */
     public IHeadingManager getHeadingSource();
+
     /**
      * Restituisce un Manager per ottenere dati sul battito cardiaco
      * dell'Escursionista.
@@ -71,6 +73,7 @@ public interface ISensorManager {
      * @return Oggetto di tipo IHeartRateManager.
      */
     public IHeartRateManager getHeartRateSource();
+
     /**
      * Restituisce un Manager per permettere la notifica a determinati
      * oggetti al raggiungimento di particolari punti geografici.
@@ -78,6 +81,7 @@ public interface ISensorManager {
      * @return Oggetto di tipo ILocationReachedManager.
      */
     public ILocationReachedManager getLocationReachedSource();
+
     /**
      * Restituisce un Manager per ottenere notifiche di wakeup del
      * processore utilizzando RTC.
@@ -85,6 +89,7 @@ public interface ISensorManager {
      * @return Oggetto di tipo IWakeupManager.
      */
     public IWakeupManager getWakeupSource();
+
     /**
      * Restituisce un Manager per offire servizi di registrazione del
      * Tracciamento dell'Escursionista.
