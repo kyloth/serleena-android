@@ -418,6 +418,65 @@ public class SerleenaDatabaseTest {
 	}
 
 	/*
+	 * TABLE_CONTACTS
+	 */
+
+	/**
+	 * Verifica che sia possibile aggiungere correttamente un Contatto.
+	 */
+	public void testAddContact() {
+		ContentValues values;
+		values = new ContentValues();
+		ArrayList<String> names = new ArrayList<String>();
+
+		names.addAll(basicStrings);
+		names.addAll(nastyStrings);
+		names.addAll(invalidStrings);
+
+		for (String name : names) {
+			for (String contact : names) {
+				values.put("contact_name", name);
+				values.put("contact_value", contact);
+				values.put("contact_ne_corner_latitude", 1);
+				values.put("contact_ne_corner_longitude", 1);
+				values.put("contact_sw_corner_latitude", 1);
+				values.put("contact_sw_corner_longitude", 1);
+				db.insertOrThrow(SerleenaDatabase.TABLE_CONTACTS, null, values);
+			}
+		}
+	}
+
+	/**
+	 * Verifica che non sia possibile aggiungere un Contatto senza nome.
+	 */
+	@Test(expected = SQLException.class)
+	public void testContactNullNameFails() {
+		ContentValues values;
+		values = new ContentValues();
+		values.put("contact_value", "foo");
+		values.put("contact_ne_corner_latitude", 1);
+		values.put("contact_ne_corner_longitude", 1);
+		values.put("contact_sw_corner_latitude", 1);
+		values.put("contact_sw_corner_longitude", 1);
+		db.insertOrThrow(SerleenaDatabase.TABLE_TELEM_EVENTS_HEART_CHECKP, null, values);
+	}
+
+	/**
+	 * Verifica che non sia possibile aggiungere un Contatto senza value.
+	 */
+	@Test(expected = SQLException.class)
+	public void testContactNullValueFails() {
+		ContentValues values;
+		values = new ContentValues();
+		values.put("contact_name", "foo");
+		values.put("contact_ne_corner_latitude", 1);
+		values.put("contact_ne_corner_longitude", 1);
+		values.put("contact_sw_corner_latitude", 1);
+		values.put("contact_sw_corner_longitude", 1);
+		db.insertOrThrow(SerleenaDatabase.TABLE_TELEM_EVENTS_HEART_CHECKP, null, values);
+	}
+
+	/*
 	 * Util
 	 */
 
