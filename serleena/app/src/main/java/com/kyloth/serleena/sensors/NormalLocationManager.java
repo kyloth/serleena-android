@@ -76,4 +76,21 @@ public class NormalLocationManager implements ILocationManager {
     private Map<ILocationObserver, LocationListener> observers;
     private android.location.LocationManager locationManager;
 
+    /**
+     * Crea un oggetto NormalLocationManager.
+     *
+     * Il costruttore è privato per realizzare correttamente il pattern
+     * Singleton, forzando l'accesso alla sola istanza esposta dai
+     * metodi Singleton e impedendo al codice client di costruire istanze
+     * arbitrariamente.
+     *
+     * @param context Contesto dell'applicazione.
+     */
+    private NormalLocationManager(Context context) {
+        this.observers = new HashMap<ILocationObserver, LocationListener>();
+
+        locationManager = (android.location.LocationManager)
+            context.getSystemService(Context.LOCATION_SERVICE);
+    }
+
 }
