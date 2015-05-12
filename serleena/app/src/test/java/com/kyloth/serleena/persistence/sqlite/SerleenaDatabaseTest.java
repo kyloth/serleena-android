@@ -600,6 +600,68 @@ public class SerleenaDatabaseTest {
 	}
 
 	/*
+	 * TABLE_CHECKPOINTS
+	 */
+
+	/**
+	 * Verifica che sia possibile aggiungere correttamente un Checkpoint.
+	 */
+	public void testAddCheckpoint() {
+		ContentValues values;
+		values = new ContentValues();
+		values.put("checkpoint_latitude", 1);
+		values.put("checkpoint_longitude", 1);
+		values.put("checkpoint_num", 1);
+		values.put("checkpoint_track", makeTrack());
+		db.insertOrThrow(SerleenaDatabase.TABLE_CHECKPOINTS, null, values);
+	}
+
+	/**
+	 * Verifica che non sia possibile aggiungere un Checkpoint senza Percorso.
+	 */
+	@Test(expected = SQLException.class)
+	public void testCheckpointNoTrackFails() {
+		ContentValues values;
+		values = new ContentValues();
+		values.put("checkpoint_latitude", 1);
+		values.put("checkpoint_longitude", 1);
+		values.put("checkpoint_num", 1);
+		db.insertOrThrow(SerleenaDatabase.TABLE_CHECKPOINTS, null, values);
+	}
+
+	/**
+	 * Verifica che non sia possibile aggiungere un Checkpoint che fa riferimento
+	 * a un Percorso inesistente.
+	 */
+	@Test(expected = SQLException.class)
+	public void testCheckpointWrongTrackFails() {
+		ContentValues values;
+		values = new ContentValues();
+		values.put("checkpoint_latitude", 1);
+		values.put("checkpoint_longitude", 1);
+		values.put("checkpoint_num", 1);
+		values.put("checkpoint_track", 12345);
+		db.insertOrThrow(SerleenaDatabase.TABLE_CHECKPOINTS, null, values);
+	}
+
+	/**
+	 * Verifica che l'eliminazione di un Percorso ne elimini i Checkpoint.
+	 */
+	public void testCheckpointCascade() {
+		ContentValues values;
+		values = new ContentValues();
+		long id = makeTrack();
+		values.put("checkpoint_latitude", 1);
+		values.put("checkpoint_longitude", 1);
+		values.put("checkpoint_num", 1);
+		values.put("checkpoint_track", id);
+		db.insertOrThrow(SerleenaDatabase.TABLE_CHECKPOINTS, null, values);
+		db.delete(SerleenaDatabase.TABLE_TRACKS, "id = " + id, null);
+		Cursor query = db.query(SerleenaDatabase.TABLE_CHECKPOINTS, null, "checkpoint_track = " + id, null, null, null, null);
+		assertTrue(query.getCount() == 0);
+	}
+
+	/*
 	 * Util
 	 */
 
