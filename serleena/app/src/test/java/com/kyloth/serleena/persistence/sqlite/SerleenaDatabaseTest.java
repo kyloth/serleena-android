@@ -541,6 +541,65 @@ public class SerleenaDatabaseTest {
 	}
 
 	/*
+	 * TABLE_USER_POINTS
+	 */
+
+	/**
+	 * Verifica che sia possibile aggiungere correttamente un Punto Utente
+	 */
+	public void testAddUserPoint() {
+		ContentValues values;
+		values = new ContentValues();
+		values.put("userpoint_experience", makeExperience());
+		values.put("userpoint_x", 1);
+		values.put("userpoint_y", 1);
+		db.insertOrThrow(SerleenaDatabase.TABLE_USER_POINTS, null, values);
+	}
+
+	/**
+	 * Verifica che non sia possibile aggiungere un Punto Utente senza Esperienza.
+	 */
+	@Test(expected = SQLException.class)
+	public void testUserPointNoExperienceFails() {
+		ContentValues values;
+		values = new ContentValues();
+		values.put("userpoint_x", 1);
+		values.put("userpoint_y", 1);
+		db.insertOrThrow(SerleenaDatabase.TABLE_USER_POINTS, null, values);
+	}
+
+	/**
+	 * Verifica che non sia possibile aggiungere un Punto Utente che fa riferimetno ad una
+	 * Esperienza inesistente.
+	 */
+	@Test(expected = SQLException.class)
+	public void testUserPointWrongExperienceFails() {
+		ContentValues values;
+		values = new ContentValues();
+		values.put("userpoint_experience", 12345);
+		values.put("userpoint_x", 1);
+		values.put("userpoint_y", 1);
+		db.insertOrThrow(SerleenaDatabase.TABLE_USER_POINTS, null, values);
+	}
+
+	/**
+	 * Verifica che non sia possibile aggiungere un Punto Utente che fa riferimento ad una
+	 * Esperienza inesistente.
+	 */
+	public void testUserPointCascade() {
+		ContentValues values;
+		long id = makeExperience();
+		values = new ContentValues();
+		values.put("userpoint_experience", id);
+		values.put("userpoint_x", 1);
+		values.put("userpoint_y", 1);
+		db.insertOrThrow(SerleenaDatabase.TABLE_USER_POINTS, null, values);
+		db.delete(SerleenaDatabase.TABLE_EXPERIENCES, "id = " + id, null);
+		Cursor query = db.query(SerleenaDatabase.TABLE_USER_POINTS, null, "userpoint_experience = " + id, null, null, null, null);
+		assertTrue(query.getCount() == 0);
+	}
+
+	/*
 	 * Util
 	 */
 
