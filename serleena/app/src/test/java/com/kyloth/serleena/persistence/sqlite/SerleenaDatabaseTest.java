@@ -539,7 +539,6 @@ public class SerleenaDatabaseTest {
 		values.put("weather_ne_corner_longitude", 1);
 		values.put("weather_sw_corner_latitude", 1);
 		values.put("weather_sw_corner_longitude", 1);
-		values.put("eventl_type", 1);
 		db.insertOrThrow(SerleenaDatabase.TABLE_WEATHER_FORECASTS, null, values);
 	}
 
