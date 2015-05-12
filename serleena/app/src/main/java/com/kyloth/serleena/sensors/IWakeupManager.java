@@ -92,7 +92,10 @@ public interface IWakeupManager {
      * Metodo "notify" basato sull'omonimo metodo della classe "Subject" del
      * Design Pattern "Observer".
      *
-     * @param observer Oggetto "observer" da notificare.
+     * @param observer Oggetto "observer" da notificare. Se null,
+     *                 viene sollevata un'eccezione IllegalArgumentException.
+     * @throws java.lang.IllegalArgumentException
      */
-    public void notifyObserver(IWakeupObserver observer);
+    public void notifyObserver(IWakeupObserver observer)
+            throws IllegalArgumentException;
 }
