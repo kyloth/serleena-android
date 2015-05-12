@@ -38,6 +38,9 @@
  * Version  Programmer        Date         Changes
  * 1.0.0    Gabriele Pozzan   2015-05-06   Creazione file e scrittura
  *                                         codice e documentazione Javadoc
+ * 1.0.1    Filippo Sestini   2015-05-11   Aggiunta del metodo detachObserver
+ *                                         e modifica di notifyAtLocation in
+ *                                         attachObserver.
  */
 
 package com.kyloth.serleena.sensors;
@@ -60,5 +63,14 @@ public interface ILocationReachedManager {
      * @param observer ILocationReachedObserver da registrare.
      * @param location Punto geografico il cui raggiungimento deve generare una notifica.
      */
-    public void notifyAtLocation(ILocationReachedObserver observer, GeoPoint location);
+    public void attachObserver(ILocationReachedObserver observer,
+                               GeoPoint location);
+
+    /**
+     * Annulla la registrazione di un observer precedentemente registrato
+     * all'oggetto LocationReachedManager.
+     *
+     * @param observer Oggetto da deregistrare ILocationReachedManager.
+     */
+    public void detachObserver(ILocationReachedManager observer);
 }
