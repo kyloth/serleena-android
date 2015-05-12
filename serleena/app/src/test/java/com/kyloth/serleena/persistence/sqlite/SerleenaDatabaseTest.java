@@ -477,6 +477,70 @@ public class SerleenaDatabaseTest {
 	}
 
 	/*
+	 * WEATHER_FORECASTS
+	 */
+
+	/**
+	 * Verifica che sia possibile aggiungere correttamente un Forecast.
+	 */
+	public void testAddForecast() {
+		ContentValues values;
+		values = new ContentValues();
+		ArrayList<String> strings = new ArrayList<String>();
+
+		strings.addAll(basicStrings);
+		strings.addAll(nastyStrings);
+		strings.addAll(invalidStrings);
+
+		for (String value : strings) {
+			values.put("weather_condition", value);
+			values.put("weather_temperature", 1);
+			values.put("weather_start", 1);
+			values.put("weather_end", 1);
+			values.put("weather_ne_corner_latitude", 1);
+			values.put("weather_ne_corner_longitude", 1);
+			values.put("weather_sw_corner_latitude", 1);
+			values.put("weather_sw_corner_longitude", 1);
+		}
+		db.insertOrThrow(SerleenaDatabase.TABLE_WEATHER_FORECASTS, null, values);
+	}
+
+	/**
+	 * Verifica che non sia possibile aggiungere un Forecast con attributo start nullo.
+	 */
+	@Test(expected = SQLException.class)
+	public void testForecastNullStartFails() {
+		ContentValues values;
+		values = new ContentValues();
+		values.put("weather_condition", "foo");
+		values.put("weather_temperature", 1);
+		values.put("weather_end", 1);
+		values.put("weather_ne_corner_latitude", 1);
+		values.put("weather_ne_corner_longitude", 1);
+		values.put("weather_sw_corner_latitude", 1);
+		values.put("weather_sw_corner_longitude", 1);
+		db.insertOrThrow(SerleenaDatabase.TABLE_WEATHER_FORECASTS, null, values);
+	}
+
+	/**
+	 * Verifica che non sia possibile aggiungere un Forecast con attributo end nullo.
+	 */
+	@Test(expected = SQLException.class)
+	public void testForecastNullEndFails() {
+		ContentValues values;
+		values = new ContentValues();
+		values.put("weather_condition", "foo");
+		values.put("weather_temperature", 1);
+		values.put("weather_start", 1);
+		values.put("weather_ne_corner_latitude", 1);
+		values.put("weather_ne_corner_longitude", 1);
+		values.put("weather_sw_corner_latitude", 1);
+		values.put("weather_sw_corner_longitude", 1);
+		values.put("eventl_type", 1);
+		db.insertOrThrow(SerleenaDatabase.TABLE_WEATHER_FORECASTS, null, values);
+	}
+
+	/*
 	 * Util
 	 */
 
