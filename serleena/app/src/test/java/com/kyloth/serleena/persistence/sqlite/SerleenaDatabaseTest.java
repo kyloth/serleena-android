@@ -82,6 +82,40 @@ public class SerleenaDatabaseTest {
 	}
 
 	/*
+	 * TABLE_EXPERIENCES
+	 */
+
+	/**
+	 * Verifica che sia possibile aggiungere correttamente un'Esperienza.
+	 */
+	@Test
+	public void testAddExperience() {
+		ContentValues values;
+
+		ArrayList<String> names = new ArrayList<String>();
+		names.addAll(basicStrings);
+		names.addAll(nastyStrings);
+		names.addAll(invalidStrings);
+
+		for (String name : names) {
+			values = new ContentValues();
+			values.put("experience_name", name);
+			db.insertOrThrow(SerleenaDatabase.TABLE_EXPERIENCES, null, values);
+		}
+
+	}
+
+	/**
+	 * Verifica che sia non sia possibile aggiungere un'Esperienza senza nome.
+	 */
+	@Test(expected = SQLException.class)
+	public void testExperienceNoNameFails() {
+		ContentValues values = (new ContentValues());
+		values.put("experience_name", (String)null);
+		db.insertOrThrow(SerleenaDatabase.TABLE_EXPERIENCES, null, values);
+	}
+
+	/*
 	 * Util
 	 */
 
