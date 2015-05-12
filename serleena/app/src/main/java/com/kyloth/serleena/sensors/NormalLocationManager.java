@@ -66,4 +66,14 @@ import java.util.Set;
  */
 public class NormalLocationManager implements ILocationManager {
 
+    private static NormalLocationManager instance;
+
+    private static final int TIMEOUT_SECONDS = 60;
+    private static final long MAX_WINDOW_SECONDS = 30;
+
+    private GeoPoint lastKnownLocation;
+    private long lastUpdate;
+    private Map<ILocationObserver, LocationListener> observers;
+    private android.location.LocationManager locationManager;
+
 }
