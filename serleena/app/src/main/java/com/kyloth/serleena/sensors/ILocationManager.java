@@ -73,13 +73,19 @@ public interface ILocationManager {
      */
     public void detachObserver(ILocationObserver observer);
     /**
-     * Permette di ottenere un aggiornamento dei dati di posizione su
-     * richiesta esplicita.
+     * Permette di ottenere un singolo 1aggiornamento dei dati di posizione su
+     * richiesta esplicita. L'aggiornamento viene dato in maniera asincrona
+     * tramite callback all'observer, dato il tempo possibilmente non
+     * trascurabile per ottenere i dati.
      *
-     * @return Ritorna un valore di tipo GeoPoint rappresentante la posizione
-     *         attuale dell'Escursionista.
+     * @param observer Oggetto ILocationObserver a cui comunicare i dati.
+     *                 Se null, viene lanciata un'eccezione
+     *                 IllegalArgumentException.
+     * @throws java.lang.IllegalArgumentException
      */
-    public GeoPoint getSingleUpdate();
+    public void getSingleUpdate(ILocationObserver observer)
+        throws IllegalArgumentException;
+
     /**
      * Metodo "notify" basato sull'omonimo metodo della classe "Subject" del
      * Design Pattern "Observer".
