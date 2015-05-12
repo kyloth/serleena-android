@@ -75,4 +75,34 @@ public class WakefulLocationManager implements ILocationManager {
     private Map<ILocationObserver, Integer> intervals;
     private GeoPoint lastKnownLocation;
 
+    /**
+     * Crea un oggetto WakefulLocationManager.
+     *
+     * Il costruttore è privato per realizzare correttamente il pattern
+     * Singleton, forzando l'accesso alla sola istanza esposta dai
+     * metodi Singleton e impedendo al codice client di costruire istanze
+     * arbitrariamente.
+     *
+     * @param context Contesto dell'applicazione.
+     */
+    private WakefulLocationManager(Context context) {
+        wm = WakeupManager.getInstance(context);
+        pm = (PowerManager) context.getSystemService(Context.POWER_SERVICE);
+        observers = new HashMap<ILocationObserver, IWakeupObserver>();
+        intervals = new HashMap<ILocationObserver, Integer>();
+
+        final WakefulLocationManager me = this;
+        class GpsWakeup implements IWakeupObserver, ILocationObserver {
+            @Override
+            public void onLocationUpdate(GeoPoint loc) {
+                lastKnownLocation = loc;
+            }
+            @Override
+            public void onWakeup() {
+                me.getSingleUpdate(this);
+            }
+        }
+        gpsUpdateObserver = new GpsWakeup();
+    }
+
 }
