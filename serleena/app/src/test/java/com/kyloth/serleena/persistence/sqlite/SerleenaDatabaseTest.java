@@ -41,15 +41,25 @@
 
 package com.kyloth.serleena.persistence.sqlite;
 
+import android.content.ContentValues;
+import android.database.Cursor;
+import android.database.SQLException;
 import android.database.sqlite.SQLiteDatabase;
+
 import com.kyloth.serleena.BuildConfig;
-import java.net.URISyntaxException;
+
+import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.robolectric.annotation.Config;
 import org.robolectric.RobolectricGradleTestRunner;
 import org.robolectric.RuntimeEnvironment;
+import org.robolectric.annotation.Config;
+
+import java.net.URISyntaxException;
+import java.util.ArrayList;
+
+import static junit.framework.Assert.assertTrue;
 
 /**
  * Contiene i test di unità per la classe SerleenaDatabaseTest
@@ -61,15 +71,41 @@ import org.robolectric.RuntimeEnvironment;
 @Config(constants = BuildConfig.class, emulateSdk = 19)
 public class SerleenaDatabaseTest {
 	SerleenaDatabase sh;
+	SQLiteDatabase db;
+	ArrayList<String> basicStrings;
+	ArrayList<String> nastyStrings;
+	ArrayList<String> invalidStrings;
 
 	@Test
-	public void testGetWritableDatabase() throws Exception {
-		SQLiteDatabase db = sh.getWritableDatabase();
+	public void testGetReadableDatabase() throws Exception {
+		db = sh.getReadableDatabase();
 	}
 
 	@Before
 	public void setup() throws URISyntaxException {
-		sh = new SerleenaDatabase(RuntimeEnvironment.application, "sample.sqlite", null, 1);
+		sh = new SerleenaDatabase(RuntimeEnvironment.application, "sample.db", null, 1);
+		db = sh.getWritableDatabase();
+		basicStrings = new ArrayList<String>();
+		nastyStrings = new ArrayList<String>();
+		invalidStrings = new ArrayList<String>();
+		basicStrings.add("asdfghjkl");
+		basicStrings.add("ASDFGHJKL");
+		basicStrings.add("123456789");
+		String long256 = "256CHARLONG 3456789012345678901212345678901234567890123456789012123456789012345678901234567890121234567890123456789012345678901212345678901234567890123456789012123456789012345678901234567890121234567890123456789012345678901212345678901234567890123456789012";
+		assert(long256.length() == 256);
+		nastyStrings.add(long256);
+		String long512 = long256 + long256;
+		assert(long512.length() == 512);
+		nastyStrings.add(long512);
+		invalidStrings.add("");
+		invalidStrings.add("foo\"bar");
+		invalidStrings.add("foo`bar");
+		invalidStrings.add("\\\\\\");
+	}
+
+	@After
+	public void tearDown() throws Exception {
+		sh.close();
 	}
 }
 
