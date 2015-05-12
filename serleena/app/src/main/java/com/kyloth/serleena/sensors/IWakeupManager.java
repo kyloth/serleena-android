@@ -42,6 +42,8 @@
 
 package com.kyloth.serleena.sensors;
 
+import com.kyloth.serleena.common.UnregisteredObserverException;
+
 /**
  * Interfaccia che verrà implementata da un oggetto in grado di
  * segnalare eventi di wakeup del processo utilizzando RTC.
@@ -54,29 +56,46 @@ package com.kyloth.serleena.sensors;
  * @version 1.0.0
  */
 public interface IWakeupManager {
+
     /**
      * Registra un IWakeupObserver che, tramite il pattern "Observer"
      * sarà notificato, a un intervallo fissato, dei cambiamenti di stato.
      *
-     * @param observer IWakeupObserver da registrare.
-     * @param interval Intervallo di tempo per la notifica all'oggetto "observer".
+     * @param observer IWakeupObserver da registrare. Se null,
+     *                 viene sollevata un'eccezione IllegalArgumentException.
+     * @param interval Intervallo di tempo per la notifica all'oggetto
+     *                 "observer". Se minore o uguale a zero,
+     *                 viene sollevata un'eccezione IllegalArgumentException.
      * @param oneTimeOnly True se il wakeup avviene una sola volta,
      *                    false se il wakeup è ripetuto.
+     * @throws java.lang.IllegalArgumentException
      */
     public void attachObserver(IWakeupObserver observer, int interval,
-                               boolean oneTimeOnly);
+                               boolean oneTimeOnly)
+        throws IllegalArgumentException;
     /**
      * Cancella la registrazione di un IWakeupObserver.
      *
      * @param observer IWakeupObserver la cui registrazione come "observer" di
-     *                 questo oggetto sarà cancellata.
+     *                 questo oggetto sarà cancellata. Se null,
+     *                 viene sollevata un'eccezione IllegalArgumentException.
+     *                 Se non precedentemente registrato,
+     *                 viene sollevata un'eccezione
+     *                 UnregisteredObserverException.
+     * @throws com.kyloth.serleena.common.UnregisteredObserverException
+     * @throws java.lang.IllegalArgumentException
      */
-    public void detachObserver(IWakeupObserver observer);
+    public void detachObserver(IWakeupObserver observer)
+            throws UnregisteredObserverException, IllegalArgumentException;
+
     /**
      * Metodo "notify" basato sull'omonimo metodo della classe "Subject" del
      * Design Pattern "Observer".
      *
-     * @param observer Oggetto "observer" da notificare.
+     * @param observer Oggetto "observer" da notificare. Se null,
+     *                 viene sollevata un'eccezione IllegalArgumentException.
+     * @throws java.lang.IllegalArgumentException
      */
-    public void notifyObserver(IWakeupObserver observer);
+    public void notifyObserver(IWakeupObserver observer)
+            throws IllegalArgumentException;
 }
