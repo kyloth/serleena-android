@@ -54,17 +54,23 @@ package com.kyloth.serleena.sensors;
  * @version 1.0.0
  */
 public interface IWakeupManager {
+
     /**
      * Registra un IWakeupObserver che, tramite il pattern "Observer"
      * sarà notificato, a un intervallo fissato, dei cambiamenti di stato.
      *
-     * @param observer IWakeupObserver da registrare.
-     * @param interval Intervallo di tempo per la notifica all'oggetto "observer".
+     * @param observer IWakeupObserver da registrare. Se null,
+     *                 viene sollevata un'eccezione IllegalArgumentException.
+     * @param interval Intervallo di tempo per la notifica all'oggetto
+     *                 "observer". Se minore o uguale a zero,
+     *                 viene sollevata un'eccezione IllegalArgumentException.
      * @param oneTimeOnly True se il wakeup avviene una sola volta,
      *                    false se il wakeup è ripetuto.
+     * @throws java.lang.IllegalArgumentException
      */
     public void attachObserver(IWakeupObserver observer, int interval,
-                               boolean oneTimeOnly);
+                               boolean oneTimeOnly)
+        throws IllegalArgumentException;
     /**
      * Cancella la registrazione di un IWakeupObserver.
      *
