@@ -205,4 +205,21 @@ public class WakefulLocationManager implements ILocationManager {
         nlm.getSingleUpdate(myObs);
     }
 
+    /**
+     * Implementa ILocationManager.notifyObserver().
+     *
+     * @param observer Oggetto ILocationObserver a cui comunicare i dati.
+     *                 Se null, viene lanciata un'eccezione
+     *                 IllegalArgumentException.
+     */
+    @Override
+    public void notifyObserver(ILocationObserver observer)
+            throws IllegalArgumentException {
+
+        if (observer == null)
+            throw new IllegalArgumentException("Illegal null observer");
+
+        observer.onLocationUpdate(lastKnownLocation);
+    }
+
 }
