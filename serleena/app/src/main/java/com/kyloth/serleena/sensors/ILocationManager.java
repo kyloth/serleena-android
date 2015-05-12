@@ -43,6 +43,7 @@
 package com.kyloth.serleena.sensors;
 
 import com.kyloth.serleena.common.GeoPoint;
+import com.kyloth.serleena.common.UnregisteredObserverException;
 
 /**
  * Interfaccia che verrà implementata da un oggetto in grado di fornire
