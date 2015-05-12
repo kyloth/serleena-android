@@ -246,4 +246,18 @@ public class WakefulLocationManager implements ILocationManager {
         }
     }
 
+    /**
+     * Restituisce la singola istanza della classe.
+     *
+     * Implementa il pattern Singleton.
+     *
+     * @param context Contesto dell'applicazione.
+     * @return Istanza della classe.
+     */
+    public static WakefulLocationManager getInstance(Context context) {
+        if (instance == null)
+            instance = new WakefulLocationManager(context);
+        return instance;
+    }
+
 }
