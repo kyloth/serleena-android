@@ -42,6 +42,8 @@
 
 package com.kyloth.serleena.sensors;
 
+import com.kyloth.serleena.common.UnregisteredObserverException;
+
 /**
  * Interfaccia che verrà implementata da un oggetto in grado di
  * segnalare eventi di wakeup del processo utilizzando RTC.
@@ -75,9 +77,17 @@ public interface IWakeupManager {
      * Cancella la registrazione di un IWakeupObserver.
      *
      * @param observer IWakeupObserver la cui registrazione come "observer" di
-     *                 questo oggetto sarà cancellata.
+     *                 questo oggetto sarà cancellata. Se null,
+     *                 viene sollevata un'eccezione IllegalArgumentException.
+     *                 Se non precedentemente registrato,
+     *                 viene sollevata un'eccezione
+     *                 UnregisteredObserverException.
+     * @throws com.kyloth.serleena.common.UnregisteredObserverException
+     * @throws java.lang.IllegalArgumentException
      */
-    public void detachObserver(IWakeupObserver observer);
+    public void detachObserver(IWakeupObserver observer)
+            throws UnregisteredObserverException, IllegalArgumentException;
+
     /**
      * Metodo "notify" basato sull'omonimo metodo della classe "Subject" del
      * Design Pattern "Observer".
