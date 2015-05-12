@@ -58,7 +58,7 @@ import org.robolectric.RuntimeEnvironment;
  * @version 1.0
  */
 @RunWith(RobolectricGradleTestRunner.class)
-@Config(constants = BuildConfig.class, emulateSdk = 21)
+@Config(constants = BuildConfig.class, emulateSdk = 19)
 public class SerleenaDatabaseTest {
 	SerleenaDatabase sh;
 
