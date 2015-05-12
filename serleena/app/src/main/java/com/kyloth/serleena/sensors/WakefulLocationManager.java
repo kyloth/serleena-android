@@ -140,4 +140,31 @@ public class WakefulLocationManager implements ILocationManager {
         adjustGpsUpdateRate();
     }
 
+    /**
+     * Implementa ILocationManager.detachObserver().
+     *
+     * @param observer ILocationObserver la cui registrazione come "observer" di
+     *                 questo oggetto sarà cancellata. Se null, viene lanciata
+     *                 un'eccezione IllegalArgumentException. Se non
+     *                 precedentemente registrato,
+     *                 viene lanciata un'eccezione
+     *                 UnregisteredObserverException.
+     * @throws UnregisteredObserverException
+     * @throws IllegalArgumentException
+     */
+    @Override
+    public void detachObserver(ILocationObserver observer)
+            throws UnregisteredObserverException, IllegalArgumentException {
+
+        if (observer == null)
+            throw new IllegalArgumentException("Illegal null observer");
+        if (!observers.containsKey(observer))
+            throw new UnregisteredObserverException();
+
+        wm.detachObserver(observers.get(observer));
+        observers.remove(observer);
+        intervals.remove(observer);
+        adjustGpsUpdateRate();
+    }
+
 }
