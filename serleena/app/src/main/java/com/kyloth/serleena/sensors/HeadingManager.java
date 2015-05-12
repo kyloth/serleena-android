@@ -38,6 +38,8 @@
  * Version  Programmer        Date         Changes
  * 1.0.0    Filippo Sestini   2015-05-07   Creazione file e scrittura
  *                                         codice e documentazione Javadoc.
+ * 1.0.1    Filippo Sestini   2015-05-12   Refactoring di onSensorChanged
+ *                                         e aggiunta di onNewData().
  */
 
 package com.kyloth.serleena.sensors;
@@ -110,10 +112,20 @@ public class HeadingManager implements IHeadingManager, SensorEventListener {
      */
     @Override
     public void onSensorChanged(SensorEvent sensorEvent) {
-        if (sensorEvent.sensor.getType() == Sensor.TYPE_ACCELEROMETER)
-            accelerometerValues = sensorEvent.values;
-        else if (sensorEvent.sensor.getType() == Sensor.TYPE_MAGNETIC_FIELD)
-            magneticFieldValues = sensorEvent.values;
+        onNewData(sensorEvent.values, sensorEvent.sensor.getType());
+    }
+
+    /**
+     * Elabora dati raw provenienti dai sensori.
+     *
+     * @param values Dati rilevati dai sensori.
+     * @param sensorType Tipo di sensore che ha generato i dati.
+     */
+    public void onNewData(float[] values, int sensorType) {
+        if (sensorType == Sensor.TYPE_ACCELEROMETER)
+            accelerometerValues = values;
+        else if (sensorType == Sensor.TYPE_MAGNETIC_FIELD)
+            magneticFieldValues = values;
         else return;
 
         AsyncTask<Void, Void, Double> t = new AsyncTask<Void, Void, Double>() {
