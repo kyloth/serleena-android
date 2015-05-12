@@ -378,54 +378,30 @@ public class SerleenaSQLiteDataSource implements ISerleenaSQLiteDataSource {
      */
     @Override
     public IQuadrant getQuadrant(GeoPoint location) {
-        SQLiteDatabase db = dbHelper.getReadableDatabase();
-        String where = "(raster_ne_corner_latitude + 90) >= " +
-                (location.latitude() + 90) + " AND " +
-                "(raster_ne_corner_longitude + 180) >= " +
-                (location.longitude() + 180) + " AND " +
-                "(raster_sw_corner_latitude + 90) <= " +
-                (location.latitude() + 90) + " AND " +
-                "(raster_sw_corner_longitude + 180) <= " +
-                (location.longitude() + 180);
 
-        Cursor result = db.query(SerleenaDatabase.TABLE_RASTER_MAPS,
-                new String[] { "raster_path", "rect_ne_corner_latitude",
-                        "rect_ne_corner_longitude",
-                        "rect_sw_corner_latitude", "rect_sw_corner_longitude" },
-                where, null, null, null, null);
+        int[] ij = getIJ(location);
 
-        int pathIndex = result.getColumnIndexOrThrow("raster_path");
-        int ne_lat_index =
-                result.getColumnIndexOrThrow("rect_ne_corner_latitude");
-        int ne_lon_index =
-                result.getColumnIndexOrThrow("rect_ne_corner_longitude");
-        int sw_lat_index =
-                result.getColumnIndexOrThrow("rect_sw_corner_latitude");
-        int sw_lon_index =
-                result.getColumnIndexOrThrow("rect_sw_corner_longitude");
+        String fileName = getRasterPath(ij[0], ij[1]);
 
-        Bitmap bmp = null;
-        GeoPoint p1 = null;
-        GeoPoint p2 = null;
+        File file = new File(context.getFilesDir(), fileName);
 
-        if (pathIndex > -1) {
-            String fileName = result.getString(pathIndex);
-            File file = new File(context.getFilesDir(), fileName);
+        Bitmap bmp;
 
-            if(file.exists())
-                bmp = BitmapFactory.decodeFile(file.getAbsolutePath());
-
-            p1 = new GeoPoint(result.getDouble(ne_lat_index),
-                    result.getDouble(ne_lon_index));
-            p2 = new GeoPoint(result.getDouble(sw_lat_index),
-                    result.getDouble(sw_lon_index));
+        if(file.exists()) {
+            bmp = BitmapFactory.decodeFile(file.getAbsolutePath());
+        } else {
+            throw new RuntimeException();
+            //TODO Gestirla meglio
         }
 
-        final Bitmap finalBmp = bmp;
-        final GeoPoint finalP1 = p1;
-        final GeoPoint finalP2 = p2;
+        assert(ij[0] < TOT_LONG_QUADRANTS);
+        assert(ij[1] < TOT_LAT_QUADRANTS);
 
-        result.close();
+        final Bitmap finalBmp = bmp;
+        final GeoPoint finalP1 = new GeoPoint(ij[0] * QUADRANT_LONGSIZE,
+                                              ij[1] * QUADRANT_LATSIZE);
+        final GeoPoint finalP2 = new GeoPoint((ij[0] + 1) * QUADRANT_LONGSIZE,
+                                              (ij[1] + 1) * QUADRANT_LATSIZE);
 
         return new IQuadrant() {
             @Override
@@ -466,7 +442,7 @@ public class SerleenaSQLiteDataSource implements ISerleenaSQLiteDataSource {
                 "(contact_sw_corner_longitude + 180) <= " +
                 (location.longitude() + 180);
         Cursor result = db.query(SerleenaDatabase.TABLE_CONTACTS,
-                new String[] { "contact_name", "contact_value" }, where,
+                new String[]{"contact_name", "contact_value"}, where,
                 null, null, null, null);
 
         int nameIndex = result.getColumnIndexOrThrow("contact_name");
