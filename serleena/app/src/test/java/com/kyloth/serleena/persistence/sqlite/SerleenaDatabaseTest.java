@@ -191,7 +191,7 @@ public class SerleenaDatabaseTest {
 		values.put("track_experience", id);
 		values.put("track_name", "bar");
 		db.insertOrThrow(SerleenaDatabase.TABLE_TRACKS, null, values);
-		db.delete(SerleenaDatabase.TABLE_EXPERIENCES, "id = " + id, null);
+		db.delete(SerleenaDatabase.TABLE_EXPERIENCES, "experience_id = " + id, null);
 		Cursor query = db.query(SerleenaDatabase.TABLE_TRACKS,
 								null,
 								"track_experience = " + id,
@@ -268,7 +268,7 @@ public class SerleenaDatabaseTest {
 		values.put("eventl_latitude", 1);
 		values.put("eventl_longitude", 1);
 		db.insertOrThrow(SerleenaDatabase.TABLE_TELEM_EVENTS_LOCATION, null, values);
-		db.delete(SerleenaDatabase.TABLE_TRACKS, "id = " + id, null);
+		db.delete(SerleenaDatabase.TABLE_TRACKS, "track_id = " + id, null);
 		Cursor query = db.query(SerleenaDatabase.TABLE_TELEM_EVENTS_LOCATION, null, "eventl_telem = " + id, null, null, null, null);
 		assertTrue(query.getCount() == 0);
 	}
@@ -358,7 +358,7 @@ public class SerleenaDatabaseTest {
 		values.put("eventl_value", 1);
 		values.put("eventl_type", 1);
 		db.insertOrThrow(SerleenaDatabase.TABLE_TELEM_EVENTS_HEART_CHECKP, null, values);
-		db.delete(SerleenaDatabase.TABLE_TRACKS, "id = " + id, null);
+		db.delete(SerleenaDatabase.TABLE_TRACKS, "track_id = " + id, null);
 		Cursor query = db.query(SerleenaDatabase.TABLE_TELEM_EVENTS_HEART_CHECKP, null, "eventl_telem = " + id, null, null, null, null);
 		assertTrue(query.getCount() == 0);
 	}
@@ -599,7 +599,7 @@ public class SerleenaDatabaseTest {
 		values.put("userpoint_x", 1);
 		values.put("userpoint_y", 1);
 		db.insertOrThrow(SerleenaDatabase.TABLE_USER_POINTS, null, values);
-		db.delete(SerleenaDatabase.TABLE_EXPERIENCES, "id = " + id, null);
+		db.delete(SerleenaDatabase.TABLE_EXPERIENCES, "experience_id = " + id, null);
 		Cursor query = db.query(SerleenaDatabase.TABLE_USER_POINTS, null, "userpoint_experience = " + id, null, null, null, null);
 		assertTrue(query.getCount() == 0);
 	}
@@ -663,7 +663,7 @@ public class SerleenaDatabaseTest {
 		values.put("checkpoint_num", 1);
 		values.put("checkpoint_track", id);
 		db.insertOrThrow(SerleenaDatabase.TABLE_CHECKPOINTS, null, values);
-		db.delete(SerleenaDatabase.TABLE_TRACKS, "id = " + id, null);
+		db.delete(SerleenaDatabase.TABLE_TRACKS, "track_id = " + id, null);
 		Cursor query = db.query(SerleenaDatabase.TABLE_CHECKPOINTS, null, "checkpoint_track = " + id, null, null, null, null);
 		assertTrue(query.getCount() == 0);
 	}
