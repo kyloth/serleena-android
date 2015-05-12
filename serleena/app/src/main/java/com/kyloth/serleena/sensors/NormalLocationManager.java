@@ -165,4 +165,58 @@ public class NormalLocationManager implements ILocationManager {
         locationManager.removeUpdates(observers.remove(observer));
     }
 
+    /**
+     * Implementa ILocationManager.getSingleUpdate().
+     *
+     * Il metodo garantisce che il processore non entri in sleep mode
+     * finchè non vengono ottenuti i dati dal modulo GPS,
+     * o comunque fino allo scadere di un timeout.
+     * L'observer riceve in ogni caso una callback. Nel caso non sia stato
+     * possibile ottenere dati aggiornati dal GPS, vengono comunicati gli
+     * ultimi disponibili.
+     *
+     * @param observer Oggetto ILocationObserver a cui comunicare i dati. Se
+     *                 null, viene sollevata un'eccezione
+     *                 IllegalArgumentException.
+     */
+    @Override
+    public void getSingleUpdate(final ILocationObserver observer)
+            throws IllegalArgumentException {
+
+        if (observer == null)
+            throw new IllegalArgumentException("Illegal null observer");
+
+        if (observers.size() > 0 && ((System.currentTimeMillis() / 1000L) -
+                lastUpdate) < MAX_WINDOW_SECONDS)
+            notifyObserver(observer);
+        else {
+            final LocationListener listener = new LocationListener() {
+                @Override
+                public void onLocationChanged(Location location) {
+                    lastKnownLocation = new GeoPoint(location.getLatitude(),
+                            location.getLongitude());
+                    lastUpdate = System.currentTimeMillis() / 1000L;
+                    notifyObserver(observer);
+                }
+                @Override
+                public void onStatusChanged(String s, int i, Bundle bundle) { }
+                @Override
+                public void onProviderEnabled(String s) { }
+                @Override
+                public void onProviderDisabled(String s) { }
+            };
+
+            // TODO check if gps available
+            String provider = android.location.LocationManager.GPS_PROVIDER;
+            locationManager.requestSingleUpdate(provider, listener, null);
+
+            Handler timeoutHandler = new Handler();
+            timeoutHandler.postDelayed(new Runnable() {
+                public void run() {
+                    locationManager.removeUpdates(listener);
+                }
+            }, TIMEOUT_SECONDS * 1000);
+        }
+    }
+
 }
