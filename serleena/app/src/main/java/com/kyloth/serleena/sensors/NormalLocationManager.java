@@ -141,4 +141,28 @@ public class NormalLocationManager implements ILocationManager {
 
     }
 
+    /**
+     * Implementa ILocationManager.detachObserver().
+     *
+     * @param observer ILocationObserver la cui registrazione come "observer" di
+     *                 questo oggetto sarà cancellata. Se null, viene lanciata
+     *                 un'eccezione IllegalArgumentException. Se non
+     *                 precedentemente registrato,
+     *                 viene lanciata un'eccezione
+     *                 UnregisteredObserverException.
+     * @throws UnregisteredObserverException
+     * @throws IllegalArgumentException
+     */
+    @Override
+    public void detachObserver(ILocationObserver observer)
+            throws UnregisteredObserverException, IllegalArgumentException {
+
+        if (observer == null)
+            throw new IllegalArgumentException("Illegal null observer");
+        if (!observers.containsKey(observer))
+            throw new UnregisteredObserverException();
+
+        locationManager.removeUpdates(observers.remove(observer));
+    }
+
 }
