@@ -236,4 +236,18 @@ public class NormalLocationManager implements ILocationManager {
         observer.onLocationUpdate(lastKnownLocation);
     }
 
+    /**
+     * Restituisce la singola istanza della classe.
+     *
+     * Implementa il pattern Singleton.
+     *
+     * @param context Contesto dell'applicazione.
+     * @return Istanza della classe.
+     */
+    public static NormalLocationManager getInstance(Context context) {
+        if (instance == null)
+            instance = new NormalLocationManager(context);
+        return instance;
+    }
+
 }
