@@ -39,6 +39,7 @@
  * 1.0.0    Filippo Sestini     2015-05-06  Creazione file e scrittura di codice
  *                                          e documentazione in Javadoc.
  * 1.0.1    Tobia Tesan         2015-05-07  Aggiunta di getIJ
+ * 1.0.1    Tobia Tesan         2015-05-07  Aggiunta di getPath
  */
 
 package com.kyloth.serleena.persistence.sqlite;
@@ -90,6 +91,7 @@ public class SerleenaSQLiteDataSource implements ISerleenaSQLiteDataSource {
     final static int QUADRANT_LONGSIZE = 10;
     final static int TOT_LAT_QUADRANTS = 360 / QUADRANT_LATSIZE;
     final static int TOT_LONG_QUADRANTS = 180 / QUADRANT_LONGSIZE;
+    final static String RASTER_PATH = "raster/";
 
     SerleenaDatabase dbHelper;
     Context context;
@@ -100,6 +102,13 @@ public class SerleenaSQLiteDataSource implements ISerleenaSQLiteDataSource {
     }
 
     /**
+     * Ritorna il percorso del file per il quadrante i,j-esimo.
+     *
+     * @return Il path
+     */
+    public static String getRasterPath(int i, int j) {
+        return RASTER_PATH + i + "_" + j;
+    }
 
     /**
      * Ritorna la coppia i,j che identifica il quadrante a cui appartiene un punto.
