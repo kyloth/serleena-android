@@ -105,4 +105,39 @@ public class WakefulLocationManager implements ILocationManager {
         gpsUpdateObserver = new GpsWakeup();
     }
 
+    /**
+     * Implementa ILocationManager.attachObserver().
+     *
+     * Notifica l'observer a intervalli regolari secondo il valore del
+     * parametro interval. Se il processore è in sleep mode,
+     * questo viene svegliato e l'observer notificato.
+     *
+     * @param observer ILocationObserver da registrare. Se null,
+     *                 viene lanciata un'eccezione IllegalArgumentException.
+     * @param interval Intervallo di tempo in secondi ogni quanto viene
+     *                 notificato l'oserver. Se minore o uguale a zero,
+     *                 viene lanciata un'eccezione IllegalArgumentException.
+     * @throws IllegalArgumentException
+     */
+    @Override
+    public void attachObserver(final ILocationObserver observer, int interval) {
+
+        if (observer == null)
+            throw new IllegalArgumentException("Illegal null observer");
+        if (interval <= 0)
+            throw new IllegalArgumentException("Illegal interval");
+
+        IWakeupObserver myObserver = new IWakeupObserver() {
+            @Override
+            public void onWakeup() {
+                notifyObserver(observer);
+            }
+        };
+
+        wm.attachObserver(myObserver, interval, false);
+        observers.put(observer, myObserver);
+        intervals.put(observer, interval);
+        adjustGpsUpdateRate();
+    }
+
 }
