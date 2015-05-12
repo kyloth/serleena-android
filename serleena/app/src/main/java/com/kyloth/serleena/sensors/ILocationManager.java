@@ -74,12 +74,22 @@ public interface ILocationManager {
         throws IllegalArgumentException;
 
     /**
-     * Cancella la registrazione di un ILocationObserver.
+     * Cancella la registrazione di un ILocationObserver. Se l'observer si è
+     * registrato per un singolo aggiornamento con getSingleUpdate(),
+     * questo viene annullato.
      *
      * @param observer ILocationObserver la cui registrazione come "observer" di
-     *                 questo oggetto sarà cancellata.
+     *                 questo oggetto sarà cancellata. Se null, viene lanciata
+     *                 un'eccezione IllegalArgumentException. Se non
+     *                 precedentemente registrato,
+     *                 viene lanciata un'eccezione
+     *                 UnregisteredObserverException.
+     * @throws UnregisteredObserverException
+     * @throws java.lang.IllegalArgumentException
      */
-    public void detachObserver(ILocationObserver observer);
+    public void detachObserver(ILocationObserver observer)
+            throws UnregisteredObserverException, IllegalArgumentException;
+
     /**
      * Permette di ottenere un singolo 1aggiornamento dei dati di posizione su
      * richiesta esplicita. L'aggiornamento viene dato in maniera asincrona
