@@ -43,6 +43,7 @@
 package com.kyloth.serleena.sensors;
 
 import com.kyloth.serleena.common.GeoPoint;
+import com.kyloth.serleena.common.UnregisteredObserverException;
 
 /**
  * Interfaccia che verrà implementata da un oggetto in grado di fornire
@@ -57,32 +58,60 @@ import com.kyloth.serleena.common.GeoPoint;
  */
 
 public interface ILocationManager {
+
     /**
      * Registra un ILocationObserver che, tramite il pattern "Observer"
      * sarà notificato, a un intervallo fissato, dei cambiamenti di stato.
      *
-     * @param observer ILocationObserver da registrare.
-     * @param interval Intervallo di tempo per la notifica all'oggetto "observer".
+     * @param observer ILocationObserver da registrare. Se null,
+     *                 viene lanciata un'eccezione IllegalArgumentException.
+     * @param interval Intervallo di tempo per la notifica all'oggetto
+     *                 "observer". Se minore o uguale a zero,
+     *                 viene lanciata un'eccezione IllegalArgumentException.
+     * @throws java.lang.IllegalArgumentException
      */
-    public void attachObserver(ILocationObserver observer, int interval);
+    public void attachObserver(ILocationObserver observer, int interval)
+        throws IllegalArgumentException;
+
     /**
-     * Cancella la registrazione di un ILocationObserver.
+     * Cancella la registrazione di un ILocationObserver. Se l'observer si è
+     * registrato per un singolo aggiornamento con getSingleUpdate(),
+     * questo viene annullato.
      *
      * @param observer ILocationObserver la cui registrazione come "observer" di
-     *                 questo oggetto sarà cancellata.
+     *                 questo oggetto sarà cancellata. Se null, viene lanciata
+     *                 un'eccezione IllegalArgumentException. Se non
+     *                 precedentemente registrato,
+     *                 viene lanciata un'eccezione
+     *                 UnregisteredObserverException.
+     * @throws UnregisteredObserverException
+     * @throws java.lang.IllegalArgumentException
      */
-    public void detachObserver(ILocationObserver observer);
+    public void detachObserver(ILocationObserver observer)
+            throws UnregisteredObserverException, IllegalArgumentException;
+
     /**
-     * Permette di ottenere un aggiornamento dei dati di posizione su
-     * richiesta esplicita.
+     * Permette di ottenere un singolo 1aggiornamento dei dati di posizione su
+     * richiesta esplicita. L'aggiornamento viene dato in maniera asincrona
+     * tramite callback all'observer, dato il tempo possibilmente non
+     * trascurabile per ottenere i dati.
      *
-     * @return Ritorna un valore di tipo GeoPoint rappresentante la posizione
-     *         attuale dell'Escursionista.
+     * @param observer Oggetto ILocationObserver a cui comunicare i dati.
+     *                 Se null, viene lanciata un'eccezione
+     *                 IllegalArgumentException.
+     * @throws java.lang.IllegalArgumentException
      */
-    public GeoPoint getSingleUpdate();
+    public void getSingleUpdate(ILocationObserver observer)
+        throws IllegalArgumentException;
+
     /**
      * Metodo "notify" basato sull'omonimo metodo della classe "Subject" del
      * Design Pattern "Observer".
+     *
+     * @param observer Oggetto ILocationObserver a cui comunicare i dati.
+     *                 Se null, viene lanciata un'eccezione
+     *                 IllegalArgumentException.
      */
-    public void notifyObservers();
+    public void notifyObserver(ILocationObserver observer)
+            throws IllegalArgumentException;
 }
