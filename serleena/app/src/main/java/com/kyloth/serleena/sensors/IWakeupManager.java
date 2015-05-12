@@ -60,8 +60,11 @@ public interface IWakeupManager {
      *
      * @param observer IWakeupObserver da registrare.
      * @param interval Intervallo di tempo per la notifica all'oggetto "observer".
+     * @param oneTimeOnly True se il wakeup avviene una sola volta,
+     *                    false se il wakeup è ripetuto.
      */
-    public void attachObserver(IWakeupObserver observer, int interval);
+    public void attachObserver(IWakeupObserver observer, int interval,
+                               boolean oneTimeOnly);
     /**
      * Cancella la registrazione di un IWakeupObserver.
      *
