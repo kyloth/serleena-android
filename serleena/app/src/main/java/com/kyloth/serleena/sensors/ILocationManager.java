@@ -58,14 +58,21 @@ import com.kyloth.serleena.common.UnregisteredObserverException;
  */
 
 public interface ILocationManager {
+
     /**
      * Registra un ILocationObserver che, tramite il pattern "Observer"
      * sarà notificato, a un intervallo fissato, dei cambiamenti di stato.
      *
-     * @param observer ILocationObserver da registrare.
-     * @param interval Intervallo di tempo per la notifica all'oggetto "observer".
+     * @param observer ILocationObserver da registrare. Se null,
+     *                 viene lanciata un'eccezione IllegalArgumentException.
+     * @param interval Intervallo di tempo per la notifica all'oggetto
+     *                 "observer". Se minore o uguale a zero,
+     *                 viene lanciata un'eccezione IllegalArgumentException.
+     * @throws java.lang.IllegalArgumentException
      */
-    public void attachObserver(ILocationObserver observer, int interval);
+    public void attachObserver(ILocationObserver observer, int interval)
+        throws IllegalArgumentException;
+
     /**
      * Cancella la registrazione di un ILocationObserver.
      *
