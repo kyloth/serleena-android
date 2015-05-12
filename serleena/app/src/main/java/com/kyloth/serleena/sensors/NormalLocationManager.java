@@ -93,4 +93,52 @@ public class NormalLocationManager implements ILocationManager {
             context.getSystemService(Context.LOCATION_SERVICE);
     }
 
+    /**
+     * Implementa ILocationManager.attachObserver().
+     *
+     * L'observer viene notificato ad intervalli regolari indicati dal
+     * parametro interval, a meno che il processore non sia in sleep mode.
+     *
+     * @param observer ILocationObserver da registrare. Se null,
+     *                 viene lanciata un'eccezione IllegalArgumentException.
+     * @param interval Intervallo di tempo in secondi per la notifica
+     *                 all'oggetto "observer". Se minore o uguale a zero,
+     *                 viene lanciata un'eccezione IllegalArgumentException.
+     * @throws IllegalArgumentException
+     */
+    @Override
+    public void attachObserver(final ILocationObserver observer, int interval)
+            throws IllegalArgumentException {
+
+        if (observer == null)
+            throw new IllegalArgumentException("Illegal null observer");
+        if (interval <= 0)
+            throw new IllegalArgumentException("Illegal interval");
+
+        LocationListener listener = new LocationListener() {
+            @Override
+            public void onLocationChanged(Location location) {
+                lastKnownLocation = new GeoPoint(location.getLatitude(),
+                        location.getLongitude());
+                lastUpdate = System.currentTimeMillis() / 1000L;
+                notifyObserver(observer);
+            }
+
+            @Override
+            public void onStatusChanged(String s, int i, Bundle bundle) { }
+
+            @Override
+            public void onProviderEnabled(String s) { }
+
+            @Override
+            public void onProviderDisabled(String s) { }
+        };
+
+        // TODO check if gps available
+        String provider = android.location.LocationManager.GPS_PROVIDER;
+        locationManager.requestLocationUpdates(provider, interval*1000, 10,
+                listener);
+
+    }
+
 }
