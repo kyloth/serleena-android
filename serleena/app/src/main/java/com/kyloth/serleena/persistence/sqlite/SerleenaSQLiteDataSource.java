@@ -38,6 +38,7 @@
  * Version  Programmer          Date        Changes
  * 1.0.0    Filippo Sestini     2015-05-06  Creazione file e scrittura di codice
  *                                          e documentazione in Javadoc.
+ * 1.0.1    Tobia Tesan         2015-05-07  Aggiunta di getIJ
  */
 
 package com.kyloth.serleena.persistence.sqlite;
@@ -74,6 +75,8 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 
+import static java.lang.Math.floor;
+
 /**
  * Classe concreta contenente l’implementazione del data source per l’accesso al
  * database SQLite dell’applicazione.
@@ -83,6 +86,10 @@ import java.util.Date;
  * @since 2015-05-06
  */
 public class SerleenaSQLiteDataSource implements ISerleenaSQLiteDataSource {
+    final static int QUADRANT_LATSIZE = 10;
+    final static int QUADRANT_LONGSIZE = 10;
+    final static int TOT_LAT_QUADRANTS = 360 / QUADRANT_LATSIZE;
+    final static int TOT_LONG_QUADRANTS = 180 / QUADRANT_LONGSIZE;
 
     SerleenaDatabase dbHelper;
     Context context;
@@ -90,6 +97,25 @@ public class SerleenaSQLiteDataSource implements ISerleenaSQLiteDataSource {
     public SerleenaSQLiteDataSource(Context context, SerleenaDatabase dbHelper) {
         this.dbHelper = dbHelper;
         this.context = context;
+    }
+
+    /**
+
+    /**
+     * Ritorna la coppia i,j che identifica il quadrante a cui appartiene un punto.
+     *
+     * @param p Il punto geografico
+     * @return Un array int [2] di due punti i,j che identifica il quadrante.
+     */
+    public static int[] getIJ(GeoPoint p) {
+        assert(p.latitude() >= -90);
+        assert(p.latitude() <= +90);
+        assert(p.longitude() >= -180);
+        assert(p.longitude() <= +180);
+        int ij[] = new int[2];
+        ij[0] = (int)(floor((p.longitude() + 180) / QUADRANT_LATSIZE) % TOT_LAT_QUADRANTS);
+        ij[1] = (int)(floor((p.latitude() + 90) / QUADRANT_LATSIZE) % TOT_LAT_QUADRANTS);
+        return ij;
     }
 
     /**
