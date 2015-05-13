@@ -154,7 +154,8 @@ public class NormalLocationManager implements ILocationManager, LocationListener
         if (!observers.containsKey(observer))
             throw new UnregisteredObserverException();
 
-        locationManager.removeUpdates(observers.remove(observer));
+        observers.remove(observer);
+        adjustGpsUpdateRate();
     }
 
     /**
