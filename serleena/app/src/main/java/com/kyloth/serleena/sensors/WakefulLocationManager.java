@@ -190,8 +190,6 @@ public class WakefulLocationManager implements ILocationManager {
 
         if (observer == null)
             throw new IllegalArgumentException("Illegal null observer");
-        if (timeout <= 0)
-            throw new IllegalArgumentException("Illegal timeout");
 
         final android.os.PowerManager.WakeLock wakeLock =
                 pm.newWakeLock(PowerManager.PARTIAL_WAKE_LOCK, "MyWakelockTag");
@@ -206,7 +204,12 @@ public class WakefulLocationManager implements ILocationManager {
             }
         };
 
-        nlm.getSingleUpdate(myObs, timeout);
+        try {
+            nlm.getSingleUpdate(myObs, timeout);
+        } catch (Exception ex) {
+            wakeLock.release();
+            throw ex;
+        }
     }
 
     /**
