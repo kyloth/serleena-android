@@ -30,6 +30,9 @@
 
 package com.kyloth.serleena;
 
+import android.app.Fragment;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
 import android.view.Menu;
@@ -41,7 +44,7 @@ public class SerleenaActivity extends ActionBarActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_serleena);
+        setContentView(R.layout.fragment_exp_menu);
     }
 
     @Override
@@ -58,9 +61,25 @@ public class SerleenaActivity extends ActionBarActivity {
         // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
 
-        //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
-            return true;
+        switch(id) {
+            case R.id.screen_menu_exp:
+                setContentView(R.layout.fragment_map);
+                return true;
+            case R.id.screen_menu_contact:
+                setContentView(R.layout.fragment_contacts);
+                return true;
+            case R.id.screen_menu_meteo:
+                setContentView(R.layout.fragment_weather);
+                return true;
+            case R.id.screen_menu_cardio:
+                setContentView(R.layout.fragment_cardio);
+                return true;
+            case R.id.screen_menu_compass:
+                setContentView(R.layout.fragment_compass_screen);
+                return true;
+            case R.id.screen_menu_sync:
+                setContentView(R.layout.fragment_sync_screen);
+                return true;
         }
 
         return super.onOptionsItemSelected(item);
