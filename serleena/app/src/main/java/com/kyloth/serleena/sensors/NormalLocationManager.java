@@ -90,7 +90,9 @@ public class NormalLocationManager implements ILocationManager, LocationListener
      * @param context Contesto dell'applicazione.
      */
     private NormalLocationManager(Context context) {
-        this.observers = new HashMap<ILocationObserver, LocationListener>();
+        this.observers = new HashMap<ILocationObserver, Integer>();
+        this.singleUpdates = new HashSet<ILocationObserver>();
+        this.currentInterval = Integer.MAX_VALUE;
 
         locationManager = (android.location.LocationManager)
             context.getSystemService(Context.LOCATION_SERVICE);
