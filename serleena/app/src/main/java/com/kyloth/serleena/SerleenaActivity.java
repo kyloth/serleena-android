@@ -44,7 +44,7 @@ public class SerleenaActivity extends ActionBarActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.fragment_exp_menu);
+        setContentView(R.layout.fragment_track);
     }
 
     @Override
