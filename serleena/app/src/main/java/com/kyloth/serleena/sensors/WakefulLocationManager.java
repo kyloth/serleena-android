@@ -99,7 +99,7 @@ public class WakefulLocationManager implements ILocationManager {
             }
             @Override
             public void onWakeup() {
-                me.getSingleUpdate(this);
+                me.getSingleUpdate(this, 30);
             }
         }
         gpsUpdateObserver = new GpsWakeup();
@@ -180,14 +180,18 @@ public class WakefulLocationManager implements ILocationManager {
      * @param observer Oggetto ILocationObserver a cui comunicare i dati. Se
      *                 null, viene sollevata un'eccezione
      *                 IllegalArgumentException.
+     * @param timeout  Timeout in secondi. Se minore o uguale a zero,
+     *                 viene sollevata un'eccezione IllegalArgumentException.
      * @throws java.lang.IllegalArgumentException
      */
     @Override
-    public void getSingleUpdate(final ILocationObserver observer)
+    public void getSingleUpdate(final ILocationObserver observer, int timeout)
             throws IllegalArgumentException {
 
         if (observer == null)
             throw new IllegalArgumentException("Illegal null observer");
+        if (timeout <= 0)
+            throw new IllegalArgumentException("Illegal timeout");
 
         final android.os.PowerManager.WakeLock wakeLock =
                 pm.newWakeLock(PowerManager.PARTIAL_WAKE_LOCK, "MyWakelockTag");
@@ -202,7 +206,7 @@ public class WakefulLocationManager implements ILocationManager {
             }
         };
 
-        nlm.getSingleUpdate(myObs);
+        nlm.getSingleUpdate(myObs, timeout);
     }
 
     /**
