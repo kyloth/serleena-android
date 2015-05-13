@@ -105,4 +105,30 @@ public class LocationReachedManager implements ILocationReachedManager {
         wm.attachObserver(alarm, 0, true);
     }
 
+    /**
+     * Implementa ILocationReachedManager.detachObserver().
+     *
+     * @param observer Oggetto da deregistrare ILocationReachedManager. Se null,
+     *                 viene sollevata un'eccezione IllegalArgumentException.
+     *                 Se non precedentemente registrato,
+     *                 viene sollevata un'eccezione
+     *                 UnregisteredObserverException.
+     * @throws IllegalArgumentException
+     * @throws UnregisteredObserverException
+     */
+    @Override
+    public synchronized void detachObserver(ILocationReachedObserver observer)
+            throws IllegalArgumentException, UnregisteredObserverException {
+
+        if (observer == null)
+            throw new IllegalArgumentException("Illegal null observer");
+        if (!observers.containsKey(observer))
+            throw new UnregisteredObserverException();
+
+        observers.remove(observer);
+        try {
+            wm.detachObserver(alarms.remove(observer));
+        } catch (UnregisteredObserverException ex) { }
+    }
+
 }
