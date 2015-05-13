@@ -167,4 +167,18 @@ public class LocationReachedManager implements ILocationReachedManager {
         }
     }
 
+    /**
+     * Restituisce la singola istanza della classe.
+     *
+     * Implementa il pattern Singleton.
+     *
+     * @param context Contesto dell'applicazione.
+     * @return Istanza della classe.
+     */
+    public static LocationReachedManager getInstance(Context context) {
+        if (instance == null)
+            instance = new LocationReachedManager(context);
+        return instance;
+    }
+
 }
