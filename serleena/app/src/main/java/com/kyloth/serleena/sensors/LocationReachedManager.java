@@ -84,4 +84,25 @@ public class LocationReachedManager implements ILocationReachedManager {
         alarms = new HashMap<ILocationReachedObserver, IWakeupObserver>();
     }
 
+    /**
+     * Implementa ILocationReachedManager.attachObserver().
+     *
+     * @param observer ILocationReachedObserver da registrare. Se null,
+     *                 viene sollevata un'eccezione IllegalArgumentException.
+     * @param location Punto geografico il cui raggiungimento deve generare una
+     *                 notifica. Se null, viene sollevata un'eccezione
+     *                 IllegalArgumentException.
+     * @throws IllegalArgumentException
+     */
+    @Override
+    public synchronized void attachObserver(ILocationReachedObserver observer,
+                                            GeoPoint location)
+            throws IllegalArgumentException {
+
+        observers.put(observer, location);
+        IWakeupObserver alarm = new CheckDistanceAlarm(observer, locMan);
+        alarms.put(observer, alarm);
+        wm.attachObserver(alarm, 0, true);
+    }
+
 }
