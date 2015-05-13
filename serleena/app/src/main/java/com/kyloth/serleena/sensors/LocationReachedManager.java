@@ -181,4 +181,28 @@ public class LocationReachedManager implements ILocationReachedManager {
         return instance;
     }
 
+    private class CheckDistanceAlarm implements IWakeupObserver,
+            ILocationObserver {
+
+        private ILocationReachedObserver observer;
+        private ILocationManager locMan;
+
+        public CheckDistanceAlarm(ILocationReachedObserver observer,
+                       ILocationManager locMan) {
+            this.observer = observer;
+            this.locMan = locMan;
+        }
+
+        @Override
+        public void onLocationUpdate(GeoPoint loc) {
+            checkObserverStatus(observer, loc);
+        }
+
+        @Override
+        public void onWakeup() {
+            locMan.getSingleUpdate(this,
+                    30);
+        }
+    }
+
 }
