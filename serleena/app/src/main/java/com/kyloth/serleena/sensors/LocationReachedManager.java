@@ -59,4 +59,12 @@ import java.util.Map;
  */
 public class LocationReachedManager implements ILocationReachedManager {
 
+    private static int LOCATION_RADIUS = 15;
+    private static LocationReachedManager instance;
+
+    private Map<ILocationReachedObserver, GeoPoint> observers;
+    private Map<ILocationReachedObserver, IWakeupObserver> alarms;
+    private IWakeupManager wm;
+    private ILocationManager locMan;
+
 }
