@@ -70,13 +70,14 @@ public class NormalLocationManager implements ILocationManager, LocationListener
 
     private static NormalLocationManager instance;
 
-    private static final int TIMEOUT_SECONDS = 60;
     private static final long MAX_WINDOW_SECONDS = 30;
 
     private GeoPoint lastKnownLocation;
     private long lastUpdate;
-    private Map<ILocationObserver, LocationListener> observers;
+    private Map<ILocationObserver, Integer> observers;
     private android.location.LocationManager locationManager;
+    private Set<ILocationObserver> singleUpdates;
+    private int currentInterval;
 
     /**
      * Crea un oggetto NormalLocationManager.
