@@ -249,10 +249,14 @@ public class NormalLocationManager implements ILocationManager, LocationListener
      *
      * Implementa il pattern Singleton.
      *
-     * @param context Contesto dell'applicazione.
+     * @param context Contesto dell'applicazione. Se null,
+     *                viene sollevata un'eccezione IllegalArgumentException.
      * @return Istanza della classe.
      */
-    public static NormalLocationManager getInstance(Context context) {
+    public static NormalLocationManager getInstance(Context context)
+            throws IllegalArgumentException {
+        if (context == null)
+            throw new IllegalArgumentException("Illegal null context");
         if (instance == null)
             instance = new NormalLocationManager(context);
         return instance;
