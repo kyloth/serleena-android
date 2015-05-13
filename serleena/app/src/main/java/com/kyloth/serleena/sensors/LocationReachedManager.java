@@ -67,4 +67,21 @@ public class LocationReachedManager implements ILocationReachedManager {
     private IWakeupManager wm;
     private ILocationManager locMan;
 
+    /**
+     * Crea un oggetto LocationReachedManager.
+     *
+     * Il costruttore è privato per realizzare correttamente il pattern
+     * Singleton, forzando l'accesso alla sola istanza esposta dai
+     * metodi Singleton e impedendo al codice client di costruire istanze
+     * arbitrariamente.
+     *
+     * @param context Contesto dell'applicazione.
+     */
+    private LocationReachedManager(Context context) {
+        wm = WakeupManager.getInstance(context);
+        locMan = WakefulLocationManager.getInstance(context);
+        observers = new HashMap<ILocationReachedObserver, GeoPoint>();
+        alarms = new HashMap<ILocationReachedObserver, IWakeupObserver>();
+    }
+
 }
