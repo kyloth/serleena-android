@@ -255,4 +255,23 @@ public class NormalLocationManager implements ILocationManager, LocationListener
         return instance;
     }
 
+    @Override
+    public void onLocationChanged(Location location) {
+        lastKnownLocation = new GeoPoint(location.getLatitude(),
+                location.getLongitude());
+        lastUpdate = System.currentTimeMillis() / 1000L;
+
+        for (ILocationObserver observer : observers.keySet())
+            notifyObserver(observer);
+    }
+
+    @Override
+    public void onStatusChanged(String s, int i, Bundle bundle) { }
+
+    @Override
+    public void onProviderEnabled(String s) { }
+
+    @Override
+    public void onProviderDisabled(String s) { }
+
 }
