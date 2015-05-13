@@ -171,6 +171,7 @@ public class NormalLocationManager implements ILocationManager, LocationListener
      * @param observer Oggetto ILocationObserver a cui comunicare i dati. Se
      *                 null, viene sollevata un'eccezione
      *                 IllegalArgumentException.
+     * @param timeout  Timeout in secondi.
      */
     @Override
     public void getSingleUpdate(final ILocationObserver observer, int timeout)
@@ -178,6 +179,8 @@ public class NormalLocationManager implements ILocationManager, LocationListener
 
         if (observer == null)
             throw new IllegalArgumentException("Illegal null observer");
+        if (timeout <= 0)
+            throw new IllegalArgumentException("Illegal timeout");
 
         if (observers.size() > 0 && ((System.currentTimeMillis() / 1000L) -
                 lastUpdate) < MAX_WINDOW_SECONDS)
