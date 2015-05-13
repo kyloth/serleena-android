@@ -173,7 +173,7 @@ public class NormalLocationManager implements ILocationManager, LocationListener
      *                 IllegalArgumentException.
      */
     @Override
-    public void getSingleUpdate(final ILocationObserver observer)
+    public void getSingleUpdate(final ILocationObserver observer, int timeout)
             throws IllegalArgumentException {
 
         if (observer == null)
@@ -181,11 +181,15 @@ public class NormalLocationManager implements ILocationManager, LocationListener
 
         if (observers.size() > 0 && ((System.currentTimeMillis() / 1000L) -
                 lastUpdate) < MAX_WINDOW_SECONDS)
+
             notifyObserver(observer);
+
         else {
+
             final LocationListener listener = new LocationListener() {
                 @Override
                 public void onLocationChanged(Location location) {
+                    singleUpdates.remove(observer);
                     lastKnownLocation = new GeoPoint(location.getLatitude(),
                             location.getLongitude());
                     lastUpdate = System.currentTimeMillis() / 1000L;
@@ -199,16 +203,24 @@ public class NormalLocationManager implements ILocationManager, LocationListener
                 public void onProviderDisabled(String s) { }
             };
 
-            // TODO check if gps available
+            singleUpdates.add(observer);
+
             String provider = android.location.LocationManager.GPS_PROVIDER;
             locationManager.requestSingleUpdate(provider, listener, null);
 
-            Handler timeoutHandler = new Handler();
-            timeoutHandler.postDelayed(new Runnable() {
+            final Handler timeoutHandler = new Handler();
+            final Runnable runnable = new Runnable() {
                 public void run() {
-                    locationManager.removeUpdates(listener);
+                    if (singleUpdates.contains(observer)) {
+                        locationManager.removeUpdates(listener);
+                        notifyObserver(observer);
+                        singleUpdates.remove(observer);
+                    }
                 }
-            }, TIMEOUT_SECONDS * 1000);
+            };
+
+            timeoutHandler.postDelayed(runnable, timeout * 1000);
+
         }
     }
 
