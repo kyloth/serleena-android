@@ -131,4 +131,40 @@ public class LocationReachedManager implements ILocationReachedManager {
         } catch (UnregisteredObserverException ex) { }
     }
 
+    /**
+     * Verifica, per un particolare observer, la distanza tra la posizione
+     * attuale e quella richiesta dall'observer.
+     *
+     * Se la distanza è ritenuta
+     * trascurabile, la destinazione è considerata raggiunta e l'observer
+     * viene notificato. Altrimenti, viene pianificato un ulteriore controllo
+     * con ritardo di tempo dipendente dalla distanza tra la destinazione e
+     * la posizione attuale.
+     *
+     * @param observer Oggetto ILocationReachedObserver la cui destinazione
+     *                 viene controllata.
+     * @param currentLocation Posizione attuale dell'utente.
+     */
+    private synchronized void checkObserverStatus(
+            ILocationReachedObserver observer, GeoPoint currentLocation) {
+        float[] results = new float[1];
+        GeoPoint toReach = observers.get(observer);
+
+        Location.distanceBetween(currentLocation.latitude(),
+                currentLocation.longitude(), toReach.latitude(),
+                toReach.longitude(), results);
+
+        int distance = Math.round(results[0]);
+
+        if (distance <= LOCATION_RADIUS) {
+            observer.onLocationReached();
+            observers.remove(observer);
+        } else {
+            IWakeupObserver alarm = new CheckDistanceAlarm(observer, locMan);
+            alarms.remove(observer);
+            alarms.put(observer, alarm);
+            wm.attachObserver(alarm, distance, true);
+        }
+    }
+
 }
