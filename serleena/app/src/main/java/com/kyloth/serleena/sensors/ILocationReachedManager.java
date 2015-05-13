@@ -57,11 +57,16 @@ public interface ILocationReachedManager {
      * Metodo che permette di registrare un oggetto che verrà notificato
      * al raggiungimento del punto geografico "location".
      *
-     * @param observer ILocationReachedObserver da registrare.
-     * @param location Punto geografico il cui raggiungimento deve generare una notifica.
+     * @param observer ILocationReachedObserver da registrare. Se null,
+     *                 viene sollevata un'eccezione IllegalArgumentException.
+     * @param location Punto geografico il cui raggiungimento deve generare una
+     *                 notifica. Se null, viene sollevata un'eccezione
+     *                 IllegalArgumentException.
+     * @throws IllegalArgumentException
      */
     public void attachObserver(ILocationReachedObserver observer,
-                               GeoPoint location);
+                               GeoPoint location)
+            throws IllegalArgumentException;
 
     /**
      * Annulla la registrazione di un observer precedentemente registrato
