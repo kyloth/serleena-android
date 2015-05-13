@@ -274,4 +274,28 @@ public class NormalLocationManager implements ILocationManager, LocationListener
     @Override
     public void onProviderDisabled(String s) { }
 
+    /**
+     * Regola la frequenza delle richieste di aggiornamento sulla posizione
+     * utente in base agli observer correntemente registrati e le loro
+     * esigenze in termini di tempo.
+     */
+    private void adjustGpsUpdateRate() {
+        if (observers.size() == 0) {
+            currentInterval = Integer.MAX_VALUE;
+            locationManager.removeUpdates(this);
+        } else {
+
+            int minInterval = Integer.MAX_VALUE;
+            for (int interval : observers.values())
+                if (interval < minInterval)
+                    minInterval = interval;
+
+            locationManager.removeUpdates(this);
+            locationManager.requestLocationUpdates(LocationManager
+                    .GPS_PROVIDER, minInterval * 1000, 10, this);
+            currentInterval = minInterval;
+
+        }
+    }
+
 }
