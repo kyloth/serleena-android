@@ -38,9 +38,6 @@
  * Version  Programmer        Date         Changes
  * 1.0.0    Gabriele Pozzan   2015-05-06   Creazione file e scrittura
  *                                         codice e documentazione Javadoc
- * 1.0.1    Filippo Sestini   2015-05-11   Aggiunta del metodo detachObserver
- *                                         e modifica di notifyAtLocation in
- *                                         attachObserver.
  */
 
 package com.kyloth.serleena.sensors;
