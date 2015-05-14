@@ -38,14 +38,12 @@
  * Version  Programmer        Date         Changes
  * 1.0.0    Gabriele Pozzan   2015-05-06   Creazione file e scrittura
  *                                         codice e documentazione Javadoc
- * 1.0.1    Filippo Sestini   2015-05-11   Aggiunta del metodo detachObserver
- *                                         e modifica di notifyAtLocation in
- *                                         attachObserver.
  */
 
 package com.kyloth.serleena.sensors;
 
 import com.kyloth.serleena.common.GeoPoint;
+import com.kyloth.serleena.common.UnregisteredObserverException;
 
 /**
  * Interfaccia che verrà implementata da un oggetto in grado di segnalare,
@@ -60,17 +58,27 @@ public interface ILocationReachedManager {
      * Metodo che permette di registrare un oggetto che verrà notificato
      * al raggiungimento del punto geografico "location".
      *
-     * @param observer ILocationReachedObserver da registrare.
-     * @param location Punto geografico il cui raggiungimento deve generare una notifica.
+     * @param observer ILocationReachedObserver da registrare. Se null,
+     *                 viene sollevata un'eccezione IllegalArgumentException.
+     * @param location Punto geografico il cui raggiungimento deve generare una
+     *                 notifica. Se null, viene sollevata un'eccezione
+     *                 IllegalArgumentException.
+     * @throws IllegalArgumentException
      */
     public void attachObserver(ILocationReachedObserver observer,
-                               GeoPoint location);
+                               GeoPoint location)
+            throws IllegalArgumentException;
 
     /**
      * Annulla la registrazione di un observer precedentemente registrato
      * all'oggetto LocationReachedManager.
      *
-     * @param observer Oggetto da deregistrare ILocationReachedManager.
+     * @param observer Oggetto da deregistrare ILocationReachedManager. Se null,
+     *                 viene sollevata un'eccezione IllegalArgumentException.
+     *                 Se non precedentemente registrato,
+     *                 viene sollevata un'eccezione
+     *                 UnregisteredObserverException.
      */
-    public void detachObserver(ILocationReachedManager observer);
+    public void detachObserver(ILocationReachedObserver observer) throws
+            IllegalArgumentException, UnregisteredObserverException;
 }
