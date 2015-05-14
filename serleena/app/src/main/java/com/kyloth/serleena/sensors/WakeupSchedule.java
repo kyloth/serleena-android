@@ -79,4 +79,8 @@ class WakeupSchedule {
         return onetimeMap.get(observer);
     }
 
+    public boolean containsObserver(IWakeupObserver observer) {
+        return onetimeMap.containsKey(observer);
+    }
+
 }
