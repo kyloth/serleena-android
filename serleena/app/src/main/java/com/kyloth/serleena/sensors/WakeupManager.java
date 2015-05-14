@@ -49,6 +49,8 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 
+import com.kyloth.serleena.common.UnregisteredObserverException;
+
 import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
@@ -95,7 +97,13 @@ public class WakeupManager extends BroadcastReceiver implements IWakeupManager {
     @TargetApi(19)
     @Override
     public synchronized void attachObserver(IWakeupObserver observer,
-                                            int interval, boolean oneTimeOnly) {
+                                            int interval, boolean oneTimeOnly)
+            throws IllegalArgumentException {
+        if (observer == null)
+            throw new IllegalArgumentException("Illegal null observer");
+        if (interval <= 0)
+            throw new IllegalArgumentException("Illegal interval");
+
         int alarmType = AlarmManager.RTC_WAKEUP;
         int millis = interval * 1000;
         String uuid = UUID.randomUUID().toString();
@@ -123,7 +131,13 @@ public class WakeupManager extends BroadcastReceiver implements IWakeupManager {
      * @param observer IWakeupObserver la cui registrazione come "observer" di
      */
     @Override
-    public synchronized void detachObserver(IWakeupObserver observer) {
+    public synchronized void detachObserver(IWakeupObserver observer)
+            throws IllegalArgumentException, UnregisteredObserverException {
+        if (observer == null)
+            throw new IllegalArgumentException("Illegal null observer");
+        if (!schedule.containsObserver(observer))
+            throw new UnregisteredObserverException();
+
         AlarmManager alarmManager =
                 (AlarmManager) context.getSystemService (Context.ALARM_SERVICE);
         alarmManager.cancel(schedule.getIntent(observer));
@@ -136,11 +150,15 @@ public class WakeupManager extends BroadcastReceiver implements IWakeupManager {
      * @param observer Oggetto "observer" da notificare.
      */
     @Override
-    public synchronized void notifyObserver(IWakeupObserver observer) {
-        if (schedule.isOneTimeOnly(observer))
-            detachObserver(observer);
-
-        observer.onWakeup();
+    public synchronized void notifyObserver(IWakeupObserver observer)
+            throws IllegalArgumentException {
+        if (observer == null)
+            throw new IllegalArgumentException("Illegal null observer");
+        try {
+            if (schedule.isOneTimeOnly(observer))
+                detachObserver(observer);
+            observer.onWakeup();
+        } catch (UnregisteredObserverException ex) { }
     }
 
     /**
