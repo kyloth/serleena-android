@@ -46,8 +46,17 @@ import org.junit.Before;
 import static org.mockito.Mockito.*;
 import static org.junit.Assert.*;
 import android.app.PendingIntent;
+
+import com.kyloth.serleena.sensors.IWakeupObserver;
+import com.kyloth.serleena.sensors.WakeupSchedule;
+
+import java.lang.Override;
+import java.lang.String;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 
 /**
  * Contiene i test di unità per la classe WakeupSchedule.
@@ -161,5 +170,18 @@ public class WakeupScheduleTest {
         new_wsp.add("uuid_2", new_observer, alarmIntent, false);
         assertTrue(new_wsp.isOneTimeOnly(observer));
         assertTrue(!(new_wsp.isOneTimeOnly(new_observer)));
+    }
+
+    /**
+     * Testa la correttezza del metodo "containsObserver" della classe.
+     */
+    @Test
+    public void testContainsObserver() {
+        IWakeupObserver obs = mock(IWakeupObserver.class);
+        IWakeupObserver obs2 = mock(IWakeupObserver.class);
+        WakeupSchedule sched = new WakeupSchedule();
+        sched.add("uuid1", obs, alarmIntent, false);
+        assertTrue(sched.containsObserver(obs));
+        assertTrue(!sched.containsObserver(obs2));
     }
 }
