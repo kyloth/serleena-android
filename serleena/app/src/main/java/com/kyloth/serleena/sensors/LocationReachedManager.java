@@ -126,9 +126,7 @@ public class LocationReachedManager implements ILocationReachedManager {
             throw new UnregisteredObserverException();
 
         observers.remove(observer);
-        try {
-            wm.detachObserver(alarms.remove(observer));
-        } catch (UnregisteredObserverException ex) { }
+        wm.detachObserver(alarms.remove(observer));
     }
 
     /**
