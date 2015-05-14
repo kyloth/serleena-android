@@ -42,6 +42,7 @@
 
 package com.kyloth.serleena.sensors;
 
+import android.annotation.TargetApi;
 import android.app.AlarmManager;
 import android.app.PendingIntent;
 import android.content.BroadcastReceiver;
@@ -91,6 +92,7 @@ public class WakeupManager extends BroadcastReceiver implements IWakeupManager {
      * @param oneTimeOnly True se il wakeup avviene una sola volta,
      *                    false se il wakeup è ripetuto.
      */
+    @TargetApi(19)
     @Override
     public void attachObserver(IWakeupObserver observer, int interval,
                                boolean oneTimeOnly) {
