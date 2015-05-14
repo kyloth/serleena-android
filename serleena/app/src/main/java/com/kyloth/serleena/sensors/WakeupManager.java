@@ -94,8 +94,8 @@ public class WakeupManager extends BroadcastReceiver implements IWakeupManager {
      */
     @TargetApi(19)
     @Override
-    public void attachObserver(IWakeupObserver observer, int interval,
-                               boolean oneTimeOnly) {
+    public synchronized void attachObserver(IWakeupObserver observer,
+                                            int interval, boolean oneTimeOnly) {
         int alarmType = AlarmManager.RTC_WAKEUP;
         int millis = interval * 1000;
         String uuid = UUID.randomUUID().toString();
@@ -123,7 +123,7 @@ public class WakeupManager extends BroadcastReceiver implements IWakeupManager {
      * @param observer IWakeupObserver la cui registrazione come "observer" di
      */
     @Override
-    public void detachObserver(IWakeupObserver observer) {
+    public synchronized void detachObserver(IWakeupObserver observer) {
         AlarmManager alarmManager =
                 (AlarmManager) context.getSystemService (Context.ALARM_SERVICE);
         alarmManager.cancel(schedule.getIntent(observer));
@@ -136,7 +136,7 @@ public class WakeupManager extends BroadcastReceiver implements IWakeupManager {
      * @param observer Oggetto "observer" da notificare.
      */
     @Override
-    public void notifyObserver(IWakeupObserver observer) {
+    public synchronized void notifyObserver(IWakeupObserver observer) {
         if (schedule.isOneTimeOnly(observer))
             detachObserver(observer);
 
@@ -150,7 +150,7 @@ public class WakeupManager extends BroadcastReceiver implements IWakeupManager {
      * @param intent Intent oggetto dell'evento.
      */
     @Override
-    public void onReceive(Context context, Intent intent) {
+    public synchronized void onReceive(Context context, Intent intent) {
         String uuid = intent.getStringExtra(ALARM_UUID);
         notifyObserver(schedule.getObserver(uuid));
     }
