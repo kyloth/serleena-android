@@ -121,7 +121,8 @@ public class WakefulLocationManager implements ILocationManager {
      */
     @Override
     public synchronized void attachObserver(final ILocationObserver observer,
-                                            int interval) {
+                                            int interval)
+            throws IllegalArgumentException {
 
         if (observer == null)
             throw new IllegalArgumentException("Illegal null observer");
@@ -237,9 +238,12 @@ public class WakefulLocationManager implements ILocationManager {
      * esigenze in termini di tempo.
      */
     private synchronized void adjustGpsUpdateRate() {
+        try {
+            wm.detachObserver(gpsUpdateObserver);
+        } catch (UnregisteredObserverException ex) {}
+
         if (observers.size() == 0) {
             gpsUpdateInterval = Integer.MAX_VALUE;
-            wm.detachObserver(gpsUpdateObserver);
         } else {
             int minInterval = Integer.MAX_VALUE;
 
@@ -247,11 +251,8 @@ public class WakefulLocationManager implements ILocationManager {
                 if (interval < minInterval)
                     minInterval = interval;
 
-            if (minInterval != gpsUpdateInterval) {
-                wm.detachObserver(gpsUpdateObserver);
-                wm.attachObserver(gpsUpdateObserver, minInterval, false);
-                gpsUpdateInterval = minInterval;
-            }
+            gpsUpdateInterval = minInterval;
+            wm.attachObserver(gpsUpdateObserver, gpsUpdateInterval, false);
         }
     }
 
