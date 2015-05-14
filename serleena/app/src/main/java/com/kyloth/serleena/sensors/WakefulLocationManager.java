@@ -120,7 +120,8 @@ public class WakefulLocationManager implements ILocationManager {
      * @throws IllegalArgumentException
      */
     @Override
-    public void attachObserver(final ILocationObserver observer, int interval) {
+    public synchronized void attachObserver(final ILocationObserver observer,
+                                            int interval) {
 
         if (observer == null)
             throw new IllegalArgumentException("Illegal null observer");
@@ -153,7 +154,7 @@ public class WakefulLocationManager implements ILocationManager {
      * @throws IllegalArgumentException
      */
     @Override
-    public void detachObserver(ILocationObserver observer)
+    public synchronized void detachObserver(ILocationObserver observer)
             throws UnregisteredObserverException, IllegalArgumentException {
 
         if (observer == null)
@@ -185,7 +186,8 @@ public class WakefulLocationManager implements ILocationManager {
      * @throws java.lang.IllegalArgumentException
      */
     @Override
-    public void getSingleUpdate(final ILocationObserver observer, int timeout)
+    public synchronized void getSingleUpdate(final ILocationObserver observer,
+                                             int timeout)
             throws IllegalArgumentException {
 
         if (observer == null)
@@ -220,7 +222,7 @@ public class WakefulLocationManager implements ILocationManager {
      *                 IllegalArgumentException.
      */
     @Override
-    public void notifyObserver(ILocationObserver observer)
+    public synchronized void notifyObserver(ILocationObserver observer)
             throws IllegalArgumentException {
 
         if (observer == null)
@@ -234,7 +236,7 @@ public class WakefulLocationManager implements ILocationManager {
      * utente in base agli observer correntemente registrati e le loro
      * esigenze in termini di tempo.
      */
-    private void adjustGpsUpdateRate() {
+    private synchronized void adjustGpsUpdateRate() {
         if (observers.size() == 0) {
             gpsUpdateInterval = Integer.MAX_VALUE;
             wm.detachObserver(gpsUpdateObserver);
