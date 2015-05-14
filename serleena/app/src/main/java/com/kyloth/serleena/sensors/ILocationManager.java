@@ -99,9 +99,11 @@ public interface ILocationManager {
      * @param observer Oggetto ILocationObserver a cui comunicare i dati.
      *                 Se null, viene lanciata un'eccezione
      *                 IllegalArgumentException.
+     * @param timeout  Timeout in secondi trascorso il quale l'observer viene
+     *                 segnalato con i dati più recenti possibile
      * @throws java.lang.IllegalArgumentException
      */
-    public void getSingleUpdate(ILocationObserver observer)
+    public void getSingleUpdate(ILocationObserver observer, int timeout)
         throws IllegalArgumentException;
 
     /**
