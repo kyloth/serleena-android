@@ -121,7 +121,7 @@ public class NormalLocationManager implements ILocationManager, LocationListener
      * @throws IllegalArgumentException
      */
     @Override
-    public void attachObserver(final ILocationObserver observer, int interval)
+    public synchronized void attachObserver(final ILocationObserver observer, int interval)
             throws IllegalArgumentException {
 
         if (observer == null)
@@ -146,7 +146,7 @@ public class NormalLocationManager implements ILocationManager, LocationListener
      * @throws IllegalArgumentException
      */
     @Override
-    public void detachObserver(ILocationObserver observer)
+    public synchronized void detachObserver(ILocationObserver observer)
             throws UnregisteredObserverException, IllegalArgumentException {
 
         if (observer == null)
@@ -174,7 +174,8 @@ public class NormalLocationManager implements ILocationManager, LocationListener
      * @param timeout  Timeout in secondi.
      */
     @Override
-    public void getSingleUpdate(final ILocationObserver observer, int timeout)
+    public synchronized void getSingleUpdate(final ILocationObserver observer,
+                                             int timeout)
             throws IllegalArgumentException {
 
         if (observer == null)
@@ -235,7 +236,7 @@ public class NormalLocationManager implements ILocationManager, LocationListener
      *                 IllegalArgumentException.
      */
     @Override
-    public void notifyObserver(ILocationObserver observer)
+    public synchronized void notifyObserver(ILocationObserver observer)
             throws IllegalArgumentException {
 
         if (observer == null)
@@ -263,7 +264,7 @@ public class NormalLocationManager implements ILocationManager, LocationListener
     }
 
     @Override
-    public void onLocationChanged(Location location) {
+    public synchronized void onLocationChanged(Location location) {
         lastKnownLocation = new GeoPoint(location.getLatitude(),
                 location.getLongitude());
         lastUpdate = System.currentTimeMillis() / 1000L;
@@ -286,7 +287,7 @@ public class NormalLocationManager implements ILocationManager, LocationListener
      * utente in base agli observer correntemente registrati e le loro
      * esigenze in termini di tempo.
      */
-    private void adjustGpsUpdateRate() {
+    private synchronized void adjustGpsUpdateRate() {
         if (observers.size() == 0) {
             currentInterval = Integer.MAX_VALUE;
             locationManager.removeUpdates(this);
