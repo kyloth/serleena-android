@@ -111,7 +111,7 @@ public class HeadingManager implements IHeadingManager, SensorEventListener {
      * @see android.hardware.SensorEventListener
      */
     @Override
-    public void onSensorChanged(SensorEvent sensorEvent) {
+    public synchronized void onSensorChanged(SensorEvent sensorEvent) {
         onNewData(sensorEvent.values, sensorEvent.sensor.getType());
     }
 
@@ -121,7 +121,7 @@ public class HeadingManager implements IHeadingManager, SensorEventListener {
      * @param values Dati rilevati dai sensori.
      * @param sensorType Tipo di sensore che ha generato i dati.
      */
-    public void onNewData(float[] values, int sensorType) {
+    public synchronized void onNewData(float[] values, int sensorType) {
         if (sensorType == Sensor.TYPE_ACCELEROMETER)
             accelerometerValues = values;
         else if (sensorType == Sensor.TYPE_MAGNETIC_FIELD)
@@ -163,7 +163,8 @@ public class HeadingManager implements IHeadingManager, SensorEventListener {
      */
     @Override
     @TargetApi(19)
-    public void attachObserver(final IHeadingObserver observer, int interval) {
+    public synchronized void attachObserver(final IHeadingObserver observer,
+                                            int interval) {
         Runnable task = new Runnable() {
             @Override
             public void run() {
@@ -193,7 +194,7 @@ public class HeadingManager implements IHeadingManager, SensorEventListener {
      */
     @Override
     @TargetApi(19)
-    public void detachObserver(IHeadingObserver observer) {
+    public synchronized void detachObserver(IHeadingObserver observer) {
         ScheduledFuture sf = observers.get(observer);
         sf.cancel(true);
         observers.remove(observer);
@@ -211,7 +212,7 @@ public class HeadingManager implements IHeadingManager, SensorEventListener {
      * @return Orientamento in gradi rispetto ai punti cardinali.
      */
     @Override
-    public double getSingleUpdate() {
+    public synchronized double getSingleUpdate() {
         return latestOrientation;
     }
 
@@ -221,7 +222,7 @@ public class HeadingManager implements IHeadingManager, SensorEventListener {
      * @param observer Oggetto IHeadingObserver da notificare.
      */
     @Override
-    public void notifyObserver(IHeadingObserver observer) {
+    public synchronized void notifyObserver(IHeadingObserver observer) {
         observer.onHeadingUpdate(latestOrientation);
     }
 
@@ -234,7 +235,7 @@ public class HeadingManager implements IHeadingManager, SensorEventListener {
      * @return Gradi di rotazione sull'asse azimuth.
      */
     @TargetApi(19)
-    private double computeOrientation() {
+    private synchronized double computeOrientation() {
         float[] values = new float[3];
         float[] R = new float[9];
         SensorManager.getRotationMatrix(R, null, accelerometerValues,
