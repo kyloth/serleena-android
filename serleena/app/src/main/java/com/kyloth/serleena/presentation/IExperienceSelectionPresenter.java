@@ -50,11 +50,16 @@ package com.kyloth.serleena.presentation;
  * @since 1.0
  */
 public interface IExperienceSelectionPresenter extends IPresenter {
-	/**
+
+    /**
 	 * Attiva un'esperienza identificata per numero tra quelle mostrati dalla
-	 * View di selezione.
-	 *
-	 * @since 1.0
-	 */
-	void activateExperience(int index);
+	 * vista di selezione.
+     *
+     * @param index Indice della lista di esperienze che rappresenta la
+     *              selezione dell'utente. Se minore di zero o non
+     *              corrispondente ad un elemento della lista,
+     *              viene sollevata un'eccezione IllegalArgumentException.
+     */
+	public void activateExperience(int index) throws IllegalArgumentException;
+
 }
