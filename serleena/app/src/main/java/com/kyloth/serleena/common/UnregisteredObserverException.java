@@ -49,6 +49,6 @@ package com.kyloth.serleena.common;
  * @author Filippo Sestini <sestini.filippo@gmail.com>
  * @version 1.0.0
  */
-public class UnregisteredObserverException extends Exception {
+public class UnregisteredObserverException extends RuntimeException {
 
 }
