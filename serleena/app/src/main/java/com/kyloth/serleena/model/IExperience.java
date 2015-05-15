@@ -57,7 +57,7 @@ public interface IExperience {
 	 * @version 1.0
 	 * @since   1.0
 	 */
-	Iterable<IExperience> getTracks();
+	Iterable<ITrack> getTracks();
 
 	/**
 	 * @return  Ritorna un Iterable che contiene tutti i Punti Utente
