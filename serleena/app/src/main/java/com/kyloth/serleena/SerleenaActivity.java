@@ -31,19 +31,28 @@
 package com.kyloth.serleena;
 
 import android.app.Fragment;
-import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentTransaction;
-import android.support.v7.app.ActionBarActivity;
+import android.app.FragmentTransaction;
+import android.net.Uri;
 import android.os.Bundle;
+import android.support.v7.app.ActionBarActivity;
 import android.view.Menu;
 import android.view.MenuItem;
 
 
-public class SerleenaActivity extends ActionBarActivity {
+public class SerleenaActivity extends ActionBarActivity implements OnFragmentInteractionListener {
+
+    private int old_id;
+
+    private String oldFrag;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        Fragment f = new TrackFragment();
+        FragmentTransaction ft = getFragmentManager().beginTransaction();
+        ft.add(f,"Percorso");
+        oldFrag = "Percorso";
+        ft.commit();
         setContentView(R.layout.fragment_track);
     }
 
@@ -60,28 +69,59 @@ public class SerleenaActivity extends ActionBarActivity {
         // automatically handle clicks on the Home/Up button, so long
         // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
+        removeOldFragment();
+        Fragment f = null;
 
         switch(id) {
             case R.id.screen_menu_exp:
+                f = new MapFragment();
+                oldFrag = "MAP";
                 setContentView(R.layout.fragment_map);
-                return true;
+                break;
             case R.id.screen_menu_contact:
+                f = new ContactsFragment();
+                oldFrag = "CONTACTS";
                 setContentView(R.layout.fragment_contacts);
-                return true;
+                break;
             case R.id.screen_menu_meteo:
+                f = new WeatherFragment();
+                oldFrag = "WEATHER";
                 setContentView(R.layout.fragment_weather);
-                return true;
+                break;
             case R.id.screen_menu_cardio:
+                f = new CardioFragment();
+                oldFrag = "CARDIO";
                 setContentView(R.layout.fragment_cardio);
-                return true;
+                break;
             case R.id.screen_menu_compass:
+                f = new CompassFragment();
+                oldFrag = "COMPASS";
                 setContentView(R.layout.fragment_compass_screen);
-                return true;
+                break;
             case R.id.screen_menu_sync:
+                f = new SyncFragment();
+                oldFrag = "SYNC";
                 setContentView(R.layout.fragment_sync_screen);
-                return true;
+                break;
         }
+        getFragmentManager().
+                beginTransaction()
+                .add(f,oldFrag)
+                .commit();
+        return true;
 
-        return super.onOptionsItemSelected(item);
+        //return super.onOptionsItemSelected(item);
+    }
+
+    private void removeOldFragment() {
+        FragmentTransaction ft = getFragmentManager().beginTransaction();
+        Fragment old = getFragmentManager().findFragmentByTag(oldFrag);
+        ft.remove(old);
+        ft.commit();
+    }
+
+    @Override
+    public void onFragmentInteraction(Uri uri) {
+
     }
 }
