@@ -533,7 +533,7 @@ public class SerleenaSQLiteDataSource implements ISerleenaSQLiteDataSource {
         where = "eventl_telem = " + id;
         result = db.query(SerleenaDatabase.TABLE_TELEM_EVENTS_LOCATION,
                 new String[] { "eventl_timestamp", "eventl_latitude",
-                        "eventhl_longitude" }, where, null, null, null, null);
+                        "eventl_longitude" }, where, null, null, null, null);
 
         timestampIndex = result.getColumnIndexOrThrow("eventl_timestamp");
         int latitudeIndex = result.getColumnIndexOrThrow("eventl_latitude");
