@@ -79,7 +79,7 @@ public class LocationReachedManager implements ILocationReachedManager {
      */
     private LocationReachedManager(Context context) {
         wm = WakeupManager.getInstance(context);
-        locMan = WakefulLocationManager.getInstance(context);
+        locMan = SerleenaLocationManager.getInstance(context);
         observers = new HashMap<ILocationReachedObserver, GeoPoint>();
         alarms = new HashMap<ILocationReachedObserver, IWakeupObserver>();
     }
