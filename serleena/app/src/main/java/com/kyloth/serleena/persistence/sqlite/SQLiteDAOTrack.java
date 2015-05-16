@@ -67,10 +67,10 @@ class SQLiteDAOTrack implements ITrackStorage {
     private ImmutableList<Checkpoint> checkpoints;
 
     public SQLiteDAOTrack(ImmutableList<Checkpoint> checkpoints, int id,
-                          ISerleenaSQLiteDataSource
-            dataSource) {
+                          ISerleenaSQLiteDataSource dataSource) {
         this.id = id;
         this.dataSource = dataSource;
+        this.checkpoints = checkpoints;
     }
 
     /**
