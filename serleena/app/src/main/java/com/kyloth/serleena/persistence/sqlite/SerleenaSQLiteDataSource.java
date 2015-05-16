@@ -377,6 +377,14 @@ public class SerleenaSQLiteDataSource implements ISerleenaSQLiteDataSource {
         morning.set(Calendar.SECOND, 0);
         morning.set(Calendar.MILLISECOND, 0);
 
+        GregorianCalendar morningAfter = new GregorianCalendar();
+        morningAfter.setTime(date);
+        morningAfter.set(Calendar.HOUR_OF_DAY, 6);
+        morningAfter.set(Calendar.HOUR_OF_DAY, 6);
+        morningAfter.set(Calendar.MINUTE, 0);
+        morningAfter.set(Calendar.SECOND, 0);
+        morningAfter.set(Calendar.MILLISECOND, 0);
+        morningAfter.add(Calendar.HOUR_OF_DAY, 24);
 
         GregorianCalendar afternoon = new GregorianCalendar();
         afternoon.setTime(date);
@@ -399,7 +407,7 @@ public class SerleenaSQLiteDataSource implements ISerleenaSQLiteDataSource {
         int afternoonEnd = Math.round(night.getTimeInMillis() / 1000);
 
         int nightStart = Math.round(night.getTimeInMillis() / 1000);
-        int nightEnd = Math.round(morning.getTimeInMillis() / 1000);
+        int nightEnd = Math.round(morningAfter.getTimeInMillis() / 1000);
 
         SimpleWeather morningWeather = getForecast(location, morningStart, morningEnd);
         SimpleWeather afternoonWeather =
