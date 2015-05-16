@@ -132,7 +132,7 @@ public class SerleenaDatabase extends SQLiteOpenHelper {
         "weather_id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, " +
         "weather_start INTEGER NOT NULL, " +
         "weather_end INTEGER NOT NULL, " +
-        "weather_condition TEXT NOT NULL, " +
+        "weather_condition INTEGER NOT NULL, " +
         "weather_temperature INTEGER NOT NULL, " +
         "weather_ne_corner_latitude REAL NOT NULL, " +
         "weather_ne_corner_longitude REAL NOT NULL, " +

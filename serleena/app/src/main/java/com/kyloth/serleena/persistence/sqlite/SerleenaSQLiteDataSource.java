@@ -591,7 +591,7 @@ public class SerleenaSQLiteDataSource implements ISerleenaSQLiteDataSource {
 
         if (result.moveToNext()) {
             WeatherForecastEnum forecast =
-                    WeatherForecastEnum.valueOf(result.getString(conditionIndex));
+                    WeatherForecastEnum.values()[result.getInt(conditionIndex)];
             int temperature = result.getInt(temperatureIndex);
             return new SimpleWeather(forecast, temperature);
         } else
