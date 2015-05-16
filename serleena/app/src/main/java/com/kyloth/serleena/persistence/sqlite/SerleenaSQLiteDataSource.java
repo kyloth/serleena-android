@@ -218,6 +218,36 @@ public class SerleenaSQLiteDataSource implements ISerleenaSQLiteDataSource {
     }
 
     /**
+     * Implementazione di ISerleenaSQLiteDataSource.getUserPoints().
+     *
+     * Viene eseguita una query sul database per ottenere i Punti Utente
+     * associati all'Esperienza specificata.
+     *
+     * @param experience Esperienza di cui si vogliono ottenere i Punti Utente.
+     * @return Insieme enumerabile di Punti Utente.
+     */
+    @Override
+    public Iterable<UserPoint> getUserPoints(SQLiteDAOExperience experience) {
+        SQLiteDatabase db = dbHelper.getReadableDatabase();
+        String where = "userpoint_experience = " + experience.id();
+        Cursor result = db.query(SerleenaDatabase.TABLE_USER_POINTS,
+                new String[] { "userpoint_x", "userpoint_y" }, where, null,
+                null, null, null);
+        int latIndex = result.getColumnIndexOrThrow("userpoint_x");
+        int lonIndex = result.getColumnIndexOrThrow("userpoint_y");
+
+        ArrayList<UserPoint> list = new ArrayList<>();
+        while (result.moveToNext()) {
+            double latitude = result.getDouble(latIndex);
+            double longitude = result.getDouble(lonIndex);
+            list.add(new UserPoint(latitude, longitude));
+        }
+
+        result.close();
+        return list;
+    }
+
+    /**
      * Implementazione di ISerleenaSQLiteDataSource.addUserPoint().
      *
      * @param experience Esperienza a cui aggiungere il punto utente.
