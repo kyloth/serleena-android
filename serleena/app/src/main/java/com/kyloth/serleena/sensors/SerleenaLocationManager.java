@@ -66,9 +66,10 @@ import java.util.Set;
  * @author Filippo Sestini <sestini.filippo@gmail.com>
  * @version 1.0.0
  */
-public class NormalLocationManager implements ILocationManager, LocationListener {
+public class SerleenaLocationManager implements ILocationManager,
+        LocationListener {
 
-    private static NormalLocationManager instance;
+    private static SerleenaLocationManager instance;
 
     private static final long MAX_WINDOW_SECONDS = 30;
 
@@ -89,7 +90,7 @@ public class NormalLocationManager implements ILocationManager, LocationListener
      *
      * @param context Contesto dell'applicazione.
      */
-    private NormalLocationManager(Context context) {
+    private SerleenaLocationManager(Context context) {
         this.observers = new HashMap<ILocationObserver, Integer>();
         this.singleUpdates = new HashSet<ILocationObserver>();
         this.currentInterval = Integer.MAX_VALUE;
@@ -121,7 +122,8 @@ public class NormalLocationManager implements ILocationManager, LocationListener
      * @throws IllegalArgumentException
      */
     @Override
-    public synchronized void attachObserver(final ILocationObserver observer, int interval)
+    public synchronized void attachObserver(final ILocationObserver observer,
+                                            int interval)
             throws IllegalArgumentException {
 
         if (observer == null)
@@ -254,12 +256,12 @@ public class NormalLocationManager implements ILocationManager, LocationListener
      *                viene sollevata un'eccezione IllegalArgumentException.
      * @return Istanza della classe.
      */
-    public static NormalLocationManager getInstance(Context context)
+    public static SerleenaLocationManager getInstance(Context context)
             throws IllegalArgumentException {
         if (context == null)
             throw new IllegalArgumentException("Illegal null context");
         if (instance == null)
-            instance = new NormalLocationManager(context);
+            instance = new SerleenaLocationManager(context);
         return instance;
     }
 
