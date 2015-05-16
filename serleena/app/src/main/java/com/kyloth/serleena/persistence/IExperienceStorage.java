@@ -62,6 +62,13 @@ public interface IExperienceStorage {
     public Iterable<ITrackStorage> getTracks();
 
     /**
+     * Restituisce i Punti Utente associati all'Esperienza.
+     *
+     * @return Insieme enumerabile di Punti Utente.
+     */
+    public Iterable<UserPoint> getUserPoints();
+
+    /**
      * Aggiunge un punto utente all'esperienza.
      * @param p     Punto utente.
      */
