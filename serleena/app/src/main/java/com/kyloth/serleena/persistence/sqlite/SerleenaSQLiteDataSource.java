@@ -598,13 +598,13 @@ public class SerleenaSQLiteDataSource implements ISerleenaSQLiteDataSource {
         String where =
                 "weather_end >= " + startTime + " AND " +
                 "weather_start <= " + endTime + " AND " +
-                "(weather_ne_corner_latitude + 90) >= " +
+                "(weather_ne_corner_latitude + 90) <= " +
                 (location.latitude() + 90) + " AND " +
-                "(weather_ne_corner_longitude + 180) >= " +
+                "(weather_ne_corner_longitude + 180) <= " +
                 (location.longitude() + 180) + " AND " +
-                "(weather_sw_corner_latitude + 90) <= " +
+                "(weather_sw_corner_latitude + 90) >= " +
                 (location.latitude() + 90) + " AND " +
-                "(weather_sw_corner_longitude + 180) <= " +
+                "(weather_sw_corner_longitude + 180) >= " +
                 (location.longitude() + 180);
 
         Cursor result = db.query(SerleenaDatabase.TABLE_WEATHER_FORECASTS,
