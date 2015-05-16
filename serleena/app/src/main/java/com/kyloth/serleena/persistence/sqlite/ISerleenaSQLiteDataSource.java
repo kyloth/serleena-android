@@ -74,6 +74,14 @@ public interface ISerleenaSQLiteDataSource extends IPersistenceDataSource {
     public Iterable<SQLiteDAOTelemetry> getTelemetries(SQLiteDAOTrack track);
 
     /**
+     * Restituisce i Punti Utente associati a una specifica Esperienza.
+     *
+     * @param experience Esperienza di cui si vogliono ottenere i Punti Utente.
+     * @return Insieme enumerabile di Punti Utente.
+     */
+    public Iterable<UserPoint> getUserPoints(SQLiteDAOExperience experience);
+
+    /**
      * Aggiunge un nuovo punto utente al database, associato all'Esperienza
      * specificata.
      *
