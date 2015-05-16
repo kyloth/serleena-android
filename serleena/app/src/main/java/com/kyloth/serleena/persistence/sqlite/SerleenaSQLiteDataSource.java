@@ -583,7 +583,7 @@ public class SerleenaSQLiteDataSource implements ISerleenaSQLiteDataSource {
                 (location.longitude() + 180);
 
         Cursor result = db.query(SerleenaDatabase.TABLE_WEATHER_FORECASTS,
-                new String[] { "weather_condition", "wheather_temperature" },
+                new String[] { "weather_condition", "weather_temperature" },
                 where, null, null, null, null);
 
         int conditionIndex = result.getColumnIndex("weather_condition");
