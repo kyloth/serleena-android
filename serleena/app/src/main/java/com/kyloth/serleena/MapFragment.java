@@ -31,23 +31,32 @@
 package com.kyloth.serleena;
 
 import android.app.Activity;
+import android.app.Fragment;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.graphics.drawable.BitmapDrawable;
 import android.net.Uri;
 import android.os.Bundle;
-import android.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
+
+import com.kyloth.serleena.common.GeoPoint;
+import com.kyloth.serleena.common.IQuadrant;
+import com.kyloth.serleena.common.UserPoint;
+import com.kyloth.serleena.presentation.IMapPresenter;
 
 
 /**
  * A simple {@link Fragment} subclass.
  * Activities that contain this fragment must implement the
- * {@link MapFragment.OnFragmentInteractionListener} interface
+ * {@link OnFragmentInteractionListener} interface
  * to handle interaction events.
  * Use the {@link MapFragment#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class MapFragment extends Fragment {
+public class MapFragment extends Fragment implements com.kyloth.serleena.presentation.IMapView  {
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_PARAM1 = "param1";
@@ -57,7 +66,13 @@ public class MapFragment extends Fragment {
     private String mParam1;
     private String mParam2;
 
-    private OnFragmentInteractionListener mListener;
+    private GeoPoint userPosition;
+
+    private BitmapDrawable mapRaster;
+
+    private IMapPresenter presenter;
+
+    private com.kyloth.serleena.OnFragmentInteractionListener mListener;
 
     /**
      * Use this factory method to create a new instance of
@@ -94,6 +109,10 @@ public class MapFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
+        Bitmap temp = BitmapFactory.decodeResource(getResources(), R.drawable.background);
+        mapRaster = new BitmapDrawable(temp);
+        ImageView map = (ImageView) getActivity().findViewById(R.id.map_image);
+        map.setBackground(mapRaster);
         return inflater.inflate(R.layout.fragment_map, container, false);
     }
 
@@ -107,12 +126,12 @@ public class MapFragment extends Fragment {
     @Override
     public void onAttach(Activity activity) {
         super.onAttach(activity);
-        try {
+        /*try {
             mListener = (OnFragmentInteractionListener) activity;
         } catch (ClassCastException e) {
             throw new ClassCastException(activity.toString()
                     + " must implement OnFragmentInteractionListener");
-        }
+        }*/
     }
 
     @Override
@@ -121,19 +140,27 @@ public class MapFragment extends Fragment {
         mListener = null;
     }
 
-    /**
-     * This interface must be implemented by activities that contain this
-     * fragment to allow an interaction in this fragment to be communicated
-     * to the activity and potentially other fragments contained in that
-     * activity.
-     * <p/>
-     * See the Android Training lesson <a href=
-     * "http://developer.android.com/training/basics/fragments/communicating.html"
-     * >Communicating with Other Fragments</a> for more information.
-     */
-    public interface OnFragmentInteractionListener {
-        // TODO: Update argument type and name
-        public void onFragmentInteraction(Uri uri);
+    @Override
+    public void setUserLocation(GeoPoint point) {
+        userPosition = point;
+    }
+
+    @Override
+    public void displayQuadrant(IQuadrant q) {
+        Bitmap temp = q.getRaster();
+        mapRaster = new BitmapDrawable(temp);
+        ImageView map = (ImageView) getActivity().findViewById(R.id.map_image);
+        map.setBackground(mapRaster);
+    }
+
+    @Override
+    public void displayUP(Iterable<UserPoint> points) {
+
+    }
+
+    @Override
+    public void attachPresenter(IMapPresenter presenter) {
+        this.presenter = presenter;
     }
 
 }
