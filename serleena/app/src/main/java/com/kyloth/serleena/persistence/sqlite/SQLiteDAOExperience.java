@@ -88,6 +88,11 @@ class SQLiteDAOExperience implements IExperienceStorage
         return list;
     }
 
+    @Override
+    public Iterable<UserPoint> getUserPoints() {
+        return dataSource.getUserPoints(this);
+    }
+
     /**
      * Implementazione di IExperienceStorage.addUserPoint().
      *
