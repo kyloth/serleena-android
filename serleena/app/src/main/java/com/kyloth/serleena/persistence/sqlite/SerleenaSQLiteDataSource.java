@@ -74,7 +74,9 @@ import java.text.DateFormat;
 import java.text.ParsePosition;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
+import java.util.GregorianCalendar;
 
 import static java.lang.Math.floor;
 
@@ -368,32 +370,47 @@ public class SerleenaSQLiteDataSource implements ISerleenaSQLiteDataSource {
         if (date == null)
             return null;
 
-        Date morningTime = new Date(date.getYear(), date.getMonth(),
-                date.getDay(), 6, 0);
-        Date afternoonTime = new Date(date.getYear(), date.getMonth(),
-                date.getDay(), 14, 0);
-        Date nightTime = new Date(date.getYear(), date.getMonth(),
-                date.getDay(), 21, 0);
+        GregorianCalendar morning = new GregorianCalendar();
+        morning.setTime(date);
+        morning.set(Calendar.HOUR_OF_DAY, 6);
+        morning.set(Calendar.MINUTE, 0);
+        morning.set(Calendar.SECOND, 0);
+        morning.set(Calendar.MILLISECOND, 0);
 
-        int morningStart = Math.round(morningTime.getTime() / 1000);
-        int morningEnd = Math.round(afternoonTime.getTime() / 1000);
 
-        int afternoonStart = Math.round(afternoonTime.getTime() / 1000);
-        int afternoonEnd = Math.round(nightTime.getTime() / 1000);
+        GregorianCalendar afternoon = new GregorianCalendar();
+        afternoon.setTime(date);
+        afternoon.set(Calendar.HOUR_OF_DAY, 14);
+        afternoon.set(Calendar.MINUTE, 0);
+        afternoon.set(Calendar.SECOND, 0);
+        afternoon.set(Calendar.MILLISECOND, 0);
 
-        int nightStart = Math.round(nightTime.getTime() / 1000);
-        int nightEnd = Math.round(morningTime.getTime() / 1000);
+        GregorianCalendar night = new GregorianCalendar();
+        night.setTime(date);
+        night.set(Calendar.HOUR_OF_DAY, 21);
+        night.set(Calendar.MINUTE, 0);
+        night.set(Calendar.SECOND, 0);
+        night.set(Calendar.MILLISECOND, 0);
 
-        SimpleWeather morning = getForecast(location, morningStart, morningEnd);
-        SimpleWeather afternoon =
+        int morningStart = Math.round(morning.getTimeInMillis() / 1000);
+        int morningEnd = Math.round(afternoon.getTimeInMillis() / 1000);
+
+        int afternoonStart = Math.round(afternoon.getTimeInMillis() / 1000);
+        int afternoonEnd = Math.round(night.getTimeInMillis() / 1000);
+
+        int nightStart = Math.round(night.getTimeInMillis() / 1000);
+        int nightEnd = Math.round(morning.getTimeInMillis() / 1000);
+
+        SimpleWeather morningWeather = getForecast(location, morningStart, morningEnd);
+        SimpleWeather afternoonWeather =
                 getForecast(location, afternoonStart, afternoonEnd);
-        SimpleWeather night = getForecast(location, nightStart, nightEnd);
+        SimpleWeather nightWeather = getForecast(location, nightStart, nightEnd);
 
         if (morning != null && afternoon != null && night != null) {
-            return new SQLiteDAOWeather(morning.forecast(),
-                    afternoon.forecast(), night.forecast(),
-                    morning.temperature(), afternoon.temperature(),
-                    night.temperature(), date);
+            return new SQLiteDAOWeather(morningWeather.forecast(),
+                    afternoonWeather.forecast(), nightWeather.forecast(),
+                    morningWeather.temperature(), afternoonWeather.temperature(),
+                    nightWeather.temperature(), date);
         }
 
         return null;
