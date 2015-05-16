@@ -571,7 +571,7 @@ public class SerleenaSQLiteDataSource implements ISerleenaSQLiteDataSource {
         SQLiteDatabase db = dbHelper.getReadableDatabase();
 
         String where =
-                "weather_end >= = " + startTime + " AND " +
+                "weather_end >= " + startTime + " AND " +
                 "weather_start <= " + endTime + " AND " +
                 "(weather_ne_corner_latitude + 90) >= " +
                 (location.latitude() + 90) + " AND " +
