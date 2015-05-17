@@ -61,6 +61,7 @@ import com.kyloth.serleena.common.IQuadrant;
 import com.kyloth.serleena.common.ImmutableList;
 import com.kyloth.serleena.common.ListAdapter;
 import com.kyloth.serleena.common.LocationTelemetryEvent;
+import com.kyloth.serleena.common.Quadrant;
 import com.kyloth.serleena.common.TelemetryEvent;
 import com.kyloth.serleena.common.UserPoint;
 import com.kyloth.serleena.persistence.IExperienceStorage;
@@ -439,43 +440,17 @@ public class SerleenaSQLiteDataSource implements ISerleenaSQLiteDataSource {
         assert(ij[0] < TOT_LONG_QUADRANTS);
         assert(ij[1] < TOT_LAT_QUADRANTS);
 
-        final String fileName = getRasterPath(ij[0], ij[1]);
-        final GeoPoint finalP1 = new GeoPoint(ij[0] * QUADRANT_LONGSIZE,
+        String fileName = getRasterPath(ij[0], ij[1]);
+        GeoPoint p1 = new GeoPoint(ij[0] * QUADRANT_LONGSIZE,
                                               ij[1] * QUADRANT_LATSIZE);
-        final GeoPoint finalP2 = new GeoPoint((ij[0] + 1) * QUADRANT_LONGSIZE,
+        GeoPoint p2 = new GeoPoint((ij[0] + 1) * QUADRANT_LONGSIZE,
                                               (ij[1] + 1) * QUADRANT_LATSIZE);
 
-        return new IQuadrant() {
-            String path = fileName;
-            Bitmap bmp;
-            @Override
-            public Bitmap getRaster() {
-                if (bmp == null) {
-                    File file = new File(context.getFilesDir(), fileName);
-                    if (file.exists()) {
-                        bmp = BitmapFactory.decodeFile(file.getAbsolutePath());
-                    } else {
-                        throw new RuntimeException();
-                        //TODO Gestirla meglio
-                    }
-                }
-                return bmp;
-            }
-
-            public String getPath() {
-                return path;
-            }
-
-            @Override
-            public GeoPoint getFirstPoint() {
-                return finalP1;
-            }
-
-            @Override
-            public GeoPoint getSecondPoint() {
-                return finalP2;
-            }
-        };
+        Bitmap raster = null;
+        File file = new File(context.getFilesDir(), fileName);
+        if (file.exists())
+            raster = BitmapFactory.decodeFile(file.getAbsolutePath());
+        return new Quadrant(p1, p2, raster);
     }
 
     /**
