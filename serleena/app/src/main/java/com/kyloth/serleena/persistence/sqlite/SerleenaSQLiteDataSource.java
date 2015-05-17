@@ -121,13 +121,13 @@ public class SerleenaSQLiteDataSource implements ISerleenaSQLiteDataSource {
      * @return Un array int [2] di due punti i,j che identifica il quadrante.
      */
     public static int[] getIJ(GeoPoint p) {
-        assert(p.latitude() >= -90);
-        assert(p.latitude() <= +90);
-        assert(p.longitude() >= -180);
-        assert(p.longitude() <= +180);
+        assert(p.latitude() >= 0);
+        assert(p.latitude() <= 180);
+        assert(p.longitude() >= 0);
+        assert(p.longitude() <= 360);
         int ij[] = new int[2];
-        ij[0] = (int)(floor((p.longitude() + 180) / QUADRANT_LATSIZE) % TOT_LAT_QUADRANTS);
-        ij[1] = (int)(floor((p.latitude() + 90) / QUADRANT_LATSIZE) % TOT_LAT_QUADRANTS);
+        ij[0] = (int)(floor(p.longitude() / QUADRANT_LONGSIZE) % TOT_LONG_QUADRANTS);
+        ij[1] = (int)(floor(p.latitude() / QUADRANT_LATSIZE) % TOT_LAT_QUADRANTS);
         return ij;
     }
 
