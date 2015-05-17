@@ -96,6 +96,20 @@ public class ContactsPresenter implements IContactsPresenter,
     }
 
     /**
+     * Implementa IContactsPresenter.nextContact().
+     *
+     * Se non vi sono contatti da visualizzare, il metodo non ha effetto.
+     */
+    @Override
+    public void nextContact() {
+        if (contacts != null && contacts.size() > 0) {
+            index = (index + 1) % contacts.size();
+            EmergencyContact c = contacts.get(index);
+            view.displayContact(c.name(), c.value());
+        }
+    }
+
+    /**
      * Implementa IPresenter.resume().
      *
      * Si registra al sensore di posizione.
