@@ -73,4 +73,26 @@ public class ContactsPresenter implements IContactsPresenter,
     private ImmutableList<EmergencyContact> contacts;
     int index;
 
+    /**
+     * Crea un nuovo oggetto ContactsPresenter.
+     *
+     * @param view Vista IContactsView associata al Presenter. Se null,
+     *             viene sollevata un'eccezione IllegalArgumentException.
+     * @param activity Activity dell'applicazione. Se null,
+     *                 viene sollevata un'eccezione IllegalArgumentException.
+     */
+    public ContactsPresenter(IContactsView view, ISerleenaActivity activity) {
+        if (view == null)
+            throw new IllegalArgumentException("Illegal null view");
+        if (activity == null)
+            throw new IllegalArgumentException("Illegal null activity");
+
+        this.view = view;
+        this.activity = activity;
+        locMan = activity.getSensorManager().getLocationSource();
+
+        view.attachPresenter(this);
+        resetView();
+    }
+
 }
