@@ -40,6 +40,7 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.FrameLayout;
 import android.widget.ImageView;
 
 import com.kyloth.serleena.common.GeoPoint;
@@ -69,7 +70,9 @@ public class MapFragment extends Fragment implements com.kyloth.serleena.present
     private String mParam2;
 
     private GeoPoint userPosition;
+    private Iterable<UserPoint> upList;
 
+    private FrameLayout layout;
     private BitmapDrawable mapRaster;
 
     private IMapPresenter presenter;
@@ -107,10 +110,6 @@ public class MapFragment extends Fragment implements com.kyloth.serleena.present
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        Bitmap temp = BitmapFactory.decodeResource(getResources(), R.drawable.background);
-        mapRaster = new BitmapDrawable(temp);
-        ImageView map = (ImageView) getActivity().findViewById(R.id.map_image);
-        map.setBackground(mapRaster);
         return inflater.inflate(R.layout.fragment_map, container, false);
     }
 
@@ -125,6 +124,10 @@ public class MapFragment extends Fragment implements com.kyloth.serleena.present
     public void onAttach(Activity activity) {
         super.onAttach(activity);
         try {
+            Bitmap temp = BitmapFactory.decodeResource(getResources(), R.drawable.background);
+            mapRaster = new BitmapDrawable(temp);
+            ImageView map = (ImageView) getActivity().findViewById(R.id.map_image);
+            map.setBackground(mapRaster);
             mActivity = (OnFragmentInteractionListener) activity;
             presenter.resume();
         } catch (ClassCastException e) {
@@ -147,26 +150,41 @@ public class MapFragment extends Fragment implements com.kyloth.serleena.present
     @Override
     public void displayQuadrant(IQuadrant q) {
         Bitmap temp = q.getRaster();
-        mapRaster = new BitmapDrawable(temp);
+        if(temp != null)
+            mapRaster = new BitmapDrawable(temp);
         ImageView map = (ImageView) getActivity().findViewById(R.id.map_image);
         map.setBackground(mapRaster);
     }
 
     @Override
     public void displayUP(Iterable<UserPoint> points) {
-        Iterator<UserPoint> it = points.iterator();
-        while (it.hasNext()) {
-            UserPoint up = it.next();
-            drawUp(up);
-        }
+        upList = points;
+        draw();
     }
 
-    private void drawUp(UserPoint up) {
-        Bitmap bmp = BitmapFactory.
-                        decodeResource(getActivity().getResources(), R.drawable.user_point);
+    private void draw() {
+        layout = new FrameLayout(getActivity());
+        layout.setBackground(mapRaster);
+        drawPosition();
+        drawUp();
+        getActivity().setContentView(layout);
+    }
 
-        ImageView map_view = (ImageView) getActivity().findViewById(R.id.map_image);
-        map_view.setImageDrawable(new BitmapDrawable(getResources(), bmp));
+    private void drawPosition() {
+        if(userPosition == null) return;
+    }
+
+    private void drawUp() {
+        Iterator<UserPoint> it = upList.iterator();
+        while (it.hasNext()) {
+            UserPoint up = it.next();
+            ImageView img = new ImageView(getActivity());
+            img.setImageResource(R.drawable.user_point);
+            FrameLayout.LayoutParams params = new FrameLayout.LayoutParams(100, 100);
+            params.topMargin = (int) up.latitude();
+            params.leftMargin = (int) up.longitude();
+            layout.addView(img, params);
+        }
     }
 
     @Override

@@ -51,19 +51,20 @@ public class SerleenaActivity extends ActionBarActivity implements OnFragmentInt
     private int old_id;
     private Map<String,Fragment> myFrags = new HashMap<>();
     private Map<String,IPresenter> myPress = new HashMap<>();
+    private Map<String,Integer> myLayoutIds = new HashMap<>();
+    private Map<Integer,String> myMenuItemIds = new HashMap<>();
 
-    private String oldFrag;
+    private String curFrag;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         initFragMap();
         initPresentersMap();
+        initLayoutIds();
+        initMenuItemIds();
         FragmentTransaction ft = getFragmentManager().beginTransaction();
-        ft.add(myFrags.get("TRACK"),"TRACK");
-        oldFrag = "TRACK";
-        ft.commit();
-        setContentView(R.layout.fragment_track);
+        changeFragment("TRACK");
     }
 
     private void initFragMap() {
@@ -81,6 +82,25 @@ public class SerleenaActivity extends ActionBarActivity implements OnFragmentInt
         ((IMapView) myFrags.get("MAP")).attachPresenter((IMapPresenter) myPress.get("MAP"));
     }
 
+    private void initLayoutIds() {
+        myLayoutIds.put("TRACK",R.layout.fragment_track);
+        myLayoutIds.put("MAP", R.layout.fragment_map);
+        myLayoutIds.put("CONTACTS", R.layout.fragment_contacts);
+        myLayoutIds.put("WEATHER", R.layout.fragment_weather);
+        myLayoutIds.put("CARDIO",R.layout.fragment_cardio);
+        myLayoutIds.put("COMPASS", R.layout.fragment_compass_screen);
+        myLayoutIds.put("SYNC", R.layout.fragment_sync_screen);
+    }
+
+    private void initMenuItemIds() {
+        myMenuItemIds.put(R.id.screen_menu_exp,"MAP");
+        myMenuItemIds.put(R.id.screen_menu_contact,"CONTACTS");
+        myMenuItemIds.put(R.id.screen_menu_meteo,"WEATHER");
+        myMenuItemIds.put(R.id.screen_menu_cardio,"CARDIO");
+        myMenuItemIds.put(R.id.screen_menu_compass,"COMPASS");
+        myMenuItemIds.put(R.id.screen_menu_sync,"SYNC");
+    }
+
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
@@ -94,48 +114,33 @@ public class SerleenaActivity extends ActionBarActivity implements OnFragmentInt
         // automatically handle clicks on the Home/Up button, so long
         // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
-        removeOldFragment();
-        Fragment f = null;
-
-        switch(id) {
-            case R.id.screen_menu_exp:
-                oldFrag = "MAP";
-                setContentView(R.layout.fragment_map);
-                ((IMapPresenter) myPress.get("MAP")).newUserPoint();
-                break;
-            case R.id.screen_menu_contact:
-                oldFrag = "CONTACTS";
-                setContentView(R.layout.fragment_contacts);
-                break;
-            case R.id.screen_menu_meteo:
-                oldFrag = "WEATHER";
-                setContentView(R.layout.fragment_weather);
-                break;
-            case R.id.screen_menu_cardio:
-                oldFrag = "CARDIO";
-                setContentView(R.layout.fragment_cardio);
-                break;
-            case R.id.screen_menu_compass:
-                oldFrag = "COMPASS";
-                setContentView(R.layout.fragment_compass_screen);
-                break;
-            case R.id.screen_menu_sync:
-                oldFrag = "SYNC";
-                setContentView(R.layout.fragment_sync_screen);
-                break;
+        String newFrag = myMenuItemIds.get(id);
+        if(newFrag.equals("MAP")) {
+            ((IMapPresenter) myPress.get("MAP")).newUserPoint();
+            ((IMapPresenter) myPress.get("MAP")).newUserPoint();
         }
-        getFragmentManager().
-                beginTransaction()
-                .add(myFrags.get(oldFrag),oldFrag)
-                .commit();
+
+        if(newFrag.equals(curFrag)) return true;
+        changeFragment(newFrag);
         return true;
 
         //return super.onOptionsItemSelected(item);
     }
 
-    private void removeOldFragment() {
+    private void changeFragment(String newFrag) {
+        if(curFrag != null)
+            removeFragment();
+        curFrag = newFrag;
+        getFragmentManager().
+                beginTransaction()
+                .add(myFrags.get(curFrag), curFrag)
+                .commit();
+        setContentView(myLayoutIds.get(curFrag));
+    }
+
+    private void removeFragment() {
         FragmentTransaction ft = getFragmentManager().beginTransaction();
-        Fragment old = getFragmentManager().findFragmentByTag(oldFrag);
+        Fragment old = getFragmentManager().findFragmentByTag(curFrag);
         ft.remove(old);
         ft.commit();
     }

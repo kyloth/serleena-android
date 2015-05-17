@@ -31,7 +31,10 @@
 package com.kyloth.serleena;
 
 import android.app.Fragment;
+import android.graphics.Bitmap;
 
+import com.kyloth.serleena.common.GeoPoint;
+import com.kyloth.serleena.common.IQuadrant;
 import com.kyloth.serleena.common.UserPoint;
 import com.kyloth.serleena.presentation.IMapPresenter;
 
@@ -54,19 +57,35 @@ public class DummyMapPresenter implements IMapPresenter {
     public void newUserPoint() {
         switch(cnt) {
             case 0:
-                myUps.add(new UserPoint(24,24));
+                myUps.add(new UserPoint(240,240));
                 break;
             case 1:
-                myUps.add(new UserPoint(12,64));
+                myUps.add(new UserPoint(120,640));
                 break;
             default:
-                myUps.add(new UserPoint(50,50));
+                myUps.add(new UserPoint(500,500));
         }
         cnt++;
     }
 
     @Override
     public void resume() {
+        myMap.displayQuadrant(new IQuadrant() {
+            @Override
+            public Bitmap getRaster() {
+                return null;
+            }
+
+            @Override
+            public GeoPoint getFirstPoint() {
+                return null;
+            }
+
+            @Override
+            public GeoPoint getSecondPoint() {
+                return null;
+            }
+        });
         myMap.displayUP(myUps);
     }
 
