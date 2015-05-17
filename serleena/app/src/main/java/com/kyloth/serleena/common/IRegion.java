@@ -53,18 +53,18 @@ package com.kyloth.serleena.common;
 public interface IRegion {
 
     /**
-     * Restituisce una delle due coordinate che individuano l'area geografica.
+     * Restituisce il punto a nord-est dell'area geografica.
      *
      * @return Primo punto geografico.
      */
-    public GeoPoint getFirstPoint();
+    public GeoPoint getNorthEastPoint();
 
     /**
-     * Restituisce una delle due coordinate che individuano l'area geografica.
+     * Restituisce il punto a sud-ovest dell'area geografica.
      *
      * @return Secondo punto geografico
      */
-    public GeoPoint getSecondPoint();
+    public GeoPoint getSouthWestPoint();
 
     /**
      * Restituisce true se il punto geografico specificato è contenuto
