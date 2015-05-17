@@ -38,22 +38,40 @@ import android.support.v7.app.ActionBarActivity;
 import android.view.Menu;
 import android.view.MenuItem;
 
+import java.util.HashMap;
+import java.util.Map;
+
 
 public class SerleenaActivity extends ActionBarActivity implements OnFragmentInteractionListener {
 
     private int old_id;
+    private Map<String,Fragment> myFrags = new HashMap<>();
 
     private String oldFrag;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        Fragment f = new TrackFragment();
+        initFragMap();
+        initPresentersMap();
         FragmentTransaction ft = getFragmentManager().beginTransaction();
-        ft.add(f,"Percorso");
-        oldFrag = "Percorso";
+        ft.add(myFrags.get("TRACK"),"TRACK");
+        oldFrag = "TRACK";
         ft.commit();
         setContentView(R.layout.fragment_track);
+    }
+
+    private void initPresentersMap() {
+    }
+
+    private void initFragMap() {
+        myFrags.put("TRACK",new TrackFragment());
+        myFrags.put("MAP",new MapFragment());
+        myFrags.put("CONTACTS",new ContactsFragment());
+        myFrags.put("WEATHER",new WeatherFragment());
+        myFrags.put("CARDIO",new CardioFragment());
+        myFrags.put("COMPASS",new CompassFragment());
+        myFrags.put("SYNC",new SyncFragment());
     }
 
     @Override
@@ -74,39 +92,33 @@ public class SerleenaActivity extends ActionBarActivity implements OnFragmentInt
 
         switch(id) {
             case R.id.screen_menu_exp:
-                f = new MapFragment();
                 oldFrag = "MAP";
                 setContentView(R.layout.fragment_map);
                 break;
             case R.id.screen_menu_contact:
-                f = new ContactsFragment();
                 oldFrag = "CONTACTS";
                 setContentView(R.layout.fragment_contacts);
                 break;
             case R.id.screen_menu_meteo:
-                f = new WeatherFragment();
                 oldFrag = "WEATHER";
                 setContentView(R.layout.fragment_weather);
                 break;
             case R.id.screen_menu_cardio:
-                f = new CardioFragment();
                 oldFrag = "CARDIO";
                 setContentView(R.layout.fragment_cardio);
                 break;
             case R.id.screen_menu_compass:
-                f = new CompassFragment();
                 oldFrag = "COMPASS";
                 setContentView(R.layout.fragment_compass_screen);
                 break;
             case R.id.screen_menu_sync:
-                f = new SyncFragment();
                 oldFrag = "SYNC";
                 setContentView(R.layout.fragment_sync_screen);
                 break;
         }
         getFragmentManager().
                 beginTransaction()
-                .add(f,oldFrag)
+                .add(myFrags.get(oldFrag),oldFrag)
                 .commit();
         return true;
 
