@@ -92,7 +92,7 @@ public class ContactsPresenter implements IContactsPresenter,
         locMan = activity.getSensorManager().getLocationSource();
 
         view.attachPresenter(this);
-        resetView();
+        resetView(contacts);
     }
 
     /**
@@ -101,7 +101,7 @@ public class ContactsPresenter implements IContactsPresenter,
      * Se non vi sono contatti da visualizzare, il metodo non ha effetto.
      */
     @Override
-    public void nextContact() {
+    public synchronized void nextContact() {
         if (contacts != null && contacts.size() > 0) {
             index = (index + 1) % contacts.size();
             EmergencyContact c = contacts.get(index);
@@ -115,7 +115,7 @@ public class ContactsPresenter implements IContactsPresenter,
      * Si registra al sensore di posizione.
      */
     @Override
-    public void resume() {
+    public synchronized void resume() {
         locMan.attachObserver(this, UPDATE_INTERVAL_SECONDS);
     }
 
@@ -126,7 +126,7 @@ public class ContactsPresenter implements IContactsPresenter,
      * di posizione.
      */
     @Override
-    public void pause() {
+    public synchronized void pause() {
         locMan.detachObserver(this);
     }
 
@@ -140,7 +140,7 @@ public class ContactsPresenter implements IContactsPresenter,
      * @param loc Valore di tipo GeoPoint che indica la posizione
      */
     @Override
-    public void onLocationUpdate(final GeoPoint loc) {
+    public synchronized void onLocationUpdate(final GeoPoint loc) {
         if (loc == null)
             throw new IllegalArgumentException("Illegal null location");
 
@@ -152,9 +152,7 @@ public class ContactsPresenter implements IContactsPresenter,
                 for (EmergencyContact c : ds.getContacts(loc))
                     list.add(c);
 
-                contacts = new ListAdapter<>(list);
-                resetView();
-
+                resetView(new ListAdapter<>(list));
                 return null;
             }
         };
@@ -165,7 +163,9 @@ public class ContactsPresenter implements IContactsPresenter,
     /**
      * Reimposta la vista alla condizione iniziale.
      */
-    private synchronized void resetView() {
+    private synchronized void resetView(ImmutableList<EmergencyContact>
+                                                contacts) {
+        this.contacts = contacts;
         index = 0;
 
         if (contacts == null || contacts.size() == 0)
