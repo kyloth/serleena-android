@@ -84,7 +84,7 @@ public class TelemetryPresenterTest {
      */
 
     @Test
-    public void constructor_should_throw_exception_when_null_view() {
+    public void constructorShouldThrowWxceptionWhenNullView() {
         exception.expect(IllegalArgumentException.class);
         exception.expectMessage("Illegal null view");
         TelemetryPresenter null_view_tp = new TelemetryPresenter(null, activity);
@@ -97,7 +97,7 @@ public class TelemetryPresenterTest {
      */
 
     @Test
-    public void constructor_should_throw_exception_when_null_activity() {
+    public void constructorShouldThrowExceptionWhenNullActivity() {
         exception.expect(IllegalArgumentException.class);
         exception.expectMessage("Illegal null activity");
         TelemetryPresenter null_view_tp = new TelemetryPresenter(view, null);
@@ -109,7 +109,7 @@ public class TelemetryPresenterTest {
      */
 
     @Test
-    public void constructor_should_call_attachPresenter_on_view_with_correct_param() {
+    public void constructorShouldCallAttachPresenterWithCorrectParam() {
         TelemetryPresenter tp = new TelemetryPresenter(view, activity);
         verify(view).attachPresenter(tp);
     }
@@ -120,7 +120,7 @@ public class TelemetryPresenterTest {
      */
 
     @Test
-    public void enableTelemetry_should_forward_call_to_activity() {
+    public void enableTelemetryShouldForwardCallToActivity() {
         TelemetryPresenter tp = new TelemetryPresenter(view, activity);
         tp.enableTelemetry();
         verify(activity).enableTelemetry();
@@ -132,7 +132,7 @@ public class TelemetryPresenterTest {
      */
 
     @Test
-    public void disableTelemetry_should_forward_call_to_activity() {
+    public void disableTelemetryShouldForwardCallToActivity() {
         TelemetryPresenter tp = new TelemetryPresenter(view, activity);
         tp.disableTelemetry();
         verify(activity).disableTelemetry();

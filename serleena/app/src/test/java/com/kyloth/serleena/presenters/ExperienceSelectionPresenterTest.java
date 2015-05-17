@@ -102,7 +102,7 @@ public class ExperienceSelectionPresenterTest {
      */
 
     @Test
-    public void constructor_should_throw_exception_when_null_view() {
+    public void constructorShouldThrowExceptionWhenNnullView() {
         exception.expect(IllegalArgumentException.class);
         exception.expectMessage("Illegal null view");
         ExperienceSelectionPresenter null_view_esp = new ExperienceSelectionPresenter(null, activity);
@@ -114,7 +114,7 @@ public class ExperienceSelectionPresenterTest {
      */
 
     @Test
-    public void constructor_should_throw_exception_when_null_activity() {
+    public void constructorShouldThrowExceptionWhenNullActivity() {
         exception.expect(IllegalArgumentException.class);
         exception.expectMessage("Illegal null activity");
         ExperienceSelectionPresenter null_activity_esp = new ExperienceSelectionPresenter(view, null);
@@ -127,7 +127,7 @@ public class ExperienceSelectionPresenterTest {
      */
 
     @Test
-    public void activateExperience_should_throw_exception_when_index_out_of_range() {
+    public void activateExperienceShouldThrowExceptionWhenIndexOutOfRange() {
         ExperienceSelectionPresenter esp = new ExperienceSelectionPresenter(view, activity);
         exception.expect(IllegalArgumentException.class);
         exception.expectMessage("Index out of range");
@@ -143,7 +143,7 @@ public class ExperienceSelectionPresenterTest {
      */
 
     @Test
-    public void activateExperience_should_pass_correct_parameter_to_setActiveExperience() {
+    public void activateExperienceShouldPassCorrectParameter() {
         ExperienceSelectionPresenter esp = new ExperienceSelectionPresenter(view, activity);
         esp.activateExperience(0);
         verify(activity).setActiveExperience(exp_1);

@@ -99,7 +99,7 @@ public class TrackSelectionPresenterTest {
      */
 
     @Test
-    public void constructor_should_throw_exception_when_null_view() {
+    public void constructorShouldThrowExceptionWhenNullView() {
         exception.expect(IllegalArgumentException.class);
         exception.expectMessage("Illegal null view");
         TrackSelectionPresenter null_view_tsp = new TrackSelectionPresenter(null, activity);
@@ -112,7 +112,7 @@ public class TrackSelectionPresenterTest {
      */
 
     @Test
-    public void constructor_should_throw_exception_when_null_activity() {
+    public void constructorShouldThrowExceptionWhenNullActivity() {
         exception.expect(IllegalArgumentException.class);
         exception.expectMessage("Illegal null activity");
         TrackSelectionPresenter null_view_tsp = new TrackSelectionPresenter(view, null);
@@ -124,7 +124,7 @@ public class TrackSelectionPresenterTest {
      */
 
     @Test
-    public void constructor_should_call_attachPresenter_on_view_with_correct_param() {
+    public void constructorShouldCallAttachPresenterWithCorrectParam() {
         TrackSelectionPresenter tsp = new TrackSelectionPresenter(view, activity);
         verify(view).attachPresenter(tsp);
     }
@@ -135,7 +135,7 @@ public class TrackSelectionPresenterTest {
      */
 
     @Test
-    public void setActiveExperience_should_throw_exception_when_null_experience() {
+    public void setActiveExperienceShouldThrowExceptionWhenNullExperience() {
         TrackSelectionPresenter tsp = new TrackSelectionPresenter(view, activity);
         exception.expect(IllegalArgumentException.class);
         exception.expectMessage("Illegal null experience");
@@ -149,7 +149,7 @@ public class TrackSelectionPresenterTest {
      */
 
     @Test
-    public void activateTrack_should_throw_exception_when_index_out_of_range() {
+    public void activateTrackShouldThrowExceptionWhenIndexOutOfRange() {
         TrackSelectionPresenter tsp = new TrackSelectionPresenter(view, activity);
         exception.expect(IllegalArgumentException.class);
         exception.expectMessage("Index out of range");
