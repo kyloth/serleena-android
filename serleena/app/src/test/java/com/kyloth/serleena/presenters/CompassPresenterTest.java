@@ -49,8 +49,8 @@ import static org.junit.Assert.*;
 import com.kyloth.serleena.presentation.ICompassPresenter;
 import com.kyloth.serleena.presentation.ICompassView;
 import com.kyloth.serleena.presentation.ISerleenaActivity;
-import com.kyloth.serleena.model.*;
-import com.kyloth.serleena.sensors.*;
+import com.kyloth.serleena.sensors.ISensorManager;
+import com.kyloth.serleena.sensors.IHeadingManager;
 
 /**
  * Contiene i test di unità per la classe CompassPresenter.
@@ -65,9 +65,11 @@ public class CompassPresenterTest {
     ISensorManager sm;
     IHeadingManager hm;
     public static final int UPDATE_INTERVAL = 5;
+
     /**
      * Inizializza i campi dati necessari ai test.
      */
+
     @Before
     public void initialize() {
         activity = mock(ISerleenaActivity.class);
@@ -78,39 +80,49 @@ public class CompassPresenterTest {
         when(sm.getHeadingSource()).thenReturn(hm);
 
     }
+
     /**
-     * Testa la correttezza del costruttore della classe.
+     * Verifica che il costruttore chiami il metodo attachPresenter sulla view
+     * fornendo il nuovo CompassPresenter creato come parametro.
      */
+
     @Test
-    public void testConstructor() {
+    public void constructorShouldCallAttachPresenterWithCorrectParam() {
         CompassPresenter cp = new CompassPresenter(view, activity);
         verify(view).attachPresenter(cp);
     }
+
     /**
-     * Testa la correttezza del metodo "resume" della classe.
+     * Verifica che il metodo resume chiami il metodo attachObserver sull'oggetto
+     * IHeadingManager fornito dall'ISensorManager passando come parametro l'oggetto
+     * CompassPresenter di invocazione e l'intervallo di aggiornamento corretto.
      */
+
     @Test
-    public void testResume() {
+    public void resumeShouldCallAttachObserverWithCorrectParams() {
         CompassPresenter cp = new CompassPresenter(view, activity);
         cp.resume();
-        verify(activity).getSensorManager();
-        verify(sm).getHeadingSource();
         verify(hm).attachObserver(cp, UPDATE_INTERVAL);
     }
+
     /**
-     * Testa la correttezza del metodo "pause" della classe.
+     * Verifica che il metodo pause chiami il metodo detachObserver sull'oggetto
+     * IHeadingManager fornito dall'ISensorManager passando come parametro l'ogetto
+     * CompassPresenter di invocazione.
      */
-    public void testPause() {
+
+    public void pauseShouldCallDetachObserverWithCorrectParam() {
         CompassPresenter cp = new CompassPresenter(view, activity);
         cp.pause();
-        verify(activity).getSensorManager();
-        verify(sm).getHeadingSource();
         verify(hm).detachObserver(cp);
     }
+
     /**
-     * Testa la correttezza del metodo "onHeadingUpdate" della classe.
+     * Verifica che il metodo onHeadingUpdate chiami il metodo setHeading sulla view
+     * fornendo il suo stesso parametro di invocazione.
      */
-    public void testOnHeadingUpdate() {
+
+    public void onHeadingUpdateShouldForwardParamToSetHeading() {
         CompassPresenter cp = new CompassPresenter(view, activity);
         cp.onHeadingUpdate(13.532);
         verify(view).setHeading(13.532);
