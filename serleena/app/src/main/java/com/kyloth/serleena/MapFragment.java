@@ -47,6 +47,8 @@ import com.kyloth.serleena.common.IQuadrant;
 import com.kyloth.serleena.common.UserPoint;
 import com.kyloth.serleena.presentation.IMapPresenter;
 
+import java.util.Iterator;
+
 
 /**
  * A simple {@link Fragment} subclass.
@@ -72,7 +74,7 @@ public class MapFragment extends Fragment implements com.kyloth.serleena.present
 
     private IMapPresenter presenter;
 
-    private com.kyloth.serleena.OnFragmentInteractionListener mListener;
+    private OnFragmentInteractionListener mActivity;
 
     /**
      * Use this factory method to create a new instance of
@@ -90,10 +92,6 @@ public class MapFragment extends Fragment implements com.kyloth.serleena.present
         args.putString(ARG_PARAM2, param2);
         fragment.setArguments(args);
         return fragment;
-    }
-
-    public MapFragment() {
-        // Required empty public constructor
     }
 
     @Override
@@ -118,26 +116,27 @@ public class MapFragment extends Fragment implements com.kyloth.serleena.present
 
     // TODO: Rename method, update argument and hook method into UI event
     public void onButtonPressed(Uri uri) {
-        if (mListener != null) {
-            mListener.onFragmentInteraction(uri);
+        if (mActivity != null) {
+            mActivity.onFragmentInteraction(uri);
         }
     }
 
     @Override
     public void onAttach(Activity activity) {
         super.onAttach(activity);
-        /*try {
-            mListener = (OnFragmentInteractionListener) activity;
+        try {
+            mActivity = (OnFragmentInteractionListener) activity;
+            presenter.resume();
         } catch (ClassCastException e) {
             throw new ClassCastException(activity.toString()
                     + " must implement OnFragmentInteractionListener");
-        }*/
+        }
     }
 
     @Override
     public void onDetach() {
         super.onDetach();
-        mListener = null;
+        mActivity = null;
     }
 
     @Override
@@ -155,7 +154,19 @@ public class MapFragment extends Fragment implements com.kyloth.serleena.present
 
     @Override
     public void displayUP(Iterable<UserPoint> points) {
+        Iterator<UserPoint> it = points.iterator();
+        while (it.hasNext()) {
+            UserPoint up = it.next();
+            drawUp(up);
+        }
+    }
 
+    private void drawUp(UserPoint up) {
+        Bitmap bmp = BitmapFactory.
+                        decodeResource(getActivity().getResources(), R.drawable.user_point);
+
+        ImageView map_view = (ImageView) getActivity().findViewById(R.id.map_image);
+        map_view.setImageDrawable(new BitmapDrawable(getResources(), bmp));
     }
 
     @Override

@@ -38,6 +38,10 @@ import android.support.v7.app.ActionBarActivity;
 import android.view.Menu;
 import android.view.MenuItem;
 
+import com.kyloth.serleena.presentation.IMapPresenter;
+import com.kyloth.serleena.presentation.IMapView;
+import com.kyloth.serleena.presentation.IPresenter;
+
 import java.util.HashMap;
 import java.util.Map;
 
@@ -46,6 +50,7 @@ public class SerleenaActivity extends ActionBarActivity implements OnFragmentInt
 
     private int old_id;
     private Map<String,Fragment> myFrags = new HashMap<>();
+    private Map<String,IPresenter> myPress = new HashMap<>();
 
     private String oldFrag;
 
@@ -61,17 +66,19 @@ public class SerleenaActivity extends ActionBarActivity implements OnFragmentInt
         setContentView(R.layout.fragment_track);
     }
 
-    private void initPresentersMap() {
+    private void initFragMap() {
+        myFrags.put("TRACK", new TrackFragment());
+        myFrags.put("MAP", new MapFragment());
+        myFrags.put("CONTACTS", new ContactsFragment());
+        myFrags.put("WEATHER", new WeatherFragment());
+        myFrags.put("CARDIO",new CardioFragment());
+        myFrags.put("COMPASS", new CompassFragment());
+        myFrags.put("SYNC", new SyncFragment());
     }
 
-    private void initFragMap() {
-        myFrags.put("TRACK",new TrackFragment());
-        myFrags.put("MAP",new MapFragment());
-        myFrags.put("CONTACTS",new ContactsFragment());
-        myFrags.put("WEATHER",new WeatherFragment());
-        myFrags.put("CARDIO",new CardioFragment());
-        myFrags.put("COMPASS",new CompassFragment());
-        myFrags.put("SYNC",new SyncFragment());
+    private void initPresentersMap() {
+        myPress.put("MAP",new DummyMapPresenter(myFrags.get("MAP")));
+        ((IMapView) myFrags.get("MAP")).attachPresenter((IMapPresenter) myPress.get("MAP"));
     }
 
     @Override
@@ -94,6 +101,7 @@ public class SerleenaActivity extends ActionBarActivity implements OnFragmentInt
             case R.id.screen_menu_exp:
                 oldFrag = "MAP";
                 setContentView(R.layout.fragment_map);
+                ((IMapPresenter) myPress.get("MAP")).newUserPoint();
                 break;
             case R.id.screen_menu_contact:
                 oldFrag = "CONTACTS";
