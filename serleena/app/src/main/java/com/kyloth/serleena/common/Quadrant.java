@@ -33,28 +33,38 @@ package com.kyloth.serleena.common;
 import android.graphics.Bitmap;
 
 public class Quadrant implements IQuadrant {
+    GeoPoint northEast;
+    GeoPoint southWest;
+    Bitmap raster;
 
     public Quadrant(GeoPoint northEast, GeoPoint southWest, Bitmap raster) {
-
+        this.northEast = northEast;
+        this.southWest = southWest;
+        this.raster = raster;
     }
 
     @Override
     public Bitmap getRaster() {
-        return null;
+        return raster;
     }
 
     @Override
     public GeoPoint getNorthEastPoint() {
-        return null;
+        return northEast;
     }
 
     @Override
     public GeoPoint getSouthWestPoint() {
-        return null;
+        return southWest;
     }
 
     @Override
     public boolean contains(GeoPoint p) throws IllegalArgumentException {
-        return false;
+        return (
+                northEast.latitude() <= p.latitude() &&
+                p.latitude() <= southWest.latitude() &&
+                northEast.longitude() <= p.longitude() &&
+                p.longitude() <= southWest.longitude()
+        );
     }
 }
