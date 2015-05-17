@@ -131,6 +131,38 @@ public class ContactsPresenter implements IContactsPresenter,
     }
 
     /**
+     * Implementa ILocationObserver.onLocationUpdate().
+     *
+     * Ad ogni aggiornamento sulla posizione, viene creato un flusso di
+     * controllo asincrono che si occupa di richiedere alla sorgente dati i
+     * contatti di emergenza aggiornati.
+     *
+     * @param loc Valore di tipo GeoPoint che indica la posizione
+     */
+    @Override
+    public void onLocationUpdate(final GeoPoint loc) {
+        if (loc == null)
+            throw new IllegalArgumentException("Illegal null location");
+
+        final ISerleenaDataSource ds = activity.getDataSource();
+        AsyncTask<Void, Void, Void> task = new AsyncTask<Void, Void, Void>() {
+            @Override
+            protected Void doInBackground(Void... voids) {
+                ArrayList<EmergencyContact> list = new ArrayList<>();
+                for (EmergencyContact c : ds.getContacts(loc))
+                    list.add(c);
+
+                contacts = new ListAdapter<>(list);
+                resetView();
+
+                return null;
+            }
+        };
+
+        task.execute();
+    }
+
+    /**
      * Reimposta la vista alla condizione iniziale.
      */
     private synchronized void resetView() {
