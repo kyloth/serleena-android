@@ -51,8 +51,7 @@ import static org.junit.Assert.*;
 import com.kyloth.serleena.presentation.ICompassPresenter;
 import com.kyloth.serleena.presentation.ITelemetryView;
 import com.kyloth.serleena.presentation.ISerleenaActivity;
-import com.kyloth.serleena.model.*;
-import com.kyloth.serleena.sensors.*;
+import com.kyloth.serleena.sensors.ISensorManager;
 
 /**
  * Contiene i test di unità per la classe TelemetryPresenter.
@@ -79,44 +78,64 @@ public class TelemetryPresenterTest {
     }
 
     /**
-     * Verifica la correttezza del costruttore della classe.
+     * Verifica che il costruttore lanci un'eccezione IllegalArgumentException
+     * con messaggio "Illegal null view" al tentativo di costruire un oggetto
+     * con view nulla.
      */
 
     @Test
-    public void testConstructor() {
+    public void constructor_should_throw_exception_when_null_view() {
         exception.expect(IllegalArgumentException.class);
-	exception.expectMessage("Illegal null view");
-        TelemetryPresenter fail_tp_1 = new TelemetryPresenter(null, activity);
-        exception.expect(IllegalArgumentException.class);
-	exception.expectMessage("Illegal null activity");
-        TelemetryPresenter fail_tp_2 = new TelemetryPresenter(view, null);
+        exception.expectMessage("Illegal null view");
+        TelemetryPresenter null_view_tp = new TelemetryPresenter(null, activity);
+    }
 
+    /**
+     * Verifica che il costruttore lanci un'eccezione IllegalArgumentException
+     * con messaggio "Illegal null activity" al tentativo di costruire un oggetto
+     * con activity nulla.
+     */
+
+    @Test
+    public void constructor_should_throw_exception_when_null_activity() {
+        exception.expect(IllegalArgumentException.class);
+        exception.expectMessage("Illegal null activity");
+        TelemetryPresenter null_view_tp = new TelemetryPresenter(view, null);
+    }
+
+    /**
+     * Verifica che il costruttore chiami il metodo attachPresenter sulla view
+     * fornendo il nuovo TelemetryPresenter creato come parametro.
+     */
+
+    @Test
+    public void constructor_should_call_attachPresenter_on_view_with_correct_param() {
         TelemetryPresenter tp = new TelemetryPresenter(view, activity);
         verify(view).attachPresenter(tp);
     }
 
     /**
-     * Verifica la correttezza del metodo "enableTelemetry".
+     * Verifica che il metodo enableTelemetry chiami a sua volta il metodo
+     * enableTelemetry su activity.
      */
 
     @Test
-    public void testEnableTelemetry() {
+    public void enableTelemetry_should_forward_call_to_activity() {
         TelemetryPresenter tp = new TelemetryPresenter(view, activity);
         tp.enableTelemetry();
         verify(activity).enableTelemetry();
     }
 
     /**
-     * Verifica la correttezza del metodo "disableTelemetry".
+     * Verifica che il metodo disableTelemetry chiami a sua volta il metodo
+     * disableTelemetry su activity.
      */
 
     @Test
-    public void testDisableTelemetry() {
+    public void disableTelemetry_should_forward_call_to_activity() {
         TelemetryPresenter tp = new TelemetryPresenter(view, activity);
         tp.disableTelemetry();
         verify(activity).disableTelemetry();
     }
-
-
 
 }
