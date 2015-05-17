@@ -70,8 +70,10 @@ public class WakeupScheduleTest {
     Map<IWakeupObserver, PendingIntent> obsMap;
     Map<PendingIntent, String> intentMap;
     Map<IWakeupObserver, Boolean> onetimeMap;
-    String uuid;
-    IWakeupObserver observer;
+    String onetime_uuid;
+    String not_onetime_uuid;
+    IWakeupObserver observer_onetime;
+    IWakeupObserver observer_not_onetime;
     PendingIntent alarmIntent;
     WakeupSchedulePlaceholder wsp;
 
@@ -102,86 +104,83 @@ public class WakeupScheduleTest {
      */
     @Before
     public void initialize() {
+        observer_onetime = mock(IWakeupObserver.class);
+        observer_not_onetime = mock(IWakeupObserver.class);
+        alarmIntent = mock(PendingIntent.class);
+        onetime_uuid = "onetime_uuid";
+        not_onetime_uuid = "not_onetime_uuid";
         uuidMap = (Map<String, IWakeupObserver>) mock(Map.class);
         obsMap = (Map<IWakeupObserver, PendingIntent>) mock(Map.class);
+        when(uuidMap.put(onetime_uuid, observer_onetime)).thenReturn(observer_onetime);
+        when(obsMap.put(observer_onetime, alarmIntent)).thenReturn(alarmIntent);
+        when(obsMap.remove(observer_onetime)).thenReturn(alarmIntent);
         intentMap = (Map<PendingIntent, String>) mock(Map.class);
+        when(intentMap.remove(alarmIntent)).thenReturn(onetime_uuid);
         onetimeMap = (Map<IWakeupObserver, Boolean>) mock(Map.class);
+        when(onetimeMap.get(observer_onetime)).thenReturn(true);
+        when(onetimeMap.get(observer_not_onetime)).thenReturn(false);
         wsp = new WakeupSchedulePlaceholder();
         wsp.setUuidMap(uuidMap);
         wsp.setObsMap(obsMap);
         wsp.setIntentMap(intentMap);
         wsp.setOneTimeMap(onetimeMap);
-        uuid = "uuid";
-        observer = mock(IWakeupObserver.class);
-        alarmIntent = mock(PendingIntent.class);
-    }
-    /**
-     * Testa la correttezza del metodo "add" della classe.
-     */
-    @Test
-    public void testAdd() {
-        when(uuidMap.put(uuid, observer)).thenReturn(observer);
-        when(obsMap.put(observer, alarmIntent)).thenReturn(alarmIntent);
-        wsp.add(uuid, observer, alarmIntent, true);
-        verify(uuidMap).put(uuid, observer);
-        verify(obsMap).put(observer, alarmIntent);
-        verify(intentMap).put(alarmIntent, uuid);
-        verify(onetimeMap).put(observer, true);
-        IWakeupObserver new_observer = mock(IWakeupObserver.class);
-        wsp.add("new_uuid", new_observer, alarmIntent, false);
-        verify(onetimeMap).put(new_observer, false);
     }
 
     /**
-     * Testa la correttezza del metodo "remove" della classe.
+     * Verifica che il metodo add chiami i metodi put sulle diverse
+     * HashMap di WakeupSchedule con i corretti parametri.
      */
+
     @Test
-    public void testRemove() {
-        when(obsMap.remove(observer)).thenReturn(alarmIntent);
-        when(intentMap.remove(alarmIntent)).thenReturn(uuid);
-        wsp.add(uuid, observer, alarmIntent, true);
-        wsp.remove(observer);
-        verify(uuidMap).remove(uuid);
-        verify(obsMap).remove(observer);
+    public void addShouldForwardCorrectParams() {
+        wsp.add(onetime_uuid, observer_onetime, alarmIntent, true);
+        verify(uuidMap).put(onetime_uuid, observer_onetime);
+        verify(obsMap).put(observer_onetime, alarmIntent);
+        verify(intentMap).put(alarmIntent, onetime_uuid);
+        verify(onetimeMap).put(observer_onetime, true);
+        wsp.add(not_onetime_uuid, observer_not_onetime, alarmIntent, false);
+        verify(onetimeMap).put(observer_not_onetime, false);
+    }
+
+    /**
+     * Verifica che il metodo remove chiami i metodi remove sulle diverse
+     * HashMap di WakeupSchedule con i corretti parametri.
+     */
+
+    @Test
+    public void removeShouldForwardCorrectParams() {
+        wsp.add(onetime_uuid, observer_onetime, alarmIntent, true);
+        wsp.remove(observer_onetime);
+        verify(uuidMap).remove(onetime_uuid);
+        verify(obsMap).remove(observer_onetime);
         verify(intentMap).remove(alarmIntent);
-        verify(onetimeMap).remove(observer);
+        verify(onetimeMap).remove(observer_onetime);
     }
 
     /**
-     * Testa la correttezza dei metodi "getter" della classe.
+     * Verifica che il metodo isOneTimeOnly chiami il metodo get
+     * su onetimeMap fornendo il suo stesso parametro.
      */
+
     @Test
-    public void testGetters() {
-        wsp.add(uuid, observer, alarmIntent, true);
-        wsp.getIntent(observer);
-        verify(obsMap).get(observer);
-        wsp.getObserver(uuid);
-        verify(uuidMap).get(uuid);
+    public void isOneTimeOnlyShouldForwardCorrectParam() {
+        wsp.add(onetime_uuid, observer_onetime, alarmIntent, true);
+        wsp.isOneTimeOnly(observer_onetime);
+        verify(onetimeMap).get(observer_onetime);
+        wsp.add(not_onetime_uuid, observer_not_onetime, alarmIntent, false);
+        wsp.isOneTimeOnly(observer_not_onetime);
+        verify(onetimeMap).get(observer_not_onetime);
     }
 
     /**
-     * Testa la correttezza del metodo "isOneTimeOnly" della classe.
+     * Verifica che il metodo containsObserver chiami il metodo
+     * containsKey su onetimeMap fornendo il suo stesso parametro.
      */
-    @Test
-    public void testIsOneTimeOnly() {
-        IWakeupObserver new_observer = mock(IWakeupObserver.class);
-        WakeupSchedule new_wsp = new WakeupSchedule();
-        new_wsp.add("uuid_1", observer, alarmIntent, true);
-        new_wsp.add("uuid_2", new_observer, alarmIntent, false);
-        assertTrue(new_wsp.isOneTimeOnly(observer));
-        assertTrue(!(new_wsp.isOneTimeOnly(new_observer)));
-    }
 
-    /**
-     * Testa la correttezza del metodo "containsObserver" della classe.
-     */
     @Test
-    public void testContainsObserver() {
-        IWakeupObserver obs = mock(IWakeupObserver.class);
-        IWakeupObserver obs2 = mock(IWakeupObserver.class);
-        WakeupSchedule sched = new WakeupSchedule();
-        sched.add("uuid1", obs, alarmIntent, false);
-        assertTrue(sched.containsObserver(obs));
-        assertTrue(!sched.containsObserver(obs2));
+    public void containsObserverShouldForwardCorrectParam() {
+        wsp.add(onetime_uuid, observer_onetime, alarmIntent, true);
+        wsp.containsObserver(observer_onetime);
+        verify(onetimeMap).containsKey(observer_onetime);
     }
 }
