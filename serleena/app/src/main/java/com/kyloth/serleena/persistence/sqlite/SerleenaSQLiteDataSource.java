@@ -39,7 +39,8 @@
  * 1.0.0    Filippo Sestini     2015-05-06  Creazione file e scrittura di codice
  *                                          e documentazione in Javadoc.
  * 1.0.1    Tobia Tesan         2015-05-07  Aggiunta di getIJ
- * 1.0.1    Tobia Tesan         2015-05-07  Aggiunta di getPath
+ * 1.0.2    Tobia Tesan         2015-05-07  Aggiunta di getPath
+ * 1.0.3    Tobia Tesan         2015-05-10  Riscrittura di getForecast con GregorianCalendar
  */
 
 package com.kyloth.serleena.persistence.sqlite;
