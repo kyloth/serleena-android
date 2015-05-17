@@ -44,6 +44,8 @@ package com.kyloth.serleena.model;
 import com.kyloth.serleena.common.EmergencyContact;
 import com.kyloth.serleena.common.GeoPoint;
 import com.kyloth.serleena.common.IQuadrant;
+import com.kyloth.serleena.common.IRegion;
+import com.kyloth.serleena.common.UserPoint;
 
 import java.util.Date;
 
@@ -86,4 +88,13 @@ public interface ISerleenaDataSource {
 	 * @version 1.0
 	 */
 	Iterable<EmergencyContact> getContacts(GeoPoint loc);
+
+    /**
+     * Restituisce i punti utente assocati ad un'esperienza,
+     * in una particolare regione geografica.
+     *
+     * @return Insieme enumerabile di punti utente.
+     */
+    public Iterable<UserPoint> getUserPoints(IExperience exp, IRegion region);
+
 }

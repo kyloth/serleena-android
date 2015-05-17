@@ -41,6 +41,8 @@
 
 package com.kyloth.serleena.presentation;
 
+import com.kyloth.serleena.common.NoActiveExperienceException;
+
 /**
  * IMapPresenter e' l'interfaccia del Presenter della schermata Mappa.
  *
@@ -49,11 +51,15 @@ package com.kyloth.serleena.presentation;
  * @since 1.0
  */
 public interface IMapPresenter extends IPresenter {
-	/**
+
+    /**
 	 * Richiede l'aggiunta di un nuovo punto utente corrispondente alla
 	 * posizione corrente.
-	 *
-	 * @since 1.0
+	 * Se non è vi sono esperienze attive, viene sollevata un'eccezione
+     * NoActiveExperienceException.
+     *
+	 * @throws com.kyloth.serleena.common.NoActiveExperienceException
 	 */
-	void newUserPoint();
+	public void newUserPoint() throws NoActiveExperienceException;
+
 }
