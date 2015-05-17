@@ -66,7 +66,9 @@ public class TrackSelectionPresenterTest {
     private ISerleenaActivity activity;
     private ITrackSelectionView view;
     private IExperience experience;
-    private ITrack track;
+    private ITrack track_1;
+    private ITrack track_2;
+    private ITrack track_3;
     private ArrayList<ITrack> track_list;
     @Rule
     public ExpectedException exception = ExpectedException.none();
@@ -80,59 +82,81 @@ public class TrackSelectionPresenterTest {
         activity = mock(ISerleenaActivity.class);
         view = mock(ITrackSelectionView.class);
         experience = mock(IExperience.class);
-        track = mock(ITrack.class);
+        track_1 = mock(ITrack.class);
+        track_2 = mock(ITrack.class);
+        track_3 = mock(ITrack.class);
         track_list = new ArrayList<ITrack>();
-        track_list.add(track);
-        track_list.add(track);
-        track_list.add(track);
+        track_list.add(track_1);
+        track_list.add(track_2);
+        track_list.add(track_3);
         when(experience.getTracks()).thenReturn(track_list);
     }
 
     /**
-     * Testa la correttezza del costruttore della classe.
+     * Verifica che il costruttore lanci un'eccezione IllegalArgumentException
+     * con messaggio "Illegal null view" al tentativo di costruire un oggetto
+     * con view nulla.
      */
 
     @Test
-    public void testConstructor() {
+    public void constructor_should_throw_exception_when_null_view() {
         exception.expect(IllegalArgumentException.class);
         exception.expectMessage("Illegal null view");
-        TrackSelectionPresenter fail_tsp_1 = new TrackSelectionPresenter(null, activity);
-        exception.expect(IllegalArgumentException.class);
-        exception.expectMessage("Illegal null activity");
-        TrackSelectionPresenter fail_tsp_2 = new TrackSelectionPresenter(view, null);
-        TrackSelectionPresenter tsp = new TrackSelectionPresenter(view, activity);
-        verify(view).attachPresenter(tsp);
-        verify(view).clearList();
+        TrackSelectionPresenter null_view_tsp = new TrackSelectionPresenter(null, activity);
     }
 
     /**
-     * Testa la correttezza del metodo "setActiveExperience".
+     * Verifica che il costruttore lanci un'eccezione IllegalArgumentException
+     * con messaggio "Illegal null activity" al tentativo di costruire un oggetto
+     * con activity nulla.
      */
 
     @Test
-    public void testSetActiveExperience() {
+    public void constructor_should_throw_exception_when_null_activity() {
+        exception.expect(IllegalArgumentException.class);
+        exception.expectMessage("Illegal null activity");
+        TrackSelectionPresenter null_view_tsp = new TrackSelectionPresenter(view, null);
+    }
+
+    /**
+     * Verifica che il costruttore chiami il metodo attachPresenter sulla view
+     * fornendo il nuovo TrackSelectionPresenter creato come parametro.
+     */
+
+    @Test
+    public void constructor_should_call_attachPresenter_on_view_with_correct_param() {
+        TrackSelectionPresenter tsp = new TrackSelectionPresenter(view, activity);
+        verify(view).attachPresenter(tsp);
+    }
+
+    /**
+     * Verifica che il metodo setActiveExperience lanci un'eccezione IllegalArumentException
+     * con messaggio "Illegal null experience" quando chiamato con parametro nullo.
+     */
+
+    @Test
+    public void setActiveExperience_should_throw_exception_when_null_experience() {
         TrackSelectionPresenter tsp = new TrackSelectionPresenter(view, activity);
         exception.expect(IllegalArgumentException.class);
         exception.expectMessage("Illegal null experience");
         tsp.setActiveExperience(null);
-        tsp.setActiveExperience(experience);
-        verify(view).clearList();
     }
 
     /**
-     * Testa la correttezza del metodo "activateTrack".
+     * Verifica che il metodo activateTrack lanci un'eccezione IllegalArgumentException
+     * con messaggio "Index out of range" quando chiamato con parametro inferiore a zero
+     * o superiore alla dimensione della lista dei Percorsi.
      */
 
     @Test
-    public void testActivateTrack() {
+    public void activateTrack_should_throw_exception_when_index_out_of_range() {
         TrackSelectionPresenter tsp = new TrackSelectionPresenter(view, activity);
-        tsp.setActiveExperience(experience);
         exception.expect(IllegalArgumentException.class);
         exception.expectMessage("Index out of range");
         tsp.activateTrack(-1);
         exception.expect(IllegalArgumentException.class);
-        tsp.activateTrack(4);
-        tsp.activateTrack(0);
-        verify(activity).setActiveTrack(track);
+        exception.expectMessage("Index out of range");
+        tsp.activateTrack(3);
     }
+
 }
