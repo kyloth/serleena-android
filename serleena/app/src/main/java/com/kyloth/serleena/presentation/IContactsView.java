@@ -70,4 +70,10 @@ public interface IContactsView {
 	 *                (es. "0744 885546")
 	 */
 	void displayContact(String name, String contact);
+
+    /**
+     * Pulisce la vista.
+     */
+    public void clearView();
+
 }
