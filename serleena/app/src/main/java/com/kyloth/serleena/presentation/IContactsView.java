@@ -50,6 +50,17 @@ package com.kyloth.serleena.presentation;
  * @since 1.0
  */
 public interface IContactsView {
+
+    /**
+     * Lega un presenter alla vista.
+     *
+     * @param presenter Presenter da associare alla vista. Se null,
+     *                  viene sollevata un'eccezione IllegalArgumentException.
+     * @throws IllegalArgumentException
+     */
+    public void attachPresenter(IContactsPresenter presenter)
+            throws IllegalArgumentException;
+
 	/**
 	 * Mostra a schermo un contatto di emergenza.
 	 *
@@ -59,4 +70,10 @@ public interface IContactsView {
 	 *                (es. "0744 885546")
 	 */
 	void displayContact(String name, String contact);
+
+    /**
+     * Pulisce la vista.
+     */
+    public void clearView();
+
 }
