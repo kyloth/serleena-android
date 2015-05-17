@@ -65,7 +65,7 @@ public interface IExperience {
 	 * @version 1.0
 	 * @since   1.0
 	 */
-	Iterable<UserPoint> getUserPoints();
+	public Iterable<UserPoint> getUserPoints();
 
 	/**
 	 * Aggiunge un punto utente dato all'Esperienza.
