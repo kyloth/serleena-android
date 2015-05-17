@@ -119,4 +119,15 @@ public class ContactsPresenter implements IContactsPresenter,
         locMan.attachObserver(this, UPDATE_INTERVAL_SECONDS);
     }
 
+    /**
+     * Implementa IPresenter.pause().
+     *
+     * Rilascia le risorse non necessarie annullando la registrazione al sensore
+     * di posizione.
+     */
+    @Override
+    public void pause() {
+        locMan.detachObserver(this);
+    }
+
 }
