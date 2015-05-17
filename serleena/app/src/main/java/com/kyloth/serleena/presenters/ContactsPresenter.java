@@ -95,4 +95,14 @@ public class ContactsPresenter implements IContactsPresenter,
         resetView();
     }
 
+    /**
+     * Implementa IPresenter.resume().
+     *
+     * Si registra al sensore di posizione.
+     */
+    @Override
+    public void resume() {
+        locMan.attachObserver(this, UPDATE_INTERVAL_SECONDS);
+    }
+
 }
