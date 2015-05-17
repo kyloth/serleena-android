@@ -130,4 +130,18 @@ public class ContactsPresenter implements IContactsPresenter,
         locMan.detachObserver(this);
     }
 
+    /**
+     * Reimposta la vista alla condizione iniziale.
+     */
+    private synchronized void resetView() {
+        index = 0;
+
+        if (contacts == null || contacts.size() == 0)
+            view.clearView();
+        else {
+            EmergencyContact c = contacts.get(0);
+            view.displayContact(c.name(), c.value());
+        }
+    }
+
 }
