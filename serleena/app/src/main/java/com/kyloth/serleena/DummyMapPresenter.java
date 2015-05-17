@@ -86,6 +86,7 @@ public class DummyMapPresenter implements IMapPresenter {
                 return null;
             }
         });
+        myMap.setUserLocation(new GeoPoint(640,120));
         myMap.displayUP(myUps);
     }
 

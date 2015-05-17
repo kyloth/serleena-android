@@ -48,6 +48,7 @@ import com.kyloth.serleena.common.IQuadrant;
 import com.kyloth.serleena.common.UserPoint;
 import com.kyloth.serleena.presentation.IMapPresenter;
 
+import java.util.ArrayList;
 import java.util.Iterator;
 
 
@@ -70,7 +71,7 @@ public class MapFragment extends Fragment implements com.kyloth.serleena.present
     private String mParam2;
 
     private GeoPoint userPosition;
-    private Iterable<UserPoint> upList;
+    private Iterable<UserPoint> upList = new ArrayList<>();
 
     private FrameLayout layout;
     private BitmapDrawable mapRaster;
@@ -145,6 +146,7 @@ public class MapFragment extends Fragment implements com.kyloth.serleena.present
     @Override
     public void setUserLocation(GeoPoint point) {
         userPosition = point;
+        draw();
     }
 
     @Override
@@ -172,6 +174,12 @@ public class MapFragment extends Fragment implements com.kyloth.serleena.present
 
     private void drawPosition() {
         if(userPosition == null) return;
+        ImageView img = new ImageView(getActivity());
+        img.setImageResource(R.drawable.mirino);
+        FrameLayout.LayoutParams params = new FrameLayout.LayoutParams(100, 100);
+        params.topMargin = (int) userPosition.latitude();
+        params.leftMargin = (int) userPosition.longitude();
+        layout.addView(img, params);
     }
 
     private void drawUp() {
