@@ -66,4 +66,15 @@ public interface IRegion {
      */
     public GeoPoint getSecondPoint();
 
+    /**
+     * Restituisce true se il punto geografico specificato è contenuto
+     * nell'area rappresentata dall'oggetto. False altrimenti.
+     *
+     * @param p Punto geografico. Se null, viene sollevata un'eccezione
+     *          IllegalArgumentException.
+     * @return True se il punto è contenuto nell'area. False altrimenti.
+     * @throws IllegalArgumentException
+     */
+    public boolean contains(GeoPoint p) throws IllegalArgumentException;
+
 }
