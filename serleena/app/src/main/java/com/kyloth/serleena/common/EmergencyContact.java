@@ -100,4 +100,15 @@ public class EmergencyContact {
         }
         return false;
     }
+
+    /**
+     * Overriding di Object.hashCode().
+     *
+     * @return Hash dell'oggetto.
+     */
+    @Override
+    public int hashCode() {
+        return name.length() + value.length();
+    }
+
 }
