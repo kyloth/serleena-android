@@ -49,6 +49,7 @@ import com.kyloth.serleena.OnFragmentInteractionListener;
  * Classe che implementa la schermata “Cardio”, in cui vengono mostrate eventuali informazioni
  * relative ad un sensore Fitness collegato allo smartwatch
  *
+ * @field mActivity : OnFragmentInteractionListener activity a cui è legato il CardioFragment
  * @author Sebastiano Valle <valle.sebastiano93@gmail.com>
  * @version 1.0.0
  * @see android.app.Fragment
