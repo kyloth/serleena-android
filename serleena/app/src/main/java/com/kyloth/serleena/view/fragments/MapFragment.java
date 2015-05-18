@@ -88,7 +88,7 @@ public class MapFragment extends Fragment implements com.kyloth.serleena.present
     private OnFragmentInteractionListener mActivity;
 
     /**
-     * Questo metodo viene invocato ogni volta che MapFragment viene collegato ad un'Activity.
+     * Questo metodo viene invocato ogni volta che un MapFragment viene collegato ad un'Activity.
      * Al termine di questo metodo, viene invocato il metodo resume() dell'IMapPresenter in ascolto.
      *
      * @param activity Activity che ha appena terminato una transazione in cui viene aggiunto il corrente Fragment
@@ -110,7 +110,7 @@ public class MapFragment extends Fragment implements com.kyloth.serleena.present
     }
 
     /**
-     * Questo metodo viene invocato ogni volta che MapFragment viene rimosso da un'Activity tramite
+     * Questo metodo viene invocato ogni volta che un MapFragment viene rimosso da un'Activity tramite
      * una transazione. Viene cancellato il riferimento all'Activity a cui era legato.
      */
     @Override

@@ -59,7 +59,7 @@ public class CardioFragment extends Fragment {
     private OnFragmentInteractionListener mActivity;
 
     /**
-     * Questo metodo viene invocato ogni volta che CardioFragment viene collegato ad un'Activity.
+     * Questo metodo viene invocato ogni volta che un CardioFragment viene collegato ad un'Activity.
      *
      * @param activity Activity che ha appena terminato una transazione in cui viene aggiunto il corrente Fragment
      */

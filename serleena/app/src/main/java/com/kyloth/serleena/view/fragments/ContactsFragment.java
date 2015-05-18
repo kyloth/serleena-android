@@ -56,7 +56,7 @@ import com.kyloth.serleena.OnFragmentInteractionListener;
  */
 public class ContactsFragment extends Fragment {
 
-    private OnFragmentInteractionListener mListener;
+    private OnFragmentInteractionListener mActivity;
 
     /**
      * Questo metodo viene invocato ogni volta che ContactsFragment viene collegato ad un'Activity.
@@ -67,7 +67,7 @@ public class ContactsFragment extends Fragment {
     public void onAttach(Activity activity) {
         super.onAttach(activity);
         try {
-            mListener = (OnFragmentInteractionListener) activity;
+            mActivity = (OnFragmentInteractionListener) activity;
         } catch (ClassCastException e) {
             throw new ClassCastException(activity.toString()
                     + " must implement OnFragmentInteractionListener");
@@ -81,7 +81,7 @@ public class ContactsFragment extends Fragment {
     @Override
     public void onDetach() {
         super.onDetach();
-        mListener = null;
+        mActivity = null;
     }
 
 }

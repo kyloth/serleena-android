@@ -57,7 +57,7 @@ public class SyncFragment extends Fragment {
     private OnFragmentInteractionListener mActivity;
 
     /**
-     * Questo metodo viene invocato ogni volta che SyncFragment viene collegato ad un'Activity.
+     * Questo metodo viene invocato ogni volta che un SyncFragment viene collegato ad un'Activity.
      *
      * @param activity Activity che ha appena terminato una transazione in cui viene aggiunto il corrente Fragment
      */

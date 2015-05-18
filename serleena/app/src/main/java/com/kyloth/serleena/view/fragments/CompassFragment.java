@@ -56,10 +56,10 @@ import com.kyloth.serleena.OnFragmentInteractionListener;
  */
 public class CompassFragment extends Fragment {
 
-    private OnFragmentInteractionListener mListener;
+    private OnFragmentInteractionListener mActivity;
 
     /**
-     * Questo metodo viene invocato ogni volta che CompassFragment viene collegato ad un'Activity.
+     * Questo metodo viene invocato ogni volta che un CompassFragment viene collegato ad un'Activity.
      *
      * @param activity Activity che ha appena terminato una transazione in cui viene aggiunto il corrente Fragment
      */
@@ -67,7 +67,7 @@ public class CompassFragment extends Fragment {
     public void onAttach(Activity activity) {
         super.onAttach(activity);
         try {
-            mListener = (OnFragmentInteractionListener) activity;
+            mActivity = (OnFragmentInteractionListener) activity;
         } catch (ClassCastException e) {
             throw new ClassCastException(activity.toString()
                     + " must implement OnFragmentInteractionListener");
@@ -81,6 +81,6 @@ public class CompassFragment extends Fragment {
     @Override
     public void onDetach() {
         super.onDetach();
-        mListener = null;
+        mActivity = null;
     }
 }
