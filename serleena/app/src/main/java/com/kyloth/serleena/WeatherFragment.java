@@ -28,6 +28,15 @@
 ///////////////////////////////////////////////////////////////////////////////
 
 
+/**
+ * Name: WeatherFragment
+ * Package: com.kyloth.serleena.view.fragments
+ * Author: Sebastiano Valle
+ *
+ * History:
+ * Version   Programmer         Changes
+ * 1.0.0     Sebastiano Valle   Creazione del file, scrittura del codice e di Javadoc
+ */
 package com.kyloth.serleena;
 
 import android.app.Activity;
@@ -40,12 +49,13 @@ import android.view.ViewGroup;
 
 
 /**
- * A simple {@link Fragment} subclass.
- * Activities that contain this fragment must implement the
- * {@link OnFragmentInteractionListener} interface
- * to handle interaction events.
- * Use the {@link WeatherFragment#newInstance} factory method to
- * create an instance of this fragment.
+ * Classe che implementa la schermata “Meteo”, in cui vengono mostrate informazioni metereologiche
+ * relative ad un giorno
+ *
+ * @field mActivity : OnFragmentInteractionListener activity a cui è legato il WeatherFragment
+ * @author Sebastiano Valle <valle.sebastiano93@gmail.com>
+ * @version 1.0.0
+ * @see android.app.Fragment
  */
 public class WeatherFragment extends Fragment {
     // TODO: Rename parameter arguments, choose names that match
@@ -57,7 +67,7 @@ public class WeatherFragment extends Fragment {
     private String mParam1;
     private String mParam2;
 
-    private OnFragmentInteractionListener mListener;
+    private OnFragmentInteractionListener mActivity;
 
     /**
      * Use this factory method to create a new instance of
@@ -99,26 +109,35 @@ public class WeatherFragment extends Fragment {
 
     // TODO: Rename method, update argument and hook method into UI event
     public void onButtonPressed(Uri uri) {
-        if (mListener != null) {
-            mListener.onFragmentInteraction(uri);
+        if (mActivity != null) {
+            mActivity.onFragmentInteraction(uri);
         }
     }
 
+    /**
+     * Questo metodo viene invocato ogni volta che un WeatherFragment viene collegato ad un'Activity.
+     *
+     * @param activity Activity che ha appena terminato una transazione in cui viene aggiunto il corrente Fragment
+     */
     @Override
     public void onAttach(Activity activity) {
         super.onAttach(activity);
         try {
-            mListener = (OnFragmentInteractionListener) activity;
+            mActivity = (OnFragmentInteractionListener) activity;
         } catch (ClassCastException e) {
             throw new ClassCastException(activity.toString()
                     + " must implement OnFragmentInteractionListener");
         }
     }
 
+    /**
+     * Questo metodo viene invocato ogni volta che un WeatherFragment viene rimosso da un'Activity
+     * tramite una transazione. Viene cancellato il riferimento all'Activity a cui era legato.
+     */
     @Override
     public void onDetach() {
         super.onDetach();
-        mListener = null;
+        mActivity = null;
     }
 
 }
