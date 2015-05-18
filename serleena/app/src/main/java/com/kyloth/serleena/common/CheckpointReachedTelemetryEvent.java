@@ -100,4 +100,9 @@ public class CheckpointReachedTelemetryEvent extends TelemetryEvent {
         return false;
     }
 
+    @Override
+    public int hashCode() {
+        return checkpointNumber;
+    }
+
 }
