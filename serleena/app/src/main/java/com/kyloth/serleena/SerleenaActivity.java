@@ -72,7 +72,7 @@ public class SerleenaActivity extends ActionBarActivity implements OnFragmentInt
         initLayoutIds();
         initMenuItemIds();
         FragmentTransaction ft = getFragmentManager().beginTransaction();
-        changeFragment("EXPLIST");
+        changeFragment("TRACKLIST");
     }
 
     private void initFragMap() {
@@ -80,6 +80,7 @@ public class SerleenaActivity extends ActionBarActivity implements OnFragmentInt
         myFrags.put("MAP", new MapFragment());
         myFrags.put("TELEMETRY", new TelemetryFragment());
         myFrags.put("EXPLIST", new ExperienceSelectionFragment());
+        myFrags.put("TRACKLIST", new TrackSelectionFragment());
         myFrags.put("CONTACTS", new ContactsFragment());
         myFrags.put("WEATHER", new WeatherFragment());
         myFrags.put("CARDIO",new CardioFragment());
@@ -97,6 +98,7 @@ public class SerleenaActivity extends ActionBarActivity implements OnFragmentInt
         myLayoutIds.put("MAP", R.layout.fragment_map);
         myLayoutIds.put("TELEMETRY", R.layout.fragment_telemetry);
         myLayoutIds.put("EXPLIST", R.layout.fragment_exp_selection_list);
+        myLayoutIds.put("TRACKLIST", R.layout.fragment_track_selection_list);
         myLayoutIds.put("CONTACTS", R.layout.fragment_contacts);
         myLayoutIds.put("WEATHER", R.layout.fragment_weather);
         myLayoutIds.put("CARDIO",R.layout.fragment_cardio);
