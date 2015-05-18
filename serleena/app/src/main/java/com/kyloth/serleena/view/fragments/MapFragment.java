@@ -38,7 +38,7 @@
  * 1.0.0     Sebastiano Valle   Creazione del file, scrittura del codice e di Javadoc
  */
 
-package com.kyloth.serleena;
+package com.kyloth.serleena.view.fragments;
 
 import android.app.Activity;
 import android.app.Fragment;
@@ -48,6 +48,8 @@ import android.graphics.drawable.BitmapDrawable;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 
+import com.kyloth.serleena.OnFragmentInteractionListener;
+import com.kyloth.serleena.R;
 import com.kyloth.serleena.common.GeoPoint;
 import com.kyloth.serleena.common.IQuadrant;
 import com.kyloth.serleena.common.UserPoint;
@@ -71,6 +73,7 @@ import java.util.Iterator;
  * @field mActivity : OnFragmentInteractionListener activity a cui è legato il MapFragment
  * @author Sebastiano Valle <valle.sebastiano93@gmail.com>
  * @version 1.0.0
+ * @see android.app.Fragment
  * @see com.kyloth.serleena.presentation.IMapView
  */
 public class MapFragment extends Fragment implements com.kyloth.serleena.presentation.IMapView  {
@@ -108,7 +111,7 @@ public class MapFragment extends Fragment implements com.kyloth.serleena.present
 
     /**
      * Questo metodo viene invocato ogni volta che MapFragment viene rimosso da un'Activity tramite
-     * una transazione. Viene dimenticato il riferimento all'Activity a cui era legato.
+     * una transazione. Viene cancellato il riferimento all'Activity a cui era legato.
      */
     @Override
     public void onDetach() {

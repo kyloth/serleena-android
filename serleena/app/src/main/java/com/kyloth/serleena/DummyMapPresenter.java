@@ -37,6 +37,7 @@ import com.kyloth.serleena.common.GeoPoint;
 import com.kyloth.serleena.common.IQuadrant;
 import com.kyloth.serleena.common.UserPoint;
 import com.kyloth.serleena.presentation.IMapPresenter;
+import com.kyloth.serleena.view.fragments.MapFragment;
 
 import java.util.ArrayList;
 
