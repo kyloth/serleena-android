@@ -77,4 +77,15 @@ public interface ITrack {
      */
     public ImmutableList<Checkpoint> getCheckpoints();
 
+    /**
+     * Restituisce il Tracciamento con migliore tempo totale per il Percorso.
+     *
+     * Se non esistono Tracciamenti per il Percorso,
+     * viene sollevata un'eccezione NoSuchTelemetryException.
+     *
+     * @return Tracciamento.
+     * @throws NoSuchTelemetryException
+     */
+    public ITelemetry getBestTelemetry() throws NoSuchTelemetryException;
+
 }
