@@ -69,14 +69,14 @@ public class LocationTelemetryEventTest {
      */
     @Test
     public void testLocationTelemetryEventGetters() {
-        Date date = new Date(2015, 5, 5, 2, 27);
+        int date = 123654;
         GeoPoint location = new GeoPoint(4.56, 1.231);
         LocationTelemetryEvent event = new LocationTelemetryEvent(date, location);
 
-        org.junit.Assert.assertTrue(event.timestamp().equals(date));
+        org.junit.Assert.assertTrue(event.timestamp() == date);
         org.junit.Assert.assertTrue(event.location().equals(location));
 
-        org.junit.Assert.assertTrue(!(event.timestamp().equals(new Date(2014, 5, 5, 2, 27))));
+        org.junit.Assert.assertTrue(!(event.timestamp() == 321654));
         org.junit.Assert.assertTrue(!(event.location().equals(new GeoPoint(5, 5))));
     }
 
@@ -85,15 +85,15 @@ public class LocationTelemetryEventTest {
      */
     @Test
     public void testEqualsMethod() {
-        Date date1 = new Date(2015, 5, 5, 2, 27);
+        int date1 = 123456;
         GeoPoint location1 = new GeoPoint(4.56, 1.231);
         LocationTelemetryEvent event1 = new LocationTelemetryEvent(date1, location1);
 
-        Date date2 = new Date(2015, 5, 5, 2, 27);
+        int date2 = 123456;
         GeoPoint location2 = new GeoPoint(4.56, 1.231);
         LocationTelemetryEvent event2 = new LocationTelemetryEvent(date2, location2);
 
-        Date date3 = new Date(2014, 5, 5, 2, 27);
+        int date3 = 321654;
         GeoPoint location3 = new GeoPoint(5.56, 9.231);
         LocationTelemetryEvent event3 = new LocationTelemetryEvent(date3, location3);
 

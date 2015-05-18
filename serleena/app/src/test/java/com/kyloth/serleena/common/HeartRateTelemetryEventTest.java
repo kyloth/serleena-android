@@ -70,14 +70,14 @@ public class HeartRateTelemetryEventTest {
      */
     @Test
     public void testHeartRateTelemetryEventGetters() {
-        Date date = new Date(2015, 5, 5, 2, 27);
+        int date = 123456;
         int rate = 34;
         HeartRateTelemetryEvent event = new HeartRateTelemetryEvent(date, rate);
 
-        org.junit.Assert.assertTrue(event.timestamp().equals(date));
+        org.junit.Assert.assertTrue(event.timestamp() == date);
         org.junit.Assert.assertTrue(event.heartRate() == rate);
 
-        org.junit.Assert.assertTrue(!(event.timestamp().equals(new Date(2014, 5, 5, 2, 27))));
+        org.junit.Assert.assertTrue(!(event.timestamp() == 321654));
         org.junit.Assert.assertTrue(!(event.heartRate() == 50));
     }
 
@@ -86,15 +86,15 @@ public class HeartRateTelemetryEventTest {
      */
     @Test
     public void testEqualsMethod() {
-        Date date1 = new Date(2015, 5, 5, 2, 27);
+        int date1 = 123456;
         int rate1 = 33;
         HeartRateTelemetryEvent event1 = new HeartRateTelemetryEvent(date1, rate1);
 
-        Date date2 = new Date(2015, 5, 5, 2, 27);
+        int date2 = 123456;
         int rate2 = 33;
         HeartRateTelemetryEvent event2 = new HeartRateTelemetryEvent(date2, rate2);
 
-        Date date3 = new Date(2014, 5, 5, 2, 27);
+        int date3 = 321654;
         int rate3 = 33;
         HeartRateTelemetryEvent event3 = new HeartRateTelemetryEvent(date3, rate3);
 

@@ -64,20 +64,21 @@ public class CheckpointReachedTelemetryEventTest {
     /**
      * Testa la correttezza dei metodi "getter" della classe.
      *
-     * Vengono testati i valori restituiti dai metodi della classe. In particolare, si verifica che
-     * i valori passati al costruttore nella creazione dell'oggetto vengano correttamente restituiti
-     * dai metodi.
+     * Vengono testati i valori restituiti dai metodi della classe. In
+     * particolare, si verifica che i valori passati al costruttore nella
+     * creazione dell'oggetto vengano correttamente restituiti dai metodi.
      */
     @Test
     public void testCheckpointReachedTelemetryEventGetters() {
-        Date date = new Date(2015, 5, 5, 2, 27);
+        int time = 1648521;
         int checkp = 34;
-        CheckpointReachedTelemetryEvent event = new CheckpointReachedTelemetryEvent(date, checkp);
+        CheckpointReachedTelemetryEvent event =
+                new CheckpointReachedTelemetryEvent(time, checkp);
 
-        org.junit.Assert.assertTrue(event.timestamp().equals(date));
+        org.junit.Assert.assertTrue(event.timestamp() == time);
         org.junit.Assert.assertTrue(event.checkpointNumber() == checkp);
 
-        org.junit.Assert.assertTrue(!(event.timestamp().equals(new Date(2014, 5, 5, 2, 27))));
+        org.junit.Assert.assertTrue(!(event.timestamp() == 98568));
         org.junit.Assert.assertTrue(!(event.checkpointNumber() == 50));
     }
 
@@ -86,17 +87,17 @@ public class CheckpointReachedTelemetryEventTest {
      */
     @Test
     public void testEqualsMethod() {
-        Date date1 = new Date(2015, 5, 5, 2, 27);
+        int date1 = 123456;
         int checkp1 = 33;
         CheckpointReachedTelemetryEvent event1 =
             new CheckpointReachedTelemetryEvent(date1, checkp1);
 
-        Date date2 = new Date(2015, 5, 5, 2, 27);
+        int date2 = 123456;
         int checkp2 = 33;
         CheckpointReachedTelemetryEvent event2 =
             new CheckpointReachedTelemetryEvent(date2, checkp2);
 
-        Date date3 = new Date(2014, 5, 5, 2, 27);
+        int date3 = 321654;
         int checkp3 = 33;
         CheckpointReachedTelemetryEvent event3 =
             new CheckpointReachedTelemetryEvent(date3, checkp3);

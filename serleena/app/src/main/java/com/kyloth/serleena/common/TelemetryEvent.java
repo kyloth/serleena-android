@@ -53,26 +53,29 @@ import java.util.Date;
  */
 public abstract class TelemetryEvent {
 
-    private Date timestamp;
+    private int timestamp;
 
     /**
      * Crea un nuovo oggetto TelemetryEvent.
      *
-     * Poichè la classe è astratta, questo costruttore può essere invocato solamente da sue
-     * sottoclassi.
+     * Poichè la classe è astratta, questo costruttore può essere invocato
+     * solamente da sue sottoclassi.
      *
-     * @param timestamp Istante di campionamento dell'evento.
+     * @param timestamp Istante di campionamento dell'evento,
+     *                  espresso in secondi trascorsi dall'avvio del
+     *                  Tracciamento.
      */
-    public TelemetryEvent(Date timestamp) {
+    public TelemetryEvent(int timestamp) {
         this.timestamp = timestamp;
     }
 
     /**
-     * Restituisce l'istante di tempo in cui l'evento è stato campionato.
+     * Restituisce l'istante di tempo in cui l'evento è stato campionato,
+     * espresso in secondi trascorsi dall'avvio del Tracciamento.
      *
-     * @return Data e ora del campionamento.
+     * @return Secondi trascorsi dall'avvio del Tracciamento.
      */
-    public Date timestamp() {
+    public int timestamp() {
         return this.timestamp;
     }
 

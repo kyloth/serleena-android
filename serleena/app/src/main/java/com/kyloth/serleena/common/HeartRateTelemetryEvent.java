@@ -59,10 +59,12 @@ public class HeartRateTelemetryEvent extends TelemetryEvent {
     /**
      * Crea un nuovo evento di tracciamento del battito cardiaco.
      *
-     * @param timestamp     Istante di tempo in cui l'evento è stato campionato.
+     * @param timestamp     Istante di tempo in cui l'evento è stato
+     *                      campionato, espresso in secondi dall'avvio del
+     *                      Tracciamento.
      * @param heartRate     Battito cardiaco campionato.
      */
-    public HeartRateTelemetryEvent(Date timestamp, int heartRate) {
+    public HeartRateTelemetryEvent(int timestamp, int heartRate) {
         super(timestamp);
         this.heartRate = heartRate;
     }
@@ -89,7 +91,7 @@ public class HeartRateTelemetryEvent extends TelemetryEvent {
         if (o != null && o instanceof HeartRateTelemetryEvent) {
             HeartRateTelemetryEvent other = (HeartRateTelemetryEvent) o;
             return this.heartRate() == other.heartRate() &&
-                    this.timestamp().equals(other.timestamp());
+                    this.timestamp() == other.timestamp();
         }
         return false;
     }

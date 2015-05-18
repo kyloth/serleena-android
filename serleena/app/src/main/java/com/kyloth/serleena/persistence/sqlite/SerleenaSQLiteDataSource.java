@@ -291,8 +291,7 @@ public class SerleenaSQLiteDataSource implements ISerleenaSQLiteDataSource {
             if (event instanceof LocationTelemetryEvent) {
 
                 LocationTelemetryEvent eventl = (LocationTelemetryEvent) event;
-                values.put("eventl_timestamp",
-                    new Double(eventl.timestamp().getTime() / 1000).intValue());
+                values.put("eventl_timestamp", eventl.timestamp());
                 values.put("eventl_latitude", eventl.location().latitude());
                 values.put("eventl_longitude", eventl.location().longitude());
                 values.put("eventl_telem", newId);
@@ -302,8 +301,7 @@ public class SerleenaSQLiteDataSource implements ISerleenaSQLiteDataSource {
 
                 HeartRateTelemetryEvent eventh =
                         (HeartRateTelemetryEvent) event;
-                values.put("eventhc_timestamp",
-                        new Double(eventh.timestamp().getTime() / 1000).intValue());
+                values.put("eventhc_timestamp", eventh.timestamp());
                 values.put("eventhc_value", eventh.heartRate());
                 values.put("eventhc_type", SerleenaDatabase.EVENT_TYPE_HEARTRATE);
                 values.put("eventhc_telem", newId);
@@ -314,8 +312,7 @@ public class SerleenaSQLiteDataSource implements ISerleenaSQLiteDataSource {
 
                 CheckpointReachedTelemetryEvent eventc =
                         (CheckpointReachedTelemetryEvent) event;
-                values.put("eventhc_timestamp",
-                    new Double(eventc.timestamp().getTime() / 1000).intValue());
+                values.put("eventhc_timestamp", eventc.timestamp());
                 values.put("eventhc_value", eventc.checkpointNumber());
                 values.put("eventhc_type", SerleenaDatabase.EVENT_TYPE_CHECKPOINT);
                 values.put("eventhc_telem", newId);
@@ -512,17 +509,17 @@ public class SerleenaSQLiteDataSource implements ISerleenaSQLiteDataSource {
         int typeIndex = result.getColumnIndexOrThrow("eventhc_type");
 
         while (result.moveToNext()) {
-            Date d = new Date(result.getInt(timestampIndex) * 1000);
+            int time = result.getInt(timestampIndex);
             int value = Integer.parseInt(result.getString(valueIndex));
             String type = result.getString(typeIndex);
 
             TelemetryEvent event = null;
             switch (type) {
                 case SerleenaDatabase.EVENT_TYPE_CHECKPOINT:
-                    event = new CheckpointReachedTelemetryEvent(d, value);
+                    event = new CheckpointReachedTelemetryEvent(time, value);
                     break;
                 case SerleenaDatabase.EVENT_TYPE_HEARTRATE:
-                    event = new HeartRateTelemetryEvent(d, value);
+                    event = new HeartRateTelemetryEvent(time, value);
                     break;
                 default:
                    /*throw new Exception();*/
@@ -541,12 +538,12 @@ public class SerleenaSQLiteDataSource implements ISerleenaSQLiteDataSource {
         int longitudeIndex = result.getColumnIndexOrThrow("eventl_longitude");
 
         while (result.moveToNext()) {
-            Date d = new Date(result.getInt(timestampIndex) * 1000);
+            int time = result.getInt(timestampIndex);
             double latitude = result.getDouble(latitudeIndex);
             double longitude = result.getDouble(longitudeIndex);
             GeoPoint location = new GeoPoint(latitude, longitude);
 
-            list.add(new LocationTelemetryEvent(d, location));
+            list.add(new LocationTelemetryEvent(time, location));
         }
 
         result.close();

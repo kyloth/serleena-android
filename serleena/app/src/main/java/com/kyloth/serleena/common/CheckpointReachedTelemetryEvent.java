@@ -61,10 +61,11 @@ public class CheckpointReachedTelemetryEvent extends TelemetryEvent {
     /**
      * Crea un nuovo evento di tracciamento di raggiungimento di un checkpoint.
      *
-     * @param timestamp         Istante di tempo di campionamento.
+     * @param timestamp         Istante di tempo di campionamento,
+     *                          espresso in secondi dall'avvio del Tracciamento.
      * @param checkpointNumber  Numero del checkpoint raggiunto.
      */
-    public CheckpointReachedTelemetryEvent(Date timestamp,
+    public CheckpointReachedTelemetryEvent(int timestamp,
                                            int checkpointNumber) {
         super(timestamp);
         this.checkpointNumber = checkpointNumber;
@@ -94,7 +95,7 @@ public class CheckpointReachedTelemetryEvent extends TelemetryEvent {
             CheckpointReachedTelemetryEvent other =
                     (CheckpointReachedTelemetryEvent) o;
             return this.checkpointNumber() == other.checkpointNumber() &&
-                    this.timestamp().equals(other.timestamp());
+                    this.timestamp() == other.timestamp();
         }
         return false;
     }

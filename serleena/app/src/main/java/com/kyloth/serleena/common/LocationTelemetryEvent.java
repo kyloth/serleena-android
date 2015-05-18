@@ -59,10 +59,12 @@ public class LocationTelemetryEvent extends TelemetryEvent {
     /**
      * Crea un nuovo evento di tracciamento della posizione utente.
      *
-     * @param timestamp     Istante di tempo in cui l'evento è stato campionato.
+     * @param timestamp     Istante di tempo in cui l'evento è stato
+     *                      campionato, espresso in secondi dall'avvio del
+     *                      Tracciamento.
      * @param location      Posizione geografica campionata dall'evento.
      */
-    public LocationTelemetryEvent(Date timestamp, GeoPoint location) {
+    public LocationTelemetryEvent(int timestamp, GeoPoint location) {
         super(timestamp);
         this.location = location;
     }
@@ -88,7 +90,7 @@ public class LocationTelemetryEvent extends TelemetryEvent {
         if (o != null && o instanceof LocationTelemetryEvent) {
             LocationTelemetryEvent other = (LocationTelemetryEvent) o;
             return this.location().equals(other.location()) &&
-                this.timestamp().equals(other.timestamp());
+                this.timestamp() == other.timestamp();
         }
         return false;
     }
