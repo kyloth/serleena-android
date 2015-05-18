@@ -87,6 +87,9 @@ public interface ITrackView {
 	/**
 	 * Imposta il tempo parziale rilevato all'ultimo checkpoint
 	 * per visualizzarlo a schermo.
+     *
+     * @param seconds Secondi trascorsi dall'inizio del Percorso all'ultimo
+     *                checkpoint attraversato.
 	 *
 	 * @since 1.0
 	 */
