@@ -42,6 +42,8 @@
 
 package com.kyloth.serleena.common;
 
+import android.location.Location;
+
 /**
  * Rappresenta un punto geografico come una coppia di valori "latitudine" e "longitudine".
  *
@@ -81,6 +83,13 @@ public class GeoPoint
      */
     public double longitude() {
         return longitude;
+    }
+
+    public float distanceTo(GeoPoint other) {
+        float[] results = new float[1];
+        Location.distanceBetween(latitude(), longitude(), other.latitude(),
+                other.longitude(), results);
+        return results[0];
     }
 
     /**
