@@ -48,6 +48,7 @@ import com.kyloth.serleena.view.fragments.MapFragment;
 import com.kyloth.serleena.view.fragments.SyncFragment;
 import com.kyloth.serleena.view.fragments.TelemetryFragment;
 import com.kyloth.serleena.view.fragments.TrackFragment;
+import com.kyloth.serleena.view.fragments.TrackSelectionFragment;
 import com.kyloth.serleena.view.fragments.WeatherFragment;
 
 import java.util.HashMap;
