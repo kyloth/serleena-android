@@ -64,14 +64,21 @@ public interface ITelemetry {
 	/**
 	 * @return  Un Iterable che contiene tutti gli eventi del Tracciamento
 	 *          compresi nell'intervallo di secondi specificato.
-	 * @param from L'inizio dell'intervallo in secondi comprensivo degli
-	 *             eventi da restituire.
-	 * @param to L'inizio dell'intervallo in secondi comprensivo degli
-	 *           eventi da restituire.
+	 * @param from L'inizio dell'intervallo, comprensivo degli
+	 *             eventi da restituire, espresso in secondi dall'avvio del
+     *             Tracciamento.
+     *             Se from > to, viene sollevata un'eccezione
+     *             IllegalArgumentException.
+	 * @param to L'inizio dell'intervallo, comprensivo degli
+	 *           eventi da restituire, espresso in secondi dall'avvio del
+     *           Tracciamento.
+     *           Se from > to, viene sollevata un'eccezione
+     *           IllegalArgumentException.
 	 * @version 1.0
 	 * @since   1.0
 	 */
-	Iterable<TelemetryEvent> getEvents(int from, int to);
+	public Iterable<TelemetryEvent> getEvents(int from, int to)
+            throws IllegalArgumentException;
 
 	/**
 	 * @return  Un Iterable che contiene tutti e soli gli eventi del
