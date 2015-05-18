@@ -43,6 +43,7 @@ import com.kyloth.serleena.presentation.IPresenter;
 import com.kyloth.serleena.view.fragments.CardioFragment;
 import com.kyloth.serleena.view.fragments.CompassFragment;
 import com.kyloth.serleena.view.fragments.ContactsFragment;
+import com.kyloth.serleena.view.fragments.ExperienceSelectionFragment;
 import com.kyloth.serleena.view.fragments.MapFragment;
 import com.kyloth.serleena.view.fragments.SyncFragment;
 import com.kyloth.serleena.view.fragments.TelemetryFragment;

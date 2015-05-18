@@ -37,7 +37,7 @@
  * Version   Programmer         Changes
  * 1.0.0     Sebastiano Valle   Creazione del file, scrittura del codice e di Javadoc
  */
-package com.kyloth.serleena;
+package com.kyloth.serleena.view.fragments;
 
 import android.app.Activity;
 import android.app.Fragment;
@@ -48,10 +48,11 @@ import android.widget.ArrayAdapter;
 import android.widget.ListAdapter;
 import android.widget.TextView;
 
+import com.kyloth.serleena.OnFragmentInteractionListener;
 import com.kyloth.serleena.dummy.DummyExperience;
 
 /**
- * Classe che implementa la visuale “Selezione Esperienza” della schermata “Esperienza”.
+ * Classe che implementa la visuale Selezione Esperienza della schermata Esperienza.
  *
  * In questa visuale è possibile selezionare un'esperienza da attivare tra quelle disponibili.
  *
