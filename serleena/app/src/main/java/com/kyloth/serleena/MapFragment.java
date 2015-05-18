@@ -28,6 +28,16 @@
 ///////////////////////////////////////////////////////////////////////////////
 
 
+/**
+ * Name: MapFragment
+ * Package: com.kyloth.serleena.view.fragments
+ * Author: Sebastiano Valle
+ *
+ * History:
+ * Version   Programmer         Changes
+ * 1.0.0     Sebastiano Valle   Creazione del file, scrittura del codice e di Javadoc
+ */
+
 package com.kyloth.serleena;
 
 import android.app.Activity;
@@ -35,11 +45,6 @@ import android.app.Fragment;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.drawable.BitmapDrawable;
-import android.net.Uri;
-import android.os.Bundle;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 
@@ -53,23 +58,22 @@ import java.util.Iterator;
 
 
 /**
- * A simple {@link Fragment} subclass.
- * Activities that contain this fragment must implement the
- * {@link OnFragmentInteractionListener} interface
- * to handle interaction events.
- * Use the {@link MapFragment#newInstance} factory method to
- * create an instance of this fragment.
+ * Classe che implementa la visuale “Mappa” della schermata “Esperienza”
+ *
+ * Implementa l'interfaccia IMapView, gestendo tutte le esigenze grafiche
+ * riguardo alla visuale Mappa nella schermata Esperienza.
+ *
+ * @field userPosition : GeoPoint salva il punto geografico corrispondente alla posizione dell'utente
+ * @field upList : Iterable<UserPoint> lista dei Punti Utente relativi al quadrante visualizzato
+ * @field layout : FrameLayout layout che viene visualizzato sul display
+ * @field mapRaster : BitmapDrawable immagine di background raffigurante una mappa, sopra la quale verranno disegnati punti utente e posizione
+ * @field presenter : IMapPresenter presenter da notificare all'aggiunta del Fragment all'Activity
+ * @field mActivity : OnFragmentInteractionListener activity a cui è legato il MapFragment
+ * @author Sebastiano Valle <valle.sebastiano93@gmail.com>
+ * @version 1.0.0
+ * @see com.kyloth.serleena.presentation.IMapView
  */
 public class MapFragment extends Fragment implements com.kyloth.serleena.presentation.IMapView  {
-    // TODO: Rename parameter arguments, choose names that match
-    // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-    private static final String ARG_PARAM1 = "param1";
-    private static final String ARG_PARAM2 = "param2";
-
-    // TODO: Rename and change types of parameters
-    private String mParam1;
-    private String mParam2;
-
     private GeoPoint userPosition;
     private Iterable<UserPoint> upList = new ArrayList<>();
 
@@ -81,46 +85,11 @@ public class MapFragment extends Fragment implements com.kyloth.serleena.present
     private OnFragmentInteractionListener mActivity;
 
     /**
-     * Use this factory method to create a new instance of
-     * this fragment using the provided parameters.
+     * Questo metodo viene invocato ogni volta che MapFragment viene collegato ad un'Activity.
+     * Al termine di questo metodo, viene invocato il metodo resume() dell'IMapPresenter in ascolto.
      *
-     * @param param1 Parameter 1.
-     * @param param2 Parameter 2.
-     * @return A new instance of fragment MapFragment.
+     * @param activity Activity che ha appena terminato una transazione in cui viene aggiunto il corrente Fragment
      */
-    // TODO: Rename and change types and number of parameters
-    public static MapFragment newInstance(String param1, String param2) {
-        MapFragment fragment = new MapFragment();
-        Bundle args = new Bundle();
-        args.putString(ARG_PARAM1, param1);
-        args.putString(ARG_PARAM2, param2);
-        fragment.setArguments(args);
-        return fragment;
-    }
-
-    @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        if (getArguments() != null) {
-            mParam1 = getArguments().getString(ARG_PARAM1);
-            mParam2 = getArguments().getString(ARG_PARAM2);
-        }
-    }
-
-    @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_map, container, false);
-    }
-
-    // TODO: Rename method, update argument and hook method into UI event
-    public void onButtonPressed(Uri uri) {
-        if (mActivity != null) {
-            mActivity.onFragmentInteraction(uri);
-        }
-    }
-
     @Override
     public void onAttach(Activity activity) {
         super.onAttach(activity);
@@ -137,18 +106,32 @@ public class MapFragment extends Fragment implements com.kyloth.serleena.present
         }
     }
 
+    /**
+     * Questo metodo viene invocato ogni volta che MapFragment viene rimosso da un'Activity tramite
+     * una transazione. Viene dimenticato il riferimento all'Activity a cui era legato.
+     */
     @Override
     public void onDetach() {
         super.onDetach();
         mActivity = null;
     }
 
+    /**
+     * Viene impostata la posizione dell'utente e visualizzata la posizione dell'utente.
+     *
+     * @param point posizione dell'utente
+     */
     @Override
     public void setUserLocation(GeoPoint point) {
         userPosition = point;
         draw();
     }
 
+    /**
+     * Metodo con cui viene visualizzato un quadrante.
+     *
+     * @param q Quadrante da visualizzare
+     */
     @Override
     public void displayQuadrant(IQuadrant q) {
         Bitmap temp = q.getRaster();
@@ -158,12 +141,20 @@ public class MapFragment extends Fragment implements com.kyloth.serleena.present
         map.setBackground(mapRaster);
     }
 
+    /**
+     * Metodo con cui vengono visualizzati i Punti Utente sulla mappa
+     *
+     * @param points punti utente da visualizzare
+     */
     @Override
     public void displayUP(Iterable<UserPoint> points) {
         upList = points;
         draw();
     }
 
+    /**
+     * Metodo con cui viene disegnata una mappa con posizione e punti utente.
+     */
     private void draw() {
         layout = new FrameLayout(getActivity());
         layout.setBackground(mapRaster);
@@ -172,6 +163,9 @@ public class MapFragment extends Fragment implements com.kyloth.serleena.present
         getActivity().setContentView(layout);
     }
 
+    /**
+     * Metodo per disegnare posizione sulla mappa.
+     */
     private void drawPosition() {
         if(userPosition == null) return;
         ImageView img = new ImageView(getActivity());
@@ -182,6 +176,9 @@ public class MapFragment extends Fragment implements com.kyloth.serleena.present
         layout.addView(img, params);
     }
 
+    /**
+     * Metodo per disegnare i punti utente sulla mappa.
+     */
     private void drawUp() {
         Iterator<UserPoint> it = upList.iterator();
         while (it.hasNext()) {
@@ -195,6 +192,11 @@ public class MapFragment extends Fragment implements com.kyloth.serleena.present
         }
     }
 
+    /**
+     * Metodo per eseguire un'operazione di subscribe relativa ad un IMapPresenter.
+     *
+     * @param presenter oggetto collegato che verrà notificato da questo Fragment
+     */
     @Override
     public void attachPresenter(IMapPresenter presenter) {
         this.presenter = presenter;
