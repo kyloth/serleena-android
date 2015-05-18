@@ -37,10 +37,12 @@
  * Version   Programmer         Changes
  * 1.0.0     Sebastiano Valle   Creazione del file, scrittura del codice e di Javadoc
  */
-package com.kyloth.serleena;
+package com.kyloth.serleena.view.fragments;
 
 import android.app.Activity;
 import android.app.Fragment;
+
+import com.kyloth.serleena.OnFragmentInteractionListener;
 
 
 /**
