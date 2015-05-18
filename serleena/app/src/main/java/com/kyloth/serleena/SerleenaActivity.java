@@ -42,6 +42,7 @@ import com.kyloth.serleena.presentation.IMapPresenter;
 import com.kyloth.serleena.presentation.IMapView;
 import com.kyloth.serleena.presentation.IPresenter;
 import com.kyloth.serleena.view.fragments.CardioFragment;
+import com.kyloth.serleena.view.fragments.CompassFragment;
 import com.kyloth.serleena.view.fragments.MapFragment;
 
 import java.util.HashMap;
