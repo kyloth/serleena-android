@@ -46,6 +46,7 @@ import com.kyloth.serleena.view.fragments.CompassFragment;
 import com.kyloth.serleena.view.fragments.ContactsFragment;
 import com.kyloth.serleena.view.fragments.MapFragment;
 import com.kyloth.serleena.view.fragments.SyncFragment;
+import com.kyloth.serleena.view.fragments.WeatherFragment;
 
 import java.util.HashMap;
 import java.util.Map;
