@@ -28,6 +28,15 @@
 ///////////////////////////////////////////////////////////////////////////////
 
 
+/**
+ * Name: CompassFragment
+ * Package: com.kyloth.serleena.view.fragments
+ * Author: Sebastiano Valle
+ *
+ * History:
+ * Version   Programmer         Changes
+ * 1.0.0     Sebastiano Valle   Creazione del file, scrittura del codice e di Javadoc
+ */
 package com.kyloth.serleena;
 
 import android.app.Activity;
@@ -40,12 +49,12 @@ import android.view.ViewGroup;
 
 
 /**
- * A simple {@link Fragment} subclass.
- * Activities that contain this fragment must implement the
- * {@link OnFragmentInteractionListener} interface
- * to handle interaction events.
- * Use the {@link CompassFragment#newInstance} factory method to
- * create an instance of this fragment.
+ * Classe che implementa la schermata “Bussola”, in cui vengono fornite all'utente delle indicazioni
+ * rispetto i poli geografici
+ *
+ * @author Sebastiano Valle <valle.sebastiano93@gmail.com>
+ * @version 1.0.0
+ * @see android.app.Fragment
  */
 public class CompassFragment extends Fragment {
     // TODO: Rename parameter arguments, choose names that match
@@ -104,6 +113,11 @@ public class CompassFragment extends Fragment {
         }
     }
 
+    /**
+     * Questo metodo viene invocato ogni volta che CompassFragment viene collegato ad un'Activity.
+     *
+     * @param activity Activity che ha appena terminato una transazione in cui viene aggiunto il corrente Fragment
+     */
     @Override
     public void onAttach(Activity activity) {
         super.onAttach(activity);
@@ -115,6 +129,10 @@ public class CompassFragment extends Fragment {
         }
     }
 
+    /**
+     * Questo metodo viene invocato ogni volta che un CompassFragment viene rimosso da un'Activity
+     * tramite una transazione. Viene cancellato il riferimento all'Activity a cui era legato.
+     */
     @Override
     public void onDetach() {
         super.onDetach();
