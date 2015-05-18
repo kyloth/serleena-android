@@ -32,7 +32,6 @@ package com.kyloth.serleena;
 
 import android.app.Fragment;
 import android.app.FragmentTransaction;
-import android.net.Uri;
 import android.os.Bundle;
 import android.support.v7.app.ActionBarActivity;
 import android.view.Menu;
@@ -72,13 +71,14 @@ public class SerleenaActivity extends ActionBarActivity implements OnFragmentInt
         initLayoutIds();
         initMenuItemIds();
         FragmentTransaction ft = getFragmentManager().beginTransaction();
-        changeFragment("TELEMETRY");
+        changeFragment("EXPLIST");
     }
 
     private void initFragMap() {
         myFrags.put("TRACK", new TrackFragment());
         myFrags.put("MAP", new MapFragment());
         myFrags.put("TELEMETRY", new TelemetryFragment());
+        myFrags.put("EXPLIST", new ExperienceSelectionFragment());
         myFrags.put("CONTACTS", new ContactsFragment());
         myFrags.put("WEATHER", new WeatherFragment());
         myFrags.put("CARDIO",new CardioFragment());
@@ -95,6 +95,7 @@ public class SerleenaActivity extends ActionBarActivity implements OnFragmentInt
         myLayoutIds.put("TRACK",R.layout.fragment_track);
         myLayoutIds.put("MAP", R.layout.fragment_map);
         myLayoutIds.put("TELEMETRY", R.layout.fragment_telemetry);
+        myLayoutIds.put("EXPLIST", R.layout.fragment_exp_selection_list);
         myLayoutIds.put("CONTACTS", R.layout.fragment_contacts);
         myLayoutIds.put("WEATHER", R.layout.fragment_weather);
         myLayoutIds.put("CARDIO",R.layout.fragment_cardio);
@@ -156,7 +157,7 @@ public class SerleenaActivity extends ActionBarActivity implements OnFragmentInt
     }
 
     @Override
-    public void onFragmentInteraction(Uri uri) {
+    public void onFragmentInteraction(Object obj) {
 
     }
 }
