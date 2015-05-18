@@ -28,6 +28,15 @@
 ///////////////////////////////////////////////////////////////////////////////
 
 
+/**
+ * Name: SyncFragment
+ * Package: com.kyloth.serleena.view.fragments
+ * Author: Sebastiano Valle
+ *
+ * History:
+ * Version   Programmer         Changes
+ * 1.0.0     Sebastiano Valle   Creazione del file, scrittura del codice e di Javadoc
+ */
 package com.kyloth.serleena;
 
 import android.app.Activity;
@@ -40,12 +49,13 @@ import android.view.ViewGroup;
 
 
 /**
- * A simple {@link Fragment} subclass.
- * Activities that contain this fragment must implement the
- * {@link OnFragmentInteractionListener} interface
- * to handle interaction events.
- * Use the {@link SyncFragment#newInstance} factory method to
- * create an instance of this fragment.
+ * Classe che implementa la schermata “Sincronizzazione”, in cui è possibile richiedere la
+ * sincronizzazione con la piattaforma Cloud.
+ *
+ * @field mActivity : OnFragmentInteractionListener activity a cui è legato il SyncFragment
+ * @author Sebastiano Valle <valle.sebastiano93@gmail.com>
+ * @version 1.0.0
+ * @see android.app.Fragment
  */
 public class SyncFragment extends Fragment {
     // TODO: Rename parameter arguments, choose names that match
@@ -104,6 +114,11 @@ public class SyncFragment extends Fragment {
         }
     }
 
+    /**
+     * Questo metodo viene invocato ogni volta che SyncFragment viene collegato ad un'Activity.
+     *
+     * @param activity Activity che ha appena terminato una transazione in cui viene aggiunto il corrente Fragment
+     */
     @Override
     public void onAttach(Activity activity) {
         super.onAttach(activity);
@@ -115,6 +130,10 @@ public class SyncFragment extends Fragment {
         }
     }
 
+    /**
+     * Questo metodo viene invocato ogni volta che un SyncFragment viene rimosso da un'Activity
+     * tramite una transazione. Viene cancellato il riferimento all'Activity a cui era legato.
+     */
     @Override
     public void onDetach() {
         super.onDetach();
