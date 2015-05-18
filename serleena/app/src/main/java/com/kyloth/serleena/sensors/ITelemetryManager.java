@@ -77,5 +77,5 @@ public interface ITelemetryManager {
      *
      * @param event Evento di Tracciamento da registrare.
      */
-    public void signalEvent(TelemetryEventType event);
+    public void signalEvent(TelemetryEvent event);
 }
