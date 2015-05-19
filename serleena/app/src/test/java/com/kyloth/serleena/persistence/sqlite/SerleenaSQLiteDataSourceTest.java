@@ -165,6 +165,105 @@ public class SerleenaSQLiteDataSourceTest {
 		           && second.longitude() == 2 * SerleenaSQLiteDataSource.QUADRANT_LONGSIZE);
 	}
 
+	/**
+	 * Controlla che sia possibile ottenere correttamente i Percorsi per
+	 * un'Esperienza
+	 */
+	@Test
+	public void testGetTracks() {
+		long id = makeExperience(db);
+		ContentValues values = new ContentValues();
+		values.put("track_name", "bar");
+		values.put("track_experience", id);
+		id = db.insertOrThrow(SerleenaDatabase.TABLE_TRACKS, null, values);
+		Iterable<IExperienceStorage> exps = sds.getExperiences();
+		IExperienceStorage exp = exps.iterator().next();
+		Iterable<SQLiteDAOTrack> trax = sds.getTracks((SQLiteDAOExperience) exp);
+	}
+
+	/**
+	 * Controlla che un'Esperienza cancellata non abbia Percorsi
+	 */
+	@Test
+	public void testNoTracks() {
+		long id = makeExperience(db);
+		ContentValues values = new ContentValues();
+		values.put("track_name", "bar");
+		values.put("track_experience", id);
+		id = db.insertOrThrow(SerleenaDatabase.TABLE_TRACKS, null, values);
+		Iterable<IExperienceStorage> exps = sds.getExperiences();
+		IExperienceStorage exp = exps.iterator().next();
+		String whereClause = "experience_id = " + ((SQLiteDAOExperience)exp).id();
+		db.delete(SerleenaDatabase.TABLE_EXPERIENCES, whereClause, null);
+		Iterable<SQLiteDAOTrack> trax = sds.getTracks((SQLiteDAOExperience) exp);
+		int i = 0;
+		for (SQLiteDAOTrack track : trax) {
+			i++;
+		}
+		assertTrue(i == 0);
+	}
+
+	/**
+	 * Controlla che un'Esperienza cancellata non abbia Percorsi
+	 */
+	@Test
+	public void testExperienceSlippage() {
+		long id = makeExperience(db);
+		ContentValues values = new ContentValues();
+		values.put("track_name", "bar");
+		values.put("track_experience", id);
+		id = db.insertOrThrow(SerleenaDatabase.TABLE_TRACKS, null, values);
+		Iterable<IExperienceStorage> exps = sds.getExperiences();
+		IExperienceStorage exp = exps.iterator().next();
+		String whereClause = "experience_id = " + ((SQLiteDAOExperience)exp).id();
+		Iterable<SQLiteDAOTrack> trax = sds.getTracks((SQLiteDAOExperience) exp);
+		db.delete(SerleenaDatabase.TABLE_EXPERIENCES, whereClause, null);
+		int i = 0;
+		for (SQLiteDAOTrack track : trax) {
+			i++;
+		}
+		assertTrue(i == 1);
+	}
+
+	/**
+	 * Controlla che addUserPoint aggiunga i punti utente.
+	 */
+	@Test
+	public void testAddUserPoint() {
+		long id = makeTrack(db);
+		ContentValues values = new ContentValues();
+		values.put("telem_track", id);
+		db.insertOrThrow(SerleenaDatabase.TABLE_TELEMETRIES, null, values);
+		db.insertOrThrow(SerleenaDatabase.TABLE_TELEMETRIES, null, values);
+		Iterable<IExperienceStorage> exps = sds.getExperiences();
+		SQLiteDAOExperience exp = (SQLiteDAOExperience) exps.iterator().next();
+		Iterable<SQLiteDAOTrack> trax = sds.getTracks(exp);
+		SQLiteDAOTrack track = trax.iterator().next();
+		Iterable<ITelemetryStorage> telemetries = track.getTelemetries();
+		int i = 0;
+		for (ITelemetryStorage telem : telemetries) {
+			i++;
+		}
+		assert(i == 2);
+	}
+
+	/**
+	 * Controlla che getExperience restituisca correttamente le esperienze.
+	 */
+	@Test
+	public void testGetExperiences() {
+		ContentValues values;
+
+		makeExperience(db);
+
+		Iterable<IExperienceStorage> exps = sds.getExperiences();
+		int i = 0;
+		for (IExperienceStorage exp : exps) {
+			i++;
+		}
+		assertTrue(i == 1);
+	}
+
 	@Before
 	public void setup() throws URISyntaxException {
 		SerleenaDatabase sh = new SerleenaDatabase(RuntimeEnvironment.application, null, null, 1);
