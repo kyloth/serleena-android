@@ -87,6 +87,17 @@ public class TelemetryManager implements ITelemetryManager,
     }
 
     /**
+     * Implementa ITelemetryManager.stop().
+     */
+    @Override
+    public synchronized void stop() {
+        if (sampling) {
+            wkMan.detachObserver(this);
+            sampling = false;
+        }
+    }
+
+    /**
      * Implementa ITelemetryManager.signalEvent().
      *
      * @param event Evento di Tracciamento da registrare.
