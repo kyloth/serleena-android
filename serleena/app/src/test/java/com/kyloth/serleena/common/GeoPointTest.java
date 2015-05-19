@@ -63,19 +63,24 @@ public class GeoPointTest {
 
     /**
      * Testa la correttezza dei metodi "getter" della classe.
-     *
-     * Vengono testati i valori restituiti dai metodi della classe.
-     * In particolare, si verifica che i valori passati al costruttore nella
-     * creazione dell'oggetto vengano correttamente restituiti dai metodi.
-     */
+     **/
     @Test
-    public void testGetters() {
+    public void testGeoPointGettersWork() {
         double latitude = 5;
         double longitude = 10;
         GeoPoint up = new GeoPoint(latitude, longitude);
-
         org.junit.Assert.assertTrue(up.latitude() == latitude);
         org.junit.Assert.assertTrue(up.longitude() == longitude);
+    }
+
+    /**
+     * Verifica che i campi di GeoPoint non vengano scambiati
+     */
+    @Test
+    public void testGeoPointDoesntSwap() {
+        double latitude = 5;
+        double longitude = 10;
+        GeoPoint up = new GeoPoint(latitude, longitude);
         org.junit.Assert.assertTrue(up.latitude() != 10);
         org.junit.Assert.assertTrue(up.longitude() != 5);
     }
