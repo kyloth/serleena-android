@@ -115,4 +115,22 @@ public class TelemetryManager implements ITelemetryManager,
         pm.unlock("LocationTelemetryLock");
     }
 
+    /**
+     * Implementa IWakeupObserver.onWakeup().
+     *
+     * Il metodo viene invocato periodicamente da un IWakeupManager,
+     * per permettere all'applicazione di registrare eventi di Tracciamento
+     * anche in periodi di sleep del processore.
+     * In attesa della risposta dei sensori, il metodo acquisisce un lock sul
+     * processore per evitare che esso torni in modalità sleep prima del
+     * corretto campionamento dell'evento.
+     */
+    @Override
+    public void onWakeup() {
+        pm.lock("LocationTelemetryLock");
+        pm.lock("HeartRateTelemetryLock");
+        locMan.getSingleUpdate(this, 20);
+        hrMan.getSingleUpdate(this, 20);
+    }
+
 }
