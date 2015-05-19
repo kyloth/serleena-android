@@ -121,13 +121,15 @@ public class SerleenaSQLiteDataSource implements ISerleenaSQLiteDataSource {
      * @return Un array int [2] di due punti i,j che identifica il quadrante.
      */
     public static int[] getIJ(GeoPoint p) {
-        assert(p.latitude() >= 0);
-        assert(p.latitude() <= 180);
-        assert(p.longitude() >= 0);
-        assert(p.longitude() <= 360);
+        assert(p.latitude() >= -90.0);
+        assert(p.latitude() <= 90.0);
+        assert(p.longitude() >= -180.0);
+        assert(p.longitude() < 180.0);
         int ij[] = new int[2];
-        ij[0] = (int)(floor(p.longitude() / QUADRANT_LONGSIZE) % TOT_LONG_QUADRANTS);
-        ij[1] = (int)(floor(p.latitude() / QUADRANT_LATSIZE) % TOT_LAT_QUADRANTS);
+        ij[0] = (int)(floor((p.latitude() + 90.0) / QUADRANT_LATSIZE));
+        assert(ij[0] < TOT_LAT_QUADRANTS);
+        ij[1] = (int)(floor((p.longitude() + 180.0) / QUADRANT_LONGSIZE) %  TOT_LONG_QUADRANTS);
+        assert(ij[1] < TOT_LONG_QUADRANTS);
         return ij;
     }
 
@@ -435,14 +437,14 @@ public class SerleenaSQLiteDataSource implements ISerleenaSQLiteDataSource {
 
         int[] ij = getIJ(location);
 
-        assert(ij[0] < TOT_LONG_QUADRANTS);
-        assert(ij[1] < TOT_LAT_QUADRANTS);
+        assert(ij[0] < TOT_LAT_QUADRANTS);
+        assert(ij[1] < TOT_LONG_QUADRANTS);
 
         String fileName = getRasterPath(ij[0], ij[1]);
-        GeoPoint p1 = new GeoPoint(ij[0] * QUADRANT_LONGSIZE,
-                                              ij[1] * QUADRANT_LATSIZE);
-        GeoPoint p2 = new GeoPoint((ij[0] + 1) * QUADRANT_LONGSIZE,
-                                              (ij[1] + 1) * QUADRANT_LATSIZE);
+        GeoPoint p1 = new GeoPoint(ij[0] * QUADRANT_LATSIZE,
+                                   ij[1] * QUADRANT_LONGSIZE);
+        GeoPoint p2 = new GeoPoint((ij[0] + 1) * QUADRANT_LATSIZE,
+                                   (ij[1] + 1) * QUADRANT_LONGSIZE);
 
         Bitmap raster = null;
         File file = new File(context.getFilesDir(), fileName);
