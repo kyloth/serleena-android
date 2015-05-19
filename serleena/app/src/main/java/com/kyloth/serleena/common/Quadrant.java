@@ -37,7 +37,10 @@ public class Quadrant implements IQuadrant {
     private GeoPoint southWest;
     private Bitmap raster;
 
-    public Quadrant(GeoPoint northEast, GeoPoint southWest, Bitmap raster) {
+    public Quadrant(GeoPoint northEast, GeoPoint southWest, Bitmap raster) throws IllegalArgumentException {
+        if (northEast == null || southWest == null) {
+            throw new IllegalArgumentException();
+        }
         this.northEast = northEast;
         this.southWest = southWest;
         this.raster = raster;
