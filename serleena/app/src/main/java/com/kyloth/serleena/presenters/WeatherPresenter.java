@@ -125,4 +125,12 @@ public class WeatherPresenter implements IWeatherPresenter, ILocationObserver {
         }
     }
 
+    /**
+     * Implementa IPresenter.resume().
+     */
+    @Override
+    public synchronized void resume() {
+        locMan.attachObserver(this, LOCATION_UPDATE_INTERVAL_SECONDS);
+    }
+
 }
