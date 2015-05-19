@@ -66,11 +66,11 @@ public interface IWeatherView {
 	void setWeatherInfo(IWeatherForecast forecast);
 
 	/**
-	 * Pulisce la vista.
+	 * Pulisce le informazioni metereologiche della vista.
 	 *
 	 * @since 1.0
 	 */
-	void clearView();
+	void clearWeatherInfo();
 
 	/**
 	 * Imposta la data visualizzata.
