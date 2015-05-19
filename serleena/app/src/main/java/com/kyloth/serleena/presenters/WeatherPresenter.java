@@ -62,7 +62,8 @@ public class WeatherPresenter implements IWeatherPresenter, ILocationObserver {
     private ISerleenaDataSource ds;
     private GeoPoint lastKnownLocation;
 
-    public WeatherPresenter(IWeatherView view, ISerleenaActivity activity) {
+    public WeatherPresenter(IWeatherView view, ISerleenaActivity activity)
+            throws IllegalArgumentException {
         if (view == null)
             throw new IllegalArgumentException("Illegal null view");
         if (activity == null)
@@ -148,7 +149,11 @@ public class WeatherPresenter implements IWeatherPresenter, ILocationObserver {
      *            dell'Escursionista.
      */
     @Override
-    public synchronized void onLocationUpdate(GeoPoint loc) {
+    public synchronized void onLocationUpdate(GeoPoint loc)
+            throws IllegalArgumentException {
+        if (loc == null)
+            throw new IllegalArgumentException("Illegal null location");
+
         lastKnownLocation = loc;
         AsyncTask<Void, Void, Void> task = new AsyncTask<Void, Void, Void>() {
             @Override
