@@ -113,4 +113,13 @@ public class GeoPoint
         return false;
     }
 
+    /**
+     * Overriding di Object.hashCode()
+     *
+     * @return Hash dell'oggetto.
+     */
+    public int hashCode() {
+        return (int)(latitude + longitude);
+    }
+
 }

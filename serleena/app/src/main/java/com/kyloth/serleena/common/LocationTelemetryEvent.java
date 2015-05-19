@@ -95,4 +95,13 @@ public class LocationTelemetryEvent extends TelemetryEvent {
         return false;
     }
 
+    /**
+     * Overriding di Object.hashCode().
+     *
+     * @return Hash dell'oggetto.
+     */
+    public int hashCode() {
+        return (int)(location.latitude() + location.longitude());
+    }
+
 }

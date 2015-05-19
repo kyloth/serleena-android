@@ -96,4 +96,13 @@ public class HeartRateTelemetryEvent extends TelemetryEvent {
         return false;
     }
 
+    /**
+     * Overriding di Object.hashCode().
+     *
+     * @return Hash dell'oggetto.
+     */
+    public int hashCode() {
+        return heartRate;
+    }
+
 }
