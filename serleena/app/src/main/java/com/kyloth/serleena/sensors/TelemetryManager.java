@@ -48,6 +48,16 @@ import java.util.Date;
 public class TelemetryManager implements ITelemetryManager,
         ILocationObserver, IHeartRateObserver, IWakeupObserver {
 
+    private static int SAMPLING_RATE_SECONDS = 60;
+
+    private ILocationManager locMan;
+    private IHeartRateManager hrMan;
+    private IWakeupManager wkMan;
+    private ArrayList<TelemetryEvent> events;
+    private SerleenaPowerManager pm;
+    private boolean sampling;
+    private long startTimestamp;
+
     public TelemetryManager(Context context) {
         if (context == null)
             throw new IllegalArgumentException("Illegal null context");
