@@ -137,7 +137,7 @@ public class GeoPointTest {
         double longitude2 = 10;
         GeoPoint gp2 = new GeoPoint(latitude2, longitude2);
 
-        double latitude3 = 115;
+        double latitude3 = 90;
         double longitude3 = 130;
         GeoPoint gp3 = new GeoPoint(latitude3, longitude3);
 
