@@ -76,4 +76,14 @@ public class TelemetryManager implements ITelemetryManager,
         return (Iterable<TelemetryEvent>) events.clone();
     }
 
+    /**
+     * Implementa ITelemetryManager.signalEvent().
+     *
+     * @param event Evento di Tracciamento da registrare.
+     */
+    @Override
+    public void signalEvent(TelemetryEvent event) {
+        events.add(event);
+    }
+
 }
