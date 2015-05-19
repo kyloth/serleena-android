@@ -76,6 +76,16 @@ public class TelemetryManager implements ITelemetryManager,
         return (Iterable<TelemetryEvent>) events.clone();
     }
 
+    @Override
+    public synchronized void start() {
+        if (!sampling) {
+            wkMan.attachObserver(this, SAMPLING_RATE_SECONDS, false);
+            sampling = true;
+        }
+        events.clear();
+        startTimestamp = System.currentTimeMillis() / 1000L;
+    }
+
     /**
      * Implementa ITelemetryManager.signalEvent().
      *
