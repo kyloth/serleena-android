@@ -48,7 +48,7 @@ import android.graphics.drawable.BitmapDrawable;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 
-import com.kyloth.serleena.OnFragmentInteractionListener;
+import com.kyloth.serleena.presenters.OnFragmentInteractionListener;
 import com.kyloth.serleena.R;
 import com.kyloth.serleena.common.GeoPoint;
 import com.kyloth.serleena.common.IQuadrant;

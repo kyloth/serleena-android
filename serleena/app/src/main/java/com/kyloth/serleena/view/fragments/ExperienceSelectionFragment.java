@@ -48,7 +48,7 @@ import android.widget.ArrayAdapter;
 import android.widget.ListAdapter;
 import android.widget.TextView;
 
-import com.kyloth.serleena.OnFragmentInteractionListener;
+import com.kyloth.serleena.presenters.OnFragmentInteractionListener;
 import com.kyloth.serleena.dummy.DummyExperience;
 
 /**

@@ -42,7 +42,7 @@ package com.kyloth.serleena.view.fragments;
 import android.app.Activity;
 import android.app.Fragment;
 
-import com.kyloth.serleena.OnFragmentInteractionListener;
+import com.kyloth.serleena.presenters.OnFragmentInteractionListener;
 
 
 /**

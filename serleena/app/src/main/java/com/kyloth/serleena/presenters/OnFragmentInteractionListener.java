@@ -28,10 +28,28 @@
 ///////////////////////////////////////////////////////////////////////////////
 
 
-package com.kyloth.serleena;
+/**
+ * Name: OnFragmentInteractionListener
+ * Package: com.kyloth.serleena.presenters
+ * Author: Sebastiano Valle
+ *
+ * History:
+ * Version   Programmer         Changes
+ * 1.0.0     Sebastiano Valle   Creazione del file, scrittura del codice e di Javadoc
+ */
+package com.kyloth.serleena.presenters;
 
 /**
+ * Interfaccia che permette ad un'Activity di rimanere in attesa di notifiche dal Fragment.
+ *
+ * @author Sebastiano Valle <valle.sebastiano93@gmail.com>
+ * @version 1.0.0
  */
 public interface OnFragmentInteractionListener {
+    /**
+     * Metodo invocato ogni qualvolta vi è un evento in un Fragment
+     *
+     * @param obj oggetto passato per gestire l'interazione
+     */
     public void onFragmentInteraction(Object obj);
 }
