@@ -59,6 +59,9 @@ import org.robolectric.annotation.Config;
 import java.net.URISyntaxException;
 import java.util.ArrayList;
 
+import static com.kyloth.serleena.persistence.sqlite.SerleenaDatabaseTestUtils.makeExperience;
+import static com.kyloth.serleena.persistence.sqlite.SerleenaDatabaseTestUtils.makeTelemetry;
+import static com.kyloth.serleena.persistence.sqlite.SerleenaDatabaseTestUtils.makeTrack;
 import static junit.framework.Assert.assertTrue;
 
 /**
@@ -126,7 +129,7 @@ public class SerleenaDatabaseTest {
 	public void testAddTrack() {
 		ContentValues values;
 
-		long id = makeExperience();
+		long id = makeExperience(db);
 
 		ArrayList<String> names = new ArrayList<String>();
 
@@ -159,7 +162,7 @@ public class SerleenaDatabaseTest {
 	 */
 	@Test(expected = SQLException.class)
 	public void testTrackWrongID() {
-		long id = makeExperience();
+		long id = makeExperience(db);
 		// Questo dovrebbe rompere l'integrita' referenziale?
 		id += 123;
 		ContentValues values;
@@ -186,7 +189,7 @@ public class SerleenaDatabaseTest {
 	@Test
 	public void testTrackCascade() {
 		ContentValues values;
-		long id = makeExperience();
+		long id = makeExperience(db);
 		values = new ContentValues();
 		values.put("track_experience", id);
 		values.put("track_name", "bar");
@@ -213,7 +216,7 @@ public class SerleenaDatabaseTest {
 	public void testAddTelem() {
 		ContentValues values;
 
-		long id = makeTelemetry();
+		long id = makeTelemetry(db);
 		values = new ContentValues();
 		values.put("eventl_telem", id);
 		values.put("eventl_timestamp", "asdfb");
@@ -262,7 +265,7 @@ public class SerleenaDatabaseTest {
 	@Test(expected = SQLException.class)
 	public void testLocationCascade() {
 		ContentValues values = new ContentValues();
-		long id = makeTrack();
+		long id = makeTrack(db);
 		values.put("eventl_telem", id);
 		values.put("eventl_timestamp", 1);
 		values.put("eventl_latitude", 1);
@@ -291,7 +294,7 @@ public class SerleenaDatabaseTest {
 	 */
 	@Test(expected = SQLException.class)
 	public void testLocationNullTimestampFails() {
-		long id = makeTelemetry();
+		long id = makeTelemetry(db);
 		ContentValues values;
 		values = new ContentValues();
 		values.put("eventl_telem", id);
@@ -305,7 +308,7 @@ public class SerleenaDatabaseTest {
 	 */
 	@Test(expected = SQLException.class)
 	public void testLocationNullLatitudeFails() {
-		long id = makeTelemetry();
+		long id = makeTelemetry(db);
 		ContentValues values;
 		values = new ContentValues();
 		values.put("eventl_telem", id);
@@ -319,7 +322,7 @@ public class SerleenaDatabaseTest {
 	 */
 	@Test(expected = SQLException.class)
 	public void testLocationNullLongitudeFails() {
-		long id = makeTelemetry();
+		long id = makeTelemetry(db);
 		ContentValues values;
 		values = new ContentValues();
 		values.put("eventl_telem", id);
@@ -352,7 +355,7 @@ public class SerleenaDatabaseTest {
 	@Test(expected = SQLException.class)
 	public void testHeartCascade() {
 		ContentValues values = new ContentValues();
-		long id = makeTrack();
+		long id = makeTrack(db);
 		values.put("eventl_telem", id);
 		values.put("eventl_timestamp", 1);
 		values.put("eventl_value", 1);
@@ -381,7 +384,7 @@ public class SerleenaDatabaseTest {
 	 */
 	@Test(expected = SQLException.class)
 	public void testHeartNullTimestampFails() {
-		long id = makeTelemetry();
+		long id = makeTelemetry(db);
 		ContentValues values;
 		values = new ContentValues();
 		values.put("eventl_telem", id);
@@ -395,7 +398,7 @@ public class SerleenaDatabaseTest {
 	 */
 	@Test(expected = SQLException.class)
 	public void testHeartNullTypeFails() {
-		long id = makeTelemetry();
+		long id = makeTelemetry(db);
 		ContentValues values;
 		values = new ContentValues();
 		values.put("eventl_telem", id);
@@ -409,7 +412,7 @@ public class SerleenaDatabaseTest {
 	 */
 	@Test(expected = SQLException.class)
 	public void testHeartNullValueFails() {
-		long id = makeTelemetry();
+		long id = makeTelemetry(db);
 		ContentValues values;
 		values = new ContentValues();
 		values.put("eventl_telem", id);
@@ -553,7 +556,7 @@ public class SerleenaDatabaseTest {
 	public void testAddUserPoint() {
 		ContentValues values;
 		values = new ContentValues();
-		values.put("userpoint_experience", makeExperience());
+		values.put("userpoint_experience", makeExperience(db));
 		values.put("userpoint_x", 1);
 		values.put("userpoint_y", 1);
 		db.insertOrThrow(SerleenaDatabase.TABLE_USER_POINTS, null, values);
@@ -592,7 +595,7 @@ public class SerleenaDatabaseTest {
 	@Test
 	public void testUserPointCascade() {
 		ContentValues values;
-		long id = makeExperience();
+		long id = makeExperience(db);
 		values = new ContentValues();
 		values.put("userpoint_experience", id);
 		values.put("userpoint_x", 1);
@@ -617,7 +620,7 @@ public class SerleenaDatabaseTest {
 		values.put("checkpoint_latitude", 1);
 		values.put("checkpoint_longitude", 1);
 		values.put("checkpoint_num", 1);
-		values.put("checkpoint_track", makeTrack());
+		values.put("checkpoint_track", makeTrack(db));
 		db.insertOrThrow(SerleenaDatabase.TABLE_CHECKPOINTS, null, values);
 	}
 
@@ -656,7 +659,7 @@ public class SerleenaDatabaseTest {
 	public void testCheckpointCascade() {
 		ContentValues values;
 		values = new ContentValues();
-		long id = makeTrack();
+		long id = makeTrack(db);
 		values.put("checkpoint_latitude", 1);
 		values.put("checkpoint_longitude", 1);
 		values.put("checkpoint_num", 1);
@@ -670,39 +673,6 @@ public class SerleenaDatabaseTest {
 	/*
 	 * Util
 	 */
-
-	/**
-	 * Metodo di utilita' per creare un'esperienza.
-	 */
-	private long makeExperience() {
-		ContentValues values;
-		values = new ContentValues();
-		values.put("experience_name", "foo");
-		return db.insertOrThrow(SerleenaDatabase.TABLE_EXPERIENCES, null, values);
-	}
-
-	/**
-	 * Metodo di utilita' per creare un percorso in un DB vuoto.
-	 * Crea automaticamente l'esperienza richiesta.
-	 */
-	private long makeTrack() {
-		ContentValues values;
-		values = new ContentValues();
-		values.put("track_name", "foo");
-		values.put("track_experience", makeExperience());
-		return db.insertOrThrow(SerleenaDatabase.TABLE_TRACKS, null, values);
-	}
-
-	/**
-	 * Metodo di utilita' per creare un tracciamento in un DB vuoto.
-	 * Crea automaticamente il percorso e l'esperienza richiesta.
-	 */
-	private long makeTelemetry() {
-		ContentValues values;
-		values = new ContentValues();
-		values.put("telem_track", makeTrack());
-		return db.insertOrThrow(SerleenaDatabase.TABLE_TELEMETRIES, null, values);
-	}
 
 	@Before
 	public void setup() throws URISyntaxException {
