@@ -28,15 +28,42 @@
 ///////////////////////////////////////////////////////////////////////////////
 
 
+/**
+ * Name: Quadrant.java
+ * Package: com.kyloth.serleena.common
+ * Author: Tobia Tesan
+ * Date: 2015-05-05
+ *
+ * History:
+ * Version  Programmer          Date        Changes
+ * 1.0.0    Tobia Tesan         2015-05-05  Creazione file e scrittura di codice
+ *                                          e documentazione in Javadoc.
+ */
 package com.kyloth.serleena.common;
 
 import android.graphics.Bitmap;
 
+/**
+ * Classe che realizza l'interfaccia IQuadrant.
+ *
+ * @author Tobia Tesan <tobia.tesan@gmail.com>
+ * @version 1.0
+ */
 public class Quadrant implements IQuadrant {
     private GeoPoint northEast;
     private GeoPoint southWest;
     private Bitmap raster;
 
+    /**
+     * Crea un oggetto Quadrant
+     *
+     * @param northEast
+     * @param southWest
+     * @param raster L'immagine raster della mappa per il quadrante. Puo'
+     *               essere null.
+     * @throws IllegalArgumentException E' lanciata quando northEast o
+     *               southEast sono null
+     */
     public Quadrant(GeoPoint northEast, GeoPoint southWest, Bitmap raster) throws IllegalArgumentException {
         if (northEast == null || southWest == null) {
             throw new IllegalArgumentException();
@@ -61,6 +88,14 @@ public class Quadrant implements IQuadrant {
         return southWest;
     }
 
+    /**
+     * Verifica se un punto e' contenuto nel Quadrant.
+     *
+     * @param p Punto geografico. Se null, viene sollevata un'eccezione
+     *          IllegalArgumentException.
+     * @return True se p e' contenuto nel quadrante
+     * @throws IllegalArgumentException se p e' null
+     */
     @Override
     public boolean contains(GeoPoint p) throws IllegalArgumentException {
         if (p == null) {
