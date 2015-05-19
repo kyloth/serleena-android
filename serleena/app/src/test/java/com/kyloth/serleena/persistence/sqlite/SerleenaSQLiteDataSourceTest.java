@@ -226,6 +226,97 @@ public class SerleenaSQLiteDataSourceTest {
 	}
 
 	/**
+	 * Controlla che getCheckpoints restituisca correttamente i checkpoint.
+	 */
+	@Test
+	public void testGetCheckpoints() {
+		long id = makeTrack(db);
+		ContentValues values = new ContentValues();
+		values.put("checkpoint_num", 1);
+		values.put("checkpoint_latitude", 0.000);
+		values.put("checkpoint_longitude", 0.000);
+		values.put("checkpoint_track", id);
+		id = db.insertOrThrow(SerleenaDatabase.TABLE_CHECKPOINTS, null, values);
+		values.put("checkpoint_num", 2);
+		values.put("checkpoint_latitude", 1.000);
+		values.put("checkpoint_longitude", 1.000);
+		values.put("checkpoint_track", id);
+		id = db.insertOrThrow(SerleenaDatabase.TABLE_CHECKPOINTS, null, values);
+		Iterable<IExperienceStorage> exps = sds.getExperiences();
+		SQLiteDAOExperience exp = (SQLiteDAOExperience) exps.iterator().next();
+		Iterable<SQLiteDAOTrack> trax = sds.getTracks(exp);
+		SQLiteDAOTrack track = trax.iterator().next();
+		assertTrue(track.getCheckpoints().size() == 2);
+	}
+
+	/**
+	 * Controll che getTelemetries restituisca correttamente i Tracciamenti.
+	 */
+	@Test
+	public void testGetTelemetries() {
+		long id = makeTrack(db);
+		ContentValues values = new ContentValues();
+		values.put("telem_track", id);
+		db.insertOrThrow(SerleenaDatabase.TABLE_TELEMETRIES, null, values);
+		db.insertOrThrow(SerleenaDatabase.TABLE_TELEMETRIES, null, values);
+		Iterable<IExperienceStorage> exps = sds.getExperiences();
+		SQLiteDAOExperience exp = (SQLiteDAOExperience) exps.iterator().next();
+		Iterable<SQLiteDAOTrack> trax = sds.getTracks(exp);
+		SQLiteDAOTrack track = trax.iterator().next();
+		Iterable<ITelemetryStorage> telemetries = track.getTelemetries();
+		int i = 0;
+		for (ITelemetryStorage telem : telemetries) {
+			i++;
+		}
+		assertTrue(i == 2);
+	}
+
+	/**
+	 * Controlla che getEvents restituisca correttamente gli Eventi del
+	 * Tracciamento
+	 */
+	@Test
+	public void testGetTelemetryEvents() {
+		long id = makeTrack(db);
+		ContentValues values = new ContentValues();
+		values.put("telem_track", id);
+		id = db.insertOrThrow(SerleenaDatabase.TABLE_TELEMETRIES, null, values);
+
+		values = new ContentValues();
+		values.put("eventl_timestamp", (new GregorianCalendar(2015, GregorianCalendar.JANUARY, 01, 01, 00, 00)).getTimeInMillis() / 1000);
+		values.put("eventl_latitude", 1.0);
+		values.put("eventl_longitude", 1.0);
+		values.put("eventl_telem", id);
+		db.insertOrThrow(SerleenaDatabase.TABLE_TELEM_EVENTS_LOCATION, null, values);
+
+		values = new ContentValues();
+		values.put("eventl_timestamp", (new GregorianCalendar(2015, GregorianCalendar.JANUARY, 01, 01, 00, 01)).getTimeInMillis() / 1000);
+		values.put("eventl_latitude", 1.1);
+		values.put("eventl_longitude", 1.1);
+		values.put("eventl_telem", id);
+		db.insertOrThrow(SerleenaDatabase.TABLE_TELEM_EVENTS_LOCATION, null, values);
+
+		values = new ContentValues();
+		values.put("eventl_timestamp", (new GregorianCalendar(2015, GregorianCalendar.JANUARY, 01, 01, 00, 02)).getTimeInMillis() / 1000);
+		values.put("eventl_latitude", 1.2);
+		values.put("eventl_longitude", 1.2);
+		values.put("eventl_telem", id);
+		db.insertOrThrow(SerleenaDatabase.TABLE_TELEM_EVENTS_LOCATION, null, values);
+
+		Iterable<IExperienceStorage> exps = sds.getExperiences();
+		SQLiteDAOExperience exp = (SQLiteDAOExperience) exps.iterator().next();
+		Iterable<SQLiteDAOTrack> trax = sds.getTracks(exp);
+		SQLiteDAOTrack track = trax.iterator().next();
+		Iterable<ITelemetryStorage> telemetries = track.getTelemetries();
+		ITelemetryStorage telem = telemetries.iterator().next();
+		int i = 0;
+		for (TelemetryEvent event : telem.getEvents()) {
+			i++;
+		}
+		assertTrue(i == 3);
+	}
+
+	/**
 	 * Controlla che addUserPoint aggiunga i punti utente.
 	 */
 	@Test
