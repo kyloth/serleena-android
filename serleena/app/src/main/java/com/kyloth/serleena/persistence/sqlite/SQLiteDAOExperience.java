@@ -81,6 +81,7 @@ class SQLiteDAOExperience implements IExperienceStorage
      *
      * @return Insieme enumerabile di Percorsi.
      */
+    @Override
     public Iterable<ITrackStorage> getTracks() {
         ArrayList<ITrackStorage> list = new ArrayList<ITrackStorage>();
         for (SQLiteDAOTrack t : dataSource.getTracks(this))
@@ -98,6 +99,7 @@ class SQLiteDAOExperience implements IExperienceStorage
      *
      * @param p     Punto geografico associato al punto utente.
      */
+    @Override
     public void addUserPoint(UserPoint p) {
         dataSource.addUserPoint(this, p);
     }

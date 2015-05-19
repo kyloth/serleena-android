@@ -33,9 +33,9 @@ package com.kyloth.serleena.common;
 import android.graphics.Bitmap;
 
 public class Quadrant implements IQuadrant {
-    GeoPoint northEast;
-    GeoPoint southWest;
-    Bitmap raster;
+    private GeoPoint northEast;
+    private GeoPoint southWest;
+    private Bitmap raster;
 
     public Quadrant(GeoPoint northEast, GeoPoint southWest, Bitmap raster) {
         this.northEast = northEast;
@@ -67,4 +67,5 @@ public class Quadrant implements IQuadrant {
                 p.longitude() <= southWest.longitude()
         );
     }
+
 }

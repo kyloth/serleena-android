@@ -54,21 +54,22 @@ import com.kyloth.serleena.common.TelemetryEvent;
  * @since   1.0
  */
 public interface ITrack {
-	/**
-	 * @return  Un Iterable che contiene tutti i Tracciamenti disponibili
-	 *          per il Percorso rappresentato dall'oggetto.
-	 * @version 1.0
-	 * @since   1.0
-	 */
-	Iterable<ITelemetry> getTelemetries();
 
-	/**
-	 * @return  Crea e salva un Tracciamento dato un Iterable di oggetti
-	 *          TelemetryEvent.
-	 * @version 1.0
-	 * @since   1.0
-	 */
-	void createTelemetry(Iterable<TelemetryEvent> events);
+    /**
+     * @return  Un Iterable che contiene tutti i Tracciamenti disponibili
+     *          per il Percorso rappresentato dall'oggetto.
+     * @version 1.0
+     * @since   1.0
+     */
+    public Iterable<ITelemetry> getTelemetries();
+
+    /**
+     * @return  Crea e salva un Tracciamento dato un Iterable di oggetti
+     *          TelemetryEvent.
+     * @version 1.0
+     * @since   1.0
+     */
+    public void createTelemetry(Iterable<TelemetryEvent> events);
 
     /**
      * Restituisce i Checkpoint che compongono il percorso.

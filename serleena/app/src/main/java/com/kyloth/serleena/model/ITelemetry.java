@@ -53,46 +53,53 @@ import com.kyloth.serleena.common.TelemetryEventType;
  * @since   1.0
  */
 public interface ITelemetry {
-	/**
-	 * @return  Un Iterable che contiene tutti gli eventi
-	 *          del Tracciamento.
-	 * @version 1.0
-	 * @since   1.0
-	 */
-	Iterable<TelemetryEvent> getEvents();
 
-	/**
-	 * @return  Un Iterable che contiene tutti gli eventi del Tracciamento
-	 *          compresi nell'intervallo di secondi specificato.
-	 * @param from L'inizio dell'intervallo, comprensivo degli
-	 *             eventi da restituire, espresso in secondi dall'avvio del
+    /**
+     * Restituisce gli eventi che costituiscono il Tracciamento.
+     *
+     * @return  Un Iterable che contiene tutti gli eventi del Tracciamento.
+     * @version 1.0
+     */
+    public Iterable<TelemetryEvent> getEvents();
+
+    /**
+     * Restituisce gli eventi che costituiscono il Tracciamento, filtrati
+     * secondo un intervallo di tempo specificato.
+     *
+     * @return  Insieme enumerabile che contiene tutti gli eventi del
+     *          Tracciamento compresi nell'intervallo di secondi specificato.
+     * @param from L'inizio dell'intervallo, comprensivo degli
+     *             eventi da restituire, espresso in secondi dall'avvio del
      *             Tracciamento.
      *             Se from > to, viene sollevata un'eccezione
      *             IllegalArgumentException.
-	 * @param to L'inizio dell'intervallo, comprensivo degli
-	 *           eventi da restituire, espresso in secondi dall'avvio del
+     * @param to L'inizio dell'intervallo, comprensivo degli
+     *           eventi da restituire, espresso in secondi dall'avvio del
      *           Tracciamento.
      *           Se from > to, viene sollevata un'eccezione
      *           IllegalArgumentException.
-	 * @version 1.0
-	 * @since   1.0
-	 */
-	public Iterable<TelemetryEvent> getEvents(int from, int to)
+     * @version 1.0
+     */
+    public Iterable<TelemetryEvent> getEvents(int from, int to)
             throws IllegalArgumentException;
 
-	/**
-	 * @return  Un Iterable che contiene tutti e soli gli eventi del
-	 *          Tracciamento di tipo dato
-	 * @param type Il tipo di eventi da restituire
-	 * @version 1.0
-	 * @since   1.0
-	 */
-	Iterable<TelemetryEvent> getEvents(TelemetryEventType type);
+    /**
+     * Restituisce gli eventi che costituiscono il Tracciamento, filtrati in
+     * base a uno specifico tipo di evento.
+     *
+     * @return  Insieme enumerabile che contiene tutti e soli gli eventi del
+     *          Tracciamento di tipo specificato.
+     * @param type Tipo di eventi da restituire.
+     * @version 1.0
+     */
+    public Iterable<TelemetryEvent> getEvents(TelemetryEventType type);
 
-	/**
-	 * @return  La durata temporale in secondi del tracciamento.
-	 * @version 1.0
-	 * @since   1.0
-	 */
-	int getDuration();
+    /**
+     * Restituisce la durata totale del Tracciamento.
+     *
+     * @return  Durata temporale in secondi del Tracciamento.
+     * @version 1.0
+     */
+    public int getDuration();
+
 }

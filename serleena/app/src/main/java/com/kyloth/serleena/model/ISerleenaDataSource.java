@@ -57,37 +57,38 @@ import java.util.Date;
  * @since   1.0
  */
 public interface ISerleenaDataSource {
-	/**
-	 * Restituisce tutte le esperienze presenti nel datasource.
-	 *
-	 * @version 1.0
-	 */
-	Iterable<IExperience> getExperiences();
 
-	/**
-	 * Restituisce le previsioni meteo per un dato punto geografico e data
-	 * disponibili nel datasource.
-	 *
-	 * @param p Il punto geografico per cui interessano le previsioni meteo
-	 * @param date La data per cui interessano le previsioni
-	 * @version 1.0
-	 */
-	IWeatherForecast getWeatherInfo(GeoPoint p, Date date);
+    /**
+     * Restituisce tutte le esperienze presenti nel datasource.
+     *
+     * @version 1.0
+     */
+    public Iterable<IExperience> getExperiences();
 
-	/**
-	 * Restituisce il quadrante di afferenza per una dato punto geografico.
-	 *
-	 * @version 1.0
-	 */
-	IQuadrant getQuadrant(GeoPoint point);
+    /**
+     * Restituisce le previsioni meteo per un dato punto geografico e data
+     * disponibili nel datasource.
+     *
+     * @param p Il punto geografico per cui interessano le previsioni meteo
+     * @param date La data per cui interessano le previsioni
+     * @version 1.0
+     */
+    public IWeatherForecast getWeatherInfo(GeoPoint p, Date date);
 
-	/**
-	 * Restituisce i contatti di emergenza che hanno giurisdizione su un dato
-	 * punto geografico.
-	 *
-	 * @version 1.0
-	 */
-	Iterable<EmergencyContact> getContacts(GeoPoint loc);
+    /**
+     * Restituisce il quadrante di afferenza per una dato punto geografico.
+     *
+     * @version 1.0
+     */
+    public IQuadrant getQuadrant(GeoPoint point);
+
+    /**
+     * Restituisce i contatti di emergenza che hanno giurisdizione su un dato
+     * punto geografico.
+     *
+     * @version 1.0
+     */
+    public Iterable<EmergencyContact> getContacts(GeoPoint loc);
 
     /**
      * Restituisce i punti utente assocati ad un'esperienza,

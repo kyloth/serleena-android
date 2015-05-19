@@ -51,29 +51,29 @@ import com.kyloth.serleena.common.UserPoint;
  * @since   1.0
  */
 public interface IExperience {
-	/**
-	 * @return  Ritorna un Iterable che contiene tutti i percorsi
-	 *          dell'Esperienza.
-	 * @version 1.0
-	 * @since   1.0
-	 */
-	Iterable<ITrack> getTracks();
+    /**
+     * @return  Ritorna un Iterable che contiene tutti i percorsi
+     *          dell'Esperienza.
+     * @version 1.0
+     * @since   1.0
+     */
+    public Iterable<ITrack> getTracks();
 
-	/**
-	 * @return  Ritorna un Iterable che contiene tutti i Punti Utente
-	 *          propri dell'Esperienza, compresi quelli creati sull'orologio..
-	 * @version 1.0
-	 * @since   1.0
-	 */
-	public Iterable<UserPoint> getUserPoints();
+    /**
+     * @return  Ritorna un Iterable che contiene tutti i Punti Utente
+     *          propri dell'Esperienza, compresi quelli creati sull'orologio..
+     * @version 1.0
+     * @since   1.0
+     */
+    public Iterable<UserPoint> getUserPoints();
 
-	/**
-	 * Aggiunge un punto utente dato all'Esperienza.
-	 *
-	 * @version 1.0
-	 * @since   1.0
-	 */
-	void addUserPoints(UserPoint point);
+    /**
+     * Aggiunge un punto utente dato all'Esperienza.
+     *
+     * @version 1.0
+     * @since   1.0
+     */
+    public void addUserPoints(UserPoint point);
 
     /**
      * Restituisce il nome dell'esperienza.

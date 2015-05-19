@@ -31,7 +31,12 @@
 package com.kyloth.serleena.common;
 
 /**
- * Created by fsestini on 5/15/15.
+ * Segnala una situazione eccezionale in cui è richiesto l'uso di un'Esperienza
+ * attiva ma questa non è disponibile.
+ *
+ * @author Filippo Sestini <sestini.filippo@gmail.com>
+ * @version 1.0.0
  */
 public class NoActiveExperienceException extends Exception {
+
 }

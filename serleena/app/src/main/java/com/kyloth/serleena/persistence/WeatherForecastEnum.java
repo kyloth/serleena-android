@@ -30,4 +30,10 @@
 
 package com.kyloth.serleena.persistence;
 
+/**
+ * Rappresenta una condizione metereologica.
+ *
+ * @author Filippo Sestini <sestini.filippo@gmail.com>
+ * @version 1.0.0
+ */
 public enum WeatherForecastEnum { Sunny, Cloudy, Rainy, Stormy, Snowy }
