@@ -415,7 +415,7 @@ public class SerleenaSQLiteDataSource implements ISerleenaSQLiteDataSource {
                 getForecast(location, afternoonStart, afternoonEnd);
         SimpleWeather nightWeather = getForecast(location, nightStart, nightEnd);
 
-        if (morning != null && afternoon != null && night != null) {
+        if (morningWeather != null && morningWeather != null && morningWeather != null) {
             return new SQLiteDAOWeather(morningWeather.forecast(),
                     afternoonWeather.forecast(), nightWeather.forecast(),
                     morningWeather.temperature(), afternoonWeather.temperature(),
