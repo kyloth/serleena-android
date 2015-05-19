@@ -74,4 +74,22 @@ public class WeatherPresenter implements IWeatherPresenter, ILocationObserver {
         daysPastNow = 0;
     }
 
+    /**
+     * Implementa IWeatherPresenter.advanceDate().
+     */
+    @Override
+    public synchronized void advanceDate() {
+        daysPastNow = (daysPastNow + 1) % 6;
+        if (lastKnownLocation != null) {
+            AsyncTask<Void, Void, Void> task = new AsyncTask<Void, Void, Void>() {
+                @Override
+                protected Void doInBackground(Void... voids) {
+                    present(daysPastNow, lastKnownLocation);
+                    return null;
+                }
+            };
+            task.execute();
+        }
+    }
+
 }
