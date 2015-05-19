@@ -99,4 +99,20 @@ public class TelemetryManager implements ITelemetryManager,
         pm.unlock("HeartRateTelemetryLock");
     }
 
+    /**
+     * Implementa ILocationObserver.onLocationUpdate().
+     *
+     * Rilascia il lock del processore acquisito in onWaleup() per il sensore
+     * di posizione. Vedi TelemetryManager.onWakeup().
+     *
+     * @param loc Posizione geografica dell'utente.
+     */
+    @Override
+    public void onLocationUpdate(GeoPoint loc) {
+        long now = System.currentTimeMillis() / 1000L;
+        int partial = (int)(now - startTimestamp);
+        events.add(new LocationTelemetryEvent(partial, loc));
+        pm.unlock("LocationTelemetryLock");
+    }
+
 }
