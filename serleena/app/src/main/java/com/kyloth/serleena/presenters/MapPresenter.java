@@ -194,7 +194,7 @@ public class MapPresenter implements IMapPresenter, ILocationObserver {
                     currentQuadrant = ds.getQuadrant(currentPosition);
                     view.displayQuadrant(currentQuadrant);
                     Iterable<UserPoint> ups =
-                            ds.getUserPoints(activeExperience, currentQuadrant);
+                            activeExperience.getUserPoints();
                     view.displayUP(ups);
                 }
 
