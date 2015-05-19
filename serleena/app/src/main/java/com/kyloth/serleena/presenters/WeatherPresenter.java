@@ -53,4 +53,13 @@ import java.util.Date;
  */
 public class WeatherPresenter implements IWeatherPresenter, ILocationObserver {
 
+    private static int LOCATION_UPDATE_INTERVAL_SECONDS = 60;
+
+    private IWeatherView view;
+    private ISerleenaActivity activity;
+    private int daysPastNow;
+    private ILocationManager locMan;
+    private ISerleenaDataSource ds;
+    private GeoPoint lastKnownLocation;
+
 }
