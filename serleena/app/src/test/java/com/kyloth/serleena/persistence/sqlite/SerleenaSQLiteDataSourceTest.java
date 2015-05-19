@@ -438,6 +438,72 @@ public class SerleenaSQLiteDataSourceTest {
 		assertTrue(info == null);
 	}
 
+	/**
+	 * Controlla che getContacts restituisca correttamente
+	 * le informazioni di contatto per la regione richiesta.
+	 */
+	@Test
+	public void testGetContactsHit() {
+		ContentValues values = new ContentValues();
+		values.put("contact_name", "foo");
+		values.put("contact_value", "asdfghj");
+		values.put("contact_ne_corner_latitude", 0.0);
+		values.put("contact_ne_corner_longitude", 0.0);
+		values.put("contact_sw_corner_latitude", 2.0);
+		values.put("contact_sw_corner_longitude", 2.0);
+		db.insertOrThrow(SerleenaDatabase.TABLE_CONTACTS, null, values);
+		Iterable<EmergencyContact> contacts = sds.getContacts(new GeoPoint(1.0, 1.0));
+		int i = 0;
+		for (EmergencyContact contact : contacts) {
+			i++;
+		}
+		assertTrue(i == 1);
+	}
+
+	/**
+	 * Controlla che getContacts restituisca correttamente
+	 * le informazioni di contatto per i margini di una regione.
+	 */
+	@Test
+	public void testGetContactsHitMargin() {
+		ContentValues values = new ContentValues();
+		values.put("contact_name", "foo");
+		values.put("contact_value", "asdfghj");
+		values.put("contact_ne_corner_latitude", 0.0);
+		values.put("contact_ne_corner_longitude", 0.0);
+		values.put("contact_sw_corner_latitude", 2.0);
+		values.put("contact_sw_corner_longitude", 2.0);
+		db.insertOrThrow(SerleenaDatabase.TABLE_CONTACTS, null, values);
+		Iterable<EmergencyContact> contacts = sds.getContacts(new GeoPoint(0.0, 0.0));
+		int i = 0;
+		for (EmergencyContact contact : contacts) {
+			i++;
+		}
+		assertTrue(i == 1);
+	}
+
+	/**
+	 * Controlla che getContacts non restituisca infomazioni di contatto
+	 * per la regione sbagliata.
+	 */
+	@Test
+	public void testGetContactsMiss() {
+		ContentValues values = new ContentValues();
+		values.put("contact_name", "foo");
+		values.put("contact_value", "asdfghj");
+		values.put("contact_ne_corner_latitude", 10.0);
+		values.put("contact_ne_corner_longitude", 10.0);
+		values.put("contact_sw_corner_latitude", 20.0);
+		values.put("contact_sw_corner_longitude", 20.0);
+		db.insertOrThrow(SerleenaDatabase.TABLE_CONTACTS, null, values);
+		Iterable<EmergencyContact> contacts = sds.getContacts(new GeoPoint(1.0, 1.0));
+		int i = 0;
+		for (EmergencyContact contact : contacts) {
+			i++;
+		}
+		assertTrue(i == 0);
+	}
+
 	@Before
 	public void setup() throws URISyntaxException {
 		SerleenaDatabase sh = new SerleenaDatabase(RuntimeEnvironment.application, null, null, 1);
