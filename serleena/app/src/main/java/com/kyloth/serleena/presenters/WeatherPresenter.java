@@ -133,4 +133,12 @@ public class WeatherPresenter implements IWeatherPresenter, ILocationObserver {
         locMan.attachObserver(this, LOCATION_UPDATE_INTERVAL_SECONDS);
     }
 
+    /**
+     * Implementa IPresenter.pause().
+     */
+    @Override
+    public synchronized void pause() {
+        locMan.detachObserver(this);
+    }
+
 }
