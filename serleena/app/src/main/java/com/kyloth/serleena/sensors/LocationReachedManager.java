@@ -98,6 +98,10 @@ public class LocationReachedManager implements ILocationReachedManager {
     public synchronized void attachObserver(ILocationReachedObserver observer,
                                             GeoPoint location)
             throws IllegalArgumentException {
+        if (observer == null)
+            throw new IllegalArgumentException("Illegal null observer");
+        if (location == null)
+            throw new IllegalArgumentException("Illegal null location");
 
         observers.put(observer, location);
         IWakeupObserver alarm = new CheckDistanceAlarm(observer, locMan);
