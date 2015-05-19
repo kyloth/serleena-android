@@ -86,4 +86,17 @@ public class TelemetryManager implements ITelemetryManager,
         events.add(event);
     }
 
+    /**
+     * Implementa IHeartRateObserver.onHeartRateUpdate().
+     *
+     * @param rate Valore intero indicante il BPM.
+     */
+    @Override
+    public void onHeartRateUpdate(int rate) {
+        long now = System.currentTimeMillis() / 1000L;
+        int partial = (int)(now - startTimestamp);
+        events.add(new HeartRateTelemetryEvent(partial, rate));
+        pm.unlock("HeartRateTelemetryLock");
+    }
+
 }
