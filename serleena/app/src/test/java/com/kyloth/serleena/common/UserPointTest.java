@@ -93,8 +93,8 @@ public class UserPointTest {
         double longitude2 = 10;
         UserPoint up2 = new UserPoint(latitude2, longitude2);
 
-        double latitude3 = 115;
-        double longitude3 = 130;
+        double latitude3 = 11;
+        double longitude3 = 13;
         UserPoint up3 = new UserPoint(latitude3, longitude3);
 
         org.junit.Assert.assertTrue(up1.equals(up2));
