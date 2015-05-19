@@ -90,12 +90,4 @@ public interface ISerleenaDataSource {
      */
     public Iterable<EmergencyContact> getContacts(GeoPoint loc);
 
-    /**
-     * Restituisce i punti utente assocati ad un'esperienza,
-     * in una particolare regione geografica.
-     *
-     * @return Insieme enumerabile di punti utente.
-     */
-    public Iterable<UserPoint> getUserPoints(IExperience exp, IRegion region);
-
 }
