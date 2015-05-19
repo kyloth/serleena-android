@@ -80,6 +80,91 @@ public class SerleenaSQLiteDataSourceTest {
 	SerleenaSQLiteDataSource sds;
 	SQLiteDatabase db;
 
+	/**
+	 * Verifica che il path dei raster sia != null, != ""
+	 */
+	@Test
+	public void testGetRasterPathWellFormed() {
+		assertTrue(sds.getRasterPath(0, 0) != null);
+		assertTrue(sds.getRasterPath(0, 0).length() != 0);
+	}
+
+	/**
+	 * Verifica che il path dei raster cambi al cambiare di I,J
+	 */
+	@Test
+	public void testGetRasterPathAreDifferent() {
+		assertTrue(sds.getRasterPath(0, 0) != sds.getRasterPath(1, 1));
+	}
+
+	/**
+	 * Controlla che l'output di getIJ sia all'interno del range corretto.
+	 */
+	@Test
+	public void testGetIJRange() {
+		for (int x = -180; x < 180; x++) {
+			for (int y = -90; y < 90; y++) {
+				int[] ij = sds.getIJ(new GeoPoint(y, x));
+				assertTrue(0 <= ij[0]);
+				assertTrue(0 <= ij[1]);
+				assertTrue(ij[0] <= SerleenaSQLiteDataSource.TOT_LAT_QUADRANTS);
+				assertTrue(ij[1] <= SerleenaSQLiteDataSource.TOT_LONG_QUADRANTS);
+			}
+		}
+	}
+
+	/**
+	 * Controlla che l'output di getIJ sia corretto alle estremita' del range
+	 */
+	@Test
+	public void testGetIJTopBottom() {
+		int[] ij = sds.getIJ(new GeoPoint(-90, -180));
+		assertTrue(0 == ij[0]);
+		assertTrue(0 == ij[1]);
+		GeoPoint p = new GeoPoint(90.0 - SerleenaSQLiteDataSource.QUADRANT_LATSIZE / 2.0,
+		                          180.0 - SerleenaSQLiteDataSource.QUADRANT_LONGSIZE / 2.0);
+		ij = sds.getIJ(p);
+		assertTrue(ij[0] == SerleenaSQLiteDataSource.TOT_LAT_QUADRANTS - 1);
+		assertTrue(ij[1] == SerleenaSQLiteDataSource.TOT_LONG_QUADRANTS - 1);
+	}
+
+	/**
+	 * Controlla che per un dato punto il quadrante sia quello atteso.
+	 */
+	@Test
+	public void testGetQuadrantMidPoint() {
+		GeoPoint p = new GeoPoint(-90.0 + SerleenaSQLiteDataSource.QUADRANT_LATSIZE / 2.0,
+		                          -180.0 + SerleenaSQLiteDataSource.QUADRANT_LONGSIZE / 2.0);
+		Quadrant q = (Quadrant) sds.getQuadrant(p);
+		GeoPoint first = q.getNorthEastPoint();
+		GeoPoint second = q.getSouthWestPoint();
+		assertTrue(first.latitude() == 0);
+		assertTrue(first.longitude() == 0);
+		assertTrue(second.latitude() == SerleenaSQLiteDataSource.QUADRANT_LATSIZE);
+		assertTrue(second.longitude() == SerleenaSQLiteDataSource.QUADRANT_LONGSIZE);
+	}
+
+	/**
+	 * Controlla che per un dato punto al margine di un quadrante il quadrante sia
+	 * uno tra i due possibili corretti.
+	 */
+	@Test
+	public void testGetQuadrantEdgePoint() {
+		GeoPoint p = new GeoPoint(-90.0 + SerleenaSQLiteDataSource.QUADRANT_LATSIZE,
+		                          -180.0 + SerleenaSQLiteDataSource.QUADRANT_LONGSIZE);
+		Quadrant q = (Quadrant) sds.getQuadrant(p);
+		GeoPoint first = q.getNorthEastPoint();
+		GeoPoint second = q.getSouthWestPoint();
+		assertTrue(first.latitude() == 0
+		           && second.latitude() == SerleenaSQLiteDataSource.QUADRANT_LATSIZE ||
+		           first.latitude() == SerleenaSQLiteDataSource.QUADRANT_LATSIZE
+		           && second.latitude() == 2 * SerleenaSQLiteDataSource.QUADRANT_LATSIZE);
+		assertTrue(first.longitude() == 0
+		           && second.longitude() == SerleenaSQLiteDataSource.QUADRANT_LONGSIZE ||
+		           first.longitude() == SerleenaSQLiteDataSource.QUADRANT_LONGSIZE
+		           && second.longitude() == 2 * SerleenaSQLiteDataSource.QUADRANT_LONGSIZE);
+	}
+
 	@Before
 	public void setup() throws URISyntaxException {
 		SerleenaDatabase sh = new SerleenaDatabase(RuntimeEnvironment.application, null, null, 1);
