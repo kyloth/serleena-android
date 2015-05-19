@@ -141,4 +141,23 @@ public class WeatherPresenter implements IWeatherPresenter, ILocationObserver {
         locMan.detachObserver(this);
     }
 
+    /**
+     * Implementa ILocationObserver.onLocationUpdate().
+     *
+     * @param loc Valore di tipo GeoPoint che indica la posizione
+     *            dell'Escursionista.
+     */
+    @Override
+    public synchronized void onLocationUpdate(GeoPoint loc) {
+        lastKnownLocation = loc;
+        AsyncTask<Void, Void, Void> task = new AsyncTask<Void, Void, Void>() {
+            @Override
+            protected Void doInBackground(Void... voids) {
+                present(daysPastNow, lastKnownLocation);
+                return null;
+            }
+        };
+        task.execute();
+    }
+
 }
