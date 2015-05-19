@@ -68,12 +68,15 @@ public interface ISerleenaDataSource {
     /**
      * Restituisce le previsioni meteo per un dato punto geografico e data
      * disponibili nel datasource.
+     * Se il datasource non contiene alcun elemento che soddisfi i parametri
+     * specificati, viene sollevata un'eccezione NoSuchWeatherForecastException.
      *
      * @param p Il punto geografico per cui interessano le previsioni meteo
      * @param date La data per cui interessano le previsioni
      * @version 1.0
      */
-    public IWeatherForecast getWeatherInfo(GeoPoint p, Date date);
+    public IWeatherForecast getWeatherInfo(GeoPoint p, Date date)
+            throws NoSuchWeatherForecastException;
 
     /**
      * Restituisce il quadrante di afferenza per una dato punto geografico.
