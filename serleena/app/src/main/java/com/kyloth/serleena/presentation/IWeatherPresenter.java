@@ -51,4 +51,10 @@ package com.kyloth.serleena.presentation;
  */
 public interface IWeatherPresenter extends IPresenter {
 
+    /**
+     * Avanza le previsioni visualizzate sulla vista associata alla data
+     * successiva.
+     */
+    public void advanceDate();
+
 }
