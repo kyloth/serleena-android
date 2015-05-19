@@ -92,4 +92,37 @@ public class WeatherPresenter implements IWeatherPresenter, ILocationObserver {
         }
     }
 
+    /**
+     * Presenta alla vista associata le previsioni metereologiche del giorno
+     * specificato, relative alla posizione geografica specificata.
+     *
+     * @param daysPastNow Specifica la data delle previsioni da visualizzare,
+     *                    calcolata sommando alla data corrente il numero di
+     *                    giorni indicati dal parametro.
+     * @param location Posizione geografica delle previsioni da visualizzare.
+     *                 Se null, viene sollevata un'eccezione
+     *                 IllegalArgumentException.
+     */
+    public void present(int daysPastNow, GeoPoint location) throws
+            IllegalArgumentException {
+        if (location == null)
+            throw new IllegalArgumentException("Illegal null location");
+
+        Calendar c = Calendar.getInstance();
+        c.setTime(new Date());
+        c.add(Calendar.DATE, daysPastNow);
+        Date d = c.getTime();
+
+        view.setDate(d);
+
+        try {
+            IWeatherForecast info =
+                    ds.getWeatherInfo(location, d);
+            view.setDate(d);
+            view.setWeatherInfo(info);
+        } catch (NoSuchWeatherForecastException ex) {
+            view.clearWeatherInfo();
+        }
+    }
+
 }
