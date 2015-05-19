@@ -59,10 +59,14 @@ public class GeoPoint
     /**
      * Crea una nuova istanza di GeoPoint da una coppia di coordinate.
      *
-     * @param latitude     Latitudine del punto geografico.
-     * @param longitude    Longitudine del punto geografico.
+     * @param latitude     Latitudine del punto geografico, -90 < x < 90.
+     * @param longitude    Longitudine del punto geografico, -180 < x < 180.
      */
-    public GeoPoint(double latitude, double longitude) {
+    public GeoPoint(double latitude, double longitude) throws IllegalArgumentException {
+        if ( latitude < -90.0   || latitude > 90.0 ||
+            longitude < -180.0  || longitude > 180.0 ) {
+            throw new IllegalArgumentException();
+        }
         this.latitude = latitude;
         this.longitude = longitude;
     }
