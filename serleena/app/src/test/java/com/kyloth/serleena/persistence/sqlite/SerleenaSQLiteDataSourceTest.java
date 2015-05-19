@@ -264,6 +264,89 @@ public class SerleenaSQLiteDataSourceTest {
 		assertTrue(i == 1);
 	}
 
+	/**
+	 * Controlla che getWeatherInfo restituisca correttamente le informazioni meteo
+	 * dove presenti.
+	 */
+	@Test
+	public void testGetWeatherInfoHit() {
+		ContentValues values = new ContentValues();
+		values.put("weather_start", (new GregorianCalendar(2015, GregorianCalendar.JANUARY, 01, 00, 00, 00)).getTimeInMillis() / 1000);
+		values.put("weather_end", (new GregorianCalendar(2015, GregorianCalendar.JANUARY, 01, 23, 59, 59)).getTimeInMillis() / 1000);
+		values.put("weather_condition", WeatherForecastEnum.Sunny.ordinal());
+		values.put("weather_temperature", 1);
+		values.put("weather_ne_corner_latitude", 0.0);
+		values.put("weather_ne_corner_longitude", 0.0);
+		values.put("weather_sw_corner_latitude", 2.0);
+		values.put("weather_sw_corner_longitude", 2.0);
+		db.insertOrThrow(SerleenaDatabase.TABLE_WEATHER_FORECASTS, null, values);
+		IWeatherStorage info = sds.getWeatherInfo(new GeoPoint(1.0, 1.0), (new GregorianCalendar(2015, GregorianCalendar.JANUARY, 01)).getTime());
+		assertTrue(info != null);
+		assertTrue(info.getAfternoonForecast() == WeatherForecastEnum.Sunny);
+	}
+
+
+	/**
+	 * Controlla che getWeatherInfo restituisca correttamente le informazioni meteo
+	 * per i margini di una regione.
+	 */
+	@Test
+	public void testGetWeatherInfoHitMargin() {
+		ContentValues values = new ContentValues();
+		values.put("weather_start", (new GregorianCalendar(2015, GregorianCalendar.JANUARY, 01, 00, 00, 00)).getTimeInMillis() / 1000);
+		values.put("weather_end", (new GregorianCalendar(2015, GregorianCalendar.JANUARY, 01, 23, 59, 59)).getTimeInMillis() / 1000);
+		values.put("weather_condition", WeatherForecastEnum.Sunny.ordinal());
+		values.put("weather_temperature", 1);
+		values.put("weather_ne_corner_latitude", 0.0);
+		values.put("weather_ne_corner_longitude", 0.0);
+		values.put("weather_sw_corner_latitude", 2.0);
+		values.put("weather_sw_corner_longitude", 2.0);
+		db.insertOrThrow(SerleenaDatabase.TABLE_WEATHER_FORECASTS, null, values);
+		IWeatherStorage info = sds.getWeatherInfo(new GeoPoint(0.0, 0.0), (new GregorianCalendar(2015, GregorianCalendar.JANUARY, 01)).getTime());
+		assertTrue(info != null);
+		assertTrue(info.getAfternoonForecast() == WeatherForecastEnum.Sunny);
+	}
+
+	/**
+	 * Controlla che getWeatherInfo non restituisca informazioni meteo
+	 * della regione sbagliata.
+	 */
+	@Test
+	public void testGetWeatherInfoMissRegion() {
+		ContentValues values = new ContentValues();
+		values.put("weather_start", (new GregorianCalendar(2015, GregorianCalendar.JANUARY, 01, 00, 00, 00)).getTimeInMillis() / 1000);
+		values.put("weather_end", (new GregorianCalendar(2015, GregorianCalendar.JANUARY, 01, 23, 59, 59)).getTimeInMillis() / 1000);
+		values.put("weather_condition", WeatherForecastEnum.Sunny.ordinal());
+		values.put("weather_temperature", 1);
+		values.put("weather_ne_corner_latitude", 4.0);
+		values.put("weather_ne_corner_longitude", 6.0);
+		values.put("weather_sw_corner_latitude", 4.0);
+		values.put("weather_sw_corner_longitude", 6.0);
+		db.insertOrThrow(SerleenaDatabase.TABLE_WEATHER_FORECASTS, null, values);
+		IWeatherStorage info = sds.getWeatherInfo(new GeoPoint(1.0, 1.0), (new GregorianCalendar(2015, GregorianCalendar.JANUARY, 01)).getTime());
+		assertTrue(info == null);
+	}
+
+	/**
+	 * Controlla che getWeatherInfo non restituisca informazioni meteo
+	 * relatiove al frame temporale sbagliato.
+	 */
+	@Test
+	public void testGetWeatherInfoMissTime() {
+		ContentValues values = new ContentValues();
+		values.put("weather_start", (new GregorianCalendar(2010, GregorianCalendar.JANUARY, 01, 00, 00, 00)).getTimeInMillis() / 1000);
+		values.put("weather_end", (new GregorianCalendar(2010, GregorianCalendar.JANUARY, 01, 23, 59, 59)).getTimeInMillis() / 1000);
+		values.put("weather_condition", WeatherForecastEnum.Sunny.ordinal());
+		values.put("weather_temperature", 1);
+		values.put("weather_ne_corner_latitude", 0.0);
+		values.put("weather_ne_corner_longitude", 0.0);
+		values.put("weather_sw_corner_latitude", 2.0);
+		values.put("weather_sw_corner_longitude", 2.0);
+		db.insertOrThrow(SerleenaDatabase.TABLE_WEATHER_FORECASTS, null, values);
+		IWeatherStorage info = sds.getWeatherInfo(new GeoPoint(1.0, 1.0), (new GregorianCalendar(2015, GregorianCalendar.JANUARY, 01)).getTime());
+		assertTrue(info == null);
+	}
+
 	@Before
 	public void setup() throws URISyntaxException {
 		SerleenaDatabase sh = new SerleenaDatabase(RuntimeEnvironment.application, null, null, 1);
