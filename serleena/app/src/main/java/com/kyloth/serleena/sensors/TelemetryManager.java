@@ -66,4 +66,14 @@ public class TelemetryManager implements ITelemetryManager,
         this.sampling = false;
     }
 
+    /**
+     * Implementa ITelemetryManager.getEvents().
+     *
+     * @return Insieme enumerabile di eventi di Tracciamento.
+     */
+    @Override
+    public Iterable<TelemetryEvent> getEvents() {
+        return (Iterable<TelemetryEvent>) events.clone();
+    }
+
 }
