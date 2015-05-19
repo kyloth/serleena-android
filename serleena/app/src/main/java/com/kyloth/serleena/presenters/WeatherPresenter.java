@@ -62,4 +62,16 @@ public class WeatherPresenter implements IWeatherPresenter, ILocationObserver {
     private ISerleenaDataSource ds;
     private GeoPoint lastKnownLocation;
 
+    public WeatherPresenter(IWeatherView view, ISerleenaActivity activity) {
+        if (view == null)
+            throw new IllegalArgumentException("Illegal null view");
+        if (activity == null)
+            throw new IllegalArgumentException("Illegal null activity");
+
+        view.attachPresenter(this);
+        locMan = activity.getSensorManager().getLocationSource();
+        ds = activity.getDataSource();
+        daysPastNow = 0;
+    }
+
 }
