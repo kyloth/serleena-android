@@ -56,21 +56,30 @@ import com.kyloth.serleena.common.TelemetryEventType;
  */
 
 public interface ITelemetryManager {
+
     /**
-     * Restituisce una collezione di TelemetryEvent.
+     * Restituisce gli eventi di Tracciamento registrati dall'ultimo avvio del
+     * Tracciamento all'invocazione del metodo.
      *
-     * @return Un oggetto di tipo Iterable contenente gli eventi
-     *         registrati nel Tracciamento in corso.
+     * @return  Insieme enumerabile di eventi di Tracciamento.
      */
     public Iterable<TelemetryEvent> getEvents();
+
     /**
      * Avvia il Tracciamento.
+     *
+     * Se vi è già un Tracciamento avviato, questo viene perso.
      */
     public void start();
+
     /**
      * Ferma il Tracciamento.
+     *
+     * Se nessun Tracciamento era stato avviato in precedenza, il metodo non ha
+     * alcun effetto.
      */
     public void stop();
+
     /**
      * Permette di segnalare manualmente eventi da registrare
      * nel Tracciamento in corso.
@@ -78,4 +87,5 @@ public interface ITelemetryManager {
      * @param event Evento di Tracciamento da registrare.
      */
     public void signalEvent(TelemetryEvent event);
+
 }
