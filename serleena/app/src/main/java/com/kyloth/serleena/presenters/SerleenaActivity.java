@@ -37,7 +37,7 @@
  * Version   Programmer         Changes
  * 1.0.0     Sebastiano Valle   Creazione del file, scrittura del codice e di Javadoc
  */
-package com.kyloth.serleena;
+package com.kyloth.serleena.presenters;
 
 import android.app.Fragment;
 import android.app.FragmentTransaction;
@@ -46,6 +46,8 @@ import android.support.v7.app.ActionBarActivity;
 import android.view.Menu;
 import android.view.MenuItem;
 
+import com.kyloth.serleena.DummyMapPresenter;
+import com.kyloth.serleena.R;
 import com.kyloth.serleena.model.IExperience;
 import com.kyloth.serleena.model.ISerleenaDataSource;
 import com.kyloth.serleena.model.ITrack;
@@ -154,7 +156,7 @@ public class SerleenaActivity extends ActionBarActivity implements OnFragmentInt
      * Metodo che mappa i tag ai layout da visualizzare.
      */
     private void initLayoutIds() {
-        myLayoutIds.put("TRACK",R.layout.fragment_track);
+        myLayoutIds.put("TRACK", R.layout.fragment_track);
         myLayoutIds.put("MAP", R.layout.fragment_map);
         myLayoutIds.put("TELEMETRY", R.layout.fragment_telemetry);
         myLayoutIds.put("EXPLIST", R.layout.fragment_exp_selection_list);
