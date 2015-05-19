@@ -68,7 +68,8 @@ public class GeoPoint
      */
     public GeoPoint(double latitude, double longitude) throws IllegalArgumentException {
         if ( latitude < MIN_LATITUDE   || latitude > MAX_LATITUDE ||
-            longitude < MIN_LONGITUDE  || longitude > MAX_LONGITUDE ) {
+            longitude < MIN_LONGITUDE  || longitude >= MAX_LONGITUDE ) {
+            // Si: [0, 2pi) No: [0, 2pi]. 2pi mod 2pi == 0.
             throw new IllegalArgumentException();
         }
         this.latitude = latitude;
