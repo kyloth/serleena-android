@@ -55,6 +55,10 @@ public class GeoPoint
 {
     private double latitude;
     private double longitude;
+    public static double MIN_LATITUDE = -90.0;
+    public static double MAX_LATITUDE = 90.0;
+    public static double MIN_LONGITUDE = -180.0;
+    public static double MAX_LONGITUDE = 180.0;
 
     /**
      * Crea una nuova istanza di GeoPoint da una coppia di coordinate.
@@ -63,8 +67,8 @@ public class GeoPoint
      * @param longitude    Longitudine del punto geografico, -180 < x < 180.
      */
     public GeoPoint(double latitude, double longitude) throws IllegalArgumentException {
-        if ( latitude < -90.0   || latitude > 90.0 ||
-            longitude < -180.0  || longitude > 180.0 ) {
+        if ( latitude < MIN_LATITUDE   || latitude > MAX_LATITUDE ||
+            longitude < MIN_LONGITUDE  || longitude > MAX_LONGITUDE ) {
             throw new IllegalArgumentException();
         }
         this.latitude = latitude;
