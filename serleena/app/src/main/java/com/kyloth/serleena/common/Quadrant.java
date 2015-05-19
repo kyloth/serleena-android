@@ -60,6 +60,9 @@ public class Quadrant implements IQuadrant {
 
     @Override
     public boolean contains(GeoPoint p) throws IllegalArgumentException {
+        if (p == null) {
+            throw new IllegalArgumentException();
+        }
         return (
                 northEast.latitude() <= p.latitude() &&
                 p.latitude() <= southWest.latitude() &&
