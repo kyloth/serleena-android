@@ -93,8 +93,8 @@ import static java.lang.Math.floor;
 public class SerleenaSQLiteDataSource implements ISerleenaSQLiteDataSource {
     final static int QUADRANT_LATSIZE = 10;
     final static int QUADRANT_LONGSIZE = 10;
-    final static int TOT_LAT_QUADRANTS = 360 / QUADRANT_LATSIZE;
-    final static int TOT_LONG_QUADRANTS = 180 / QUADRANT_LONGSIZE;
+    final static int TOT_LAT_QUADRANTS = 180 / QUADRANT_LATSIZE;
+    final static int TOT_LONG_QUADRANTS = 360 / QUADRANT_LONGSIZE;
     final static String RASTER_PATH = "raster/";
 
     SerleenaDatabase dbHelper;
