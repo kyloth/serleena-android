@@ -81,6 +81,50 @@ public class GeoPointTest {
     }
 
     /**
+     * Verifica che non sia possibile sfondare il limite inferiore del range
+     * ammissibile per la latitudine di GeoPoint
+     */
+    @Test(expected=IllegalArgumentException.class)
+    public void testGeoPointEnforcesXRangeTop() {
+        double latitude = -91;
+        double longitude = -180;
+        GeoPoint up = new GeoPoint(latitude, longitude);
+    }
+
+    /**
+     * Verifica che non sia possibile sfondare il limite superiore del range
+     * ammissibile per la latitudine di GeoPoint
+     */
+    @Test(expected=IllegalArgumentException.class)
+    public void testGeoPointEnforcesXRangeBottom() {
+        double latitude = 91;
+        double longitude = 180;
+        GeoPoint up = new GeoPoint(latitude, longitude);
+    }
+
+    /**
+     * Verifica che non sia possibile sfondare il limite superiore del range
+     * ammissibile per la longitudine di GeoPoint
+     */
+    @Test(expected=IllegalArgumentException.class)
+    public void testGeoPointEnforcesYRangeTop() {
+        double latitude = -90;
+        double longitude = 181;
+        GeoPoint up = new GeoPoint(latitude, longitude);
+    }
+
+    /**
+     * Verifica che non sia possibile sfondare il limite inferiore del range
+     * ammissibile per la longitudine di GeoPoint
+     */
+    @Test(expected=IllegalArgumentException.class)
+    public void testGeoPointEnforcesYRangeBottom() {
+        double latitude = 90;
+        double longitude = -181;
+        GeoPoint up = new GeoPoint(latitude, longitude);
+    }
+
+    /**
      * Testa la correttezza del metodo equals().
      */
     @Test
