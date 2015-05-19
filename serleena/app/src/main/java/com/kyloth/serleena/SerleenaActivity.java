@@ -28,6 +28,15 @@
 ///////////////////////////////////////////////////////////////////////////////
 
 
+/**
+ * Name: SerleenaActivity
+ * Package: com.kyloth.serleena.presenters
+ * Author: Sebastiano Valle
+ *
+ * History:
+ * Version   Programmer         Changes
+ * 1.0.0     Sebastiano Valle   Creazione del file, scrittura del codice e di Javadoc
+ */
 package com.kyloth.serleena;
 
 import android.app.Fragment;
@@ -37,9 +46,15 @@ import android.support.v7.app.ActionBarActivity;
 import android.view.Menu;
 import android.view.MenuItem;
 
+import com.kyloth.serleena.model.IExperience;
+import com.kyloth.serleena.model.ISerleenaDataSource;
+import com.kyloth.serleena.model.ITrack;
 import com.kyloth.serleena.presentation.IMapPresenter;
 import com.kyloth.serleena.presentation.IMapView;
 import com.kyloth.serleena.presentation.IPresenter;
+import com.kyloth.serleena.presentation.ISerleenaActivity;
+import com.kyloth.serleena.presenters.OnFragmentInteractionListener;
+import com.kyloth.serleena.sensors.ISensorManager;
 import com.kyloth.serleena.view.fragments.CardioFragment;
 import com.kyloth.serleena.view.fragments.CompassFragment;
 import com.kyloth.serleena.view.fragments.ContactsFragment;
@@ -55,16 +70,51 @@ import java.util.HashMap;
 import java.util.Map;
 
 
-public class SerleenaActivity extends ActionBarActivity implements OnFragmentInteractionListener {
+/**
+ * Classe che implementa ISerleenaActivity.
+ *
+ * In questa visuale è possibile selezionare un'esperienza da attivare tra quelle disponibili.
+ *
+ * @field myFrags : Map<String,Fragment> lista dei Fragment istanziati nell'Activity
+ * @field myPress : Map<String,IPresenter> lista degli IPresenter istanziati nell'Activity
+ * @field myLayoutIds : Map<String,Integer> mappa di corrispondenze tra stringhe e id dei layout
+ * @field myMenuItemIds : Map<Integer,String> mappa di corrispondenze tra id dei menu item e visuale richiesta
+ * @field curFrag : String stringa contenente il nome della visuale attualmente presente sul display
+ * @author Sebastiano Valle <valle.sebastiano93@gmail.com>
+ * @version 1.0.0
+ * @see android.support.v7.app.ActionBarActivity
+ * @see com.kyloth.serleena.presenters.OnFragmentInteractionListener
+ */
+public class SerleenaActivity extends ActionBarActivity implements OnFragmentInteractionListener,ISerleenaActivity {
 
-    private int old_id;
+    /**
+     * Lista dei Fragment.
+     */
     private Map<String,Fragment> myFrags = new HashMap<>();
+    /**
+     * Lista dei Presenter.
+     */
     private Map<String,IPresenter> myPress = new HashMap<>();
+    /**
+     * Matrice di corrispondenza per gli id dei layout.
+     */
     private Map<String,Integer> myLayoutIds = new HashMap<>();
+    /**
+     * Matrice di corrispondenza per le voci del menù.
+     */
     private Map<Integer,String> myMenuItemIds = new HashMap<>();
 
+    /**
+     * Tag del Fragment attualmente visualizzato.
+     */
     private String curFrag;
 
+    /**
+     * Metodo invocato alla creazione dell'Activity. Vengono inizializzate le
+     * mappe e viene visualizzato il Fragment iniziale
+     *
+     * @param savedInstanceState istanza che viene rigenerata dal sistema operativo dopo una terminazione dell'applicazione
+     */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -76,6 +126,9 @@ public class SerleenaActivity extends ActionBarActivity implements OnFragmentInt
         changeFragment("TRACKLIST");
     }
 
+    /**
+     * Metodo che istanzia i Fragment nell'Activity e li mappa a dei tag.
+     */
     private void initFragMap() {
         myFrags.put("TRACK", new TrackFragment());
         myFrags.put("MAP", new MapFragment());
@@ -89,11 +142,17 @@ public class SerleenaActivity extends ActionBarActivity implements OnFragmentInt
         myFrags.put("SYNC", new SyncFragment());
     }
 
+    /**
+     * Metodo che istanzia i Presenter nell'Activity e li mappa a dei tag.
+     */
     private void initPresentersMap() {
         myPress.put("MAP",new DummyMapPresenter(myFrags.get("MAP")));
         ((IMapView) myFrags.get("MAP")).attachPresenter((IMapPresenter) myPress.get("MAP"));
     }
 
+    /**
+     * Metodo che mappa i tag ai layout da visualizzare.
+     */
     private void initLayoutIds() {
         myLayoutIds.put("TRACK",R.layout.fragment_track);
         myLayoutIds.put("MAP", R.layout.fragment_map);
@@ -107,6 +166,9 @@ public class SerleenaActivity extends ActionBarActivity implements OnFragmentInt
         myLayoutIds.put("SYNC", R.layout.fragment_sync_screen);
     }
 
+    /**
+     * Metodo che mappa le voci dei menù ai tag delle varie visuali e schermate.
+     */
     private void initMenuItemIds() {
         myMenuItemIds.put(R.id.screen_menu_exp,"MAP");
         myMenuItemIds.put(R.id.screen_menu_contact,"CONTACTS");
@@ -116,18 +178,23 @@ public class SerleenaActivity extends ActionBarActivity implements OnFragmentInt
         myMenuItemIds.put(R.id.screen_menu_sync,"SYNC");
     }
 
+    /**
+     * Metodo che aggiunge un menù all'ActionBar.
+     */
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.menu_serleena, menu);
         return true;
     }
 
+    /**
+     * Metodo che gestisce la selezione di voci nel menù presente nella ActionBar.
+     *
+     * Tale metodo ha il compito di alternare i vari Fragment in base
+     * all'opzione scelta dall'utente.
+     */
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
         String newFrag = myMenuItemIds.get(id);
         if(newFrag.equals("MAP")) {
@@ -138,10 +205,15 @@ public class SerleenaActivity extends ActionBarActivity implements OnFragmentInt
         if(newFrag.equals(curFrag)) return true;
         changeFragment(newFrag);
         return true;
-
-        //return super.onOptionsItemSelected(item);
     }
 
+    /**
+     * Metodo utilizzato per rimpiazzare un Fragment (o aggiungerne uno se non
+     * vi è alcun Fragment visualizzato) sull'Activity.
+     *
+     * Inizialmente il Fragment precedente viene rimosso, per poi aggiungere
+     * il Fragment richiesto dall'utente.
+     */
     private void changeFragment(String newFrag) {
         if(curFrag != null)
             removeFragment();
@@ -153,6 +225,10 @@ public class SerleenaActivity extends ActionBarActivity implements OnFragmentInt
         setContentView(myLayoutIds.get(curFrag));
     }
 
+    /**
+     * Metodo utilizzato per rimuovere un Fragment dal FragmentManager
+     * dell'Activity.
+     */
     private void removeFragment() {
         FragmentTransaction ft = getFragmentManager().beginTransaction();
         Fragment old = getFragmentManager().findFragmentByTag(curFrag);
@@ -160,8 +236,63 @@ public class SerleenaActivity extends ActionBarActivity implements OnFragmentInt
         ft.commit();
     }
 
+    /**
+     * Metodo che si interpone tra le interazioni dei Fragment con gli
+     * IPresenter, gestendo gli eventi sui Fragment e invocando di conseguenza
+     * i relativi IPresenter.
+     */
     @Override
     public void onFragmentInteraction(Object obj) {
 
+    }
+
+    /**
+     * Metodo che implementa l'attivazione di un'esperienza.
+     */
+    @Override
+    public void setActiveExperience(IExperience experience) {
+
+    }
+
+    /**
+     * Metodo che implementa l'attivazione di un percorso.
+     */
+    @Override
+    public void setActiveTrack(ITrack track) {
+
+    }
+
+    /**
+     * Metodo che implementa l'abilitazione del tracciamento per il percorso
+     * attivo.
+     */
+    @Override
+    public void enableTelemetry() {
+
+    }
+
+    /**
+     * Metodo che implementa la disabilitazione del tracciamento per il
+     * percorso attivo.
+     */
+    @Override
+    public void disableTelemetry() {
+
+    }
+
+    /**
+     * Metodo che implementa getDataSource() di SerleenaActivity.
+     */
+    @Override
+    public ISerleenaDataSource getDataSource() {
+        return null;
+    }
+
+    /**
+     * Metodo che restituisce il gestore dei sensori dell'applicazione.
+     */
+    @Override
+    public ISensorManager getSensorManager() {
+        return null;
     }
 }
