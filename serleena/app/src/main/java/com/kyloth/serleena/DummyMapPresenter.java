@@ -30,8 +30,10 @@
 
 package com.kyloth.serleena;
 
+import android.app.Activity;
 import android.app.Fragment;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 
 import com.kyloth.serleena.common.GeoPoint;
 import com.kyloth.serleena.common.IQuadrant;
@@ -73,18 +75,24 @@ public class DummyMapPresenter implements IMapPresenter {
     public void resume() {
         myMap.displayQuadrant(new IQuadrant() {
             @Override
+            public GeoPoint getNorthEastPoint() {
+                return null;
+            }
+
+            @Override
+            public GeoPoint getSouthWestPoint() {
+                return null;
+            }
+
+            @Override
+            public boolean contains(GeoPoint p) throws IllegalArgumentException {
+                return false;
+            }
+
+            @Override
             public Bitmap getRaster() {
-                return null;
-            }
-
-            @Override
-            public GeoPoint getFirstPoint() {
-                return null;
-            }
-
-            @Override
-            public GeoPoint getSecondPoint() {
-                return null;
+                Activity a = myMap.getActivity();
+                return BitmapFactory.decodeResource(a.getResources(), R.drawable.background);
             }
         });
         myMap.setUserLocation(new GeoPoint(640,120));

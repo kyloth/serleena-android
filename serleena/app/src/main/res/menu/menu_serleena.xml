@@ -3,21 +3,15 @@
     xmlns:tools="http://schemas.android.com/tools"
     tools:context="com.kyloth.serleena.presenters.SerleenaActivity">
     <item android:id="@+id/screen_menu_exp" android:title="@string/screen_menu_exp_text"
-        android:orderInCategory="100" app:showAsAction="never"
-        android:icon="@drawable/hiking"/>
+        android:orderInCategory="100" app:showAsAction="never"/>
     <item android:id="@+id/screen_menu_contact" android:title="@string/screen_menu_contact_text"
-        android:orderInCategory="100" app:showAsAction="never"
-        android:icon="@drawable/contact"/>
+        android:orderInCategory="100" app:showAsAction="never"/>
     <item android:id="@+id/screen_menu_meteo" android:title="@string/screen_menu_weather_text"
-        android:orderInCategory="100" app:showAsAction="never"
-        android:icon="@drawable/weather"/>
+        android:orderInCategory="100" app:showAsAction="never"/>
     <item android:id="@+id/screen_menu_cardio" android:title="@string/screen_menu_cardio_text"
-        android:orderInCategory="100" app:showAsAction="never"
-        android:icon="@drawable/red_cross"/>
+        android:orderInCategory="100" app:showAsAction="never"/>
     <item android:id="@+id/screen_menu_compass" android:title="@string/screen_menu_compass_text"
-        android:orderInCategory="100" app:showAsAction="never"
-        android:icon="@drawable/compass"/>
+        android:orderInCategory="100" app:showAsAction="never"/>
     <item android:id="@+id/screen_menu_sync" android:title="@string/screen_menu_sync_text"
-        android:orderInCategory="100" app:showAsAction="never"
-        android:icon="@drawable/sync"/>
+        android:orderInCategory="100" app:showAsAction="never"/>
 </menu>

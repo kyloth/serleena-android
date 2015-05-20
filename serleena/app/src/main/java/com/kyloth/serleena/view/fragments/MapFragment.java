@@ -43,17 +43,18 @@ package com.kyloth.serleena.view.fragments;
 import android.app.Activity;
 import android.app.Fragment;
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
+import android.graphics.Canvas;
 import android.graphics.drawable.BitmapDrawable;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 
 import com.kyloth.serleena.presenters.OnFragmentInteractionListener;
-import com.kyloth.serleena.R;
 import com.kyloth.serleena.common.GeoPoint;
 import com.kyloth.serleena.common.IQuadrant;
+import com.kyloth.serleena.R;
 import com.kyloth.serleena.common.UserPoint;
 import com.kyloth.serleena.presentation.IMapPresenter;
+import com.kyloth.serleena.view.widgets.MapWidget;
 
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -65,10 +66,8 @@ import java.util.Iterator;
  * Implementa l'interfaccia IMapView, gestendo tutte le esigenze grafiche
  * riguardo alla visuale Mappa nella schermata Esperienza.
  *
- * @field userPosition : GeoPoint salva il punto geografico corrispondente alla posizione dell'utente
- * @field upList : Iterable<UserPoint> lista dei Punti Utente relativi al quadrante visualizzato
- * @field layout : FrameLayout layout che viene visualizzato sul display
- * @field mapRaster : BitmapDrawable immagine di background raffigurante una mappa, sopra la quale verranno disegnati punti utente e posizione
+ * @field mapRaster : Bitmap immagine di background raffigurante una mappa, sopra la quale verranno disegnati punti utente e posizione
+ * @field mapWidget : MapWidget widget utilizzato per disegnare la mappa
  * @field presenter : IMapPresenter presenter da notificare all'aggiunta del Fragment all'Activity
  * @field mActivity : OnFragmentInteractionListener activity a cui è legato il MapFragment
  * @author Sebastiano Valle <valle.sebastiano93@gmail.com>
@@ -77,14 +76,11 @@ import java.util.Iterator;
  * @see com.kyloth.serleena.presentation.IMapView
  */
 public class MapFragment extends Fragment implements com.kyloth.serleena.presentation.IMapView  {
-    private GeoPoint userPosition;
-    private Iterable<UserPoint> upList = new ArrayList<>();
 
-    private FrameLayout layout;
-    private BitmapDrawable mapRaster;
+    private Bitmap mapRaster;
+    private MapWidget mapWidget;
 
     private IMapPresenter presenter;
-
     private OnFragmentInteractionListener mActivity;
 
     /**
@@ -97,11 +93,9 @@ public class MapFragment extends Fragment implements com.kyloth.serleena.present
     public void onAttach(Activity activity) {
         super.onAttach(activity);
         try {
-            Bitmap temp = BitmapFactory.decodeResource(getResources(), R.drawable.background);
-            mapRaster = new BitmapDrawable(temp);
-            ImageView map = (ImageView) getActivity().findViewById(R.id.map_image);
-            map.setBackground(mapRaster);
             mActivity = (OnFragmentInteractionListener) activity;
+            ImageView view = (ImageView) activity.findViewById(R.id.map_image);
+            view = mapWidget = new MapWidget(activity);
             presenter.resume();
         } catch (ClassCastException e) {
             throw new ClassCastException(activity.toString()
@@ -126,8 +120,8 @@ public class MapFragment extends Fragment implements com.kyloth.serleena.present
      */
     @Override
     public void setUserLocation(GeoPoint point) {
-        userPosition = point;
-        draw();
+        mapWidget.setUserPosition(point);
+        mapWidget.draw(new Canvas(mapRaster));
     }
 
     /**
@@ -137,11 +131,8 @@ public class MapFragment extends Fragment implements com.kyloth.serleena.present
      */
     @Override
     public void displayQuadrant(IQuadrant q) {
-        Bitmap temp = q.getRaster();
-        if(temp != null)
-            mapRaster = new BitmapDrawable(temp);
-        ImageView map = (ImageView) getActivity().findViewById(R.id.map_image);
-        map.setBackground(mapRaster);
+        mapRaster = q.getRaster();
+        mapWidget.draw(new Canvas(mapRaster));
     }
 
     /**
@@ -151,48 +142,8 @@ public class MapFragment extends Fragment implements com.kyloth.serleena.present
      */
     @Override
     public void displayUP(Iterable<UserPoint> points) {
-        upList = points;
-        draw();
-    }
-
-    /**
-     * Metodo con cui viene disegnata una mappa con posizione e punti utente.
-     */
-    private void draw() {
-        layout = new FrameLayout(getActivity());
-        layout.setBackground(mapRaster);
-        drawPosition();
-        drawUp();
-        getActivity().setContentView(layout);
-    }
-
-    /**
-     * Metodo per disegnare posizione sulla mappa.
-     */
-    private void drawPosition() {
-        if(userPosition == null) return;
-        ImageView img = new ImageView(getActivity());
-        img.setImageResource(R.drawable.mirino);
-        FrameLayout.LayoutParams params = new FrameLayout.LayoutParams(100, 100);
-        params.topMargin = (int) userPosition.latitude();
-        params.leftMargin = (int) userPosition.longitude();
-        layout.addView(img, params);
-    }
-
-    /**
-     * Metodo per disegnare i punti utente sulla mappa.
-     */
-    private void drawUp() {
-        Iterator<UserPoint> it = upList.iterator();
-        while (it.hasNext()) {
-            UserPoint up = it.next();
-            ImageView img = new ImageView(getActivity());
-            img.setImageResource(R.drawable.user_point);
-            FrameLayout.LayoutParams params = new FrameLayout.LayoutParams(100, 100);
-            params.topMargin = (int) up.latitude();
-            params.leftMargin = (int) up.longitude();
-            layout.addView(img, params);
-        }
+        mapWidget.setUserPoints(points);
+        mapWidget.draw(new Canvas(mapRaster));
     }
 
     /**

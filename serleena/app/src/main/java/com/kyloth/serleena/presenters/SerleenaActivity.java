@@ -48,6 +48,7 @@ import android.view.MenuItem;
 
 import com.kyloth.serleena.DummyMapPresenter;
 import com.kyloth.serleena.R;
+import com.kyloth.serleena.common.NoActiveExperienceException;
 import com.kyloth.serleena.model.IExperience;
 import com.kyloth.serleena.model.ISerleenaDataSource;
 import com.kyloth.serleena.model.ITrack;
@@ -125,7 +126,7 @@ public class SerleenaActivity extends ActionBarActivity implements OnFragmentInt
         initLayoutIds();
         initMenuItemIds();
         FragmentTransaction ft = getFragmentManager().beginTransaction();
-        changeFragment("TRACKLIST");
+        changeFragment("MAP");
     }
 
     /**
@@ -172,12 +173,12 @@ public class SerleenaActivity extends ActionBarActivity implements OnFragmentInt
      * Metodo che mappa le voci dei menù ai tag delle varie visuali e schermate.
      */
     private void initMenuItemIds() {
-        myMenuItemIds.put(R.id.screen_menu_exp,"MAP");
+        myMenuItemIds.put(R.id.screen_menu_exp,"TRACKLIST");
         myMenuItemIds.put(R.id.screen_menu_contact,"CONTACTS");
         myMenuItemIds.put(R.id.screen_menu_meteo,"WEATHER");
         myMenuItemIds.put(R.id.screen_menu_cardio,"CARDIO");
         myMenuItemIds.put(R.id.screen_menu_compass,"COMPASS");
-        myMenuItemIds.put(R.id.screen_menu_sync,"SYNC");
+        myMenuItemIds.put(R.id.screen_menu_sync, "SYNC");
     }
 
     /**
@@ -200,8 +201,10 @@ public class SerleenaActivity extends ActionBarActivity implements OnFragmentInt
         int id = item.getItemId();
         String newFrag = myMenuItemIds.get(id);
         if(newFrag.equals("MAP")) {
-            ((IMapPresenter) myPress.get("MAP")).newUserPoint();
-            ((IMapPresenter) myPress.get("MAP")).newUserPoint();
+            try {
+                ((IMapPresenter) myPress.get("MAP")).newUserPoint();
+                ((IMapPresenter) myPress.get("MAP")).newUserPoint();
+            } catch(NoActiveExperienceException e) {}
         }
 
         if(newFrag.equals(curFrag)) return true;
