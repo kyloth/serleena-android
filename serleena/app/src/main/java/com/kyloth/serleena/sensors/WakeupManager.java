@@ -88,12 +88,13 @@ public class WakeupManager extends BroadcastReceiver implements IWakeupManager {
     /**
      * Implementa IWakeupManager.attachObserver().
      *
-     * @param observer IWakeupObserver da registrare.
+     * @param observer      IWakeupObserver da registrare. Se null, viene
+     *                      sollevata un'eccezione IllegalArgumentException.
      * @param interval      Intervallo di tempo per la notifica all'oggetto
      *                      "observer". Se < 0, viene sollevata un'eccezione
      *                      IllegalArgumentException.
-     * @param oneTimeOnly True se il wakeup avviene una sola volta,
-     *                    false se il wakeup è ripetuto.
+     * @param oneTimeOnly   True se il wakeup avviene una sola volta,
+     *                      false se il wakeup è ripetuto.
      */
     @TargetApi(19)
     @Override
