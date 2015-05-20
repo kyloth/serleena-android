@@ -89,8 +89,9 @@ public class WakeupManager extends BroadcastReceiver implements IWakeupManager {
      * Implementa IWakeupManager.attachObserver().
      *
      * @param observer IWakeupObserver da registrare.
-     * @param interval Intervallo di tempo per la notifica all'oggetto
-     *                 "observer".
+     * @param interval      Intervallo di tempo per la notifica all'oggetto
+     *                      "observer". Se < 0, viene sollevata un'eccezione
+     *                      IllegalArgumentException.
      * @param oneTimeOnly True se il wakeup avviene una sola volta,
      *                    false se il wakeup è ripetuto.
      */
@@ -101,11 +102,13 @@ public class WakeupManager extends BroadcastReceiver implements IWakeupManager {
             throws IllegalArgumentException {
         if (observer == null)
             throw new IllegalArgumentException("Illegal null observer");
-        if (interval <= 0)
+        if (interval < 0)
             throw new IllegalArgumentException("Illegal interval");
 
         int alarmType = AlarmManager.RTC_WAKEUP;
         int millis = interval * 1000;
+        if (millis == 0)
+            millis = 1;
         String uuid = UUID.randomUUID().toString();
 
         AlarmManager alarmManager =
