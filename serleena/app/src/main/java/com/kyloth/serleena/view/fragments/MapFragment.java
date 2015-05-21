@@ -68,7 +68,6 @@ import java.util.Map;
  * Implementa l'interfaccia IMapView, gestendo tutte le esigenze grafiche
  * riguardo alla visuale Mappa nella schermata Esperienza.
  *
- * @field mapRaster : Bitmap immagine di background raffigurante una mappa, sopra la quale verranno disegnati punti utente e posizione
  * @field mapWidget : MapWidget widget utilizzato per disegnare la mappa
  * @field presenter : IMapPresenter presenter da notificare all'aggiunta del Fragment all'Activity
  * @field mActivity : OnFragmentInteractionListener activity a cui è legato il MapFragment
@@ -79,7 +78,6 @@ import java.util.Map;
  */
 public class MapFragment extends Fragment implements com.kyloth.serleena.presentation.IMapView  {
 
-    private Bitmap mapRaster;
     private MapWidget mapWidget;
 
     private IMapPresenter presenter;
@@ -114,19 +112,15 @@ public class MapFragment extends Fragment implements com.kyloth.serleena.present
         mActivity = null;
     }
 
-    private void drawCanvas() {
-        mapWidget.draw(new Canvas());
-    }
-
     /**
-     * Viene impostata la posizione dell'utente e visualizzata la posizione dell'utente.
+     * Viene impostata la posizione dell'utente ed in seguito visualizzata.
      *
      * @param point posizione dell'utente
      */
     @Override
     public void setUserLocation(GeoPoint point) {
         mapWidget.setUserPosition(point);
-        drawCanvas();
+        mapWidget.draw(new Canvas());
     }
 
     /**
@@ -137,7 +131,7 @@ public class MapFragment extends Fragment implements com.kyloth.serleena.present
     @Override
     public void displayQuadrant(IQuadrant q) {
         mapWidget.setRaster(q.getRaster());
-        drawCanvas();
+        mapWidget.draw(new Canvas());
     }
 
     /**
@@ -148,7 +142,7 @@ public class MapFragment extends Fragment implements com.kyloth.serleena.present
     @Override
     public void displayUP(Iterable<UserPoint> points) {
         mapWidget.setUserPoints(points);
-        drawCanvas();
+        mapWidget.draw(new Canvas());
     }
 
     /**

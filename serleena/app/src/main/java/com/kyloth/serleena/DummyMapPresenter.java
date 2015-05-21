@@ -44,7 +44,7 @@ import com.kyloth.serleena.view.fragments.MapFragment;
 import java.util.ArrayList;
 
 /**
- * Stub per mockup
+ * Stub per MapFragment
  */
 public class DummyMapPresenter implements IMapPresenter {
     private MapFragment myMap;

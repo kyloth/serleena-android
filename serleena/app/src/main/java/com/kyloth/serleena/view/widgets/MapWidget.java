@@ -62,13 +62,12 @@ import java.util.Iterator;
 /**
  * Classe che implementa il widget presente nella visuale Mappa della schermata Esperienza
  *
+ * @field mapRaster : Bitmap immagine di background raffigurante una mappa, sopra la quale verranno disegnati punti utente e posizione
  * @field userPosition : GeoPoint salva il punto geografico corrispondente alla posizione dell'utente
  * @field upList : Iterable<UserPoint> lista dei Punti Utente relativi al quadrante visualizzato
- * @field layout : FrameLayout layout che viene visualizzato sul display
  * @author Sebastiano Valle <valle.sebastiano93@gmail.com>
  * @version 1.0.0
- * @see android.app.Fragment
- * @see com.kyloth.serleena.presentation.IMapView
+ * @see android.widget.ImageView
  */
 public class MapWidget extends ImageView {
 
@@ -77,31 +76,69 @@ public class MapWidget extends ImageView {
     private GeoPoint userPosition;
     private Iterable<UserPoint> upList = new ArrayList<>();
 
+    /**
+     * Costruttore di MapWidget a un parametro.
+     *
+     * @param context Activity in cui è presente il widget
+     */
     public MapWidget(Context context) {
         super(context);
         mapRaster = BitmapFactory.decodeResource(context.getResources(),R.drawable.background);
     }
 
+    /**
+     * Costruttore di MapWidget a due parametri.
+     *
+     * @param context Activity in cui è presente il widget
+     * @param attrs attributi come altezza, larghezza definiti nell'XML corrispondente a MapWidget
+     */
     public MapWidget(Context context,AttributeSet attrs) {
         super(context,attrs);
     }
 
+    /**
+     * Costruttore di MapWidget a tre parametri.
+     *
+     * @param context Activity in cui è presente il widget
+     * @param attrs attributi come altezza, larghezza definiti nell'XML corrispondente a MapWidget
+     * @param defStyle stile da applicare a questa vista, può corrispondere a 0 o a un'id di una risorsa
+     */
     public MapWidget(Context context,AttributeSet attrs,int defStyle) {
         super(context,attrs,defStyle);
     }
 
+    /**
+     * Metodo che imposta l'immagine da visualizzare relativa alla mappa.
+     *
+     * @param raster Bitmap contenente la mappa
+     */
     public void setRaster(Bitmap raster) {
         mapRaster = raster;
     }
 
+    /**
+     * Metodo che imposta la posizione dell'utente da visualizzare.
+     *
+     * @param userPosition Posizione dell'utente
+     */
     public void setUserPosition(GeoPoint userPosition) {
         this.userPosition = userPosition;
     }
 
+    /**
+     * Metodo che imposta la lista dei punti utente da visualizzare
+     *
+     * @param ups Punti utente
+     */
     public void setUserPoints(Iterable<UserPoint> ups) {
         upList= ups;
     }
 
+    /**
+     * Metodo che viene invocato quando si richiede l'operazione draw() di un'ImageView.
+     *
+     * @param canvas Oggetto su cui disegnare
+     */
     @Override
     public void onDraw(Canvas canvas) {
         canvas.drawBitmap(mapRaster,0,0,null);
@@ -116,17 +153,20 @@ public class MapWidget extends ImageView {
     }
 
     /**
-     * Metodo con cui viene disegnata una mappa con posizione e punti utente.
+     * Metodo che disegna un punto sul canvas.
+     *
+     * @param canvas Oggetto su cui disegnare
+     * @param point Punto geografico (posizione o punto utente) da visualizzare
      */
-    private void draw(Canvas canvas, GeoPoint up) {
+    private void draw(Canvas canvas, GeoPoint point) {
         ImageView img = new ImageView(getContext());
         img.setImageResource(R.drawable.user_point);
-        if(up == null) { // il punto da visualizzare e' la posizione dell'utente
-            up = userPosition;
+        if(point == null) { // il punto da visualizzare e' la posizione dell'utente
+            point = userPosition;
             img.setImageResource(R.drawable.mirino);
         }
-        Float top = (float) up.latitude();
-        Float left = (float) up.longitude();
+        Float top = (float) point.latitude();
+        Float left = (float) point.longitude();
         img.setMaxHeight(100);
         img.setMaxWidth(100);
         Bitmap bmp = ((BitmapDrawable) img.getDrawable()).getBitmap().copy(Bitmap.Config.ARGB_8888,true);
