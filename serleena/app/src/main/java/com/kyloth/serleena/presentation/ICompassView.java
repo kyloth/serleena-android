@@ -68,4 +68,13 @@ public interface ICompassView {
 	 */
 	public void attachPresenter(ICompassPresenter presenter);
 
+	/**
+	 * Pulisce la vista.
+	 *
+	 * Viene chiamato sulla vista dalla fonte di dati di orientamento, nel caso
+	 * tali dati non siano reperibili o non sia possibile comunicare con il
+	 * sensore di orientamento.
+	 */
+	public void clearView();
+
 }
