@@ -71,7 +71,7 @@ public class SerleenaPowerManager implements IPowerManager {
      *
      * @param context Contesto dell'applicazione.
      */
-    public SerleenaPowerManager(Context context) {
+    private SerleenaPowerManager(Context context) {
         pm = (PowerManager) context.getSystemService(Context.POWER_SERVICE);
         locks = new HashMap<>();
     }
