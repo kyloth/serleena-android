@@ -130,7 +130,7 @@ public class MapFragment extends Fragment implements com.kyloth.serleena.present
      */
     @Override
     public void displayQuadrant(IQuadrant q) {
-        mapWidget.setRaster(q.getRaster());
+        mapWidget.setQuadrant(q);
         mapWidget.draw(new Canvas());
     }
 

@@ -60,13 +60,13 @@ public class DummyMapPresenter implements IMapPresenter {
     public void newUserPoint() {
         switch(cnt) {
             case 0:
-                myUps.add(new UserPoint(240,240));
+                myUps.add(new UserPoint(65,65));
                 break;
             case 1:
-                myUps.add(new UserPoint(120,640));
+                myUps.add(new UserPoint(45,50));
                 break;
             default:
-                myUps.add(new UserPoint(500,500));
+                myUps.add(new UserPoint(55,75));
         }
         cnt++;
     }
@@ -76,12 +76,12 @@ public class DummyMapPresenter implements IMapPresenter {
         myMap.displayQuadrant(new IQuadrant() {
             @Override
             public GeoPoint getNorthEastPoint() {
-                return null;
+                return new GeoPoint(80,80);
             }
 
             @Override
             public GeoPoint getSouthWestPoint() {
-                return null;
+                return new GeoPoint(40,40);
             }
 
             @Override
@@ -95,7 +95,7 @@ public class DummyMapPresenter implements IMapPresenter {
                 return BitmapFactory.decodeResource(a.getResources(), R.drawable.background);
             }
         });
-        myMap.setUserLocation(new GeoPoint(640,120));
+        myMap.setUserLocation(new GeoPoint(70,60));
         myMap.displayUP(myUps);
     }
 
