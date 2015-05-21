@@ -77,4 +77,19 @@ import com.kyloth.serleena.sensors.SensorNotAvailableException;
 public class TrackPresenter implements ITrackPresenter,
         ILocationReachedObserver, ILocationObserver, IHeadingObserver {
 
+    private static int UPDATE_INTERVAL_SECONDS = 60;
+
+    private ITrackView view;
+    private ISerleenaActivity activity;
+
+    private ITrack activeTrack;
+    private int checkpointToReach;
+    private boolean telemetry;
+    private long trackStartFullTime;
+
+    private ITelemetryManager telMan;
+    private ILocationManager locMan;
+    private ILocationReachedManager lrMan;
+    private IHeadingManager hMan;
+
 }
