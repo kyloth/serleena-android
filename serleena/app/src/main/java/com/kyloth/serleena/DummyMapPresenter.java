@@ -39,6 +39,7 @@ import com.kyloth.serleena.common.GeoPoint;
 import com.kyloth.serleena.common.IQuadrant;
 import com.kyloth.serleena.common.UserPoint;
 import com.kyloth.serleena.presentation.IMapPresenter;
+import com.kyloth.serleena.presentation.IMapView;
 import com.kyloth.serleena.view.fragments.MapFragment;
 
 import java.util.ArrayList;
@@ -51,22 +52,24 @@ public class DummyMapPresenter implements IMapPresenter {
     private int cnt;
     private ArrayList<UserPoint> myUps = new ArrayList<>();
 
-    public DummyMapPresenter(Fragment fragment) {
-        if(fragment instanceof MapFragment)
-            myMap = (MapFragment) fragment;
+    public DummyMapPresenter(IMapView view) {
+        if(view instanceof MapFragment) {
+            myMap = (MapFragment) view;
+            myMap.attachPresenter(this);
+        }
     }
 
     @Override
     public void newUserPoint() {
         switch(cnt) {
             case 0:
-                myUps.add(new UserPoint(240,240));
+                myUps.add(new UserPoint(65,65));
                 break;
             case 1:
-                myUps.add(new UserPoint(120,640));
+                myUps.add(new UserPoint(45,50));
                 break;
             default:
-                myUps.add(new UserPoint(500,500));
+                myUps.add(new UserPoint(55,75));
         }
         cnt++;
     }
@@ -76,12 +79,12 @@ public class DummyMapPresenter implements IMapPresenter {
         myMap.displayQuadrant(new IQuadrant() {
             @Override
             public GeoPoint getNorthEastPoint() {
-                return null;
+                return new GeoPoint(80,80);
             }
 
             @Override
             public GeoPoint getSouthWestPoint() {
-                return null;
+                return new GeoPoint(40,40);
             }
 
             @Override
@@ -95,7 +98,7 @@ public class DummyMapPresenter implements IMapPresenter {
                 return BitmapFactory.decodeResource(a.getResources(), R.drawable.background);
             }
         });
-        myMap.setUserLocation(new GeoPoint(640,120));
+        myMap.setUserLocation(new GeoPoint(70,60));
         myMap.displayUP(myUps);
     }
 

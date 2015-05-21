@@ -28,28 +28,51 @@
 ///////////////////////////////////////////////////////////////////////////////
 
 
-/**
- * Name: OnFragmentInteractionListener
- * Package: com.kyloth.serleena.presenters
- * Author: Sebastiano Valle
- *
- * History:
- * Version   Programmer         Changes
- * 1.0.0     Sebastiano Valle   Creazione del file, scrittura del codice e di Javadoc
- */
-package com.kyloth.serleena.presenters;
+package com.kyloth.serleena;
+
+import com.kyloth.serleena.model.IExperience;
+import com.kyloth.serleena.presentation.IExperienceSelectionPresenter;
+import com.kyloth.serleena.presentation.IExperienceSelectionView;
+import com.kyloth.serleena.presentation.ISerleenaActivity;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
- * Interfaccia che permette ad un'Activity di rimanere in attesa di notifiche dal Fragment.
- *
- * @author Sebastiano Valle <valle.sebastiano93@gmail.com>
- * @version 1.0.0
+ * Classe di stub per IExperienceSelectionPresenter
  */
-public interface OnFragmentInteractionListener {
-    /**
-     * Metodo invocato ogni qualvolta vi è un evento in un Fragment
-     *
-     * @param obj oggetto passato per gestire l'interazione
-     */
-    public void onFragmentInteraction(Object obj);
+public class DummyExpSelPresenter implements IExperienceSelectionPresenter {
+
+    private List<IExperience> experiences;
+    private ISerleenaActivity activity;
+    private IExperienceSelectionView view;
+
+    public DummyExpSelPresenter(IExperienceSelectionView view, ISerleenaActivity activity) {
+        this.activity = activity;
+        this.view = view;
+        this.experiences = new ArrayList<>();
+        List<String> names = new ArrayList<>();
+
+        names.add("CORTINA");
+        names.add("ASIAGO");
+        names.add("TORRE ARCHIMEDE");
+
+        view.setList(names);
+        view.attachPresenter(this);
+    }
+
+    @Override
+    public void activateExperience(int index) throws IllegalArgumentException {
+
+    }
+
+    @Override
+    public void resume() {
+
+    }
+
+    @Override
+    public void pause() {
+
+    }
 }

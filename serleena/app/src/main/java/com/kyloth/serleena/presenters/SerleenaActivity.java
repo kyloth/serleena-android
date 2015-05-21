@@ -46,17 +46,22 @@ import android.support.v7.app.ActionBarActivity;
 import android.view.Menu;
 import android.view.MenuItem;
 
+import com.kyloth.serleena.DummyExpSelPresenter;
 import com.kyloth.serleena.DummyMapPresenter;
+import com.kyloth.serleena.DummyTrackSelPresenter;
 import com.kyloth.serleena.R;
 import com.kyloth.serleena.common.NoActiveExperienceException;
 import com.kyloth.serleena.model.IExperience;
 import com.kyloth.serleena.model.ISerleenaDataSource;
 import com.kyloth.serleena.model.ITrack;
+import com.kyloth.serleena.presentation.IExperienceSelectionPresenter;
+import com.kyloth.serleena.presentation.IExperienceSelectionView;
 import com.kyloth.serleena.presentation.IMapPresenter;
 import com.kyloth.serleena.presentation.IMapView;
 import com.kyloth.serleena.presentation.IPresenter;
 import com.kyloth.serleena.presentation.ISerleenaActivity;
-import com.kyloth.serleena.presenters.OnFragmentInteractionListener;
+import com.kyloth.serleena.presentation.ITrackSelectionPresenter;
+import com.kyloth.serleena.presentation.ITrackSelectionView;
 import com.kyloth.serleena.sensors.ISensorManager;
 import com.kyloth.serleena.view.fragments.CardioFragment;
 import com.kyloth.serleena.view.fragments.CompassFragment;
@@ -86,9 +91,8 @@ import java.util.Map;
  * @author Sebastiano Valle <valle.sebastiano93@gmail.com>
  * @version 1.0.0
  * @see android.support.v7.app.ActionBarActivity
- * @see com.kyloth.serleena.presenters.OnFragmentInteractionListener
  */
-public class SerleenaActivity extends ActionBarActivity implements OnFragmentInteractionListener,ISerleenaActivity {
+public class SerleenaActivity extends ActionBarActivity implements ISerleenaActivity {
 
     /**
      * Lista dei Fragment.
@@ -126,7 +130,7 @@ public class SerleenaActivity extends ActionBarActivity implements OnFragmentInt
         initLayoutIds();
         initMenuItemIds();
         FragmentTransaction ft = getFragmentManager().beginTransaction();
-        changeFragment("TRACKLIST");
+        changeFragment("EXPLIST");
     }
 
     /**
@@ -149,8 +153,9 @@ public class SerleenaActivity extends ActionBarActivity implements OnFragmentInt
      * Metodo che istanzia i Presenter nell'Activity e li mappa a dei tag.
      */
     private void initPresentersMap() {
-        myPress.put("MAP",new DummyMapPresenter(myFrags.get("MAP")));
-        ((IMapView) myFrags.get("MAP")).attachPresenter((IMapPresenter) myPress.get("MAP"));
+        myPress.put("MAP", new DummyMapPresenter((IMapView) myFrags.get("MAP")));
+        myPress.put("TRACKLIST", new DummyTrackSelPresenter((ITrackSelectionView) myFrags.get("TRACKLIST"), this));
+        myPress.put("EXPLIST", new DummyExpSelPresenter((IExperienceSelectionView) myFrags.get("EXPLIST"), this));
     }
 
     /**
@@ -239,16 +244,6 @@ public class SerleenaActivity extends ActionBarActivity implements OnFragmentInt
         Fragment old = getFragmentManager().findFragmentByTag(curFrag);
         ft.remove(old);
         ft.commit();
-    }
-
-    /**
-     * Metodo che si interpone tra le interazioni dei Fragment con gli
-     * IPresenter, gestendo gli eventi sui Fragment e invocando di conseguenza
-     * i relativi IPresenter.
-     */
-    @Override
-    public void onFragmentInteraction(Object obj) {
-
     }
 
     /**

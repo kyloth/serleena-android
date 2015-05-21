@@ -42,21 +42,15 @@ package com.kyloth.serleena.view.fragments;
 import android.app.Activity;
 import android.app.Fragment;
 
-import com.kyloth.serleena.presenters.OnFragmentInteractionListener;
-
-
 /**
  * Classe che implementa la schermata “Sincronizzazione”, in cui è possibile richiedere la
  * sincronizzazione con la piattaforma Cloud.
  *
- * @field mActivity : OnFragmentInteractionListener activity a cui è legato il SyncFragment
  * @author Sebastiano Valle <valle.sebastiano93@gmail.com>
  * @version 1.0.0
  * @see android.app.Fragment
  */
 public class SyncFragment extends Fragment {
-
-    private OnFragmentInteractionListener mActivity;
 
     /**
      * Questo metodo viene invocato ogni volta che un SyncFragment viene collegato ad un'Activity.
@@ -66,12 +60,6 @@ public class SyncFragment extends Fragment {
     @Override
     public void onAttach(Activity activity) {
         super.onAttach(activity);
-        try {
-            mActivity = (OnFragmentInteractionListener) activity;
-        } catch (ClassCastException e) {
-            throw new ClassCastException(activity.toString()
-                    + " must implement OnFragmentInteractionListener");
-        }
     }
 
     /**
@@ -81,7 +69,6 @@ public class SyncFragment extends Fragment {
     @Override
     public void onDetach() {
         super.onDetach();
-        mActivity = null;
     }
 
 }

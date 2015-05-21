@@ -42,21 +42,17 @@ package com.kyloth.serleena.view.fragments;
 import android.app.Activity;
 import android.app.Fragment;
 
-import com.kyloth.serleena.presenters.OnFragmentInteractionListener;
-
 
 /**
  * Classe che implementa la visuale “Tracciamento” della schermata “Esperienza”.
  *
  * In questa visuale è possibile attivare o disattivare il tracciamento.
  *
- * @field mActivity : OnFragmentInteractionListener activity a cui è legato il TelemetryFragment
  * @author Sebastiano Valle <valle.sebastiano93@gmail.com>
  * @version 1.0.0
  * @see android.app.Fragment
  */
 public class TelemetryFragment extends Fragment {
-    private OnFragmentInteractionListener mActivity;
 
     /**
      * Questo metodo viene invocato ogni volta che un TelemetryFragment viene collegato ad un'Activity.
@@ -66,12 +62,6 @@ public class TelemetryFragment extends Fragment {
     @Override
     public void onAttach(Activity activity) {
         super.onAttach(activity);
-        try {
-            mActivity = (OnFragmentInteractionListener) activity;
-        } catch (ClassCastException e) {
-            throw new ClassCastException(activity.toString()
-                    + " must implement OnFragmentInteractionListener");
-        }
     }
 
     /**
@@ -81,7 +71,6 @@ public class TelemetryFragment extends Fragment {
     @Override
     public void onDetach() {
         super.onDetach();
-        mActivity = null;
     }
 
 }

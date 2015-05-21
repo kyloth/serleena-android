@@ -42,21 +42,16 @@ package com.kyloth.serleena.view.fragments;
 import android.app.Activity;
 import android.app.Fragment;
 
-import com.kyloth.serleena.presenters.OnFragmentInteractionListener;
-
 
 /**
  * Classe che implementa la schermata “Autorità locali”, in cui vengono mostrate eventuali
  * contatti di autorità locali
  *
- * @field mActivity : OnFragmentInteractionListener activity a cui è legato il ContactsFragment
  * @author Sebastiano Valle <valle.sebastiano93@gmail.com>
  * @version 1.0.0
  * @see android.app.Fragment
  */
 public class ContactsFragment extends Fragment {
-
-    private OnFragmentInteractionListener mActivity;
 
     /**
      * Questo metodo viene invocato ogni volta che ContactsFragment viene collegato ad un'Activity.
@@ -66,12 +61,6 @@ public class ContactsFragment extends Fragment {
     @Override
     public void onAttach(Activity activity) {
         super.onAttach(activity);
-        try {
-            mActivity = (OnFragmentInteractionListener) activity;
-        } catch (ClassCastException e) {
-            throw new ClassCastException(activity.toString()
-                    + " must implement OnFragmentInteractionListener");
-        }
     }
 
     /**
@@ -81,7 +70,6 @@ public class ContactsFragment extends Fragment {
     @Override
     public void onDetach() {
         super.onDetach();
-        mActivity = null;
     }
 
 }

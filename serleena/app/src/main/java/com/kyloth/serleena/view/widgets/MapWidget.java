@@ -40,20 +40,16 @@
 
 package com.kyloth.serleena.view.widgets;
 
-import android.app.Activity;
 import android.content.Context;
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.drawable.BitmapDrawable;
-import android.graphics.drawable.Drawable;
 import android.util.AttributeSet;
-import android.widget.FrameLayout;
 import android.widget.ImageView;
-import android.widget.Toast;
 
 import com.kyloth.serleena.R;
 import com.kyloth.serleena.common.GeoPoint;
+import com.kyloth.serleena.common.IQuadrant;
 import com.kyloth.serleena.common.UserPoint;
 
 import java.util.ArrayList;
@@ -62,7 +58,7 @@ import java.util.Iterator;
 /**
  * Classe che implementa il widget presente nella visuale Mappa della schermata Esperienza
  *
- * @field mapRaster : Bitmap immagine di background raffigurante una mappa, sopra la quale verranno disegnati punti utente e posizione
+ * @field quadrant : Quadrante da visualizzare
  * @field userPosition : GeoPoint salva il punto geografico corrispondente alla posizione dell'utente
  * @field upList : Iterable<UserPoint> lista dei Punti Utente relativi al quadrante visualizzato
  * @author Sebastiano Valle <valle.sebastiano93@gmail.com>
@@ -71,7 +67,7 @@ import java.util.Iterator;
  */
 public class MapWidget extends ImageView {
 
-    private Bitmap mapRaster;
+    private IQuadrant quadrant;
 
     private GeoPoint userPosition;
     private Iterable<UserPoint> upList = new ArrayList<>();
@@ -83,7 +79,6 @@ public class MapWidget extends ImageView {
      */
     public MapWidget(Context context) {
         super(context);
-        mapRaster = BitmapFactory.decodeResource(context.getResources(),R.drawable.background);
     }
 
     /**
@@ -110,10 +105,10 @@ public class MapWidget extends ImageView {
     /**
      * Metodo che imposta l'immagine da visualizzare relativa alla mappa.
      *
-     * @param raster Bitmap contenente la mappa
+     * @param q Quadrante da visualizzare
      */
-    public void setRaster(Bitmap raster) {
-        mapRaster = raster;
+    public void setQuadrant(IQuadrant q) {
+        quadrant = q;
     }
 
     /**
@@ -141,6 +136,8 @@ public class MapWidget extends ImageView {
      */
     @Override
     public void onDraw(Canvas canvas) {
+        if(quadrant == null) return;
+        Bitmap mapRaster = quadrant.getRaster();
         canvas.drawBitmap(mapRaster,0,0,null);
         if(userPosition != null)
             draw(canvas, null);
@@ -148,7 +145,6 @@ public class MapWidget extends ImageView {
         while (it.hasNext()) {
             draw(canvas, it.next());
         }
-        Bitmap bmp = BitmapFactory.decodeResource(getResources(),R.drawable.background);
         super.onDraw(canvas);
     }
 
@@ -165,12 +161,38 @@ public class MapWidget extends ImageView {
             point = userPosition;
             img.setImageResource(R.drawable.mirino);
         }
-        Float top = (float) point.latitude();
-        Float left = (float) point.longitude();
+        Float top = getTop(point);
+        Float left = getLeft(point);
         img.setMaxHeight(100);
         img.setMaxWidth(100);
-        Bitmap bmp = ((BitmapDrawable) img.getDrawable()).getBitmap().copy(Bitmap.Config.ARGB_8888,true);
+        Bitmap bmp = ((BitmapDrawable) img.getDrawable()).getBitmap().copy(Bitmap.Config.ARGB_8888, true);
         bmp = bmp.createScaledBitmap(bmp,100,100,false);
         canvas.drawBitmap(bmp, left, top, null);
+    }
+
+    /**
+     * Metodo che disegna un punto sul canvas.
+     *
+     * @param point Punto geografico rispetto al quale prendere il margine superiore
+     */
+    private Float getTop(GeoPoint point) {
+        double topLatQ = quadrant.getNorthEastPoint().latitude();
+        double bottomLatQ = quadrant.getSouthWestPoint().latitude();
+        double height = getMeasuredHeight();
+        double h = height * (topLatQ-point.latitude()) / (topLatQ - bottomLatQ);
+        return (float) (h);
+    }
+
+    /**
+     * Metodo che disegna un punto sul canvas.
+     *
+     * @param point Punto geografico rispetto al quale prendere il margine sinistro
+     */
+    private Float getLeft(GeoPoint point) {
+        double topLonQ = quadrant.getNorthEastPoint().longitude();
+        double bottomLonQ = quadrant.getSouthWestPoint().longitude();
+        double width = getMeasuredWidth();
+        double w = width * (topLonQ-point.longitude()) / (topLonQ - bottomLonQ);
+        return (float) (w);
     }
 }
