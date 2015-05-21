@@ -28,6 +28,18 @@
 ///////////////////////////////////////////////////////////////////////////////
 
 
+/**
+ * Name: TelemetryManager.java
+ * Package: com.kyloth.serleena.sensors
+ * Author: Filippo Sestini
+ * Date: 2015-05-21
+ *
+ * History:
+ * Version  Programmer        Date         Changes
+ * 1.0.0    Filippo Sestini   2015-05-21   Creazione file e scrittura
+ *                                         codice e documentazione Javadoc
+ */
+
 package com.kyloth.serleena.sensors;
 
 import android.content.Context;
@@ -43,7 +55,9 @@ import java.util.ArrayList;
 import java.util.Date;
 
 /**
- * Created by fsestini on 5/16/15.
+ * Concretizza ITelemetryManager
+ *
+ * @author Filippo Sestini <sestini.filippo@gmail.com>
  */
 public class TelemetryManager implements ITelemetryManager,
         ILocationObserver, IHeartRateObserver, IWakeupObserver {
@@ -58,7 +72,17 @@ public class TelemetryManager implements ITelemetryManager,
     private boolean sampling;
     private long startTimestamp;
 
-    public TelemetryManager(Context context) {
+    /**
+     * Crea un oggetto TelemetryManager.
+     *
+     * Il costruttore è privato per realizzare correttamente il pattern
+     * Singleton, forzando l'accesso alla sola istanza esposta dai
+     * metodi Singleton e impedendo al codice client di costruire istanze
+     * arbitrariamente.
+     *
+     * @param context Contesto dell'applicazione.
+     */
+    private TelemetryManager(Context context) {
         if (context == null)
             throw new IllegalArgumentException("Illegal null context");
 
@@ -76,6 +100,9 @@ public class TelemetryManager implements ITelemetryManager,
         return (Iterable<TelemetryEvent>) events.clone();
     }
 
+    /**
+     * Implementa ITelemetryManager.start().
+     */
     @Override
     public synchronized void start() {
         if (!sampling) {
@@ -110,6 +137,11 @@ public class TelemetryManager implements ITelemetryManager,
     /**
      * Implementa IHeartRateObserver.onHeartRateUpdate().
      *
+     * Registra un evento HeartRateTelemetryEvent all'ottenimento di dati
+     * aggiornati da parte del monitor di battito cardiaco.
+     * Rilascia il lock del processore acquisito in onWakeup() per il sensori di
+     * battito cardiaco. Vedi onWakeup().
+     *
      * @param rate Valore intero indicante il BPM.
      */
     @Override
@@ -124,7 +156,7 @@ public class TelemetryManager implements ITelemetryManager,
      * Implementa ILocationObserver.onLocationUpdate().
      *
      * Rilascia il lock del processore acquisito in onWaleup() per il sensore
-     * di posizione. Vedi TelemetryManager.onWakeup().
+     * di posizione. Vedi onWakeup().
      *
      * @param loc Posizione geografica dell'utente.
      */
@@ -143,8 +175,8 @@ public class TelemetryManager implements ITelemetryManager,
      * per permettere all'applicazione di registrare eventi di Tracciamento
      * anche in periodi di sleep del processore.
      * In attesa della risposta dei sensori, il metodo acquisisce un lock sul
-     * processore per evitare che esso torni in modalità sleep prima del
-     * corretto campionamento dell'evento.
+     * processore per ogni sensore, evitando che esso torni in modalità sleep
+     * prima del corretto campionamento dell'evento.
      */
     @Override
     public void onWakeup() {
