@@ -49,24 +49,31 @@ import android.widget.ListAdapter;
 import android.widget.TextView;
 
 
-import com.kyloth.serleena.presenters.OnFragmentInteractionListener;
-import com.kyloth.serleena.dummy.DummyTrack;
+import com.kyloth.serleena.presentation.ITrackSelectionPresenter;
+import com.kyloth.serleena.presentation.ITrackSelectionView;
+
+import java.util.ArrayList;
 
 /**
  * Classe che implementa la visuale Selezione Percorso della schermata “Esperienza”.
  *
  * In questa visuale è possibile selezionare un percorso da attivare tra quelli disponibili.
  *
+ * @field presenter : IExperienceSelectionPresenter Presenter collegato a un ExperienceSelectionFragment
  * @field mListView : AbsListView lista di elementi
- * @field mAdapter : ListAdapter adattatore che collega la lista all'ExperienceSelectionFragment
- * @field mActivity : OnFragmentInteractionListener activity a cui è legato l'ExperienceSelectionFragment
+ * @field mAdapter : ArrayAdapter adattatore che collega la lista all'ExperienceSelectionFragment
  * @author Sebastiano Valle <valle.sebastiano93@gmail.com>
  * @version 1.0.0
  * @see android.app.Fragment
  */
-public class TrackSelectionFragment extends Fragment implements AbsListView.OnItemClickListener {
+public class TrackSelectionFragment extends Fragment implements AbsListView.OnItemClickListener, ITrackSelectionView {
 
-    private OnFragmentInteractionListener mActivity;
+    /**
+     * Presenter collegato a questo ExperienceSelectionFragment
+     */
+    private ITrackSelectionPresenter presenter;
+
+    private ArrayList<String> trackNames = new ArrayList<>();
 
     /**
      * La ListView del ExperienceSelectionFragment.
@@ -76,7 +83,7 @@ public class TrackSelectionFragment extends Fragment implements AbsListView.OnIt
     /**
      * L'Adapter che verrà utilizzato per popolare la ListView con Views.
      */
-    private ListAdapter mAdapter;
+    private ArrayAdapter<String> mAdapter;
 
     /**
      * Questo metodo viene invocato ogni volta che un TrackSelectionFragment viene collegato ad un'Activity.
@@ -86,22 +93,17 @@ public class TrackSelectionFragment extends Fragment implements AbsListView.OnIt
     @Override
     public void onAttach(Activity activity) {
         super.onAttach(activity);
-        try {
-            mActivity = (OnFragmentInteractionListener) activity;
-            mAdapter = new ArrayAdapter<DummyTrack.DummyItem>(getActivity(),
-                    android.R.layout.simple_list_item_1, android.R.id.text1, DummyTrack.ITEMS);
 
-            // Set the adapter
-            mListView = (AbsListView) activity.findViewById(android.R.id.list);
-            ((AdapterView<ListAdapter>) mListView).setAdapter(mAdapter);
+        mAdapter = new ArrayAdapter<>(activity,android.R.layout.simple_list_item_1);
+        for(String e : trackNames) mAdapter.add(e);
 
-            // Set OnItemClickListener so we can be notified on item clicks
-            mListView.setOnItemClickListener(this);
-            setEmptyText("Nessun percorso disponibile");
-        } catch (ClassCastException e) {
-            throw new ClassCastException(activity.toString()
-                    + " must implement OnFragmentInteractionListener");
-        }
+        // Set the adapter
+        mListView = (AbsListView) activity.findViewById(android.R.id.list);
+        ((AdapterView<ListAdapter>) mListView).setAdapter(mAdapter);
+
+        // Set OnItemClickListener so we can be notified on item clicks
+        mListView.setOnItemClickListener(this);
+        setEmptyText("Nessun percorso disponibile");
     }
 
     /**
@@ -111,7 +113,6 @@ public class TrackSelectionFragment extends Fragment implements AbsListView.OnIt
     @Override
     public void onDetach() {
         super.onDetach();
-        mActivity = null;
     }
 
 
@@ -120,10 +121,10 @@ public class TrackSelectionFragment extends Fragment implements AbsListView.OnIt
      */
     @Override
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-        if (null != mActivity) {
+        if (getActivity() != null) {
             // Notify the active callbacks interface (the activity, if the
             // fragment is attached to one) that an item has been selected.
-            mActivity.onFragmentInteraction(DummyTrack.ITEMS.get(position).id);
+            presenter.activateTrack(position);
         }
     }
 
@@ -139,4 +140,22 @@ public class TrackSelectionFragment extends Fragment implements AbsListView.OnIt
         }
     }
 
+    @Override
+    public void setList(Iterable<String> names) {
+        if(mAdapter == null)
+            for (String name : names) trackNames.add(name);
+        else
+            for (String name : names) mAdapter.add(name);
+    }
+
+    @Override
+    public void clearList() {
+        if(mAdapter != null)
+            mAdapter.clear();
+    }
+
+    @Override
+    public void attachPresenter(ITrackSelectionPresenter presenter) {
+        this.presenter = presenter;
+    }
 }

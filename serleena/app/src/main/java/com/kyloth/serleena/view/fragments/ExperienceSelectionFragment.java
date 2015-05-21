@@ -45,27 +45,33 @@ import android.view.View;
 import android.widget.AbsListView;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
-import android.widget.ListAdapter;
 import android.widget.TextView;
 
-import com.kyloth.serleena.presenters.OnFragmentInteractionListener;
-import com.kyloth.serleena.dummy.DummyExperience;
+import com.kyloth.serleena.presentation.IExperienceSelectionPresenter;
+import com.kyloth.serleena.presentation.IExperienceSelectionView;
+
+import java.util.ArrayList;
 
 /**
  * Classe che implementa la visuale Selezione Esperienza della schermata Esperienza.
  *
  * In questa visuale è possibile selezionare un'esperienza da attivare tra quelle disponibili.
  *
+ * @field presenter : IExperienceSelectionPresenter Presenter collegato a un ExperienceSelectionFragment
  * @field mListView : AbsListView lista di elementi
- * @field mAdapter : ListAdapter adattatore che collega la lista all'ExperienceSelectionFragment
- * @field mActivity : OnFragmentInteractionListener activity a cui è legato l'ExperienceSelectionFragment
+ * @field mAdapter : ArrayAdapter adattatore che collega la lista all'ExperienceSelectionFragment
  * @author Sebastiano Valle <valle.sebastiano93@gmail.com>
  * @version 1.0.0
  * @see android.app.Fragment
  */
-public class ExperienceSelectionFragment extends Fragment implements AbsListView.OnItemClickListener {
+public class ExperienceSelectionFragment extends Fragment implements AbsListView.OnItemClickListener,IExperienceSelectionView {
 
-    private OnFragmentInteractionListener mActivity;
+    /**
+     * Presenter collegato a questo ExperienceSelectionFragment
+     */
+    private IExperienceSelectionPresenter presenter;
+
+    private ArrayList<String> expNames = new ArrayList<>();
 
     /**
      * La ListView del ExperienceSelectionFragment.
@@ -75,7 +81,7 @@ public class ExperienceSelectionFragment extends Fragment implements AbsListView
     /**
      * L'Adapter che verrà utilizzato per popolare la ListView con Views.
      */
-    private ListAdapter mAdapter;
+    private ArrayAdapter<String> mAdapter;
 
     /**
      * Questo metodo viene invocato ogni volta che un ExperienceSelectionFragment viene collegato ad un'Activity.
@@ -85,22 +91,17 @@ public class ExperienceSelectionFragment extends Fragment implements AbsListView
     @Override
     public void onAttach(Activity activity) {
         super.onAttach(activity);
-        try {
-            mActivity = (OnFragmentInteractionListener) activity;
-            mAdapter = new ArrayAdapter<DummyExperience.DummyItem>(getActivity(),
-                    android.R.layout.simple_list_item_1, android.R.id.text1, DummyExperience.ITEMS);
 
-            // Set the adapter
-            mListView = (AbsListView) activity.findViewById(android.R.id.list);
-            ((AdapterView<ListAdapter>) mListView).setAdapter(mAdapter);
+        mAdapter = new ArrayAdapter<>(activity,android.R.layout.simple_list_item_1);
+        for(String e : expNames) mAdapter.add(e);
 
-            // Set OnItemClickListener so we can be notified on item clicks
-            mListView.setOnItemClickListener(this);
-            setEmptyText("Nessuna esperienza disponibile");
-        } catch (ClassCastException e) {
-            throw new ClassCastException(activity.toString()
-                    + " must implement OnFragmentInteractionListener");
-        }
+        // Set the adapter
+        mListView = (AbsListView) activity.findViewById(android.R.id.list);
+        mListView.setAdapter(mAdapter);
+
+        // Set OnItemClickListener so we can be notified on item clicks
+        mListView.setOnItemClickListener(this);
+        setEmptyText("Nessuna esperienza disponibile");
     }
 
     /**
@@ -110,7 +111,6 @@ public class ExperienceSelectionFragment extends Fragment implements AbsListView
     @Override
     public void onDetach() {
         super.onDetach();
-        mActivity = null;
     }
 
 
@@ -119,10 +119,10 @@ public class ExperienceSelectionFragment extends Fragment implements AbsListView
      */
     @Override
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-        if (null != mActivity) {
+        if (getActivity() != null) {
             // Notify the active callbacks interface (the activity, if the
             // fragment is attached to one) that an item has been selected.
-            mActivity.onFragmentInteraction(DummyExperience.ITEMS.get(position).id);
+            presenter.activateExperience(position);
         }
     }
 
@@ -138,4 +138,16 @@ public class ExperienceSelectionFragment extends Fragment implements AbsListView
         }
     }
 
+    @Override
+    public void setList(Iterable<String> names) {
+        if(mAdapter == null)
+            for (String name : names) expNames.add(name);
+        else
+            for (String name : names) mAdapter.add(name);
+    }
+
+    @Override
+    public void attachPresenter(IExperienceSelectionPresenter presenter) {
+        this.presenter = presenter;
+    }
 }

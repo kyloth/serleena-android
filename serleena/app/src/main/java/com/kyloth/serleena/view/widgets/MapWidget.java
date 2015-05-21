@@ -40,22 +40,16 @@
 
 package com.kyloth.serleena.view.widgets;
 
-import android.app.Activity;
 import android.content.Context;
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.drawable.BitmapDrawable;
-import android.graphics.drawable.Drawable;
 import android.util.AttributeSet;
-import android.widget.FrameLayout;
 import android.widget.ImageView;
-import android.widget.Toast;
 
 import com.kyloth.serleena.R;
 import com.kyloth.serleena.common.GeoPoint;
 import com.kyloth.serleena.common.IQuadrant;
-import com.kyloth.serleena.common.Quadrant;
 import com.kyloth.serleena.common.UserPoint;
 
 import java.util.ArrayList;

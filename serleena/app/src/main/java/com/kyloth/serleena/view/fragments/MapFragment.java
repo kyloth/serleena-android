@@ -42,25 +42,14 @@ package com.kyloth.serleena.view.fragments;
 
 import android.app.Activity;
 import android.app.Fragment;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
-import android.graphics.drawable.BitmapDrawable;
-import android.widget.FrameLayout;
-import android.widget.ImageView;
 
-import com.kyloth.serleena.presenters.OnFragmentInteractionListener;
 import com.kyloth.serleena.common.GeoPoint;
 import com.kyloth.serleena.common.IQuadrant;
 import com.kyloth.serleena.R;
 import com.kyloth.serleena.common.UserPoint;
 import com.kyloth.serleena.presentation.IMapPresenter;
 import com.kyloth.serleena.view.widgets.MapWidget;
-
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.Map;
-
 
 /**
  * Classe che implementa la visuale “Mappa” della schermata “Esperienza”
@@ -70,7 +59,6 @@ import java.util.Map;
  *
  * @field mapWidget : MapWidget widget utilizzato per disegnare la mappa
  * @field presenter : IMapPresenter presenter da notificare all'aggiunta del Fragment all'Activity
- * @field mActivity : OnFragmentInteractionListener activity a cui è legato il MapFragment
  * @author Sebastiano Valle <valle.sebastiano93@gmail.com>
  * @version 1.0.0
  * @see android.app.Fragment
@@ -81,7 +69,6 @@ public class MapFragment extends Fragment implements com.kyloth.serleena.present
     private MapWidget mapWidget;
 
     private IMapPresenter presenter;
-    private OnFragmentInteractionListener mActivity;
 
     /**
      * Questo metodo viene invocato ogni volta che un MapFragment viene collegato ad un'Activity.
@@ -92,14 +79,8 @@ public class MapFragment extends Fragment implements com.kyloth.serleena.present
     @Override
     public void onAttach(Activity activity) {
         super.onAttach(activity);
-        try {
-            mActivity = (OnFragmentInteractionListener) activity;
-            mapWidget = (MapWidget) activity.findViewById(R.id.map_image);
-            presenter.resume();
-        } catch (ClassCastException e) {
-            throw new ClassCastException(activity.toString()
-                    + " must implement OnFragmentInteractionListener");
-        }
+        mapWidget = (MapWidget) activity.findViewById(R.id.map_image);
+        presenter.resume();
     }
 
     /**
@@ -109,7 +90,6 @@ public class MapFragment extends Fragment implements com.kyloth.serleena.present
     @Override
     public void onDetach() {
         super.onDetach();
-        mActivity = null;
     }
 
     /**

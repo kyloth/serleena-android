@@ -39,6 +39,7 @@ import com.kyloth.serleena.common.GeoPoint;
 import com.kyloth.serleena.common.IQuadrant;
 import com.kyloth.serleena.common.UserPoint;
 import com.kyloth.serleena.presentation.IMapPresenter;
+import com.kyloth.serleena.presentation.IMapView;
 import com.kyloth.serleena.view.fragments.MapFragment;
 
 import java.util.ArrayList;
@@ -51,9 +52,11 @@ public class DummyMapPresenter implements IMapPresenter {
     private int cnt;
     private ArrayList<UserPoint> myUps = new ArrayList<>();
 
-    public DummyMapPresenter(Fragment fragment) {
-        if(fragment instanceof MapFragment)
-            myMap = (MapFragment) fragment;
+    public DummyMapPresenter(IMapView view) {
+        if(view instanceof MapFragment) {
+            myMap = (MapFragment) view;
+            myMap.attachPresenter(this);
+        }
     }
 
     @Override

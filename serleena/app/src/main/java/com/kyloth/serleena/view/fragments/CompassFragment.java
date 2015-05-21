@@ -42,21 +42,15 @@ package com.kyloth.serleena.view.fragments;
 import android.app.Activity;
 import android.app.Fragment;
 
-import com.kyloth.serleena.presenters.OnFragmentInteractionListener;
-
-
 /**
  * Classe che implementa la schermata “Bussola”, in cui vengono fornite all'utente delle indicazioni
  * rispetto i poli geografici
  *
- * @field mActivity : OnFragmentInteractionListener activity a cui è legato il CompassFragment
  * @author Sebastiano Valle <valle.sebastiano93@gmail.com>
  * @version 1.0.0
  * @see android.app.Fragment
  */
 public class CompassFragment extends Fragment {
-
-    private OnFragmentInteractionListener mActivity;
 
     /**
      * Questo metodo viene invocato ogni volta che un CompassFragment viene collegato ad un'Activity.
@@ -66,12 +60,6 @@ public class CompassFragment extends Fragment {
     @Override
     public void onAttach(Activity activity) {
         super.onAttach(activity);
-        try {
-            mActivity = (OnFragmentInteractionListener) activity;
-        } catch (ClassCastException e) {
-            throw new ClassCastException(activity.toString()
-                    + " must implement OnFragmentInteractionListener");
-        }
     }
 
     /**
@@ -81,6 +69,5 @@ public class CompassFragment extends Fragment {
     @Override
     public void onDetach() {
         super.onDetach();
-        mActivity = null;
     }
 }

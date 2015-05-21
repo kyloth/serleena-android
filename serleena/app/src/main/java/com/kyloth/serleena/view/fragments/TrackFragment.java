@@ -42,22 +42,17 @@ package com.kyloth.serleena.view.fragments;
 import android.app.Activity;
 import android.app.Fragment;
 
-import com.kyloth.serleena.presenters.OnFragmentInteractionListener;
-
 
 /**
  * Classe che implementa la visuale “Percorso” della schermata “Esperienza”.
  *
  * In questa visuale vengono visualizzate le informazioni riguardanti il percorso attivo.
  *
- * @field mActivity : OnFragmentInteractionListener activity a cui è legato il MapFragment
  * @author Sebastiano Valle <valle.sebastiano93@gmail.com>
  * @version 1.0.0
  * @see android.app.Fragment
  */
 public class TrackFragment extends Fragment {
-
-    private OnFragmentInteractionListener mActivity;
 
 
     /**
@@ -68,12 +63,6 @@ public class TrackFragment extends Fragment {
     @Override
     public void onAttach(Activity activity) {
         super.onAttach(activity);
-        try {
-            mActivity = (OnFragmentInteractionListener) activity;
-        } catch (ClassCastException e) {
-            throw new ClassCastException(activity.toString()
-                    + " must implement OnFragmentInteractionListener");
-        }
     }
 
     /**
@@ -83,7 +72,6 @@ public class TrackFragment extends Fragment {
     @Override
     public void onDetach() {
         super.onDetach();
-        mActivity = null;
     }
 
 }

@@ -28,47 +28,51 @@
 ///////////////////////////////////////////////////////////////////////////////
 
 
-/**
- * Name: WeatherFragment
- * Package: com.kyloth.serleena.view.fragments
- * Author: Sebastiano Valle
- *
- * History:
- * Version   Programmer         Changes
- * 1.0.0     Sebastiano Valle   Creazione del file, scrittura del codice e di Javadoc
- */
-package com.kyloth.serleena.view.fragments;
+package com.kyloth.serleena;
 
-import android.app.Activity;
-import android.app.Fragment;
+import com.kyloth.serleena.model.ITrack;
+import com.kyloth.serleena.presentation.ISerleenaActivity;
+import com.kyloth.serleena.presentation.ITrackSelectionPresenter;
+import com.kyloth.serleena.presentation.ITrackSelectionView;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
- * Classe che implementa la schermata “Meteo”, in cui vengono mostrate informazioni metereologiche
- * relative ad un giorno
- *
- * @author Sebastiano Valle <valle.sebastiano93@gmail.com>
- * @version 1.0.0
- * @see android.app.Fragment
+ * Classe di stub per IExperienceSelectionPresenter
  */
-public class WeatherFragment extends Fragment {
+public class DummyTrackSelPresenter implements ITrackSelectionPresenter{
 
-    /**
-     * Questo metodo viene invocato ogni volta che un WeatherFragment viene collegato ad un'Activity.
-     *
-     * @param activity Activity che ha appena terminato una transazione in cui viene aggiunto il corrente Fragment
-     */
-    @Override
-    public void onAttach(Activity activity) {
-        super.onAttach(activity);
+    private ISerleenaActivity activity;
+    private ITrackSelectionView view;
+    private List<ITrack> tracks;
+
+    public DummyTrackSelPresenter(ITrackSelectionView view, ISerleenaActivity activity) {
+        this.activity = activity;
+        this.view = view;
+        this.tracks = new ArrayList<>();
+        List<String> names = new ArrayList<>();
+
+        names.add("TRACK 1");
+        names.add("TRACK 2");
+        names.add("TRACK 3");
+
+        view.setList(names);
+        view.attachPresenter(this);
     }
 
-    /**
-     * Questo metodo viene invocato ogni volta che un WeatherFragment viene rimosso da un'Activity
-     * tramite una transazione. Viene cancellato il riferimento all'Activity a cui era legato.
-     */
     @Override
-    public void onDetach() {
-        super.onDetach();
+    public void resume() {
+
     }
 
+    @Override
+    public void pause() {
+
+    }
+
+    @Override
+    public void activateTrack(int index) throws IllegalArgumentException {
+
+    }
 }
