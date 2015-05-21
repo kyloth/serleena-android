@@ -57,6 +57,9 @@ import com.kyloth.serleena.sensors.ILocationObserver;
 
 /**
  * Concretizza IMapPresenter.
+ *
+ * @author Filippo Sestini <sestini.filippo@gmail.com>
+ * @version 1.0.0
  */
 public class MapPresenter implements IMapPresenter, ILocationObserver {
 
@@ -206,3 +209,4 @@ public class MapPresenter implements IMapPresenter, ILocationObserver {
     }
 
 }
+
