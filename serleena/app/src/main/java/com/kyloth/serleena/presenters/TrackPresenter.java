@@ -115,4 +115,208 @@ public class TrackPresenter implements ITrackPresenter,
         view.attachPresenter(this);
     }
 
+    /**
+     * Implementa ITrackPresenter.advanceCheckpoint().
+     *
+     * Viene annullato la rilevazione automatica dell'attraversamento di
+     * checkpoint con sensori, e effettuato un avanzamento manuale.
+     */
+    @Override
+    public void advanceCheckpoint() {
+        lrMan.detachObserver(this);
+        nextCheckpoint();
+    }
+
+    /**
+     * Fa avanzare il Percorso attivo al prossimo Checkpoint, segnalando al
+     * gestore del Tracciamento il superamento del Checkpoint.
+     */
+    private void nextCheckpoint() {
+        long now = System.currentTimeMillis() / 1000L;
+
+        if (checkpointToReach == 0)
+            trackStartFullTime = now;
+
+        int partial = (int)(now - trackStartFullTime);
+
+        if (telemetry) {
+            CheckpointReachedTelemetryEvent event = new
+                    CheckpointReachedTelemetryEvent(partial, checkpointToReach);
+            telMan.signalEvent(event);
+        }
+
+        checkpointToReach++;
+        if (checkpointToReach < activeTrack.getCheckpoints().size()) {
+            view.setLastPartial(partial);
+            view.setCheckpointNo(checkpointToReach + 1);
+
+            Checkpoint c = activeTrack.getCheckpoints().get(checkpointToReach);
+            lrMan.attachObserver(this, c);
+        } else {
+            view.clearView();
+            if (telemetry) {
+                telMan.stop();
+                activeTrack.createTelemetry(telMan.getEvents());
+            }
+        }
+    }
+
+    /**
+     * Implementa IPresenter.resume().
+     */
+    @Override
+    public synchronized void resume() {
+        locMan.attachObserver(this, UPDATE_INTERVAL_SECONDS);
+        try {
+            hMan = activity.getSensorManager().getHeadingSource();
+            hMan.attachObserver(this, UPDATE_INTERVAL_SECONDS);
+        } catch (SensorNotAvailableException e) {
+            hMan = null;
+        }
+    }
+
+    /**
+     * Implementa IPresenter.pause().
+     */
+    @Override
+    public synchronized void pause() {
+        locMan.detachObserver(this);
+        if (hMan != null)
+            hMan.detachObserver(this);
+    }
+
+    /**
+     * Segnala al presenter l'abilitazione del Tracciamento.
+     */
+    public void onTelemetryEnabled() {
+        telemetry = true;
+    }
+
+    /**
+     * Segnala al presenter la disabilitazione del Tracciamento.
+     */
+    public void onTelemetryDisabled() {
+        telemetry = false;
+        telMan.stop();
+    }
+
+    /**
+     * Segnala al presenter il Precorso attivo.
+     *
+     * @param track Percorso attivo.
+     */
+    public void setActiveTrack(ITrack track) {
+        this.activeTrack = track;
+        view.setTotalCheckpoints(track.getCheckpoints().size());
+        view.setCheckpointNo(1);
+    }
+
+    private static ITelemetry getBestTelemetry(
+            Iterable<ITelemetry> telemetries) {
+
+        int min = Integer.MAX_VALUE;
+        ITelemetry best = null;
+        for (ITelemetry t : telemetries)
+            if (t.getDuration() < min) {
+                best = t;
+                min = t.getDuration();
+            }
+
+        return best;
+    }
+
+    /**
+     * Implementa ILocationReachedObserver.onLocationObserver().
+     */
+    @Override
+    public void onLocationReached() {
+        nextCheckpoint();
+    }
+
+    /**
+     * Implementa ILocationObserver.onLocationReached().
+     *
+     * @param loc Valore di tipo GeoPoint che indica la posizione attuale
+     *            dell'utente.
+     */
+    @Override
+    @TargetApi(19)
+    public void onLocationUpdate(final GeoPoint loc) {
+        AsyncTask<Void, Void, Void> task = new AsyncTask<Void, Void, Void>() {
+            @Override
+            protected Void doInBackground(Void... voids) {
+                int distance = Math.round(loc.distanceTo(
+                        activeTrack.getCheckpoints().get(checkpointToReach)));
+                view.setDistance(distance);
+
+                try {
+                    int delta = computeDelta(activeTrack.getBestTelemetry(),
+                            loc, (int)(System.currentTimeMillis() / 1000 -
+                                    trackStartTime));
+                    view.setDelta(delta);
+                } catch (NoSuchTelemetryException|NoSuchTelemetryEventException
+                        e) {
+                    view.setDelta(0);
+                }
+                return null;
+            }
+        };
+        task.execute();
+    }
+
+    /**
+     * Calcola la differenza di tempo tra la posizione specificata e quella
+     * di un Tracciamento specificato.
+     *
+     * Se il Tracciamento specificato non contiene eventi comparabili con la
+     * posizione specificata, viene sollevata un'eccezione
+     * NoSuchTelemetryEventException.
+     *
+     * @param bestTelemetry Tracciamento su cui effettuare il confronto. Se
+     *                      null, viene sollevata un'eccezione
+     *                      IllegalArgumentException.
+     * @param loc Posizione attuale dell'utente. Se null, viene sollevata
+     *            un'eccezione IllegalArgumentException.
+     * @param now Tempo parziale attuale dell'utente,
+     *            espresso in secondi dall'avvio del Percorso. Se < 0, viene
+     *            sollevata un'eccezione IllegalArgumentException.
+     * @return  Secondi di differenza tra la posizione specificata e il
+     *          Tracciamento specificato.
+     * @throws NoSuchTelemetryEventException
+     */
+    private static int computeDelta(ITelemetry bestTelemetry, GeoPoint loc,
+                                    int now)
+            throws NoSuchTelemetryEventException {
+        Iterable<TelemetryEvent> events = bestTelemetry.getEvents(TelemetryEventType
+                .Location);
+        TelemetryEvent event = null;
+        int distance = Integer.MAX_VALUE;
+
+        for (TelemetryEvent e : events) {
+            LocationTelemetryEvent lte = (LocationTelemetryEvent)e;
+            int thisDistance = Math.round(lte.location().distanceTo(loc));
+            if (thisDistance <= 30 && thisDistance < distance) {
+                event = e;
+                distance = thisDistance;
+            }
+        }
+
+        if (event == null)
+            throw new NoSuchTelemetryEventException();
+
+        return now - event.timestamp();
+    }
+
+    /**
+     * Implementa ITrackPresenter.onHeadingUpdate().
+     *
+     * @param heading
+     */
+    @Override
+    public void onHeadingUpdate(double heading) {
+        double result;
+        // stuff
+        //view.setDirection(result);
+    }
+
 }
