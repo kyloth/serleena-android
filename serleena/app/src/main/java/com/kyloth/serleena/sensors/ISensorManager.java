@@ -64,7 +64,8 @@ public interface ISensorManager {
      *
      * @return Oggetto di tipo IHeadingManager.
      */
-    public IHeadingManager getHeadingSource();
+    public IHeadingManager getHeadingSource()
+            throws SensorNotAvailableException;
 
     /**
      * Restituisce un Manager per ottenere dati sul battito cardiaco
