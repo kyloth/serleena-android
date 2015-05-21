@@ -40,14 +40,17 @@
 
 package com.kyloth.serleena.view.widgets;
 
+import android.app.Activity;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
+import android.util.AttributeSet;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
+import android.widget.Toast;
 
 import com.kyloth.serleena.R;
 import com.kyloth.serleena.common.GeoPoint;
@@ -69,12 +72,26 @@ import java.util.Iterator;
  */
 public class MapWidget extends ImageView {
 
+    private Bitmap mapRaster;
+
     private GeoPoint userPosition;
     private Iterable<UserPoint> upList = new ArrayList<>();
 
-
     public MapWidget(Context context) {
         super(context);
+        mapRaster = BitmapFactory.decodeResource(context.getResources(),R.drawable.background);
+    }
+
+    public MapWidget(Context context,AttributeSet attrs) {
+        super(context,attrs);
+    }
+
+    public MapWidget(Context context,AttributeSet attrs,int defStyle) {
+        super(context,attrs,defStyle);
+    }
+
+    public void setRaster(Bitmap raster) {
+        mapRaster = raster;
     }
 
     public void setUserPosition(GeoPoint userPosition) {
@@ -87,13 +104,15 @@ public class MapWidget extends ImageView {
 
     @Override
     public void onDraw(Canvas canvas) {
+        canvas.drawBitmap(mapRaster,0,0,null);
         if(userPosition != null)
             draw(canvas, null);
         Iterator<UserPoint> it = upList.iterator();
         while (it.hasNext()) {
             draw(canvas, it.next());
         }
-        super.draw(canvas);
+        Bitmap bmp = BitmapFactory.decodeResource(getResources(),R.drawable.background);
+        super.onDraw(canvas);
     }
 
     /**
@@ -110,7 +129,8 @@ public class MapWidget extends ImageView {
         Float left = (float) up.longitude();
         img.setMaxHeight(100);
         img.setMaxWidth(100);
-        BitmapDrawable pos = (BitmapDrawable) img.getDrawable();
-        canvas.drawBitmap(pos.getBitmap(), left, top, null);
+        Bitmap bmp = ((BitmapDrawable) img.getDrawable()).getBitmap().copy(Bitmap.Config.ARGB_8888,true);
+        bmp = bmp.createScaledBitmap(bmp,100,100,false);
+        canvas.drawBitmap(bmp, left, top, null);
     }
 }

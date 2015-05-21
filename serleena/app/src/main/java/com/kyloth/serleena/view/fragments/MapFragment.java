@@ -43,6 +43,7 @@ package com.kyloth.serleena.view.fragments;
 import android.app.Activity;
 import android.app.Fragment;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.drawable.BitmapDrawable;
 import android.widget.FrameLayout;
@@ -58,6 +59,7 @@ import com.kyloth.serleena.view.widgets.MapWidget;
 
 import java.util.ArrayList;
 import java.util.Iterator;
+import java.util.Map;
 
 
 /**
@@ -94,8 +96,7 @@ public class MapFragment extends Fragment implements com.kyloth.serleena.present
         super.onAttach(activity);
         try {
             mActivity = (OnFragmentInteractionListener) activity;
-            ImageView view = (ImageView) activity.findViewById(R.id.map_image);
-            view = mapWidget = new MapWidget(activity);
+            mapWidget = (MapWidget) activity.findViewById(R.id.map_image);
             presenter.resume();
         } catch (ClassCastException e) {
             throw new ClassCastException(activity.toString()
@@ -113,6 +114,10 @@ public class MapFragment extends Fragment implements com.kyloth.serleena.present
         mActivity = null;
     }
 
+    private void drawCanvas() {
+        mapWidget.draw(new Canvas());
+    }
+
     /**
      * Viene impostata la posizione dell'utente e visualizzata la posizione dell'utente.
      *
@@ -121,7 +126,7 @@ public class MapFragment extends Fragment implements com.kyloth.serleena.present
     @Override
     public void setUserLocation(GeoPoint point) {
         mapWidget.setUserPosition(point);
-        mapWidget.draw(new Canvas(mapRaster));
+        drawCanvas();
     }
 
     /**
@@ -131,8 +136,8 @@ public class MapFragment extends Fragment implements com.kyloth.serleena.present
      */
     @Override
     public void displayQuadrant(IQuadrant q) {
-        mapRaster = q.getRaster();
-        mapWidget.draw(new Canvas(mapRaster));
+        mapWidget.setRaster(q.getRaster());
+        drawCanvas();
     }
 
     /**
@@ -143,7 +148,7 @@ public class MapFragment extends Fragment implements com.kyloth.serleena.present
     @Override
     public void displayUP(Iterable<UserPoint> points) {
         mapWidget.setUserPoints(points);
-        mapWidget.draw(new Canvas(mapRaster));
+        drawCanvas();
     }
 
     /**

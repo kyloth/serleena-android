@@ -126,7 +126,7 @@ public class SerleenaActivity extends ActionBarActivity implements OnFragmentInt
         initLayoutIds();
         initMenuItemIds();
         FragmentTransaction ft = getFragmentManager().beginTransaction();
-        changeFragment("MAP");
+        changeFragment("TRACKLIST");
     }
 
     /**
@@ -173,7 +173,7 @@ public class SerleenaActivity extends ActionBarActivity implements OnFragmentInt
      * Metodo che mappa le voci dei menù ai tag delle varie visuali e schermate.
      */
     private void initMenuItemIds() {
-        myMenuItemIds.put(R.id.screen_menu_exp,"TRACKLIST");
+        myMenuItemIds.put(R.id.screen_menu_exp,"MAP");
         myMenuItemIds.put(R.id.screen_menu_contact,"CONTACTS");
         myMenuItemIds.put(R.id.screen_menu_meteo,"WEATHER");
         myMenuItemIds.put(R.id.screen_menu_cardio,"CARDIO");

@@ -4,7 +4,7 @@
 
     <!-- TODO: Update blank fragment layout -->
 
-    <ImageView
+    <com.kyloth.serleena.view.widgets.MapWidget
         android:layout_width="fill_parent"
         android:layout_height="fill_parent"
         android:id="@+id/map_image"
