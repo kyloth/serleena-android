@@ -69,13 +69,29 @@ public interface IHeartRateManager {
      *                 questo oggetto sarà cancellata.
      */
     public void detachObserver(IHeartRateObserver observer);
+
     /**
      * Permette di ottenere un aggiornamento dei dati sul battico cardiaco su
      * richiesta esplicita.
      *
      * @return Ritorna un valore intero rappresentante l'heart rate attuale.
      */
-    public int getSingleUpdate();
+
+    /**
+     * Permette di ottenere un aggiornamento dei dati sul battico cardiaco su
+     * richiesta esplicita.
+     *
+     * Poichè la comunicazione con il sensore potrebbe non essere immediata o
+     * non avvenire per niente, viene specificato un timeout oltre il quale
+     * viene segnalato all'observer il risultato, che potrebbe quindi non
+     * essere aggiornato.
+     *
+     * @param observer IHeartRateObserver destinatario dell'aggiornamento.
+     * @param timeout Timeout in secondi oltre il quale il sensore invoca in
+     *                ogni caso, il metodo onHeartRateUpdate() dell'osservatore,
+     */
+    public void getSingleUpdate(IHeartRateObserver observer, int timeout);
+
     /**
      * Metodo "notify" basato sull'omonimo metodo della classe "Subject" del
      * Design Pattern "Observer".
