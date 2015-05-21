@@ -92,4 +92,27 @@ public class TrackPresenter implements ITrackPresenter,
     private ILocationReachedManager lrMan;
     private IHeadingManager hMan;
 
+    /**
+     * Crea un nuovo oggetto TrackPresenter.
+     *
+     * @param view Vista da associare al Presenter. Se null, viene sollevata
+     *             un'eccezione IllegalArgumentException.
+     * @param activity Activity a cui il Presenter fa riferimento. Se null,
+     *                 viene sollevata un'eccezione IllegalArgumentException.
+     */
+    public TrackPresenter(ITrackView view, ISerleenaActivity activity)
+            throws IllegalArgumentException {
+        if (view == null)
+            throw new IllegalArgumentException("Illegal null view");
+        if (activity == null)
+            throw new IllegalArgumentException("Illegal null activity");
+
+        this.view = view;
+        this.activity = activity;
+        this.telMan = activity.getSensorManager().getTelemetryManager();
+        this.locMan = activity.getSensorManager().getLocationSource();
+        this.lrMan = activity.getSensorManager().getLocationReachedSource();
+        view.attachPresenter(this);
+    }
+
 }
