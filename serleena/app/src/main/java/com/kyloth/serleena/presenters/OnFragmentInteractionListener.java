@@ -28,41 +28,28 @@
 ///////////////////////////////////////////////////////////////////////////////
 
 
-package com.kyloth.serleena;
+/**
+ * Name: OnFragmentInteractionListener
+ * Package: com.kyloth.serleena.presenters
+ * Author: Sebastiano Valle
+ *
+ * History:
+ * Version   Programmer         Changes
+ * 1.0.0     Sebastiano Valle   Creazione del file, scrittura del codice e di Javadoc
+ */
+package com.kyloth.serleena.presenters;
 
-import android.support.v7.app.ActionBarActivity;
-import android.os.Bundle;
-import android.view.Menu;
-import android.view.MenuItem;
-
-
-public class SerleenaActivity extends ActionBarActivity {
-
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_serleena);
-    }
-
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.menu_serleena, menu);
-        return true;
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
-        int id = item.getItemId();
-
-        //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
-            return true;
-        }
-
-        return super.onOptionsItemSelected(item);
-    }
+/**
+ * Interfaccia che permette ad un'Activity di rimanere in attesa di notifiche dal Fragment.
+ *
+ * @author Sebastiano Valle <valle.sebastiano93@gmail.com>
+ * @version 1.0.0
+ */
+public interface OnFragmentInteractionListener {
+    /**
+     * Metodo invocato ogni qualvolta vi è un evento in un Fragment
+     *
+     * @param obj oggetto passato per gestire l'interazione
+     */
+    public void onFragmentInteraction(Object obj);
 }
