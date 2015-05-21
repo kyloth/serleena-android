@@ -48,6 +48,7 @@ import com.kyloth.serleena.presentation.ISerleenaActivity;
 import com.kyloth.serleena.sensors.IHeadingManager;
 import com.kyloth.serleena.sensors.IHeadingObserver;
 import com.kyloth.serleena.sensors.ISensorManager;
+import com.kyloth.serleena.sensors.SensorNotAvailableException;
 
 /**
  * Implementa il Presenter associato alla schermata "Bussola".
@@ -87,9 +88,13 @@ public class CompassPresenter implements ICompassPresenter, IHeadingObserver {
      */
     @Override
     public void resume() {
-        ISensorManager sm = activity.getSensorManager();
-        IHeadingManager hm = sm.getHeadingSource();
-        hm.attachObserver(this, UPDATE_INTERVAL);
+        try {
+            ISensorManager sm = activity.getSensorManager();
+            IHeadingManager hm = sm.getHeadingSource();
+            hm.attachObserver(this, UPDATE_INTERVAL);
+        } catch (SensorNotAvailableException ex) {
+            view.clearView();
+        }
     }
 
     /**
@@ -99,9 +104,13 @@ public class CompassPresenter implements ICompassPresenter, IHeadingObserver {
      */
     @Override
     public void pause() {
-        ISensorManager sm = activity.getSensorManager();
-        IHeadingManager hm = sm.getHeadingSource();
-        hm.detachObserver(this);
+        try {
+            ISensorManager sm = activity.getSensorManager();
+            IHeadingManager hm = sm.getHeadingSource();
+            hm.detachObserver(this);
+        } catch (SensorNotAvailableException ex) {
+            view.clearView();
+        }
     }
 
     /**
