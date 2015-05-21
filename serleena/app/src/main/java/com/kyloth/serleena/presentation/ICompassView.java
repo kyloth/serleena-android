@@ -51,6 +51,7 @@ package com.kyloth.serleena.presentation;
  * @version 1.0
  */
 public interface ICompassView {
+
 	/**
 	 * Cambia l'orientamento mostrato dalla vista.
 	 *
@@ -58,12 +59,13 @@ public interface ICompassView {
 	 *                modulo 360.0.
 	 * @since 1.0
 	 */
-	void setHeading(double heading);
+	public void setHeading(double heading);
 
 	/**
 	 * Lega un presenter alla vista.
 	 *
 	 * @since 1.0
 	 */
-	void attachPresenter(ICompassPresenter presenter);
+	public void attachPresenter(ICompassPresenter presenter);
+
 }
