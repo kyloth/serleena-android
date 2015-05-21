@@ -95,6 +95,8 @@ public interface IHeartRateManager {
     /**
      * Metodo "notify" basato sull'omonimo metodo della classe "Subject" del
      * Design Pattern "Observer".
+     *
+     * @param observer Oggetto observer da segnalare.
      */
-    public void notifyObservers();
+    public void notifyObserver(IHeartRateObserver observer);
 }
