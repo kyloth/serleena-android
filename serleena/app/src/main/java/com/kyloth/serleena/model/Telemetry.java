@@ -64,4 +64,17 @@ public class Telemetry implements  ITelemetry {
     private Iterable<TelemetryEvent> locEvents = null;
     private int duration = -1;
 
+    /**
+     * Crea un nuovo oggetto Telemetry.
+     *
+     * Incapsula un oggetto che realizza la persistenza del Tracciamento, e
+     * rappresenta la sorgente dati.
+     *
+     * @param storage Oggetto ITelemetryStorage che realizza la persistenza del
+     *                Tracciamento.
+     */
+    public Telemetry(ITelemetryStorage storage) {
+        this.storage = storage;
+    }
+
 }
