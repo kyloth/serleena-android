@@ -88,4 +88,18 @@ public class SerleenaDataSource implements ISerleenaDataSource {
         return result;
     }
 
+    /**
+     * Implementa ISerleenaDataSource.getWeatherInfo().
+     *
+     * @param p Il punto geografico per cui interessano le previsioni meteo.
+     * @param date La data per cui interessano le previsioni.
+     * @return Previsioni meteo.
+     * @throws NoSuchWeatherForecastException
+     */
+    @Override
+    public IWeatherForecast getWeatherInfo(GeoPoint p, Date date)
+            throws NoSuchWeatherForecastException {
+        return new WeatherForecast(dataSource.getWeatherInfo(p, date));
+    }
+
 }
