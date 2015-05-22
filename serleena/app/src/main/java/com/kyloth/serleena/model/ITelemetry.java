@@ -83,7 +83,7 @@ public interface ITelemetry {
      * @version 1.0
      */
     public Iterable<TelemetryEvent> getEvents(int from, int to)
-            throws IllegalArgumentException;
+            throws NoSuchTelemetryEventException, IllegalArgumentException;
 
     /**
      * Restituisce gli eventi che costituiscono il Tracciamento, filtrati in
