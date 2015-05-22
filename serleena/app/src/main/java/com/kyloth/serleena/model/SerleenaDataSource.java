@@ -72,4 +72,20 @@ public class SerleenaDataSource implements ISerleenaDataSource {
         this.dataSource = dataSource;
     }
 
+    /**
+     * Implementa ISerleenaDataSource.getExperiences().
+     *
+     * @return Insieme enumerabile di Esperienze.
+     */
+    @Override
+    public Iterable<IExperience> getExperiences() {
+        Iterable<IExperienceStorage> storage = dataSource.getExperiences();
+        ArrayList<IExperience> result = new ArrayList<IExperience>();
+
+        for (IExperienceStorage s : storage)
+            result.add(new Experience(s));
+
+        return result;
+    }
+
 }
