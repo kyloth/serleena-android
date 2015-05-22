@@ -251,6 +251,33 @@ public class TrackPresenter implements ITrackPresenter,
     }
 
     /**
+     * Aggiorna le informazioni mostrate dalla vista associata al presenter,
+     * in base alla posizione utente specificata.
+     *
+     * Vengono aggiornate le indicazioni relative alla distanza dal prossimo
+     * checkpoint e la differenza di tempo rispetto alle precedenti
+     * esecuzioni del Percorso.
+     *
+     * @param loc Posizione attuale dell'utente.
+     */
+    public void updateView(GeoPoint loc) {
+        int distance = Math.round(loc.distanceTo(
+                activeTrack.getCheckpoints().get(checkpointToReach)));
+        view.setDistance(distance);
+
+        try {
+            int delta = computeDelta(activeTrack.getBestTelemetry(),
+                    loc, (int)(System.currentTimeMillis() / 1000 -
+                            trackStartFullTime));
+            view.setDelta(delta);
+        } catch (NoSuchTelemetryException e) {
+            view.setDelta(0);
+        } catch (NoSuchTelemetryEventException ee) {
+            view.setDelta(0);
+        }
+    }
+
+    /**
      * Calcola la differenza di tempo tra la posizione specificata e quella
      * di un Tracciamento specificato.
      *
