@@ -43,6 +43,7 @@
 package com.kyloth.serleena.sensors;
 
 import android.content.Context;
+import android.location.LocationManager;
 
 import com.kyloth.serleena.common.CheckpointReachedTelemetryEvent;
 import com.kyloth.serleena.common.GeoPoint;
@@ -86,6 +87,11 @@ public class TelemetryManager implements ITelemetryManager,
     private TelemetryManager(Context context) {
         if (context == null)
             throw new IllegalArgumentException("Illegal null context");
+
+        this.locMan = SerleenaLocationManager.getInstance(context);
+        this.hrMan = HeartRateManager.getInstance(context);
+        this.wkMan = WakeupManager.getInstance(context);
+        pm = SerleenaPowerManager.getInstance(context);
 
         this.events = new ArrayList<TelemetryEvent>();
         this.sampling = false;
