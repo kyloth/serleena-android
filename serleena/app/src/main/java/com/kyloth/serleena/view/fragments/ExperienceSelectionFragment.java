@@ -104,6 +104,7 @@ public class ExperienceSelectionFragment extends Fragment implements AbsListView
 
         mListView.setOnItemClickListener(this);
         setEmptyText("Nessuna esperienza disponibile");
+        presenter.resume();
     }
 
     /**
@@ -113,6 +114,7 @@ public class ExperienceSelectionFragment extends Fragment implements AbsListView
     @Override
     public void onDetach() {
         super.onDetach();
+        presenter.pause();
     }
 
 
