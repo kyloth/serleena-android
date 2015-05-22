@@ -105,4 +105,8 @@ public class CheckpointReachedTelemetryEvent extends TelemetryEvent {
         return checkpointNumber;
     }
 
+    @Override
+    public TelemetryEventType getType() {
+        return TelemetryEventType.CheckpointReached;
+    }
 }

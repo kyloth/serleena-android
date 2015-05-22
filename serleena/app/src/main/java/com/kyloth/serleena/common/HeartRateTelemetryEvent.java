@@ -105,4 +105,8 @@ public class HeartRateTelemetryEvent extends TelemetryEvent {
         return heartRate;
     }
 
+    @Override
+    public TelemetryEventType getType() {
+        return TelemetryEventType.HeartRate;
+    }
 }

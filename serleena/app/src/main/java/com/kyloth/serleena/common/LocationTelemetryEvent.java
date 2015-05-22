@@ -104,4 +104,8 @@ public class LocationTelemetryEvent extends TelemetryEvent {
         return (int)(location.latitude() + location.longitude());
     }
 
+    @Override
+    public TelemetryEventType getType() {
+        return TelemetryEventType.Location;
+    }
 }

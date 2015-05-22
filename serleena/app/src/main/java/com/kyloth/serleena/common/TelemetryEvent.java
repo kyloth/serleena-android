@@ -79,4 +79,11 @@ public abstract class TelemetryEvent {
         return this.timestamp;
     }
 
+    /**
+     * Restituisce il tipo di evento di Tracciamento.
+     *
+     * @return Valore enumerazione indicante in tipo di evento.
+     */
+    public abstract TelemetryEventType getType();
+
 }
