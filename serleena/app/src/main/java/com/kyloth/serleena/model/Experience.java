@@ -100,4 +100,14 @@ public class Experience implements IExperience {
         return storage.getUserPoints();
     }
 
+    /**
+     * Implementa IExperience.addUserPoints().
+     *
+     * @param point Punto utente da aggiungere all'Esperienza.
+     */
+    @Override
+    public void addUserPoints(UserPoint point) {
+        storage.addUserPoint(point);
+    }
+
 }
