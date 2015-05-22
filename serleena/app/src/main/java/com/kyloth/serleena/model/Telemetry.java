@@ -89,4 +89,36 @@ public class Telemetry implements  ITelemetry {
         return allEvents;
     }
 
+    /**
+     * Implementa ITelemetry.getEvents().
+     *
+     * @param from L'inizio dell'intervallo, comprensivo degli
+     *             eventi da restituire, espresso in secondi dall'avvio del
+     *             Tracciamento.
+     *             Se from > to, viene sollevata un'eccezione
+     *             IllegalArgumentException.
+     * @param to L'inizio dell'intervallo, comprensivo degli
+     *           eventi da restituire, espresso in secondi dall'avvio del
+     *           Tracciamento.
+     *           Se from > to, viene sollevata un'eccezione
+     *           IllegalArgumentException.
+     * @return Insieme enumerabile di eventi di Tracciamento.
+     * @throws NoSuchTelemetryEventException
+     * @throws IllegalArgumentException
+     */
+    @Override
+    public Iterable<TelemetryEvent> getEvents(int from, int to)
+            throws NoSuchTelemetryEventException, IllegalArgumentException {
+        Iterable<TelemetryEvent> allEvents = this.getEvents();
+        ArrayList<TelemetryEvent> result = new ArrayList<TelemetryEvent>();
+
+        for (TelemetryEvent e : allEvents)
+            if (from <= e.timestamp() && e.timestamp() <= to)
+                result.add(e);
+
+        if (result.size() == 0)
+            throw new NoSuchTelemetryEventException();
+        return result;
+    }
+
 }
