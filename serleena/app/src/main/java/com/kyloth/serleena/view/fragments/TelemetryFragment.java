@@ -55,7 +55,7 @@ import com.kyloth.serleena.presentation.ITelemetryView;
  *
  * In questa visuale è possibile attivare o disattivare il tracciamento.
  *
- * @field presenter : TelemetryFragment presenter collegato a un TelemetryFragment
+ * @field presenter : ITelemetryPresenter presenter collegato a un TelemetryFragment
  * @author Sebastiano Valle <valle.sebastiano93@gmail.com>
  * @version 1.0.0
  * @see android.app.Fragment

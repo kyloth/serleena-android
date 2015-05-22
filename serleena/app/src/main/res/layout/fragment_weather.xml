@@ -11,20 +11,21 @@
         android:contentDescription="@string/weatherDesc" />
 
     <TextView
-        android:layout_width="wrap_content"
+        android:layout_width="fill_parent"
         android:layout_height="122dp"
         android:textAppearance="?android:attr/textAppearanceLarge"
         android:text="@string/weather_temperature"
         android:id="@+id/weather_temperature"
         android:layout_gravity="center"
-        android:gravity="bottom"
+        android:gravity="bottom|center_horizontal"
         android:textSize="25sp" />
 
     <TextView
-        android:layout_width="wrap_content"
+        android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:text="@string/weather_day"
         android:id="@+id/weather_day"
         android:layout_gravity="center_horizontal|bottom"
-        android:textSize="22sp" />
+        android:textSize="22sp"
+        android:gravity="center_horizontal" />
 </FrameLayout>
