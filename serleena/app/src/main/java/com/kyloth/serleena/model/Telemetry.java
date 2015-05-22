@@ -58,4 +58,10 @@ import java.util.ArrayList;
  */
 public class Telemetry implements  ITelemetry {
 
+    private ITelemetryStorage storage;
+
+    private Iterable<TelemetryEvent> allEvents = null;
+    private Iterable<TelemetryEvent> locEvents = null;
+    private int duration = -1;
+
 }
