@@ -73,6 +73,9 @@ public class TrackSelectionFragment extends Fragment implements AbsListView.OnIt
      */
     private ITrackSelectionPresenter presenter;
 
+    /**
+     * Lista dei nomi dei percorsi
+     */
     private ArrayList<String> trackNames = new ArrayList<>();
 
     /**
@@ -99,11 +102,12 @@ public class TrackSelectionFragment extends Fragment implements AbsListView.OnIt
 
         // Set the adapter
         mListView = (AbsListView) activity.findViewById(android.R.id.list);
-        ((AdapterView<ListAdapter>) mListView).setAdapter(mAdapter);
+        mListView.setAdapter(mAdapter);
 
         // Set OnItemClickListener so we can be notified on item clicks
         mListView.setOnItemClickListener(this);
         setEmptyText("Nessun percorso disponibile");
+        presenter.resume();
     }
 
     /**
@@ -113,6 +117,7 @@ public class TrackSelectionFragment extends Fragment implements AbsListView.OnIt
     @Override
     public void onDetach() {
         super.onDetach();
+        presenter.pause();
     }
 
 

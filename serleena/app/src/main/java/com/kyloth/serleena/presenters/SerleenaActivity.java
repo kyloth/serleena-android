@@ -132,7 +132,7 @@ public class SerleenaActivity extends ActionBarActivity implements ISerleenaActi
         initLayoutIds();
         initMenuItemIds();
         FragmentTransaction ft = getFragmentManager().beginTransaction();
-        changeFragment("EXPLIST");
+        changeFragment("TRACKLIST");
     }
 
     /**
