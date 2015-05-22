@@ -60,4 +60,17 @@ public class Experience implements IExperience {
 
     private Iterable<ITrack> tracks = null;
 
+    /**
+     * Crea un nuovo oggetto Experience.
+     *
+     * Incapsula un oggetto che realizza la persistenza dell'Esperienza, e
+     * rappresenta la sorgente dati.
+     *
+     * @param storage Oggetto IExperienceStorage che realizza la persistenza
+     *                dell'Esperienza.
+     */
+    public Experience(IExperienceStorage storage) {
+        this.storage = storage;
+    }
+
 }
