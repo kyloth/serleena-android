@@ -287,23 +287,15 @@ public class TrackPresenter implements ITrackPresenter,
     private static int computeDelta(ITelemetry bestTelemetry, GeoPoint loc,
                                     int now)
             throws NoSuchTelemetryEventException {
-        Iterable<TelemetryEvent> events = bestTelemetry.getEvents(TelemetryEventType
-                .Location);
-        TelemetryEvent event = null;
-        int distance = Integer.MAX_VALUE;
+        if (bestTelemetry == null)
+            throw new IllegalArgumentException("Illegal null telemetry");
+        if (loc == null)
+            throw new IllegalArgumentException("Illegal null location");
+        if (now < 0)
+            throw new IllegalArgumentException("Illegal time below zero");
 
-        for (TelemetryEvent e : events) {
-            LocationTelemetryEvent lte = (LocationTelemetryEvent)e;
-            int thisDistance = Math.round(lte.location().distanceTo(loc));
-            if (thisDistance <= 30 && thisDistance < distance) {
-                event = e;
-                distance = thisDistance;
-            }
-        }
-
-        if (event == null)
-            throw new NoSuchTelemetryEventException();
-
+        LocationTelemetryEvent event =
+                bestTelemetry.getEventAtLocation(loc, 30);
         return now - event.timestamp();
     }
 
