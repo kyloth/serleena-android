@@ -231,19 +231,7 @@ public class TrackPresenter implements ITrackPresenter,
         AsyncTask<Void, Void, Void> task = new AsyncTask<Void, Void, Void>() {
             @Override
             protected Void doInBackground(Void... voids) {
-                int distance = Math.round(loc.distanceTo(
-                        activeTrack.getCheckpoints().get(checkpointToReach)));
-                view.setDistance(distance);
-
-                try {
-                    int delta = computeDelta(activeTrack.getBestTelemetry(),
-                            loc, (int)(System.currentTimeMillis() / 1000 -
-                                    trackStartTime));
-                    view.setDelta(delta);
-                } catch (NoSuchTelemetryException|NoSuchTelemetryEventException
-                        e) {
-                    view.setDelta(0);
-                }
+                updateView(loc);
                 return null;
             }
         };
