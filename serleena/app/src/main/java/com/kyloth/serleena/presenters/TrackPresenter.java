@@ -312,4 +312,16 @@ public class TrackPresenter implements ITrackPresenter,
         //view.setDirection(result);
     }
 
+    /**
+     * Calcola il valore in gradi che, sommato algebricamente
+     * all'orientamento dell'utente, torna la direzione del prossimo
+     * checkpoint da raggiungere.
+     *
+     * @param userHeading Orientamento dell'utente, in radianti rispetto
+     *                    all'asse azimuth.
+     */
+    private double computeHeadingVariation(double userHeading) {
+        return 0;
+    }
+
 }
