@@ -41,6 +41,8 @@
 
 package com.kyloth.serleena.model;
 
+import com.kyloth.serleena.common.GeoPoint;
+import com.kyloth.serleena.common.LocationTelemetryEvent;
 import com.kyloth.serleena.common.TelemetryEvent;
 import com.kyloth.serleena.common.TelemetryEventType;
 
@@ -94,6 +96,26 @@ public interface ITelemetry {
      */
     public Iterable<TelemetryEvent> getEvents(TelemetryEventType type)
             throws NoSuchTelemetryEventException;
+
+    /**
+     * Restituisce l'evento del Tracciamento registrato in prossimità dellal
+     * posizione specificata, secondo una tolleranza.
+     * Se non è possibile trovare un evento che soddisfi i valori
+     * specificati, viene sollevata un'eccezione NoSuchTelemetryEventException.
+     *
+     * @param loc Posizione campionata dall'evento che si vuole ottenere. Se
+     *            null, viene sollevata un'eccezione IllegalArgumentException.
+     * @param tolerance Tolleranza, in metri, indicante quanto la posizione
+     *                  registrata dall'evento restituito può discostarsi dal
+     *                  valore richiesto. Se < 0, viene sollevata
+     *                  un'eccezione IllegalOperationException.
+     * @return Evento di Tracciamento.
+     * @throws NoSuchTelemetryEventException
+     * @throws IllegalArgumentException
+     */
+    public LocationTelemetryEvent getEventAtLocation(GeoPoint loc,
+                                                     int tolerance)
+            throws NoSuchTelemetryEventException, IllegalArgumentException;
 
     /**
      * Restituisce la durata totale del Tracciamento.
