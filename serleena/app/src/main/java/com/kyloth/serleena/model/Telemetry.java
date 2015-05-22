@@ -190,4 +190,21 @@ public class Telemetry implements  ITelemetry {
         return event;
     }
 
+    /**
+     * Implementa ITelemetry.getDuration().
+     *
+     * @return Durata del Tracciamento, in secondi.
+     */
+    @Override
+    public int getDuration() {
+        if (duration == -1) {
+            duration = 0;
+            Iterable<TelemetryEvent> allEvents = this.getEvents();
+            for (TelemetryEvent e : allEvents)
+                if (e.timestamp() > duration)
+                    duration = e.timestamp();
+        }
+        return duration;
+    }
+
 }
