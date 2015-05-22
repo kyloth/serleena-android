@@ -50,6 +50,7 @@ import com.kyloth.serleena.DummyCardioPresenter;
 import com.kyloth.serleena.DummyContactsPresenter;
 import com.kyloth.serleena.DummyExpSelPresenter;
 import com.kyloth.serleena.DummyMapPresenter;
+import com.kyloth.serleena.DummySyncPresenter;
 import com.kyloth.serleena.DummyTrackPresenter;
 import com.kyloth.serleena.DummyTrackSelPresenter;
 import com.kyloth.serleena.DummyWeatherPresenter;
@@ -66,6 +67,7 @@ import com.kyloth.serleena.presentation.IMapPresenter;
 import com.kyloth.serleena.presentation.IMapView;
 import com.kyloth.serleena.presentation.IPresenter;
 import com.kyloth.serleena.presentation.ISerleenaActivity;
+import com.kyloth.serleena.presentation.ISyncView;
 import com.kyloth.serleena.presentation.ITelemetryView;
 import com.kyloth.serleena.presentation.ITrackSelectionPresenter;
 import com.kyloth.serleena.presentation.ITrackSelectionView;
@@ -170,6 +172,7 @@ public class SerleenaActivity extends ActionBarActivity implements ISerleenaActi
         myPress.put("CONTACTS", new DummyContactsPresenter((IContactsView) myFrags.get("CONTACTS"), this));
         myPress.put("TRACK", new DummyTrackPresenter((ITrackView) myFrags.get("TRACK"), this));
         myPress.put("WEATHER", new DummyWeatherPresenter((IWeatherView) myFrags.get("WEATHER"),this));
+        myPress.put("SYNC", new DummySyncPresenter((ISyncView) myFrags.get("SYNC"),this));
     }
 
     /**

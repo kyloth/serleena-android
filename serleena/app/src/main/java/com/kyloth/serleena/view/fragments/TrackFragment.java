@@ -112,6 +112,11 @@ public class TrackFragment extends Fragment implements ITrackView {
         presenter.pause();
     }
 
+    /**
+     * Metodo per eseguire un'operazione di subscribe relativa ad un ITrackPresenter.
+     *
+     * @param presenter oggetto collegato che verrà notificato da questo Fragment
+     */
     @Override
     public void attachPresenter(ITrackPresenter presenter) {
         this.presenter = presenter;

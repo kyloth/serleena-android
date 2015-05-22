@@ -2,24 +2,37 @@
     xmlns:tools="http://schemas.android.com/tools" android:layout_width="match_parent"
     android:layout_height="match_parent" tools:context="com.kyloth.serleena.view.fragments.SyncFragment">
 
-    <Button
-        android:layout_width="186dp"
-        android:layout_height="112dp"
+    <ImageButton
+        android:layout_width="140sp"
+        android:layout_height="140sp"
         android:text="@string/sync_button_text"
         android:id="@+id/button_sync"
         android:layout_gravity="center_horizontal|top"
         android:textSize="20sp"
         android:elegantTextHeight="false"
-        android:clickable="true" />
+        android:clickable="true"
+        android:layout_marginTop="15dp"
+        android:src="@drawable/sync"
+        android:background="@null"
+        android:scaleType="fitCenter" />
 
     <TextView
-        android:layout_width="174dp"
+        android:layout_width="fill_parent"
         android:layout_height="102dp"
         android:textAppearance="?android:attr/textAppearanceMedium"
         android:text="@string/sync_token"
-        android:id="@+id/textview_token"
+        android:id="@+id/textview_info"
         android:layout_gravity="center"
         android:gravity="bottom|center"
         android:textSize="25sp" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="New Text"
+        android:id="@+id/textview_token"
+        android:layout_gravity="center_horizontal|bottom"
+        android:textSize="25sp"
+        android:layout_marginBottom="15sp" />
 
 </FrameLayout>
