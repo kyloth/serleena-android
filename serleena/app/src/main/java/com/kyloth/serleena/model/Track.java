@@ -77,6 +77,16 @@ public class Track implements ITrack {
     }
 
     /**
+     * Implementa ITrack.createTelemetry().
+     *
+     * @param events Eventi da cui creare il Tracciamento.
+     */
+    @Override
+    public void createTelemetry(Iterable<TelemetryEvent> events) {
+        storage.createTelemetry(events);
+    }
+
+    /**
      * Implementa ITrack.getBestTelemetry().
      *
      * @return Tracciamento migliore per il Percorso.
