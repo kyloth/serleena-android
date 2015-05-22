@@ -41,16 +41,46 @@ package com.kyloth.serleena.view.fragments;
 
 import android.app.Activity;
 import android.app.Fragment;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.widget.ImageView;
+import android.widget.TextView;
+
+import com.kyloth.serleena.R;
+import com.kyloth.serleena.model.IWeatherForecast;
+import com.kyloth.serleena.persistence.WeatherForecastEnum;
+import com.kyloth.serleena.presentation.IWeatherPresenter;
+import com.kyloth.serleena.presentation.IWeatherView;
+
+import java.util.Calendar;
+import java.util.Date;
+import java.util.HashMap;
 
 /**
  * Classe che implementa la schermata “Meteo”, in cui vengono mostrate informazioni metereologiche
  * relative ad un giorno
  *
+ * @field presenter : IWeatherPresenter presenter collegato a un WeatherFragment
+ * @field now : Calendar data da visualizzare
+ * @field weatherMap : HashMap<WeatherForecastEnum,Integer> mappa di corrispondenze tra condizioni meteo e immagini da visualizzare
+ * @field image : ImageView immagine su cui disegnare le condizioni metereologiche fornite
+ * @field tempTxt : TextView casella di testo dove inserire il valore della temperatura fornito
+ * @field dayTxt : TextView casella di testo dove visualizzare la data fornita
  * @author Sebastiano Valle <valle.sebastiano93@gmail.com>
  * @version 1.0.0
  * @see android.app.Fragment
  */
-public class WeatherFragment extends Fragment {
+public class WeatherFragment extends Fragment implements IWeatherView {
+
+    private IWeatherPresenter presenter;
+
+    private Calendar now;
+
+    private HashMap<WeatherForecastEnum,Integer> weatherMap = new HashMap<>();
+
+    private ImageView image;
+    private TextView tempTxt;
+    private TextView dayTxt;
 
     /**
      * Questo metodo viene invocato ogni volta che un WeatherFragment viene collegato ad un'Activity.
@@ -60,6 +90,22 @@ public class WeatherFragment extends Fragment {
     @Override
     public void onAttach(Activity activity) {
         super.onAttach(activity);
+        initFragment();
+        presenter.resume();
+    }
+
+    /**
+     * Metodo che inizializza il Fragment, ovvero la mappa e i riferimenti alle View utilizzate.
+     */
+    private void initFragment() {
+        weatherMap.put(WeatherForecastEnum.Cloudy, R.drawable.cloud);
+        weatherMap.put(WeatherForecastEnum.Rainy,R.drawable.rain);
+        weatherMap.put(WeatherForecastEnum.Snowy, R.drawable.snow);
+        weatherMap.put(WeatherForecastEnum.Stormy, R.drawable.storm);
+        weatherMap.put(WeatherForecastEnum.Sunny, R.drawable.sun);
+        image = (ImageView) getActivity().findViewById(R.id.weather_image);
+        dayTxt = (TextView) getActivity().findViewById(R.id.weather_day);
+        tempTxt = (TextView) getActivity().findViewById(R.id.weather_temperature);
     }
 
     /**
@@ -69,6 +115,71 @@ public class WeatherFragment extends Fragment {
     @Override
     public void onDetach() {
         super.onDetach();
+        presenter.pause();
     }
 
+    /**
+     * Metodo utilizzato per collegare un presenter a un WeatherFragment
+     *
+     * @param presenter Presenter a cui viene collegato un WeatherFragment
+     */
+    @Override
+    public void attachPresenter(IWeatherPresenter presenter) {
+        this.presenter = presenter;
+    }
+
+    /**
+     * Metodo utilizzato per impostare e visualizzare delle previsioni meteorologiche.
+     *
+     * @param forecast Oggetto contenente delle previsioni
+     */
+    @Override
+    public void setWeatherInfo(IWeatherForecast forecast) {
+        image.setVisibility(ImageView.VISIBLE);
+        int hour = now.get(Calendar.HOUR_OF_DAY);
+        Integer temp = null;
+        WeatherForecastEnum weatherId = null;
+        if(hour >= 12 && hour < 20) {
+            weatherId = forecast.getAfternoonForecast();
+            temp = forecast.getAfternoonTemperature();
+        }
+        if(hour < 12 && hour >= 4) {
+            weatherId = forecast.getMorningForecast();
+            temp = forecast.getMorningTemperature();
+        }
+        if(hour < 4 ||  hour >= 20) {
+            weatherId = forecast.getNightForecast();
+            temp = forecast.getNightTemperature();
+        }
+        Bitmap bmp = BitmapFactory.decodeResource(getResources(),weatherMap.get(weatherId));
+        bmp = bmp.createScaledBitmap(bmp,130,130,false);
+        image.setImageBitmap(bmp);
+        String day = new Integer(now.get(Calendar.DAY_OF_MONTH)).toString();
+        if(now.get(Calendar.DAY_OF_MONTH) < 10) day = "0" + day;
+        String month = new Integer(now.get(Calendar.MONTH)).toString();
+        if(now.get(Calendar.MONTH) < 10) month = "0" + month;
+        dayTxt.setText(day + "/" + month + "/" + now.get(Calendar.YEAR));
+        tempTxt.setText(temp.toString() + "°C");
+    }
+
+    /**
+     * Metodo utilizzato per rimuovere le informazioni visualizzate
+     */
+    @Override
+    public void clearWeatherInfo() {
+        image.setVisibility(ImageView.INVISIBLE);
+        tempTxt.setText("NESSUNA INFORMAZIONE DISPONIBILE");
+        dayTxt.setText("");
+    }
+
+    /**
+     * Metodo utilizzato per impostare una data su un WeatherFragment
+     *
+     * @param date Data impostata
+     */
+    @Override
+    public void setDate(Date date) {
+        now = Calendar.getInstance();
+        now.setTime(date);
+    }
 }
