@@ -90,4 +90,14 @@ public class Experience implements IExperience {
         return tracks;
     }
 
+    /**
+     * Implementa IExperience.getUserPoints().
+     *
+     * @return Insieme enumerabile di punti utente.
+     */
+    @Override
+    public Iterable<UserPoint> getUserPoints() {
+        return storage.getUserPoints();
+    }
+
 }
