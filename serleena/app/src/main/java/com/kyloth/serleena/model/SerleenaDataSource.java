@@ -113,4 +113,16 @@ public class SerleenaDataSource implements ISerleenaDataSource {
         return dataSource.getQuadrant(point);
     }
 
+    /**
+     * Implementa ISerleenaDataSource.getContacts().
+     *
+     * @param loc Posizione geografica delle cui vicinanze si vogliono
+     *            ottenere i contatti di emergenza.
+     * @return Insieme enumerabile di contatti di emergenza.
+     */
+    @Override
+    public Iterable<EmergencyContact> getContacts(GeoPoint loc) {
+        return dataSource.getContacts(loc);
+    }
+
 }
