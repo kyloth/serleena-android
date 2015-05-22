@@ -41,17 +41,26 @@ package com.kyloth.serleena.view.fragments;
 
 import android.app.Activity;
 import android.app.Fragment;
+import android.view.View;
+import android.widget.TextView;
+
+import com.kyloth.serleena.R;
+import com.kyloth.serleena.presentation.ICardioPresenter;
+import com.kyloth.serleena.presentation.ICardioView;
 
 
 /**
  * Classe che implementa la schermata “Cardio”, in cui vengono mostrate eventuali informazioni
  * relative ad un sensore Fitness collegato allo smartwatch
  *
+ * @field presenter : ICardioPresenter presenter collegato a un CardioFragment
  * @author Sebastiano Valle <valle.sebastiano93@gmail.com>
  * @version 1.0.0
  * @see android.app.Fragment
  */
-public class CardioFragment extends Fragment {
+public class CardioFragment extends Fragment implements ICardioView {
+
+    ICardioPresenter presenter;
 
     /**
      * Questo metodo viene invocato ogni volta che un CardioFragment viene collegato ad un'Activity.
@@ -61,6 +70,7 @@ public class CardioFragment extends Fragment {
     @Override
     public void onAttach(Activity activity) {
         super.onAttach(activity);
+        presenter.resume();
     }
 
     /**
@@ -70,6 +80,24 @@ public class CardioFragment extends Fragment {
     @Override
     public void onDetach() {
         super.onDetach();
+        presenter.pause();
     }
 
+    /**
+     * Metodo che visualizza sullo schermo dello smartwatch il valore del battito cardiaco.
+     */
+    @Override
+    public void setHeartRate(int rate) {
+        Integer rateValue = new Integer(rate);
+        TextView hr = (TextView) getActivity().findViewById(R.id.heart_rate);
+        hr.setText(rateValue.toString());
+    }
+
+    /**
+     * Questo metodo serve per collegare un CardioFragment al proprio presenter.
+     */
+    @Override
+    public void attachPresenter(ICardioPresenter presenter) {
+        this.presenter = presenter;
+    }
 }

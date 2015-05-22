@@ -58,7 +58,7 @@ import java.util.Iterator;
 /**
  * Classe che implementa il widget presente nella visuale Mappa della schermata Esperienza
  *
- * @field quadrant : Quadrante da visualizzare
+ * @field quadrant : IQuadrant Quadrante da visualizzare
  * @field userPosition : GeoPoint salva il punto geografico corrispondente alla posizione dell'utente
  * @field upList : Iterable<UserPoint> lista dei Punti Utente relativi al quadrante visualizzato
  * @author Sebastiano Valle <valle.sebastiano93@gmail.com>

@@ -46,6 +46,7 @@ import android.support.v7.app.ActionBarActivity;
 import android.view.Menu;
 import android.view.MenuItem;
 
+import com.kyloth.serleena.DummyCardioPresenter;
 import com.kyloth.serleena.DummyExpSelPresenter;
 import com.kyloth.serleena.DummyMapPresenter;
 import com.kyloth.serleena.DummyTrackSelPresenter;
@@ -54,6 +55,7 @@ import com.kyloth.serleena.common.NoActiveExperienceException;
 import com.kyloth.serleena.model.IExperience;
 import com.kyloth.serleena.model.ISerleenaDataSource;
 import com.kyloth.serleena.model.ITrack;
+import com.kyloth.serleena.presentation.ICardioView;
 import com.kyloth.serleena.presentation.IExperienceSelectionPresenter;
 import com.kyloth.serleena.presentation.IExperienceSelectionView;
 import com.kyloth.serleena.presentation.IMapPresenter;
@@ -156,6 +158,7 @@ public class SerleenaActivity extends ActionBarActivity implements ISerleenaActi
         myPress.put("MAP", new DummyMapPresenter((IMapView) myFrags.get("MAP")));
         myPress.put("TRACKLIST", new DummyTrackSelPresenter((ITrackSelectionView) myFrags.get("TRACKLIST"), this));
         myPress.put("EXPLIST", new DummyExpSelPresenter((IExperienceSelectionView) myFrags.get("EXPLIST"), this));
+        myPress.put("CARDIO", new DummyCardioPresenter((ICardioView) myFrags.get("CARDIO"), this));
     }
 
     /**
