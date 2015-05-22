@@ -211,20 +211,6 @@ public class TrackPresenter implements ITrackPresenter,
         view.setCheckpointNo(1);
     }
 
-    private static ITelemetry getBestTelemetry(
-            Iterable<ITelemetry> telemetries) {
-
-        int min = Integer.MAX_VALUE;
-        ITelemetry best = null;
-        for (ITelemetry t : telemetries)
-            if (t.getDuration() < min) {
-                best = t;
-                min = t.getDuration();
-            }
-
-        return best;
-    }
-
     /**
      * Implementa ILocationReachedObserver.onLocationObserver().
      */
