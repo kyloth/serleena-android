@@ -60,5 +60,10 @@
     <string name="exp_map_image">Mappa</string>
     <string name="exp_map_text">MAPPA</string>
 
+    <string name="cardinal_north">N</string>
+    <string name="cardinal_east">E</string>
+    <string name="cardinal_west">W</string>
+    <string name="cardinal_south">S</string>
+
 
 </resources>

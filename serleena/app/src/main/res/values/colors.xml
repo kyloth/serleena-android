@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="background_compass_color">#F555</color>
+    <color name="marker_compass_color">#AFFF</color>
+    <color name="text_compass_color">#AFFF</color>
+</resources>

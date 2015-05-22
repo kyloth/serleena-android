@@ -41,6 +41,12 @@ package com.kyloth.serleena.view.fragments;
 
 import android.app.Activity;
 import android.app.Fragment;
+import android.view.View;
+
+import com.kyloth.serleena.R;
+import com.kyloth.serleena.presentation.ICompassPresenter;
+import com.kyloth.serleena.presentation.ICompassView;
+import com.kyloth.serleena.view.widgets.CompassWidget;
 
 /**
  * Classe che implementa la schermata “Bussola”, in cui vengono fornite all'utente delle indicazioni
@@ -50,7 +56,11 @@ import android.app.Fragment;
  * @version 1.0.0
  * @see android.app.Fragment
  */
-public class CompassFragment extends Fragment {
+public class CompassFragment extends Fragment implements ICompassView {
+
+    private ICompassPresenter presenter;
+
+    private CompassWidget widget;
 
     /**
      * Questo metodo viene invocato ogni volta che un CompassFragment viene collegato ad un'Activity.
@@ -60,6 +70,8 @@ public class CompassFragment extends Fragment {
     @Override
     public void onAttach(Activity activity) {
         super.onAttach(activity);
+        widget = (CompassWidget) activity.findViewById(R.id.compass_widget);
+        presenter.resume();
     }
 
     /**
@@ -69,5 +81,22 @@ public class CompassFragment extends Fragment {
     @Override
     public void onDetach() {
         super.onDetach();
+        presenter.pause();
+    }
+
+    @Override
+    public void setHeading(double heading) {
+        widget.setVisibility(View.VISIBLE);
+        widget.setBearing((float) heading);
+    }
+
+    @Override
+    public void attachPresenter(ICompassPresenter presenter) {
+        this.presenter = presenter;
+    }
+
+    @Override
+    public void clearView() {
+        widget.setVisibility(View.INVISIBLE);
     }
 }

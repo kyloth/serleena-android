@@ -2,19 +2,10 @@
     xmlns:tools="http://schemas.android.com/tools" android:layout_width="match_parent"
     android:layout_height="match_parent" tools:context="com.kyloth.serleena.view.fragments.CompassFragment">
 
-    <ImageView
-        android:layout_width="133dp"
-        android:layout_height="106dp"
-        android:id="@+id/compass_image"
-        android:layout_gravity="center_horizontal|top"
-        android:background="@drawable/dark_green_arrow_up" />
+    <com.kyloth.serleena.view.widgets.CompassWidget
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:id="@+id/compass_widget"
+        android:layout_gravity="center_horizontal|top" />
 
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="61dp"
-        android:text="@string/compass_value"
-        android:id="@+id/compass_text"
-        android:layout_gravity="center_horizontal|bottom"
-        android:gravity="top"
-        android:textSize="30sp" />
 </FrameLayout>
