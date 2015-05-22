@@ -90,9 +90,10 @@ public interface ITelemetry {
      * @return  Insieme enumerabile che contiene tutti e soli gli eventi del
      *          Tracciamento di tipo specificato.
      * @param type Tipo di eventi da restituire.
-     * @version 1.0
+     * @return Insieme enumerabile di eventi di Tracciamento.
      */
-    public Iterable<TelemetryEvent> getEvents(TelemetryEventType type);
+    public Iterable<TelemetryEvent> getEvents(TelemetryEventType type)
+            throws NoSuchTelemetryEventException;
 
     /**
      * Restituisce la durata totale del Tracciamento.
