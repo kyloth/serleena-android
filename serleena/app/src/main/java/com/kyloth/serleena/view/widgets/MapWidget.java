@@ -75,7 +75,7 @@ public class MapWidget extends ImageView {
     /**
      * Costruttore di MapWidget a un parametro.
      *
-     * @param context Activity in cui è presente il widget
+     * @param context Activity in cui Ã¨ presente il widget
      */
     public MapWidget(Context context) {
         super(context);
@@ -84,7 +84,7 @@ public class MapWidget extends ImageView {
     /**
      * Costruttore di MapWidget a due parametri.
      *
-     * @param context Activity in cui è presente il widget
+     * @param context Activity in cui Ã¨ presente il widget
      * @param attrs attributi come altezza, larghezza definiti nell'XML corrispondente a MapWidget
      */
     public MapWidget(Context context,AttributeSet attrs) {
@@ -94,9 +94,9 @@ public class MapWidget extends ImageView {
     /**
      * Costruttore di MapWidget a tre parametri.
      *
-     * @param context Activity in cui è presente il widget
+     * @param context Activity in cui Ã¨ presente il widget
      * @param attrs attributi come altezza, larghezza definiti nell'XML corrispondente a MapWidget
-     * @param defStyle stile da applicare a questa vista, può corrispondere a 0 o a un'id di una risorsa
+     * @param defStyle stile da applicare a questa vista, puÃ² corrispondere a 0 o a un'id di una risorsa
      */
     public MapWidget(Context context,AttributeSet attrs,int defStyle) {
         super(context,attrs,defStyle);
