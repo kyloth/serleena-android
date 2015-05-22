@@ -56,4 +56,8 @@ import java.util.ArrayList;
  */
 public class Experience implements IExperience {
 
+    private IExperienceStorage storage;
+
+    private Iterable<ITrack> tracks = null;
+
 }
