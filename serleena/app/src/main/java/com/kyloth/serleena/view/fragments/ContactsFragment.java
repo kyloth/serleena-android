@@ -41,17 +41,28 @@ package com.kyloth.serleena.view.fragments;
 
 import android.app.Activity;
 import android.app.Fragment;
+import android.widget.TextView;
+
+import com.kyloth.serleena.R;
+import com.kyloth.serleena.presentation.IContactsPresenter;
+import com.kyloth.serleena.presentation.IContactsView;
 
 
 /**
  * Classe che implementa la schermata “Autorità locali”, in cui vengono mostrate eventuali
  * contatti di autorità locali
  *
+ * @field presenter : IContactsPresenter presenter collegato a un ContactsFragment
  * @author Sebastiano Valle <valle.sebastiano93@gmail.com>
  * @version 1.0.0
  * @see android.app.Fragment
  */
-public class ContactsFragment extends Fragment {
+public class ContactsFragment extends Fragment implements IContactsView {
+
+    /**
+     * Presenter collegato a un ContactsFragment
+     */
+    private IContactsPresenter presenter;
 
     /**
      * Questo metodo viene invocato ogni volta che ContactsFragment viene collegato ad un'Activity.
@@ -61,6 +72,7 @@ public class ContactsFragment extends Fragment {
     @Override
     public void onAttach(Activity activity) {
         super.onAttach(activity);
+        presenter.resume();
     }
 
     /**
@@ -70,6 +82,36 @@ public class ContactsFragment extends Fragment {
     @Override
     public void onDetach() {
         super.onDetach();
+        presenter.pause();
     }
 
+    /**
+     * Metodo che collega un ContactsFragment al proprio Presenter.
+     */
+    @Override
+    public void attachPresenter(IContactsPresenter presenter) throws IllegalArgumentException {
+        this.presenter = presenter;
+    }
+
+    /**
+     * Metodo che richiede a un ContactsFragment di visualizzare un contatto
+     */
+    @Override
+    public void displayContact(String name, String contact) {
+        TextView textName = (TextView) getActivity().findViewById(R.id.contact_name);
+        TextView textValue = (TextView) getActivity().findViewById(R.id.contact_value);
+        textName.setText(name);
+        textValue.setText(contact);
+    }
+
+    /**
+     * Metodo che rimuove il contatto visualizzato
+     */
+    @Override
+    public void clearView() {
+        TextView textName = (TextView) getActivity().findViewById(R.id.contact_name);
+        TextView textValue = (TextView) getActivity().findViewById(R.id.contact_value);
+        textName.setText("NESSUN CONTATTO");
+        textValue.setText("DA VISUALIZZARE");
+    }
 }

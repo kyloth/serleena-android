@@ -90,6 +90,7 @@ public class MapFragment extends Fragment implements com.kyloth.serleena.present
     @Override
     public void onDetach() {
         super.onDetach();
+        presenter.pause();
     }
 
     /**
