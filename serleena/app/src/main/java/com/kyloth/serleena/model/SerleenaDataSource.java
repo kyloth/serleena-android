@@ -102,4 +102,15 @@ public class SerleenaDataSource implements ISerleenaDataSource {
         return new WeatherForecast(dataSource.getWeatherInfo(p, date));
     }
 
+    /**
+     * Implementa ISerleenaDataSource.getQuadrant().
+     *
+     * @param point Posizione geografica il cui quadrante si vuole ottenere.
+     * @return Quadrante contenente il punto geografico specificato.
+     */
+    @Override
+    public IQuadrant getQuadrant(GeoPoint point) {
+        return dataSource.getQuadrant(point);
+    }
+
 }
