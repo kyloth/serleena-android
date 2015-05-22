@@ -62,6 +62,7 @@ import com.kyloth.serleena.presentation.IMapPresenter;
 import com.kyloth.serleena.presentation.IMapView;
 import com.kyloth.serleena.presentation.IPresenter;
 import com.kyloth.serleena.presentation.ISerleenaActivity;
+import com.kyloth.serleena.presentation.ITelemetryView;
 import com.kyloth.serleena.presentation.ITrackSelectionPresenter;
 import com.kyloth.serleena.presentation.ITrackSelectionView;
 import com.kyloth.serleena.sensors.ISensorManager;
@@ -132,7 +133,7 @@ public class SerleenaActivity extends ActionBarActivity implements ISerleenaActi
         initLayoutIds();
         initMenuItemIds();
         FragmentTransaction ft = getFragmentManager().beginTransaction();
-        changeFragment("TRACKLIST");
+        changeFragment("TELEMETRY");
     }
 
     /**
@@ -159,6 +160,7 @@ public class SerleenaActivity extends ActionBarActivity implements ISerleenaActi
         myPress.put("TRACKLIST", new DummyTrackSelPresenter((ITrackSelectionView) myFrags.get("TRACKLIST"), this));
         myPress.put("EXPLIST", new DummyExpSelPresenter((IExperienceSelectionView) myFrags.get("EXPLIST"), this));
         myPress.put("CARDIO", new DummyCardioPresenter((ICardioView) myFrags.get("CARDIO"), this));
+        myPress.put("TELEMETRY", new TelemetryPresenter((ITelemetryView) myFrags.get("TELEMETRY"), this));
     }
 
     /**

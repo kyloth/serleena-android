@@ -2,14 +2,17 @@
     xmlns:tools="http://schemas.android.com/tools" android:layout_width="match_parent"
     android:layout_height="match_parent" tools:context="com.kyloth.serleena.view.fragments.TelemetryFragment">
 
-    <ImageView
-        android:layout_width="124dp"
-        android:layout_height="118dp"
+    <ImageButton
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
         android:contentDescription="@string/telemetry_image"
         android:id="@+id/telemetry_image"
         android:layout_gravity="center_horizontal|top"
         android:src="@drawable/red_button"
-        android:layout_marginTop="10dp" />
+        android:layout_marginTop="10dp"
+        android:background="@null"
+        android:onClick="com.hitchhiker"
+        android:clickable="true" />
 
     <TextView
         android:layout_width="154dp"

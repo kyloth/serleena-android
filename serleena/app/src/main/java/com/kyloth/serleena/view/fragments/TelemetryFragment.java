@@ -41,6 +41,13 @@ package com.kyloth.serleena.view.fragments;
 
 import android.app.Activity;
 import android.app.Fragment;
+import android.view.View;
+import android.widget.ImageButton;
+import android.widget.TextView;
+
+import com.kyloth.serleena.R;
+import com.kyloth.serleena.presentation.ITelemetryPresenter;
+import com.kyloth.serleena.presentation.ITelemetryView;
 
 
 /**
@@ -48,11 +55,17 @@ import android.app.Fragment;
  *
  * In questa visuale è possibile attivare o disattivare il tracciamento.
  *
+ * @field presenter : TelemetryFragment presenter collegato a un TelemetryFragment
  * @author Sebastiano Valle <valle.sebastiano93@gmail.com>
  * @version 1.0.0
  * @see android.app.Fragment
  */
-public class TelemetryFragment extends Fragment {
+public class TelemetryFragment extends Fragment implements ITelemetryView {
+
+    /**
+     * Presenter collegato a un TelemetryFragment
+     */
+    private ITelemetryPresenter presenter;
 
     /**
      * Questo metodo viene invocato ogni volta che un TelemetryFragment viene collegato ad un'Activity.
@@ -60,8 +73,24 @@ public class TelemetryFragment extends Fragment {
      * @param activity Activity che ha appena terminato una transazione in cui viene aggiunto il corrente Fragment
      */
     @Override
-    public void onAttach(Activity activity) {
+    public void onAttach(final Activity activity) {
         super.onAttach(activity);
+        ImageButton button = (ImageButton) activity.findViewById(R.id.telemetry_image);
+        button.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                TextView status = (TextView) activity.findViewById(R.id.telemetry_status);
+                if(status.getText().equals("ON")) {
+                    presenter.disableTelemetry();
+                    status.setText("OFF");
+                }
+                else {
+                    presenter.enableTelemetry();
+                    status.setText("ON");
+                }
+            }
+        });
+        presenter.resume();
     }
 
     /**
@@ -71,6 +100,11 @@ public class TelemetryFragment extends Fragment {
     @Override
     public void onDetach() {
         super.onDetach();
+        presenter.pause();
     }
 
+    @Override
+    public void attachPresenter(ITelemetryPresenter presenter) {
+        this.presenter = presenter;
+    }
 }
