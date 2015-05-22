@@ -58,4 +58,28 @@ import java.util.ArrayList;
  */
 public class Track implements ITrack {
 
+    /**
+     * Implementa ITrack.getBestTelemetry().
+     *
+     * @return Tracciamento migliore per il Percorso.
+     * @throws NoSuchTelemetryException
+     */
+    @Override
+    public ITelemetry getBestTelemetry() throws NoSuchTelemetryException {
+        Iterable<ITelemetry> telemetries = getTelemetries();
+        int min = Integer.MAX_VALUE;
+        ITelemetry best = null;
+
+        for (ITelemetry t : telemetries)
+            if (t.getDuration() < min) {
+                best = t;
+                min = t.getDuration();
+            }
+
+        if (best == null)
+            throw new NoSuchTelemetryException();
+
+        return best;
+    }
+
 }
