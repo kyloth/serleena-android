@@ -87,6 +87,16 @@ public class Track implements ITrack {
     }
 
     /**
+     * Implementa ITrack.getCheckpoints().
+     *
+     * @return Lista di Checkpoint che rappresentano il Percorso.
+     */
+    @Override
+    public ImmutableList<Checkpoint> getCheckpoints() {
+        return storage.getCheckpoints();
+    }
+
+    /**
      * Implementa ITrack.getBestTelemetry().
      *
      * @return Tracciamento migliore per il Percorso.
