@@ -110,4 +110,14 @@ public class Experience implements IExperience {
         storage.addUserPoint(point);
     }
 
+    /**
+     * Implementa IExperience.getName().
+     *
+     * @return Stringa indicante il nome dell'Esperienza.
+     */
+    @Override
+    public String getName() {
+        return storage.getName();
+    }
+
 }
