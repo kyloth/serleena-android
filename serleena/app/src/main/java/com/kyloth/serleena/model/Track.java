@@ -61,6 +61,19 @@ public class Track implements ITrack {
     private ITrackStorage storage;
 
     /**
+     * Crea un nuovo oggetto Track.
+     *
+     * Incapsula un oggetto che realizza la persistenza del Percorso, e
+     * rappresenta la sorgente dati.
+     *
+     * @param storage Oggetto ITrackStorage che realizza la persistenza del
+     *                Percorso.
+     */
+    public Track(ITrackStorage storage) {
+        this.storage = storage;
+    }
+
+    /**
      * Implementa ITrack.getTelemetries().
      *
      * @return Insieme enumerabile di Tracciamenti.
