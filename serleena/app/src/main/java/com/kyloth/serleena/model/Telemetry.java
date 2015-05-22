@@ -121,4 +121,34 @@ public class Telemetry implements  ITelemetry {
         return result;
     }
 
+    /**
+     * Implementa ITelemetry.getEvents().
+     *
+     * @param type Tipo di eventi da restituire.
+     * @return Insieme enumerabile di eventi di Tracciamento.
+     * @throws NoSuchTelemetryEventException
+     */
+    @Override
+    public Iterable<TelemetryEvent> getEvents(TelemetryEventType type)
+            throws NoSuchTelemetryEventException {
+
+        if (type == TelemetryEventType.Location && locEvents != null)
+            return locEvents;
+
+        Iterable<TelemetryEvent> allEvents = this.getEvents();
+        ArrayList<TelemetryEvent> result = new ArrayList<TelemetryEvent>();
+
+        for (TelemetryEvent e : allEvents)
+            if (e.getType() == type)
+                result.add(e);
+
+        if (result.size() == 0)
+            throw new NoSuchTelemetryEventException();
+
+        if (type == TelemetryEventType.Location)
+            locEvents = result;
+
+        return result;
+    }
+
 }
