@@ -59,4 +59,6 @@ import java.util.Date;
  */
 public class SerleenaDataSource implements ISerleenaDataSource {
 
+    private IPersistenceDataSource dataSource;
+
 }
