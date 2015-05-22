@@ -61,4 +61,15 @@ public class SerleenaDataSource implements ISerleenaDataSource {
 
     private IPersistenceDataSource dataSource;
 
+    /**
+     * Crea un nuovo oggetto SerleenaDataSource basato su una fonte di dati
+     * persistenti specificata.
+     *
+     * @param dataSource Datasource che realizza la persistenza dei dati
+     *                   utilizzati da SerleenaDataSource.
+     */
+    public SerleenaDataSource(IPersistenceDataSource dataSource) {
+        this.dataSource = dataSource;
+    }
+
 }
