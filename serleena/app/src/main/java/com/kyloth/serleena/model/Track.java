@@ -61,6 +61,22 @@ public class Track implements ITrack {
     private ITrackStorage storage;
 
     /**
+     * Implementa ITrack.getTelemetries().
+     *
+     * @return Insieme enumerabile di Tracciamenti.
+     */
+    @Override
+    public Iterable<ITelemetry> getTelemetries() {
+        Iterable<ITelemetryStorage> tels = storage.getTelemetries();
+        ArrayList<ITelemetry> result = new ArrayList<ITelemetry>();
+
+        for (ITelemetryStorage ts : tels)
+            result.add(new Telemetry(ts));
+
+        return result;
+    }
+
+    /**
      * Implementa ITrack.getBestTelemetry().
      *
      * @return Tracciamento migliore per il Percorso.
