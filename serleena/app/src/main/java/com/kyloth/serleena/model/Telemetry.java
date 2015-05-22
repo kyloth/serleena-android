@@ -77,4 +77,16 @@ public class Telemetry implements  ITelemetry {
         this.storage = storage;
     }
 
+    /**
+     * Implementa ITelemetry.getEvents().
+     *
+     * @return Insieme enumerabile di eventi di Tracciamento.
+     */
+    @Override
+    public Iterable<TelemetryEvent> getEvents() {
+        if (allEvents == null)
+            allEvents = storage.getEvents();
+        return allEvents;
+    }
+
 }
