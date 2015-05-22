@@ -73,4 +73,21 @@ public class Experience implements IExperience {
         this.storage = storage;
     }
 
+    /**
+     * Implementa IExperience.getTracks().
+     *
+     * @return Insieme enumerabile di Percorsi.
+     */
+    @Override
+    public Iterable<ITrack> getTracks() {
+        if (tracks == null) {
+            Iterable<ITrackStorage> ts = storage.getTracks();
+            ArrayList<ITrack> result = new ArrayList<ITrack>();
+            for (ITrackStorage s : ts)
+                result.add(new Track(s));
+            tracks = result;
+        }
+        return tracks;
+    }
+
 }
