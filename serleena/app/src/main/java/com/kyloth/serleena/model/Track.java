@@ -58,6 +58,8 @@ import java.util.ArrayList;
  */
 public class Track implements ITrack {
 
+    private ITrackStorage storage;
+
     /**
      * Implementa ITrack.getBestTelemetry().
      *
