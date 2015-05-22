@@ -4,40 +4,42 @@
     android:id="@+id/track_layout">
 
     <TextView
-        android:layout_width="wrap_content"
+        android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:text="@string/track_checkpoint_partial"
         android:id="@+id/track_checkpoint_partial"
         android:layout_gravity="center_horizontal|top"
         android:textSize="25sp"
-        android:layout_marginTop="10dp" />
+        android:layout_marginTop="10dp"
+        android:gravity="center_horizontal" />
 
     <TextView
-        android:layout_width="153dp"
+        android:layout_width="fill_parent"
         android:layout_height="98dp"
         android:text="@string/track_checkpoint_next"
         android:id="@+id/track_checkpoint_next"
         android:layout_gravity="center_horizontal|top"
-        android:gravity="center"
+        android:gravity="center|center_horizontal"
         android:textSize="25sp"
         android:layout_marginTop="15dp" />
 
     <TextView
-        android:layout_width="wrap_content"
+        android:layout_width="fill_parent"
         android:layout_height="85dp"
         android:text="@string/track_time_elapsed"
         android:id="@+id/track_time_elapsed"
         android:layout_gravity="center_horizontal|top"
         android:textSize="25sp"
-        android:gravity="center_vertical"
-        android:layout_marginTop="60dp" />
+        android:layout_marginTop="60dp"
+        android:gravity="center" />
 
     <TextView
-        android:layout_width="wrap_content"
+        android:layout_width="fill_parent"
         android:layout_height="58dp"
         android:text="@string/track_ghost_time"
         android:id="@+id/track_ghost_time"
         android:layout_gravity="center_horizontal|top"
         android:textSize="25sp"
-        android:layout_marginTop="130dp" />
+        android:layout_marginTop="115dp"
+        android:gravity="center" />
 </FrameLayout>

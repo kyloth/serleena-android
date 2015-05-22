@@ -50,6 +50,7 @@ import com.kyloth.serleena.DummyCardioPresenter;
 import com.kyloth.serleena.DummyContactsPresenter;
 import com.kyloth.serleena.DummyExpSelPresenter;
 import com.kyloth.serleena.DummyMapPresenter;
+import com.kyloth.serleena.DummyTrackPresenter;
 import com.kyloth.serleena.DummyTrackSelPresenter;
 import com.kyloth.serleena.R;
 import com.kyloth.serleena.common.NoActiveExperienceException;
@@ -67,6 +68,7 @@ import com.kyloth.serleena.presentation.ISerleenaActivity;
 import com.kyloth.serleena.presentation.ITelemetryView;
 import com.kyloth.serleena.presentation.ITrackSelectionPresenter;
 import com.kyloth.serleena.presentation.ITrackSelectionView;
+import com.kyloth.serleena.presentation.ITrackView;
 import com.kyloth.serleena.sensors.ISensorManager;
 import com.kyloth.serleena.view.fragments.CardioFragment;
 import com.kyloth.serleena.view.fragments.CompassFragment;
@@ -164,6 +166,7 @@ public class SerleenaActivity extends ActionBarActivity implements ISerleenaActi
         myPress.put("CARDIO", new DummyCardioPresenter((ICardioView) myFrags.get("CARDIO"), this));
         myPress.put("TELEMETRY", new TelemetryPresenter((ITelemetryView) myFrags.get("TELEMETRY"), this));
         myPress.put("CONTACTS", new DummyContactsPresenter((IContactsView) myFrags.get("CONTACTS"), this));
+        myPress.put("TRACK", new DummyTrackPresenter((ITrackView) myFrags.get("TRACK"), this));
     }
 
     /**
@@ -186,7 +189,7 @@ public class SerleenaActivity extends ActionBarActivity implements ISerleenaActi
      * Metodo che mappa le voci dei menù ai tag delle varie visuali e schermate.
      */
     private void initMenuItemIds() {
-        myMenuItemIds.put(R.id.screen_menu_exp,"MAP");
+        myMenuItemIds.put(R.id.screen_menu_exp,"TRACK");
         myMenuItemIds.put(R.id.screen_menu_contact,"CONTACTS");
         myMenuItemIds.put(R.id.screen_menu_meteo,"WEATHER");
         myMenuItemIds.put(R.id.screen_menu_cardio,"CARDIO");
