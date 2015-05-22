@@ -122,7 +122,7 @@ public class TrackPresenter implements ITrackPresenter,
      * checkpoint con sensori, e effettuato un avanzamento manuale.
      */
     @Override
-    public void advanceCheckpoint() {
+    public synchronized void advanceCheckpoint() {
         lrMan.detachObserver(this);
         nextCheckpoint();
     }
