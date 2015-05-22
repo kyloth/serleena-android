@@ -95,12 +95,12 @@ public class Telemetry implements  ITelemetry {
      * @param from L'inizio dell'intervallo, comprensivo degli
      *             eventi da restituire, espresso in secondi dall'avvio del
      *             Tracciamento.
-     *             Se from > to, viene sollevata un'eccezione
+     *             Se from > to, o < 0, viene sollevata un'eccezione
      *             IllegalArgumentException.
      * @param to L'inizio dell'intervallo, comprensivo degli
      *           eventi da restituire, espresso in secondi dall'avvio del
      *           Tracciamento.
-     *           Se from > to, viene sollevata un'eccezione
+     *           Se from > to, o < 0, viene sollevata un'eccezione
      *           IllegalArgumentException.
      * @return Insieme enumerabile di eventi di Tracciamento.
      * @throws NoSuchTelemetryEventException
@@ -109,6 +109,11 @@ public class Telemetry implements  ITelemetry {
     @Override
     public Iterable<TelemetryEvent> getEvents(int from, int to)
             throws NoSuchTelemetryEventException, IllegalArgumentException {
+        if (from < 0 || to < 0)
+            throw new IllegalArgumentException("Illegal time below zero");
+        if (from > to)
+            throw new IllegalArgumentException("Illegal time segment");
+
         Iterable<TelemetryEvent> allEvents = this.getEvents();
         ArrayList<TelemetryEvent> result = new ArrayList<TelemetryEvent>();
 
@@ -170,6 +175,8 @@ public class Telemetry implements  ITelemetry {
             throws NoSuchTelemetryEventException, IllegalArgumentException {
         if (loc == null)
             throw new IllegalArgumentException("Illegal null location");
+        if (tolerance < 0)
+            throw new IllegalArgumentException("Illegal tolerance below zero");
 
         Iterable<TelemetryEvent> events =
                 this.getEvents(TelemetryEventType.Location);
