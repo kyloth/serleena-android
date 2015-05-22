@@ -151,4 +151,43 @@ public class Telemetry implements  ITelemetry {
         return result;
     }
 
+    /**
+     * Implementa ITelemetry.getEventAtLocation().
+     *
+     * @param loc Posizione campionata dall'evento che si vuole ottenere. Se
+     *            null, viene sollevata un'eccezione IllegalArgumentException.
+     * @param tolerance Tolleranza, in metri, indicante quanto la posizione
+     *                  registrata dall'evento restituito può discostarsi dal
+     *                  valore richiesto. Se < 0, viene sollevata
+     *                  un'eccezione IllegalOperationException.
+     * @return Evento di Tracciamento di tipo LocationTelemetryEvent.
+     * @throws NoSuchTelemetryEventException
+     * @throws IllegalArgumentException
+     */
+    @Override
+    public LocationTelemetryEvent getEventAtLocation(GeoPoint loc,
+                                                     int tolerance)
+            throws NoSuchTelemetryEventException, IllegalArgumentException {
+        if (loc == null)
+            throw new IllegalArgumentException("Illegal null location");
+
+        Iterable<TelemetryEvent> events =
+                this.getEvents(TelemetryEventType.Location);
+        int distance = Integer.MAX_VALUE;
+        LocationTelemetryEvent event = null;
+
+        for (TelemetryEvent e : events) {
+            LocationTelemetryEvent lte = (LocationTelemetryEvent)e;
+            int thisDistance = Math.round(lte.location().distanceTo(loc));
+            if (thisDistance <= tolerance && thisDistance < distance) {
+                event = lte;
+                distance = thisDistance;
+            }
+        }
+
+        if (event == null)
+            throw new NoSuchTelemetryEventException();
+        return event;
+    }
+
 }
