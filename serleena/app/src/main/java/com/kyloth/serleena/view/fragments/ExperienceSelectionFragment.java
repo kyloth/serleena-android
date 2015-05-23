@@ -41,6 +41,7 @@ package com.kyloth.serleena.view.fragments;
 
 import android.app.Activity;
 import android.app.Fragment;
+import android.view.KeyEvent;
 import android.view.View;
 import android.widget.AbsListView;
 import android.widget.AdapterView;
@@ -49,6 +50,7 @@ import android.widget.TextView;
 
 import com.kyloth.serleena.presentation.IExperienceSelectionPresenter;
 import com.kyloth.serleena.presentation.IExperienceSelectionView;
+import com.kyloth.serleena.presentation.ISerleenaActivity;
 
 import java.util.ArrayList;
 
@@ -158,5 +160,14 @@ public class ExperienceSelectionFragment extends Fragment
     @Override
     public void attachPresenter(IExperienceSelectionPresenter presenter) {
         this.presenter = presenter;
+    }
+
+    /**
+     * Metodo invocato alla pressione del pulsante centrale dello smartwatch.
+     *
+     * @param keyCode tasto premuto
+     * @param event KeyEvent avvenuto
+     */
+    public void keyDown(int keyCode, KeyEvent event) {
     }
 }

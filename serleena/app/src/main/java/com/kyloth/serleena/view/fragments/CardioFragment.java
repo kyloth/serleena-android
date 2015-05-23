@@ -41,6 +41,9 @@ package com.kyloth.serleena.view.fragments;
 
 import android.app.Activity;
 import android.app.Fragment;
+import android.view.KeyEvent;
+import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.View;
 import android.widget.TextView;
 
@@ -101,5 +104,14 @@ public class CardioFragment extends Fragment implements ICardioView {
     @Override
     public void attachPresenter(ICardioPresenter presenter) {
         this.presenter = presenter;
+    }
+
+    /**
+     * Metodo invocato alla pressione del pulsante centrale dello smartwatch.
+     *
+     * @param keyCode tasto premuto
+     * @param event KeyEvent avvenuto
+     */
+    public void keyDown(int keyCode, KeyEvent event) {
     }
 }

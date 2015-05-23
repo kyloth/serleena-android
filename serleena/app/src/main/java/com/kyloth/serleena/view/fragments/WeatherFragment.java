@@ -43,6 +43,7 @@ import android.app.Activity;
 import android.app.Fragment;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.view.KeyEvent;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -181,5 +182,15 @@ public class WeatherFragment extends Fragment implements IWeatherView {
     public void setDate(Date date) {
         now = Calendar.getInstance();
         now.setTime(date);
+    }
+
+    /**
+     * Metodo che visualizza le previsioni successive.
+     *
+     * @param keyCode tasto premuto
+     * @param event KeyEvent avvenuto
+     */
+    public void keyDown(int keyCode, KeyEvent event) {
+        presenter.advanceDate();
     }
 }

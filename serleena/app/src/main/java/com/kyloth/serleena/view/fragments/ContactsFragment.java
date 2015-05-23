@@ -41,6 +41,7 @@ package com.kyloth.serleena.view.fragments;
 
 import android.app.Activity;
 import android.app.Fragment;
+import android.view.KeyEvent;
 import android.widget.TextView;
 
 import com.kyloth.serleena.R;
@@ -113,5 +114,16 @@ public class ContactsFragment extends Fragment implements IContactsView {
         TextView textValue = (TextView) getActivity().findViewById(R.id.contact_value);
         textName.setText("NESSUN CONTATTO");
         textValue.setText("DA VISUALIZZARE");
+    }
+
+    /**
+     * Metodo che richiede la visualizzazione del contatto successivo alla pressione del pulsante
+     * centrale.
+     *
+     * @param keyCode tasto premuto
+     * @param event KeyEvent avvenuto
+     */
+    public void keyDown(int keyCode, KeyEvent event) {
+        presenter.nextContact();
     }
 }

@@ -41,6 +41,7 @@ package com.kyloth.serleena.view.fragments;
 
 import android.app.Activity;
 import android.app.Fragment;
+import android.view.KeyEvent;
 import android.view.View;
 import android.widget.ImageButton;
 import android.widget.TextView;
@@ -98,10 +99,10 @@ public class SyncFragment extends Fragment implements ISyncView {
         states.put(SyncStatusEnum.COMPLETE,"FATTO");
         states.put(SyncStatusEnum.FAILED,"ERRORE");
         states.put(SyncStatusEnum.INACTIVE,"SINCRONIZZAZIONE NON ATTIVA");
-        states.put(SyncStatusEnum.INPUT_REQUIRED,"IN ATTESA DI CONFERMA...");
-        states.put(SyncStatusEnum.PREAUTH,"STO RICEVENDO IL TOKEN...");
-        states.put(SyncStatusEnum.REJECTED,"INSERIMENTO NON CORRETTO");
-        states.put(SyncStatusEnum.SYNCING,"SINCRONIZZANDO...");
+        states.put(SyncStatusEnum.INPUT_REQUIRED, "IN ATTESA DI CONFERMA...");
+        states.put(SyncStatusEnum.PREAUTH, "STO RICEVENDO IL TOKEN...");
+        states.put(SyncStatusEnum.REJECTED, "INSERIMENTO NON CORRETTO");
+        states.put(SyncStatusEnum.SYNCING, "SINCRONIZZANDO...");
     }
 
     /**
@@ -145,5 +146,15 @@ public class SyncFragment extends Fragment implements ISyncView {
     @Override
     public void attachPresenter(ISyncPresenter presenter) {
         this.presenter = presenter;
+    }
+
+    /**
+     * Metodo che richiede la sincronizzazione.
+     *
+     * @param keyCode tasto premuto
+     * @param event KeyEvent avvenuto
+     */
+    public void keyDown(int keyCode, KeyEvent event) {
+        presenter.synchronize();
     }
 }

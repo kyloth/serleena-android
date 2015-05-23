@@ -40,10 +40,12 @@
 package com.kyloth.serleena.presenters;
 
 import android.app.Fragment;
+import android.app.FragmentManager;
 import android.app.FragmentTransaction;
 import android.os.Bundle;
 import android.support.v7.app.ActionBarActivity;
 import android.support.v7.app.AppCompatActivity;
+import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuItem;
 
@@ -61,6 +63,7 @@ import com.kyloth.serleena.common.NoActiveExperienceException;
 import com.kyloth.serleena.model.IExperience;
 import com.kyloth.serleena.model.ISerleenaDataSource;
 import com.kyloth.serleena.model.ITrack;
+import com.kyloth.serleena.model.Telemetry;
 import com.kyloth.serleena.presentation.ICardioView;
 import com.kyloth.serleena.presentation.ICompassView;
 import com.kyloth.serleena.presentation.IContactsView;
@@ -130,6 +133,8 @@ public class SerleenaActivity extends AppCompatActivity implements ISerleenaActi
      */
     private String curFrag;
 
+    private boolean showingMenu = false;
+
     /**
      * Metodo invocato alla creazione dell'Activity. Vengono inizializzate le
      * mappe e viene visualizzato il Fragment iniziale
@@ -158,7 +163,7 @@ public class SerleenaActivity extends AppCompatActivity implements ISerleenaActi
         myFrags.put("TRACKLIST", new TrackSelectionFragment());
         myFrags.put("CONTACTS", new ContactsFragment());
         myFrags.put("WEATHER", new WeatherFragment());
-        myFrags.put("CARDIO",new CardioFragment());
+        myFrags.put("CARDIO", new CardioFragment());
         myFrags.put("COMPASS", new CompassFragment());
         myFrags.put("SYNC", new SyncFragment());
     }
@@ -213,7 +218,25 @@ public class SerleenaActivity extends AppCompatActivity implements ISerleenaActi
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.menu_serleena, menu);
+        showingMenu = true;
         return true;
+    }
+
+    /**
+     * Metodo invocato all'apertura di un menù.
+     */
+    @Override
+    public boolean onPrepareOptionsMenu(Menu menu) {
+        showingMenu = true;
+        return true;
+    }
+
+    /**
+     * Metodo invocato alla chiusura di un menù.
+     */
+    @Override
+    public void onOptionsMenuClosed(Menu menu) {
+        showingMenu = false;
     }
 
     /**
@@ -265,6 +288,43 @@ public class SerleenaActivity extends AppCompatActivity implements ISerleenaActi
         Fragment old = getFragmentManager().findFragmentByTag(curFrag);
         ft.remove(old);
         ft.commit();
+    }
+
+    /**
+     * Metodo richiamato
+     *
+     * @param keyCode tasto premuto
+     * @param event KeyEvent avvenuto
+     * @return true se l'evento viene gestito correttamente
+     */
+    @Override
+    public boolean onKeyDown(int keyCode, KeyEvent event) {
+        if(keyCode == KeyEvent.KEYCODE_DPAD_DOWN)
+            if(showingMenu)
+                closeOptionsMenu();
+            else
+                openOptionsMenu();
+        if(keyCode == KeyEvent.KEYCODE_DPAD_UP) {
+            if(curFrag.equals("EXPLIST")) changeFragment("TRACKLIST");
+            if(curFrag.equals("TRACKLIST")) changeFragment("TRACK");
+            if(curFrag.equals("TRACK")) changeFragment("MAP");
+            if(curFrag.equals("MAP")) changeFragment("TELEMETRY");
+            if(curFrag.equals("TELEMETRY")) changeFragment("EXPLIST");
+        }
+        if(keyCode == KeyEvent.KEYCODE_ENTER) {
+            Fragment frag = myFrags.get(curFrag);
+            if(frag instanceof MapFragment)
+                ((MapFragment) frag).keyDown(keyCode,event);
+            if(frag instanceof TelemetryFragment)
+                ((TelemetryFragment) frag).keyDown(keyCode,event);
+            if(frag instanceof WeatherFragment)
+                ((WeatherFragment) frag).keyDown(keyCode,event);
+            if(frag instanceof ContactsFragment)
+                ((ContactsFragment) frag).keyDown(keyCode,event);
+            if(frag instanceof SyncFragment)
+                ((SyncFragment) frag).keyDown(keyCode,event);
+        }
+        return true;
     }
 
     /**

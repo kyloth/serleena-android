@@ -41,6 +41,7 @@ package com.kyloth.serleena.view.fragments;
 
 import android.app.Activity;
 import android.app.Fragment;
+import android.view.KeyEvent;
 import android.view.View;
 
 import com.kyloth.serleena.R;
@@ -109,5 +110,15 @@ public class CompassFragment extends Fragment implements ICompassView {
     @Override
     public void clearView() {
         widget.setVisibility(View.INVISIBLE);
+    }
+
+    /**
+     * Metodo invocato alla pressione del pulsante centrale dello smartwatch.
+     *
+     * @param keyCode tasto premuto
+     * @param event KeyEvent avvenuto
+     */
+    public void keyDown(int keyCode, KeyEvent event) {
+
     }
 }

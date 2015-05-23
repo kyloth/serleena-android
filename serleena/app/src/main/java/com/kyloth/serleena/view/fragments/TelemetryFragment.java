@@ -41,6 +41,7 @@ package com.kyloth.serleena.view.fragments;
 
 import android.app.Activity;
 import android.app.Fragment;
+import android.view.KeyEvent;
 import android.view.View;
 import android.widget.ImageButton;
 import android.widget.TextView;
@@ -106,5 +107,23 @@ public class TelemetryFragment extends Fragment implements ITelemetryView {
     @Override
     public void attachPresenter(ITelemetryPresenter presenter) {
         this.presenter = presenter;
+    }
+
+    /**
+     * Metodo che richiede la abilitazione o la disabilitazione del tracciamento.
+     *
+     * @param keyCode tasto premuto
+     * @param event KeyEvent avvenuto
+     */
+    public void keyDown(int keyCode, KeyEvent event) {
+        TextView status = (TextView) getActivity().findViewById(R.id.telemetry_status);
+        if(status.getText().equals("ON")) {
+            presenter.disableTelemetry();
+            status.setText("OFF");
+        }
+        else {
+            presenter.enableTelemetry();
+            status.setText("ON");
+        }
     }
 }

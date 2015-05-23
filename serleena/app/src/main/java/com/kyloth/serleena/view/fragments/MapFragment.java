@@ -43,10 +43,12 @@ package com.kyloth.serleena.view.fragments;
 import android.app.Activity;
 import android.app.Fragment;
 import android.graphics.Canvas;
+import android.view.KeyEvent;
 
 import com.kyloth.serleena.common.GeoPoint;
 import com.kyloth.serleena.common.IQuadrant;
 import com.kyloth.serleena.R;
+import com.kyloth.serleena.common.NoActiveExperienceException;
 import com.kyloth.serleena.common.UserPoint;
 import com.kyloth.serleena.presentation.IMapPresenter;
 import com.kyloth.serleena.view.widgets.MapWidget;
@@ -136,4 +138,16 @@ public class MapFragment extends Fragment implements com.kyloth.serleena.present
         this.presenter = presenter;
     }
 
+    /**
+     * Metodo che richiede la creazione di un Punto Utente.
+     *
+     * @param keyCode tasto premuto
+     * @param event KeyEvent avvenuto
+     */
+    public void keyDown(int keyCode, KeyEvent event) {
+        try {
+            presenter.newUserPoint();
+        }
+        catch (NoActiveExperienceException e) {}
+    }
 }

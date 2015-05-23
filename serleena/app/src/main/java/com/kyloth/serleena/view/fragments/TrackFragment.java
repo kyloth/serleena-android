@@ -41,6 +41,7 @@ package com.kyloth.serleena.view.fragments;
 
 import android.app.Activity;
 import android.app.Fragment;
+import android.view.KeyEvent;
 import android.widget.TextView;
 
 import com.kyloth.serleena.R;
@@ -269,4 +270,9 @@ public class TrackFragment extends Fragment implements ITrackView {
     public void telemetryEnabled(boolean b) {
         displayInfo();
     }
+
+    /**
+     * Metodo invocato alla pressione del pulsante centrale dello smartwatch.
+     */
+    public void keyDown(int keyCode, KeyEvent event) {    }
 }
