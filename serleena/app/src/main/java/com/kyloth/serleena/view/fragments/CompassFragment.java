@@ -52,6 +52,8 @@ import com.kyloth.serleena.view.widgets.CompassWidget;
  * Classe che implementa la schermata “Bussola”, in cui vengono fornite all'utente delle indicazioni
  * rispetto i poli geografici
  *
+ * @field presenter : ICompassPresenter presenter collegato ad un CompassFragment
+ * @field widget : CompassWidget componente grafica che visualizza una bussola sullo schermo dello smartwatch
  * @author Sebastiano Valle <valle.sebastiano93@gmail.com>
  * @version 1.0.0
  * @see android.app.Fragment
@@ -84,17 +86,26 @@ public class CompassFragment extends Fragment implements ICompassView {
         presenter.pause();
     }
 
+    /**
+     * Metodo utilizzato per impostare l'orientamento del CompassWidget visualizzato.
+     */
     @Override
     public void setHeading(double heading) {
         widget.setVisibility(View.VISIBLE);
         widget.setBearing((float) heading);
     }
 
+    /**
+     * Metodo utilizzato per collegare un ICompassPresenter a un CompassFragment
+     */
     @Override
     public void attachPresenter(ICompassPresenter presenter) {
         this.presenter = presenter;
     }
 
+    /**
+     * Metodo utilizzato per smettere di visualizzare il CompassWidget.
+     */
     @Override
     public void clearView() {
         widget.setVisibility(View.INVISIBLE);
