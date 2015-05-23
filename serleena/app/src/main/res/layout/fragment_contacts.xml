@@ -9,23 +9,23 @@
         android:contentDescription="@string/contact_image"
         android:layout_gravity="center_horizontal|top"
         android:src="@drawable/contact"
-        android:layout_marginTop="2dp" />
+        android:layout_marginTop="20sp" />
 
     <TextView
         android:layout_width="fill_parent"
         android:layout_height="64dp"
-        android:text="@string/contact_name"
         android:id="@+id/contact_name"
-        android:layout_gravity="center"
+        android:layout_gravity="center_horizontal|top"
         android:gravity="bottom|center"
-        android:textSize="26sp" />
+        android:textSize="26sp"
+        android:layout_marginTop="220sp" />
 
     <TextView
         android:layout_width="fill_parent"
         android:layout_height="81dp"
-        android:text="@string/contact_value"
         android:id="@+id/contact_value"
-        android:layout_gravity="center_horizontal|bottom"
+        android:layout_gravity="center_horizontal|top"
         android:textSize="30sp"
-        android:gravity="center_vertical|center" />
+        android:gravity="center_vertical|center"
+        android:layout_marginTop="150sp" />
 </FrameLayout>
