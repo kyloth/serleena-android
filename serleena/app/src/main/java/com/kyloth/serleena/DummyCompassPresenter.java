@@ -50,7 +50,7 @@ public class DummyCompassPresenter implements ICompassPresenter {
     }
     @Override
     public void resume() {
-        view.setHeading(45);
+        view.setHeading(278);
     }
 
     @Override
