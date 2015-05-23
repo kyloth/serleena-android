@@ -112,8 +112,8 @@ public class ContactsFragment extends Fragment implements IContactsView {
     public void clearView() {
         TextView textName = (TextView) getActivity().findViewById(R.id.contact_name);
         TextView textValue = (TextView) getActivity().findViewById(R.id.contact_value);
-        textName.setText("NESSUN CONTATTO");
-        textValue.setText("DA VISUALIZZARE");
+        textValue.setText("NESSUN CONTATTO");
+        textName.setText("DA VISUALIZZARE");
     }
 
     /**
