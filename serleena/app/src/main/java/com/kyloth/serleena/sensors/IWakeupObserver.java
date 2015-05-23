@@ -56,4 +56,5 @@ public interface IWakeupObserver {
      * processore.
      */
     public void onWakeup();
+    public String getUUID();
 }

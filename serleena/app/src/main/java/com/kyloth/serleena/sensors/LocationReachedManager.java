@@ -50,6 +50,7 @@ import com.kyloth.serleena.common.UnregisteredObserverException;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.UUID;
 
 /**
  * Concretizza ILocationReachedManager
@@ -173,10 +174,12 @@ class LocationReachedManager implements ILocationReachedManager {
         private ILocationReachedObserver observer;
         private ILocationManager locMan;
 
+        private String uuid;
         public CheckDistanceAlarm(ILocationReachedObserver observer,
                        ILocationManager locMan) {
             this.observer = observer;
             this.locMan = locMan;
+            uuid = UUID.randomUUID().toString();
         }
 
         @Override
@@ -188,6 +191,11 @@ class LocationReachedManager implements ILocationReachedManager {
         public void onWakeup() {
             locMan.getSingleUpdate(this,
                     30);
+        }
+
+        @Override
+        public String getUUID() {
+            return uuid;
         }
     }
 

@@ -55,6 +55,7 @@ import com.kyloth.serleena.common.TelemetryEventType;
 
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.UUID;
 
 /**
  * Concretizza ITelemetryManager
@@ -73,7 +74,7 @@ class TelemetryManager implements ITelemetryManager,
     private IPowerManager pm;
     private boolean sampling;
     private long startTimestamp;
-
+    private String uuid;
     /**
      * Crea un oggetto TelemetryManager.
      *
@@ -89,6 +90,7 @@ class TelemetryManager implements ITelemetryManager,
 
         this.events = new ArrayList<TelemetryEvent>();
         this.sampling = false;
+        uuid = UUID.randomUUID().toString();
     }
 
     /**
@@ -187,4 +189,8 @@ class TelemetryManager implements ITelemetryManager,
         hrMan.getSingleUpdate(this, 20);
     }
 
+    @Override
+    public String getUUID() {
+        return uuid;
+    }
 }

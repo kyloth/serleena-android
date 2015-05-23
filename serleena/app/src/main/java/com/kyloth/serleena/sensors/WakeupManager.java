@@ -103,7 +103,7 @@ class WakeupManager extends BroadcastReceiver implements IWakeupManager {
         int millis = interval * 1000;
         if (millis == 0)
             millis = 1;
-        String uuid = UUID.randomUUID().toString();
+        String uuid = observer.getUUID();
 
         AlarmManager alarmManager =
                 (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
