@@ -54,22 +54,27 @@ import android.graphics.Shader;
 import android.util.AttributeSet;
 import android.view.View;
 import android.view.accessibility.AccessibilityEvent;
-import android.widget.Toast;
 
 import com.kyloth.serleena.R;
 
 /**
  * Classe che implementa il widget presente nella visuale Bussola della schermata Esperienza
  *
- * @field bearing : float inclinazione della bussola
+ * @field bearing : float orientamento della bussola (in gradi)
+ * @field pitch : float inclinazione verticale della bussola (in gradi)
+ * @field roll : float inclinazione trasversale della bussola (in gradi)
  * @field markerPaint : Paint modo con cui vengono colorate le tacche sulla bussola
  * @field textPaint : Paint modo con cui viene colorato il testo sulla bussola
  * @field circlePaint : Paint modo con cui viene colorato il contorno del cerchio sulla bussola
- * @field northString : String stringa che viene visualizzata in corrispondenza del Nord
- * @field southString : String stringa che viene visualizzata in corrispondenza del Sud
- * @field eastString : String stringa che viene visualizzata in corrispondenza del Est
- * @field westString : String stringa che viene visualizzata in corrispondenza dell'Ovest
  * @field textHeight : int grandezza del testo
+ * @field borderGradientColors : int[] colori degli elementi sui bordi della bussola
+ * @field borderGradientPositions : float[] dimensioni degli elementi sui bordi della bussola
+ * @field glassGradientColors : int[] colori degli elementi all'interno della bussola
+ * @field glassGradientPositions : float[] posizioni degli elementi all'interno della bussola
+ * @field skyHorizonColorFrom : int colore presente vicino al Nord
+ * @field skyHorizonColorTo : int colore presente nella metà verso il Nord della bussola
+ * @field groundHorizonColorFrom : int colore presente vicino al Sud
+ * @field groundHorizonColorTo : int colore presente nella metà verso il Sud della bussola
  * @author Sebastiano Valle <valle.sebastiano93@gmail.com>
  * @version 1.0.0
  * @see android.widget.ImageView
@@ -77,14 +82,13 @@ import com.kyloth.serleena.R;
 public class CompassWidget extends View {
 
     private float bearing;
+    private float pitch;
+    private float roll;
 
     private Paint markerPaint;
     private Paint textPaint;
     private Paint circlePaint;
     private int textHeight;
-
-    private float pitch;
-    private float roll;
 
     private int[] borderGradientColors;
     private float[] borderGradientPositions;
@@ -97,27 +101,48 @@ public class CompassWidget extends View {
     int groundHorizonColorFrom;
     int groundHorizonColorTo;
 
+    /**
+     * Possibili direzioni.
+     */
     private enum CompassDirection { N, NNE, NE, ENE,
                                     E, ESE, SE, SSE,
                                     S, SSW, SW, WSW,
                                     W, WNW, NW, NNW }
 
+    /**
+     * Costruttore di CompassWidget a un parametro.
+     *
+     * @param context Activity in cui è presente il widget
+     */
     public CompassWidget(Context context) {
         super(context);
-        initCompassView();
+        initCompassWidget();
     }
 
+    /**
+     * Costruttore di CompassWidget a due parametri.
+     *
+     * @param context Activity in cui è presente il widget
+     */
     public CompassWidget(Context context, AttributeSet attrs) {
         super(context,attrs);
-        initCompassView();
+        initCompassWidget();
     }
 
+    /**
+     * Costruttore di CompassWidget a tre parametri.
+     *
+     * @param context Activity in cui è presente il widget
+     */
     public CompassWidget(Context context, AttributeSet attrs,int defaultStyle) {
         super(context,attrs,defaultStyle);
-        initCompassView();
+        initCompassWidget();
     }
 
-    protected void initCompassView() {
+    /**
+     * Metodo con cui vengono inizializzate le variabili di un CompassWidget.
+     */
+    protected void initCompassWidget() {
         setFocusable(true);
 
         Resources r = getContext().getResources();
@@ -175,13 +200,21 @@ public class CompassWidget extends View {
         groundHorizonColorTo = r.getColor(R.color.horizon_ground_to);
     }
 
+    /**
+     * Metodo invocato quando vengono richieste le dimensioni di un CompassWidget.
+     *
+     * In questo metodo ci si assicura che venga disegnata una bussola circolare e non ovale.
+     */
     @Override
     protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
         int measuredWidth = measure(widthMeasureSpec);
-        int d = Math.min(widthMeasureSpec,heightMeasureSpec);
+        int d = Math.min(widthMeasureSpec, heightMeasureSpec);
         setMeasuredDimension(d, d);
     }
 
+    /**
+     * Metodo per restituire il valore effettivo di una dimensione considerata durante la misurazione.
+     */
     private int measure(int measureSpec) {
         int result = 0;
         int specMode = MeasureSpec.getMode(measureSpec);
@@ -195,15 +228,24 @@ public class CompassWidget extends View {
         return result;
     }
 
+    /**
+     * Metodo con cui vengono impostati i gradi di inclinazione rispetto al Nord.
+     */
     public void setBearing(float _bearing) {
         bearing = _bearing;
         sendAccessibilityEvent(AccessibilityEvent.TYPE_VIEW_TEXT_CHANGED);
     }
 
+    /**
+     * Metodo con cui vengono ottenuti i gradi di inclinazione rispetto al Nord.
+     */
     public float getBearing() {
         return bearing;
     }
 
+    /**
+     * Metodo con cui viene disegnata la bussola.
+     */
     @Override
     public void onDraw(Canvas canvas){
         float ringWidth = textHeight + 4;
@@ -375,6 +417,10 @@ public class CompassWidget extends View {
         canvas.restore();
     }
 
+    /**
+     * Metodo con cui Viene restituito il valore in gradi nel caso in cui non fosse possibile
+     * visualizzare l'immagine della bussola.
+     */
     @Override
     public boolean dispatchPopulateAccessibilityEvent(final AccessibilityEvent event) {
         super.dispatchPopulateAccessibilityEvent(event);
@@ -391,20 +437,32 @@ public class CompassWidget extends View {
             return false;
     }
 
+    /**
+     * Metodo con cui vengono impostati i gradi di inclinazione verticale.
+     */
     public void setPitch(float _pitch) {
         pitch = _pitch;
         sendAccessibilityEvent(AccessibilityEvent.TYPE_VIEW_TEXT_CHANGED);
     }
 
+    /**
+     * Metodo con cui vengono ottenuti i gradi di inclinazione verticale.
+     */
     public float getPitch() {
         return pitch;
     }
 
+    /**
+     * Metodo con cui vengono impostati i gradi di inclinazione trasversale.
+     */
     public void setRoll(float _roll) {
         pitch = _roll;
         sendAccessibilityEvent(AccessibilityEvent.TYPE_VIEW_TEXT_CHANGED);
     }
 
+    /**
+     * Metodo con cui vengono ottenuti i gradi di inclinazione trasversale.
+     */
     public float getRoll() {
         return roll;
     }
