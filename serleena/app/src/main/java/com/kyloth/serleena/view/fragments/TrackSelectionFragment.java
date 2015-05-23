@@ -66,7 +66,8 @@ import java.util.ArrayList;
  * @version 1.0.0
  * @see android.app.Fragment
  */
-public class TrackSelectionFragment extends Fragment implements AbsListView.OnItemClickListener, ITrackSelectionView {
+public class TrackSelectionFragment extends Fragment
+        implements AbsListView.OnItemClickListener, ITrackSelectionView {
 
     /**
      * Presenter collegato a questo ExperienceSelectionFragment

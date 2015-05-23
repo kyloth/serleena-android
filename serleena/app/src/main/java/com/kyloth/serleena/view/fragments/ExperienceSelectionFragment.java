@@ -65,7 +65,8 @@ import java.util.ArrayList;
  * @version 1.0.0
  * @see android.app.Fragment
  */
-public class ExperienceSelectionFragment extends Fragment implements AbsListView.OnItemClickListener,IExperienceSelectionView {
+public class ExperienceSelectionFragment extends Fragment
+        implements AbsListView.OnItemClickListener,IExperienceSelectionView {
 
     /**
      * Presenter collegato a questo ExperienceSelectionFragment
