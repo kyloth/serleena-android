@@ -70,6 +70,8 @@ public class CardioFragment extends Fragment implements ICardioView {
     @Override
     public void onAttach(Activity activity) {
         super.onAttach(activity);
+        TextView hr = (TextView) getActivity().findViewById(R.id.heart_rate);
+        hr.setText("NESSUN DATO DA VISUALIZZARE");
         presenter.resume();
     }
 
