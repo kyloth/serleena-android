@@ -43,6 +43,7 @@ import android.app.Fragment;
 import android.app.FragmentTransaction;
 import android.os.Bundle;
 import android.support.v7.app.ActionBarActivity;
+import android.support.v7.app.AppCompatActivity;
 import android.view.Menu;
 import android.view.MenuItem;
 
@@ -103,9 +104,9 @@ import java.util.Map;
  * @field curFrag : String stringa contenente il nome della visuale attualmente presente sul display
  * @author Sebastiano Valle <valle.sebastiano93@gmail.com>
  * @version 1.0.0
- * @see android.support.v7.app.ActionBarActivity
+ * @see android.support.v7.app.AppCompatActivity
  */
-public class SerleenaActivity extends ActionBarActivity implements ISerleenaActivity {
+public class SerleenaActivity extends AppCompatActivity implements ISerleenaActivity {
 
     /**
      * Lista dei Fragment.
