@@ -123,6 +123,7 @@ public class CompassWidget extends View {
      * Costruttore di CompassWidget a due parametri.
      *
      * @param context Activity in cui è presente il widget
+     * @param attrs attributi come altezza, larghezza definiti nell'XML corrispondente a MapWidget
      */
     public CompassWidget(Context context, AttributeSet attrs) {
         super(context,attrs);
@@ -133,6 +134,8 @@ public class CompassWidget extends View {
      * Costruttore di CompassWidget a tre parametri.
      *
      * @param context Activity in cui è presente il widget
+     * @param attrs attributi come altezza, larghezza definiti nell'XML corrispondente a MapWidget
+     * @param defStyle stile da applicare a questa vista, può corrispondere a 0 o a un'id di una risorsa
      */
     public CompassWidget(Context context, AttributeSet attrs,int defaultStyle) {
         super(context,attrs,defaultStyle);
@@ -204,6 +207,9 @@ public class CompassWidget extends View {
      * Metodo invocato quando vengono richieste le dimensioni di un CompassWidget.
      *
      * In questo metodo ci si assicura che venga disegnata una bussola circolare e non ovale.
+     *
+     * @param widthMeasureSpec misura di larghezza
+     * @param widthMeasureSpec misura di altezza
      */
     @Override
     protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
@@ -214,6 +220,8 @@ public class CompassWidget extends View {
 
     /**
      * Metodo per restituire il valore effettivo di una dimensione considerata durante la misurazione.
+     *
+     * @param measureSpec misura di altezza
      */
     private int measure(int measureSpec) {
         int result = 0;
@@ -230,9 +238,11 @@ public class CompassWidget extends View {
 
     /**
      * Metodo con cui vengono impostati i gradi di inclinazione rispetto al Nord.
+     *
+     * @param bearing gradi di inclinazione rispetto al Nord
      */
-    public void setBearing(float _bearing) {
-        bearing = _bearing;
+    public void setBearing(float bearing) {
+        this.bearing = bearing;
         sendAccessibilityEvent(AccessibilityEvent.TYPE_VIEW_TEXT_CHANGED);
     }
 
@@ -245,6 +255,8 @@ public class CompassWidget extends View {
 
     /**
      * Metodo con cui viene disegnata la bussola.
+     *
+     * @param canvas Oggetto su cui disegnare la bussola
      */
     @Override
     public void onDraw(Canvas canvas){
@@ -420,6 +432,8 @@ public class CompassWidget extends View {
     /**
      * Metodo con cui Viene restituito il valore in gradi nel caso in cui non fosse possibile
      * visualizzare l'immagine della bussola.
+     *
+     * @param event Evento da visualizzare
      */
     @Override
     public boolean dispatchPopulateAccessibilityEvent(final AccessibilityEvent event) {
@@ -439,9 +453,11 @@ public class CompassWidget extends View {
 
     /**
      * Metodo con cui vengono impostati i gradi di inclinazione verticale.
+     * 
+     * @param pitch gradi di inclinazione verticale
      */
-    public void setPitch(float _pitch) {
-        pitch = _pitch;
+    public void setPitch(float pitch) {
+        this.pitch = pitch;
         sendAccessibilityEvent(AccessibilityEvent.TYPE_VIEW_TEXT_CHANGED);
     }
 
@@ -454,9 +470,11 @@ public class CompassWidget extends View {
 
     /**
      * Metodo con cui vengono impostati i gradi di inclinazione trasversale.
+     *
+     * @param roll gradi di inclinazione trasversale
      */
-    public void setRoll(float _roll) {
-        pitch = _roll;
+    public void setRoll(float roll) {
+        this.roll = roll;
         sendAccessibilityEvent(AccessibilityEvent.TYPE_VIEW_TEXT_CHANGED);
     }
 
