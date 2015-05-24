@@ -134,6 +134,8 @@ public class SerleenaActivity extends AppCompatActivity implements ISerleenaActi
     private String curFrag;
 
     private boolean showingMenu = false;
+    private ISerleenaDataSource dataSource;
+    private ISensorManager sensorManager;
 
     /**
      * Metodo invocato alla creazione dell'Activity. Vengono inizializzate le
