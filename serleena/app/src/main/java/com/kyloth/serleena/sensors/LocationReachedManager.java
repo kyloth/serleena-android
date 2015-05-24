@@ -60,7 +60,6 @@ import java.util.Map;
 public class LocationReachedManager implements ILocationReachedManager {
 
     private static int LOCATION_RADIUS = 15;
-    private static LocationReachedManager instance;
 
     private Map<ILocationReachedObserver, GeoPoint> observers;
     private Map<ILocationReachedObserver, IWakeupObserver> alarms;
@@ -70,16 +69,15 @@ public class LocationReachedManager implements ILocationReachedManager {
     /**
      * Crea un oggetto LocationReachedManager.
      *
-     * Il costruttore è privato per realizzare correttamente il pattern
-     * Singleton, forzando l'accesso alla sola istanza esposta dai
-     * metodi Singleton e impedendo al codice client di costruire istanze
-     * arbitrariamente.
+     * L'oggetto utilizza altre risorse di sensoristica del dispositivo,
+     * fornitegli tramite parametri al costruttore.
      *
-     * @param context Contesto dell'applicazione.
+     * @param locMan Gestore della posizione.
+     * @param wm Gestore dei wakeup del processore.
      */
-    private LocationReachedManager(Context context) {
-        wm = WakeupManager.getInstance(context);
-        locMan = SerleenaLocationManager.getInstance(context);
+    public LocationReachedManager(IWakeupManager wm, ILocationManager locMan) {
+        this.wm = wm;
+        this.locMan = locMan;
         observers = new HashMap<ILocationReachedObserver, GeoPoint>();
         alarms = new HashMap<ILocationReachedObserver, IWakeupObserver>();
     }
@@ -167,20 +165,6 @@ public class LocationReachedManager implements ILocationReachedManager {
             alarms.put(observer, alarm);
             wm.attachObserver(alarm, distance, true);
         }
-    }
-
-    /**
-     * Restituisce la singola istanza della classe.
-     *
-     * Implementa il pattern Singleton.
-     *
-     * @param context Contesto dell'applicazione.
-     * @return Istanza della classe.
-     */
-    public static LocationReachedManager getInstance(Context context) {
-        if (instance == null)
-            instance = new LocationReachedManager(context);
-        return instance;
     }
 
     private class CheckDistanceAlarm implements IWakeupObserver,
