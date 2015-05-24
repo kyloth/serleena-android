@@ -65,22 +65,15 @@ public class WakeupManager extends BroadcastReceiver implements IWakeupManager {
 
     private static final String ALARM_UUID = "ALARM_UUID";
 
-    private static WakeupManager instance;
-
     private Context context;
     private WakeupSchedule schedule;
 
     /**
      * Crea un oggetto WakeupManager.
      *
-     * Il costruttore è privato per realizzare correttamente il pattern
-     * Singleton, forzando l'accesso alla sola istanza esposta dai
-     * metodi Singleton e impedendo al codice client di costruire istanze
-     * arbitrariamente.
-     *
      * @param context Contesto dell'applicazione.
      */
-    private WakeupManager(Context context) {
+    public WakeupManager(Context context) {
         this.context = context;
         this.schedule = new WakeupSchedule();
     }
@@ -179,20 +172,6 @@ public class WakeupManager extends BroadcastReceiver implements IWakeupManager {
             throw new IllegalArgumentException("Intent not recognized");
 
         notifyObserver(schedule.getObserver(uuid));
-    }
-
-    /**
-     * Restituisce la singola istanza della classe.
-     *
-     * Implementa il pattern Singleton.
-     *
-     * @param context Contesto dell'applicazione.
-     * @return Istanza della classe.
-     */
-    public static WakeupManager getInstance(Context context) {
-        if (instance == null)
-            instance = new WakeupManager(context);
-        return instance;
     }
 
 }
