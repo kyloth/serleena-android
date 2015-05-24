@@ -47,7 +47,12 @@ import android.content.Context;
 import java.util.HashMap;
 
 /**
- * Concretizza ISensorManager
+ * Concretizza ISensorManager.
+ *
+ * Rappresenta l'interfaccia pubblica al package sensors, e fornisce i
+ * servizi di sensoristica all'esterno aggregando le singole classi del
+ * package e restituendole ai client attraverso i suoi metodi, nascondendo i
+ * dettagli di creazione e aggregazione di tali classi.
  *
  * @author Filippo Sestini <sestini.filippo@gmail.com>
  * @version 1.0.0
@@ -64,6 +69,16 @@ public class SensorManager implements ISensorManager {
     private IWakeupManager wMan;
     private ITelemetryManager telMan;
 
+    /**
+     * Restituisce l'istanza associata al contesto specificato.
+     *
+     * Implementa il pattern Singleton, e restituisce l'unica istanza
+     * associata al contesto specificato.
+     *
+     * @param context Contesto dell'applicazione di cui si vuole ottenere il
+     *                SensorManager associato.
+     * @return Singola istanza di SensorManager associata al contesto.
+     */
     public static SensorManager getInstance(Context context) {
         if (instances.get(context) == null)
             instances.put(context, new SensorManager(context));
@@ -72,6 +87,9 @@ public class SensorManager implements ISensorManager {
 
     /**
      * Crea un gestore della sensoristica a partire dal contesto specificato.
+     *
+     * Il costruttore è privato per garantire la corretta implementazione del
+     * pattern Singleton.
      *
      * @param context Contesto dell'applicazione.
      * @see Context
