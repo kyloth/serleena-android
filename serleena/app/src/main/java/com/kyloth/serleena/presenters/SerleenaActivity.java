@@ -370,12 +370,17 @@ public class SerleenaActivity extends AppCompatActivity implements ISerleenaActi
     }
 
     /**
-     * Metodo che implementa l'abilitazione del tracciamento per il percorso
-     * attivo.
+     * Implementa ISerleenaActivity.enableTelemetry().
+     *
+     * Segnala all'activity l'abilitazione del Tracciamento. L'activity si
+     * occupa di inoltrare l'informazione agli altri presenter che
+     * ne necessitano.
      */
     @Override
     public void enableTelemetry() {
-
+        TelemetryPresenter presenter =
+                (TelemetryPresenter) myPress.get("TELEMETRY");
+        presenter.enableTelemetry();
     }
 
     /**
