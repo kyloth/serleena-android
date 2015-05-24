@@ -56,7 +56,8 @@ import java.util.Map;
  */
 public class SerleenaPowerManager implements IPowerManager {
 
-    private static SerleenaPowerManager instance;
+    private static HashMap<Context, SerleenaPowerManager> instances =
+            new HashMap<Context, SerleenaPowerManager>();
 
     private Map<String, PowerManager.WakeLock> locks;
     private PowerManager pm;
@@ -73,7 +74,7 @@ public class SerleenaPowerManager implements IPowerManager {
      */
     private SerleenaPowerManager(Context context) {
         pm = (PowerManager) context.getSystemService(Context.POWER_SERVICE);
-        locks = new HashMap<>();
+        locks = new HashMap<String, PowerManager.WakeLock>();
     }
 
     /**
@@ -118,9 +119,9 @@ public class SerleenaPowerManager implements IPowerManager {
         if (context == null)
             throw new IllegalArgumentException("Illegal null context");
 
-        if (instance == null)
-            instance = new SerleenaPowerManager(context);
-        return instance;
+        if (instances.get(context) == null)
+            instances.put(context, new SerleenaPowerManager(context));
+        return instances.get(context);
     }
 
 }
