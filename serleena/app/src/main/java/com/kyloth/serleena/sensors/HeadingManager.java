@@ -68,8 +68,6 @@ import java.util.concurrent.TimeUnit;
 @TargetApi(19)
 public class HeadingManager implements IHeadingManager, SensorEventListener {
 
-    private static HeadingManager instance;
-
     private float[] accelerometerValues;
     private float[] magneticFieldValues;
     private double latestOrientation;
@@ -80,11 +78,13 @@ public class HeadingManager implements IHeadingManager, SensorEventListener {
     private Sensor accelerometer;
 
     /**
-     * Crea un nuovo oggetto HeadingManager.
+     * Crea un nuovo oggetto HeadingManager associato a un contesto di
+     * applicazione specificato.
      *
      * @param context Oggetto Context in cui viene eseguito l'HeadingManager.
      */
-    private HeadingManager(Context context) throws SensorNotAvailableException {
+    public HeadingManager(Context context) throws
+            SensorNotAvailableException {
         SensorManager sm = (SensorManager)
                 context.getSystemService(Context.SENSOR_SERVICE);
         accelerometer = sm.getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
@@ -247,18 +247,6 @@ public class HeadingManager implements IHeadingManager, SensorEventListener {
         values[2] = (float) Math.toDegrees(values[2]); // Roll
 
         return values[0];
-    }
-
-    /**
-     * Implementazione del pattern Singleton.
-     *
-     * @return Singola istanza della classe HeadingManager.
-     */
-    public static HeadingManager getInstance(Context context)
-            throws SensorNotAvailableException {
-        if (instance == null)
-            instance = new HeadingManager(context);
-        return instance;
     }
 
 }
