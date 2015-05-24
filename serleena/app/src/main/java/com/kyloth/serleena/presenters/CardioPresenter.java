@@ -92,4 +92,17 @@ public class CardioPresenter implements ICardioPresenter, IHeartRateObserver {
         hrMan.detachObserver(this);
     }
 
+    /**
+     * Implementa ICardioPresenter.onHeartRateUpdate().
+     *
+     * Comunica alla vista i dati aggiornati relativi al battito cardiaco
+     * dell'utente.
+     *
+     * @param rate Valore di tipo intero che indica l'heart
+     */
+    @Override
+    public void onHeartRateUpdate(int rate) {
+        view.setHeartRate(rate);
+    }
+
 }
