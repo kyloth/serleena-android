@@ -159,7 +159,7 @@ public class SerleenaActivity extends AppCompatActivity implements ISerleenaActi
 
         dataSource = new SerleenaDataSource(
                 new SerleenaSQLiteDataSource(this, new SerleenaDatabase(this, 1)));
-        sensorManager = new SensorManager(this);
+        sensorManager = SensorManager.getInstance(this);
     }
 
     /**
