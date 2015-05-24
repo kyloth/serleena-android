@@ -156,6 +156,10 @@ public class SerleenaActivity extends AppCompatActivity implements ISerleenaActi
         initMenuItemIds();
         FragmentTransaction ft = getFragmentManager().beginTransaction();
         changeFragment("TELEMETRY");
+
+        dataSource = new SerleenaDataSource(
+                new SerleenaSQLiteDataSource(this, new SerleenaDatabase(this, 1)));
+        sensorManager = new SensorManager(this);
     }
 
     /**
