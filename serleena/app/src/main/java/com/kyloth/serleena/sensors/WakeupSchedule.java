@@ -65,8 +65,9 @@ class WakeupSchedule {
 
     public void add(String uuid, IWakeupObserver observer,
                     PendingIntent alarmIntent, boolean oneTimeOnly) {
-        intentMap.put(obsMap.put(uuidMap.put(uuid, observer),
-                alarmIntent), uuid);
+        uuidMap.put(uuid, observer);
+        obsMap.put(observer, alarmIntent);
+        intentMap.put(alarmIntent, uuid);
         onetimeMap.put(observer, oneTimeOnly);
     }
 
