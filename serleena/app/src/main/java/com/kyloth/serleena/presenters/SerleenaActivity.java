@@ -182,16 +182,35 @@ public class SerleenaActivity extends AppCompatActivity implements ISerleenaActi
      * Metodo che istanzia i Presenter nell'Activity e li mappa a dei tag.
      */
     private void initPresentersMap() {
-        myPress.put("MAP", new DummyMapPresenter((IMapView) myFrags.get("MAP")));
-        myPress.put("TRACKLIST", new DummyTrackSelPresenter((ITrackSelectionView) myFrags.get("TRACKLIST"), this));
-        myPress.put("EXPLIST", new DummyExpSelPresenter((IExperienceSelectionView) myFrags.get("EXPLIST"), this));
-        myPress.put("CARDIO", new DummyCardioPresenter((ICardioView) myFrags.get("CARDIO"), this));
-        myPress.put("TELEMETRY", new TelemetryPresenter((ITelemetryView) myFrags.get("TELEMETRY"), this));
-        myPress.put("CONTACTS", new DummyContactsPresenter((IContactsView) myFrags.get("CONTACTS"), this));
-        myPress.put("TRACK", new DummyTrackPresenter((ITrackView) myFrags.get("TRACK"), this));
-        myPress.put("WEATHER", new DummyWeatherPresenter((IWeatherView) myFrags.get("WEATHER"),this));
-        myPress.put("SYNC", new DummySyncPresenter((ISyncView) myFrags.get("SYNC"),this));
-        myPress.put("COMPASS", new DummyCompassPresenter((ICompassView) myFrags.get("COMPASS"),this));
+        myPress.put("MAP",
+                new MapPresenter((IMapView) myFrags.get("MAP"), this));
+        myPress.put("TRACKLIST",
+                new TrackSelectionPresenter((ITrackSelectionView)
+                        myFrags.get("TRACKLIST"), this));
+        myPress.put("EXPLIST",
+                new ExperienceSelectionPresenter(
+                        (IExperienceSelectionView) myFrags.get("EXPLIST"), this));
+        myPress.put("CARDIO",
+                new CardioPresenter(
+                        (ICardioView) myFrags.get("CARDIO"), this));
+        myPress.put("TELEMETRY",
+                new TelemetryPresenter(
+                        (ITelemetryView) myFrags.get("TELEMETRY"), this));
+        myPress.put("CONTACTS",
+                new ContactsPresenter(
+                        (IContactsView) myFrags.get("CONTACTS"), this));
+        myPress.put("TRACK",
+                new TrackPresenter(
+                        (ITrackView) myFrags.get("TRACK"), this));
+        myPress.put("WEATHER",
+                new WeatherPresenter(
+                        (IWeatherView) myFrags.get("WEATHER"),this));
+        myPress.put("SYNC",
+                new SyncPresenter(
+                        (ISyncView) myFrags.get("SYNC"),this));
+        myPress.put("COMPASS",
+                new CompassPresenter(
+                        (ICompassView) myFrags.get("COMPASS"),this));
     }
 
     /**
