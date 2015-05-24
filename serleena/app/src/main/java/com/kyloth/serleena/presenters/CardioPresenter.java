@@ -81,4 +81,15 @@ public class CardioPresenter implements ICardioPresenter, IHeartRateObserver {
         hrMan.attachObserver(this, 15);
     }
 
+    /**
+     * Implementa IPresenter.pause().
+     *
+     * Annulla la registrazione agli eventi del sensore di battito cardiaco
+     * per risparmiare risorse mentre la vista non è visibile.
+     */
+    @Override
+    public void pause() {
+        hrMan.detachObserver(this);
+    }
+
 }
