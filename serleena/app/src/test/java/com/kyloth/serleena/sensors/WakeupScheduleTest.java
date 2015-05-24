@@ -31,156 +31,246 @@
 /**
  * Name: WakeupScheduleTest.java
  * Package: com.kyloth.serleena.presenters;
- * Author: Gabriele Pozzan
+ * Author: Tobia Tesan
  *
  * History:
  * Version  Programmer       Changes
  * 1.0.0    Gabriele Pozzan  Creazione file scrittura
  *                                       codice e documentazione Javadoc
+ * 1.1.0    Tobia Tesan      Rewrite senza WakeupSchedulePlaceholder
  */
 
 package com.kyloth.serleena.sensors;
 
-import org.junit.Test;
-import org.junit.Before;
-import static org.mockito.Mockito.*;
-import static org.junit.Assert.*;
-import android.app.PendingIntent;
 
+import android.app.PendingIntent;
+import android.content.Intent;
+
+import com.kyloth.serleena.BuildConfig;
 import com.kyloth.serleena.sensors.IWakeupObserver;
 import com.kyloth.serleena.sensors.WakeupSchedule;
 
-import java.lang.Override;
-import java.lang.String;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Objects;
+import org.junit.Before;
+import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.robolectric.RobolectricGradleTestRunner;
+import org.robolectric.RuntimeEnvironment;
+import org.robolectric.annotation.Config;
+
+import java.util.NoSuchElementException;
+import java.util.UUID;
+
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertTrue;
 
 /**
  * Contiene i test di unità per la classe WakeupSchedule.
  *
- * @author Gabriele Pozzan <gabriele.pozzan@studenti.unipd.it>
- * @version 1.0.0
+ * @author Tobia Tesan <tobia.tesan@gmail.com>
+ * @version 1.1.0
  */
-
+@RunWith(RobolectricGradleTestRunner.class)
+@Config(constants = BuildConfig.class, emulateSdk = 19)
 public class WakeupScheduleTest {
-    Map<String, IWakeupObserver> uuidMap;
-    Map<IWakeupObserver, PendingIntent> obsMap;
-    Map<PendingIntent, String> intentMap;
-    Map<IWakeupObserver, Boolean> onetimeMap;
-    String onetime_uuid;
-    String not_onetime_uuid;
-    IWakeupObserver observer_onetime;
-    IWakeupObserver observer_not_onetime;
-    PendingIntent alarmIntent;
-    WakeupSchedulePlaceholder wsp;
+	IWakeupObserver goodObs;
+	IWakeupObserver badObs;
+	WakeupSchedule schedule;
+	Intent goodIntent;
+	Intent badIntent;
+	PendingIntent pGoodIntent;
+	PendingIntent pBadIntent;
 
-    /**
-     * Classe di utilità che permette di iniettare in WakeupSchedule
-     * delle mappe tracciabili.
-     */
-    class WakeupSchedulePlaceholder extends WakeupSchedule {
-        public WakeupSchedulePlaceholder() {
-            super();
-        }
-        private void setUuidMap(Map<String, IWakeupObserver> uuidMap) {
-            this.uuidMap = uuidMap;
-        }
-        private void setObsMap(Map<IWakeupObserver, PendingIntent> obsMap) {
-            this.obsMap = obsMap;
-        }
-        private void setIntentMap(Map<PendingIntent, String> intentMap) {
-            this.intentMap = intentMap;
-        }
-        private void setOneTimeMap(Map<IWakeupObserver, Boolean> onetimeMap) {
-            this.onetimeMap = onetimeMap;
-        }
-    }
+	@Before
+	public void setUp() {
+		schedule = new WakeupSchedule();
 
-    /**
-     * Inizializza i campi dati necessari all'esecuzione dei test.
-     */
-    @Before
-    public void initialize() {
-        observer_onetime = mock(IWakeupObserver.class);
-        observer_not_onetime = mock(IWakeupObserver.class);
-        alarmIntent = mock(PendingIntent.class);
-        onetime_uuid = "onetime_uuid";
-        not_onetime_uuid = "not_onetime_uuid";
-        uuidMap = (Map<String, IWakeupObserver>) mock(Map.class);
-        obsMap = (Map<IWakeupObserver, PendingIntent>) mock(Map.class);
-        when(uuidMap.put(onetime_uuid, observer_onetime)).thenReturn(observer_onetime);
-        when(obsMap.put(observer_onetime, alarmIntent)).thenReturn(alarmIntent);
-        when(obsMap.remove(observer_onetime)).thenReturn(alarmIntent);
-        intentMap = (Map<PendingIntent, String>) mock(Map.class);
-        when(intentMap.remove(alarmIntent)).thenReturn(onetime_uuid);
-        onetimeMap = (Map<IWakeupObserver, Boolean>) mock(Map.class);
-        when(onetimeMap.get(observer_onetime)).thenReturn(true);
-        when(onetimeMap.get(observer_not_onetime)).thenReturn(false);
-        wsp = new WakeupSchedulePlaceholder();
-        wsp.setUuidMap(uuidMap);
-        wsp.setObsMap(obsMap);
-        wsp.setIntentMap(intentMap);
-        wsp.setOneTimeMap(onetimeMap);
-    }
+		goodObs = new IWakeupObserver() {
+			String uuid = UUID.randomUUID().toString();
+			@Override
+			public void onWakeup() {
 
-    /**
-     * Verifica che il metodo add chiami i metodi put sulle diverse
-     * HashMap di WakeupSchedule con i corretti parametri.
-     */
+			}
 
-    @Test
-    public void addShouldForwardCorrectParams() {
-        wsp.add(onetime_uuid, observer_onetime, alarmIntent, true);
-        verify(uuidMap).put(onetime_uuid, observer_onetime);
-        verify(obsMap).put(observer_onetime, alarmIntent);
-        verify(intentMap).put(alarmIntent, onetime_uuid);
-        verify(onetimeMap).put(observer_onetime, true);
-        wsp.add(not_onetime_uuid, observer_not_onetime, alarmIntent, false);
-        verify(onetimeMap).put(observer_not_onetime, false);
-    }
+			@Override
+			public String getUUID() {
+				return uuid;
+			}
+		};
 
-    /**
-     * Verifica che il metodo remove chiami i metodi remove sulle diverse
-     * HashMap di WakeupSchedule con i corretti parametri.
-     */
+		badObs = new IWakeupObserver() {
+			String uuid = UUID.randomUUID().toString();
+			@Override
+			public void onWakeup() {
 
-    @Test
-    public void removeShouldForwardCorrectParams() {
-        wsp.add(onetime_uuid, observer_onetime, alarmIntent, true);
-        wsp.remove(observer_onetime);
-        verify(uuidMap).remove(onetime_uuid);
-        verify(obsMap).remove(observer_onetime);
-        verify(intentMap).remove(alarmIntent);
-        verify(onetimeMap).remove(observer_onetime);
-    }
+			}
 
-    /**
-     * Verifica che il metodo isOneTimeOnly chiami il metodo get
-     * su onetimeMap fornendo il suo stesso parametro.
-     */
+			@Override
+			public String getUUID() {
+				return uuid;
+			}
+		};
 
-    @Test
-    public void isOneTimeOnlyShouldForwardCorrectParam() {
-        wsp.add(onetime_uuid, observer_onetime, alarmIntent, true);
-        wsp.isOneTimeOnly(observer_onetime);
-        verify(onetimeMap).get(observer_onetime);
-        wsp.add(not_onetime_uuid, observer_not_onetime, alarmIntent, false);
-        wsp.isOneTimeOnly(observer_not_onetime);
-        verify(onetimeMap).get(observer_not_onetime);
-    }
+		goodIntent = new Intent();
+		goodIntent.putExtra("FOO", "BAR");
+		pGoodIntent = PendingIntent.getActivity(RuntimeEnvironment.application, 1, goodIntent, 0);
+		assertNotNull(pGoodIntent);
 
-    /**
-     * Verifica che il metodo containsObserver chiami il metodo
-     * containsKey su onetimeMap fornendo il suo stesso parametro.
-     */
+		badIntent = new Intent();
+		badIntent.putExtra("BAZ", "BANG");
+		pBadIntent = PendingIntent.getActivity(RuntimeEnvironment.application, 1, badIntent, 0);
+		assertNotNull(pBadIntent);
+	}
 
-    @Test
-    public void containsObserverShouldForwardCorrectParam() {
-        wsp.add(onetime_uuid, observer_onetime, alarmIntent, true);
-        wsp.containsObserver(observer_onetime);
-        verify(onetimeMap).containsKey(observer_onetime);
-    }
+	/**
+	 * Controlla che dopo l'inserimento sia possibile recuperare correttamente
+	 * l'intent inserito (e non un altro).
+	 */
+	@Test
+	public void testAddAndRetrieveIntent() {
+		schedule.add(goodObs.getUUID(), goodObs, pGoodIntent, false);
+		PendingIntent retrieved = schedule.getIntent(goodObs);
+		assertTrue(retrieved != null);
+		assertTrue(retrieved == pGoodIntent);
+		assertFalse(retrieved == pBadIntent);
+	}
+
+	/**
+	 * Controlla che dopo l'inserimento sia possibile recuperare correttamente
+	 * l'Observer inserito (e non un altro).
+	 */
+	@Test
+	public void testAddAndRetrieveObserver() {
+		schedule.add(goodObs.getUUID(), goodObs, pGoodIntent, false);
+		IWakeupObserver retrieved = schedule.getObserver(goodObs.getUUID());
+		assertTrue(retrieved != null);
+		assertTrue(retrieved == goodObs);
+		assertFalse(retrieved == badObs);
+	}
+
+	/**
+	 * Controlla che dopo l'inserimento containsObserver dia risultato
+	 * positivo per l'observer inserito (ma non un altro)
+	 */
+	@Test
+	public void testAddAndContains() {
+		schedule.add(goodObs.getUUID(), goodObs, pGoodIntent, false);
+		assertTrue(schedule.containsObserver(goodObs));
+		assertFalse(schedule.containsObserver(badObs));
+	}
+
+	/**
+	 * Controlla che dopo l'inserimento isOneTimeOnly sia true
+	 * sse il parametro passato a add() era true.
+	 */
+	@Test
+	public void testOneTimeIsOneTime() {
+		schedule.add(goodObs.getUUID(), goodObs, pGoodIntent, true);
+		schedule.add(badObs.getUUID(), badObs, pBadIntent, false);
+		assertTrue(schedule.isOneTimeOnly(goodObs) == true);
+		assertTrue(schedule.isOneTimeOnly(badObs) == false);
+	}
+
+	/**
+	 * Controlla che dopo la rimozione di un observer containsObserver
+	 * restituisca false.
+	 */
+	@Test
+	public void testRemove() {
+		schedule.add(goodObs.getUUID(), goodObs, pGoodIntent, false);
+		PendingIntent retrieved = schedule.getIntent(goodObs);
+		assertTrue(schedule.containsObserver(goodObs));
+		schedule.remove(goodObs);
+		assertFalse(schedule.containsObserver(goodObs));
+	}
+
+	/**
+	 * Controlla che il get di un Intent non esistente sollevi una
+	 * NoSuchElementException.
+	 */
+	@Test(expected = NoSuchElementException.class)
+	public void testGetIntentThrowsNoSuchElement() {
+		schedule.getIntent(goodObs);
+	}
+
+	/**
+	 * Controlla che il get di un observer non esistente sollevi una
+	 * NoSuchElementException.
+	 */
+	@Test(expected = NoSuchElementException.class)
+	public void testGetObserverThrowsNoSuchElement() {
+		schedule.getObserver("123456789");
+	}
+
+	/**
+	 * Controlla che il get di un intent null sollevi una
+	 * IllegalArgumentException
+	 */
+	@Test(expected = IllegalArgumentException.class)
+	public void testGetIntentNoNull() {
+		schedule.getIntent(null);
+	}
+
+	/**
+	 * Controlla che il get di un observer null sollevi una
+	 * IllegalArgumentException
+	 */
+	@Test(expected = IllegalArgumentException.class)
+	public void testGetObserverNoNull() {
+		schedule.getObserver(null);
+	}
+
+	/**
+	 * Controlla che add con un Observer null e OneTime == false
+	 * sollevi IllegalArgumentException
+	 */
+	@Test(expected = IllegalArgumentException.class)
+	public void testAddNoNull1() {
+		schedule.add(null, goodObs, pGoodIntent, false);
+	}
+
+	/**
+	 * Controlla che add con un UUID null e OneTime == false
+	 * sollevi IllegalArgumentException
+	 */
+	@Test(expected = IllegalArgumentException.class)
+	public void testAddNoNull2() {
+		schedule.add(goodObs.getUUID(), null, pGoodIntent, false);
+	}
+
+	/**
+	 * Controlla che add con un intent null e OneTime == false
+	 * sollevi IllegalArgumentException
+	 */
+	@Test(expected = IllegalArgumentException.class)
+	public void testAddNoNull3() {
+		schedule.add(goodObs.getUUID(), goodObs, null, false);
+	}
+
+	/**
+	 * Controlla che add con un UUID null e OneTime == true
+	 * sollevi IllegalArgumentException
+	 */
+	@Test(expected = IllegalArgumentException.class)
+	public void testAddNoNull1A() {
+		schedule.add(null, goodObs, pGoodIntent, true);
+	}
+
+	/**
+	 * Controlla che add con un Observer null e OneTime == true
+	 * sollevi IllegalArgumentException
+	 */
+	@Test(expected = IllegalArgumentException.class)
+	public void testAddNoNull2A() {
+		schedule.add(goodObs.getUUID(), null, pGoodIntent, true);
+	}
+
+	/**
+	 * Controlla che add con un Intent null e OneTime == true
+	 * sollevi IllegalArgumentException
+	 */
+	@Test(expected = IllegalArgumentException.class)
+	public void testAddNoNull3A() {
+		schedule.add(goodObs.getUUID(), goodObs, null, true);
+	}
 }
