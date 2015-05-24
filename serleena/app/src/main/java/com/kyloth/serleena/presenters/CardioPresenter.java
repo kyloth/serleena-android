@@ -59,4 +59,16 @@ public class CardioPresenter implements ICardioPresenter, IHeartRateObserver {
     private IHeartRateManager hrMan;
     private ICardioView view;
 
+    /**
+     * Crea un nuovo oggetto CardioPresenter.
+     *
+     * @param view Vista da associare al Presenter.
+     * @param activity Activity a cui è associato il Presenter.
+     */
+    public CardioPresenter(ICardioView view, ISerleenaActivity activity) {
+        this.view = view;
+        this.hrMan = activity.getSensorManager().getHeartRateSource();
+        view.attachPresenter(this);
+    }
+
 }
