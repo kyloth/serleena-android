@@ -384,12 +384,17 @@ public class SerleenaActivity extends AppCompatActivity implements ISerleenaActi
     }
 
     /**
-     * Metodo che implementa la disabilitazione del tracciamento per il
-     * percorso attivo.
+     * Implementa ISerleenaActivity.disableTelemetry().
+     *
+     * Segnala all'activity l'disabilitazione del Tracciamento. L'activity si
+     * occupa di inoltrare l'informazione agli altri presenter che
+     * ne necessitano.
      */
     @Override
     public void disableTelemetry() {
-
+        TelemetryPresenter presenter =
+                (TelemetryPresenter) myPress.get("TELEMETRY");
+        presenter.disableTelemetry();
     }
 
     /**
