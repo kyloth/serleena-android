@@ -71,4 +71,14 @@ public class CardioPresenter implements ICardioPresenter, IHeartRateObserver {
         view.attachPresenter(this);
     }
 
+    /**
+     * Implementa IPresenter.resume().
+     *
+     * Si registra agli eventi del sensore di battito cardiaco.
+     */
+    @Override
+    public void resume() {
+        hrMan.attachObserver(this, 15);
+    }
+
 }
