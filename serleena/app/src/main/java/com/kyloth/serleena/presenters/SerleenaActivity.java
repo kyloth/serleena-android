@@ -384,6 +384,6 @@ public class SerleenaActivity extends AppCompatActivity implements ISerleenaActi
      */
     @Override
     public ISensorManager getSensorManager() {
-        return null;
+        return sensormanager;
     }
 }
