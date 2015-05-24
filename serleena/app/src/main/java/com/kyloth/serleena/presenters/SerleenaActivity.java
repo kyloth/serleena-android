@@ -398,7 +398,7 @@ public class SerleenaActivity extends AppCompatActivity implements ISerleenaActi
     }
 
     /**
-     * Metodo che implementa getDataSource() di SerleenaActivity.
+     * Implementa ISerleenaActivity.getDataSource().
      */
     @Override
     public ISerleenaDataSource getDataSource() {
