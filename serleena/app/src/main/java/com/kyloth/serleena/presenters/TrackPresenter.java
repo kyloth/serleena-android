@@ -321,7 +321,7 @@ public class TrackPresenter implements ITrackPresenter,
      *                    all'asse azimuth.
      */
     private double computeHeadingVariation(double userHeading) {
-        return 0;
+        throw new UnsupportedOperationException();
     }
 
 }
