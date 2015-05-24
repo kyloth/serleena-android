@@ -69,8 +69,6 @@ import java.util.Set;
 public class SerleenaLocationManager implements ILocationManager,
         LocationListener {
 
-    private static SerleenaLocationManager instance;
-
     private static final long MAX_WINDOW_SECONDS = 30;
 
     private GeoPoint lastKnownLocation;
@@ -83,14 +81,9 @@ public class SerleenaLocationManager implements ILocationManager,
     /**
      * Crea un oggetto NormalLocationManager.
      *
-     * Il costruttore è privato per realizzare correttamente il pattern
-     * Singleton, forzando l'accesso alla sola istanza esposta dai
-     * metodi Singleton e impedendo al codice client di costruire istanze
-     * arbitrariamente.
-     *
      * @param context Contesto dell'applicazione.
      */
-    private SerleenaLocationManager(Context context) {
+    public SerleenaLocationManager(Context context) {
         this.observers = new HashMap<ILocationObserver, Integer>();
         this.singleUpdates = new HashSet<ILocationObserver>();
         this.currentInterval = Integer.MAX_VALUE;
@@ -245,24 +238,6 @@ public class SerleenaLocationManager implements ILocationManager,
             throw new IllegalArgumentException("Illegal null observer");
 
         observer.onLocationUpdate(lastKnownLocation);
-    }
-
-    /**
-     * Restituisce la singola istanza della classe.
-     *
-     * Implementa il pattern Singleton.
-     *
-     * @param context Contesto dell'applicazione. Se null,
-     *                viene sollevata un'eccezione IllegalArgumentException.
-     * @return Istanza della classe.
-     */
-    public static SerleenaLocationManager getInstance(Context context)
-            throws IllegalArgumentException {
-        if (context == null)
-            throw new IllegalArgumentException("Illegal null context");
-        if (instance == null)
-            instance = new SerleenaLocationManager(context);
-        return instance;
     }
 
     @Override
