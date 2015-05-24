@@ -158,6 +158,17 @@ public class SerleenaDatabase extends SQLiteOpenHelper {
         "FOREIGN KEY(checkpoint_track) REFERENCES " + TABLE_TRACKS + "(track_id) ON DELETE CASCADE)";
 
     /**
+     * Crea un oggetto SerleenaDatabase associato al database predefinito dalla
+     * costante DATABASE_NAME.
+     *
+     * @param context Contesto usato per creare o aprire il database.
+     * @param version Versione del database.
+     */
+    public SerleenaDatabase(Context context, int version) {
+        this(context, DATABASE_NAME, null, version);
+    }
+
+    /**
      * Crea un oggetto SerleenaDatabase.
      *
      * @param context   Oggetto android.content.Context usato per creare o
