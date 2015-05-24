@@ -66,7 +66,7 @@ import java.util.concurrent.TimeUnit;
  * @version 1.0.0
  */
 @TargetApi(19)
-public class HeadingManager implements IHeadingManager, SensorEventListener {
+class HeadingManager implements IHeadingManager, SensorEventListener {
 
     private float[] accelerometerValues;
     private float[] magneticFieldValues;

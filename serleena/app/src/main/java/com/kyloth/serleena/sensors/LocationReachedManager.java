@@ -57,7 +57,7 @@ import java.util.Map;
  * @author Filippo Sestini <sestini.filippo@gmail,com>
  * @version 1.0.0
  */
-public class LocationReachedManager implements ILocationReachedManager {
+class LocationReachedManager implements ILocationReachedManager {
 
     private static int LOCATION_RADIUS = 15;
 

@@ -44,6 +44,7 @@ package com.kyloth.serleena.sensors;
 
 import android.content.Context;
 import android.location.LocationManager;
+import android.os.PowerManager;
 
 import com.kyloth.serleena.common.CheckpointReachedTelemetryEvent;
 import com.kyloth.serleena.common.GeoPoint;
@@ -60,7 +61,7 @@ import java.util.Date;
  *
  * @author Filippo Sestini <sestini.filippo@gmail.com>
  */
-public class TelemetryManager implements ITelemetryManager,
+class TelemetryManager implements ITelemetryManager,
         ILocationObserver, IHeartRateObserver, IWakeupObserver {
 
     private static int SAMPLING_RATE_SECONDS = 60;

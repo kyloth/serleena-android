@@ -54,7 +54,7 @@ import java.util.Map;
  * @author Filippo Sestini <sestini.filippo@gmail.com>
  * @version 1.0.0
  */
-public class SerleenaPowerManager implements IPowerManager {
+class SerleenaPowerManager implements IPowerManager {
 
     private static HashMap<Context, SerleenaPowerManager> instances =
             new HashMap<Context, SerleenaPowerManager>();

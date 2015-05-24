@@ -50,7 +50,7 @@ import android.content.Context;
  * @author Filippo Sestini <sestini.filippo@gmail.com>
  * @version 1.0.0
  */
-public class HeartRateManager implements IHeartRateManager {
+class HeartRateManager implements IHeartRateManager {
 
     private Context context;
 

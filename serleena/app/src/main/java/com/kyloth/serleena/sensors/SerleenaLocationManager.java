@@ -66,7 +66,7 @@ import java.util.Set;
  * @author Filippo Sestini <sestini.filippo@gmail.com>
  * @version 1.0.0
  */
-public class SerleenaLocationManager implements ILocationManager,
+class SerleenaLocationManager implements ILocationManager,
         LocationListener {
 
     private static final long MAX_WINDOW_SECONDS = 30;

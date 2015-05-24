@@ -61,7 +61,7 @@ import java.util.UUID;
  * @author Filippo Sestini <sestini.filippo@gmail.com>
  * @version 1.0.0
  */
-public class WakeupManager extends BroadcastReceiver implements IWakeupManager {
+class WakeupManager extends BroadcastReceiver implements IWakeupManager {
 
     private static final String ALARM_UUID = "ALARM_UUID";
 
