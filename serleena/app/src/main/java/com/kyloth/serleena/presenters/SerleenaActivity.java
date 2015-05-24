@@ -63,7 +63,10 @@ import com.kyloth.serleena.common.NoActiveExperienceException;
 import com.kyloth.serleena.model.IExperience;
 import com.kyloth.serleena.model.ISerleenaDataSource;
 import com.kyloth.serleena.model.ITrack;
+import com.kyloth.serleena.model.SerleenaDataSource;
 import com.kyloth.serleena.model.Telemetry;
+import com.kyloth.serleena.persistence.sqlite.SerleenaDatabase;
+import com.kyloth.serleena.persistence.sqlite.SerleenaSQLiteDataSource;
 import com.kyloth.serleena.presentation.ICardioView;
 import com.kyloth.serleena.presentation.ICompassView;
 import com.kyloth.serleena.presentation.IContactsView;
@@ -80,6 +83,7 @@ import com.kyloth.serleena.presentation.ITrackSelectionView;
 import com.kyloth.serleena.presentation.ITrackView;
 import com.kyloth.serleena.presentation.IWeatherView;
 import com.kyloth.serleena.sensors.ISensorManager;
+import com.kyloth.serleena.sensors.SensorManager;
 import com.kyloth.serleena.view.fragments.CardioFragment;
 import com.kyloth.serleena.view.fragments.CompassFragment;
 import com.kyloth.serleena.view.fragments.ContactsFragment;
@@ -134,6 +138,8 @@ public class SerleenaActivity extends AppCompatActivity implements ISerleenaActi
     private String curFrag;
 
     private boolean showingMenu = false;
+    private ISerleenaDataSource dataSource;
+    private ISensorManager sensorManager;
 
     /**
      * Metodo invocato alla creazione dell'Activity. Vengono inizializzate le
@@ -150,6 +156,10 @@ public class SerleenaActivity extends AppCompatActivity implements ISerleenaActi
         initMenuItemIds();
         FragmentTransaction ft = getFragmentManager().beginTransaction();
         changeFragment("TELEMETRY");
+
+        dataSource = new SerleenaDataSource(
+                new SerleenaSQLiteDataSource(this, new SerleenaDatabase(this, 1)));
+        sensorManager = SensorManager.getInstance(this);
     }
 
     /**
@@ -172,16 +182,35 @@ public class SerleenaActivity extends AppCompatActivity implements ISerleenaActi
      * Metodo che istanzia i Presenter nell'Activity e li mappa a dei tag.
      */
     private void initPresentersMap() {
-        myPress.put("MAP", new DummyMapPresenter((IMapView) myFrags.get("MAP")));
-        myPress.put("TRACKLIST", new DummyTrackSelPresenter((ITrackSelectionView) myFrags.get("TRACKLIST"), this));
-        myPress.put("EXPLIST", new DummyExpSelPresenter((IExperienceSelectionView) myFrags.get("EXPLIST"), this));
-        myPress.put("CARDIO", new DummyCardioPresenter((ICardioView) myFrags.get("CARDIO"), this));
-        myPress.put("TELEMETRY", new TelemetryPresenter((ITelemetryView) myFrags.get("TELEMETRY"), this));
-        myPress.put("CONTACTS", new DummyContactsPresenter((IContactsView) myFrags.get("CONTACTS"), this));
-        myPress.put("TRACK", new DummyTrackPresenter((ITrackView) myFrags.get("TRACK"), this));
-        myPress.put("WEATHER", new DummyWeatherPresenter((IWeatherView) myFrags.get("WEATHER"),this));
-        myPress.put("SYNC", new DummySyncPresenter((ISyncView) myFrags.get("SYNC"),this));
-        myPress.put("COMPASS", new DummyCompassPresenter((ICompassView) myFrags.get("COMPASS"),this));
+        myPress.put("MAP",
+                new MapPresenter((IMapView) myFrags.get("MAP"), this));
+        myPress.put("TRACKLIST",
+                new TrackSelectionPresenter((ITrackSelectionView)
+                        myFrags.get("TRACKLIST"), this));
+        myPress.put("EXPLIST",
+                new ExperienceSelectionPresenter(
+                        (IExperienceSelectionView) myFrags.get("EXPLIST"), this));
+        myPress.put("CARDIO",
+                new CardioPresenter(
+                        (ICardioView) myFrags.get("CARDIO"), this));
+        myPress.put("TELEMETRY",
+                new TelemetryPresenter(
+                        (ITelemetryView) myFrags.get("TELEMETRY"), this));
+        myPress.put("CONTACTS",
+                new ContactsPresenter(
+                        (IContactsView) myFrags.get("CONTACTS"), this));
+        myPress.put("TRACK",
+                new TrackPresenter(
+                        (ITrackView) myFrags.get("TRACK"), this));
+        myPress.put("WEATHER",
+                new WeatherPresenter(
+                        (IWeatherView) myFrags.get("WEATHER"),this));
+        myPress.put("SYNC",
+                new SyncPresenter(
+                        (ISyncView) myFrags.get("SYNC"),this));
+        myPress.put("COMPASS",
+                new CompassPresenter(
+                        (ICompassView) myFrags.get("COMPASS"),this));
     }
 
     /**
@@ -328,52 +357,79 @@ public class SerleenaActivity extends AppCompatActivity implements ISerleenaActi
     }
 
     /**
-     * Metodo che implementa l'attivazione di un'esperienza.
+     * Implementazione di ISerleenaActivity.setActiveExperience().
+     *
+     * Segnala all'activity l'attivazione di un'Esperienza. L'activity si
+     * occupa di inoltrare l'informazione agli altri presenter che
+     * ne necessitano.
+     *
+     * @param experience Esperienza attivata.
      */
     @Override
     public void setActiveExperience(IExperience experience) {
-
+        TrackSelectionPresenter tsPres =
+                (TrackSelectionPresenter) myPress.get("TRACKLIST");
+        tsPres.setActiveExperience(experience);
+        MapPresenter mPres =
+                (MapPresenter) myPress.get("MAP");
+        mPres.setActiveExperience(experience);
     }
 
     /**
-     * Metodo che implementa l'attivazione di un percorso.
+     * Implementazione di ISerleenaActivity.setActiveTrack().
+     *
+     * Segnala all'activity l'attivazione di un Percorso. L'activity si
+     * occupa di inoltrare l'informazione agli altri presenter che
+     * ne necessitano.
      */
     @Override
     public void setActiveTrack(ITrack track) {
-
+        TrackPresenter presenter = (TrackPresenter) myPress.get("TRACK");
+        presenter.setActiveTrack(track);
     }
 
     /**
-     * Metodo che implementa l'abilitazione del tracciamento per il percorso
-     * attivo.
+     * Implementa ISerleenaActivity.enableTelemetry().
+     *
+     * Segnala all'activity l'abilitazione del Tracciamento. L'activity si
+     * occupa di inoltrare l'informazione agli altri presenter che
+     * ne necessitano.
      */
     @Override
     public void enableTelemetry() {
-
+        TelemetryPresenter presenter =
+                (TelemetryPresenter) myPress.get("TELEMETRY");
+        presenter.enableTelemetry();
     }
 
     /**
-     * Metodo che implementa la disabilitazione del tracciamento per il
-     * percorso attivo.
+     * Implementa ISerleenaActivity.disableTelemetry().
+     *
+     * Segnala all'activity l'disabilitazione del Tracciamento. L'activity si
+     * occupa di inoltrare l'informazione agli altri presenter che
+     * ne necessitano.
      */
     @Override
     public void disableTelemetry() {
-
+        TelemetryPresenter presenter =
+                (TelemetryPresenter) myPress.get("TELEMETRY");
+        presenter.disableTelemetry();
     }
 
     /**
-     * Metodo che implementa getDataSource() di SerleenaActivity.
+     * Implementa ISerleenaActivity.getDataSource().
      */
     @Override
     public ISerleenaDataSource getDataSource() {
-        return null;
+        return dataSource;
     }
 
     /**
-     * Metodo che restituisce il gestore dei sensori dell'applicazione.
+     * Implementa ISerleenaActivity.getSensorManager().
      */
     @Override
     public ISensorManager getSensorManager() {
-        return null;
+        return sensorManager;
     }
+
 }
