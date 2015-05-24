@@ -44,6 +44,8 @@ package com.kyloth.serleena.sensors;
 
 import android.content.Context;
 
+import java.util.HashMap;
+
 /**
  * Concretizza ISensorManager
  *
@@ -52,7 +54,21 @@ import android.content.Context;
  */
 public class SensorManager implements ISensorManager {
 
-    private Context context;
+    private static HashMap<Context, SensorManager> instances =
+            new HashMap<Context, SensorManager>();
+
+    private ILocationManager locMan;
+    private IHeadingManager hMan;
+    private IHeartRateManager hrMan;
+    private ILocationReachedManager locReaMan;
+    private IWakeupManager wMan;
+    private ITelemetryManager telMan;
+
+    public static SensorManager getInstance(Context context) {
+        if (instances.get(context) == null)
+            instances.put(context, new SensorManager(context));
+        return instances.get(context);
+    }
 
     /**
      * Crea un gestore della sensoristica a partire dal contesto specificato.
@@ -60,8 +76,18 @@ public class SensorManager implements ISensorManager {
      * @param context Contesto dell'applicazione.
      * @see Context
      */
-    public SensorManager(Context context) {
-        this.context = context;
+    private SensorManager(Context context) {
+        locMan = new SerleenaLocationManager(context);
+        hrMan = new HeartRateManager(context);
+        wMan = new WakeupManager(context);
+        locReaMan = new LocationReachedManager(wMan, locMan);
+        telMan = new TelemetryManager(locMan, hrMan, wMan, SerleenaPowerManager
+                .getInstance(context));
+        try {
+            hMan = new HeadingManager(context);
+        } catch (SensorNotAvailableException e) {
+            hMan = null;
+        }
     }
 
     /**
@@ -71,7 +97,7 @@ public class SensorManager implements ISensorManager {
      */
     @Override
     public ILocationManager getLocationSource() {
-        return SerleenaLocationManager.getInstance(context);
+        return locMan;
     }
 
     /**
@@ -82,7 +108,10 @@ public class SensorManager implements ISensorManager {
     @Override
     public IHeadingManager getHeadingSource()
             throws SensorNotAvailableException {
-        return HeadingManager.getInstance(context);
+        if (hMan == null)
+            throw new SensorNotAvailableException("Heading sensor not " +
+                    "available");
+        return hMan;
     }
 
     /**
@@ -92,7 +121,7 @@ public class SensorManager implements ISensorManager {
      */
     @Override
     public IHeartRateManager getHeartRateSource() {
-        return HeartRateManager.getInstance(context);
+        return hrMan;
     }
 
     /**
@@ -102,7 +131,7 @@ public class SensorManager implements ISensorManager {
      */
     @Override
     public ILocationReachedManager getLocationReachedSource() {
-        return LocationReachedManager.getInstance(context);
+        return locReaMan;
     }
 
     /**
@@ -112,7 +141,7 @@ public class SensorManager implements ISensorManager {
      */
     @Override
     public IWakeupManager getWakeupSource() {
-        return WakeupManager.getInstance(context);
+        return wMan;
     }
 
     /**
@@ -122,7 +151,7 @@ public class SensorManager implements ISensorManager {
      */
     @Override
     public ITelemetryManager getTelemetryManager() {
-        return TelemetryManager.getInstance(context);
+        return telMan;
     }
 
 }
