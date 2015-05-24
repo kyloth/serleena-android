@@ -406,10 +406,11 @@ public class SerleenaActivity extends AppCompatActivity implements ISerleenaActi
     }
 
     /**
-     * Metodo che restituisce il gestore dei sensori dell'applicazione.
+     * Implementa ISerleenaActivity.getSensorManager().
      */
     @Override
     public ISensorManager getSensorManager() {
-        return sensormanager;
+        return sensorManager;
     }
+
 }
