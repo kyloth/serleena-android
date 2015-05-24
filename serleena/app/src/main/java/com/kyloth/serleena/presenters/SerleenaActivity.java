@@ -376,7 +376,7 @@ public class SerleenaActivity extends AppCompatActivity implements ISerleenaActi
      */
     @Override
     public ISerleenaDataSource getDataSource() {
-        return null;
+        return dataSource;
     }
 
     /**
