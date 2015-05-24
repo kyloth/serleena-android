@@ -64,34 +64,27 @@ public class TelemetryManager implements ITelemetryManager,
         ILocationObserver, IHeartRateObserver, IWakeupObserver {
 
     private static int SAMPLING_RATE_SECONDS = 60;
-    private static TelemetryManager instance;
 
     private ILocationManager locMan;
     private IHeartRateManager hrMan;
     private IWakeupManager wkMan;
     private ArrayList<TelemetryEvent> events;
-    private SerleenaPowerManager pm;
+    private IPowerManager pm;
     private boolean sampling;
     private long startTimestamp;
 
     /**
      * Crea un oggetto TelemetryManager.
      *
-     * Il costruttore è privato per realizzare correttamente il pattern
-     * Singleton, forzando l'accesso alla sola istanza esposta dai
-     * metodi Singleton e impedendo al codice client di costruire istanze
-     * arbitrariamente.
-     *
-     * @param context Contesto dell'applicazione.
+     * Il Manager utilizza altre risorse del dispositivo, passate come
+     * parametri al costruttore.
      */
-    private TelemetryManager(Context context) {
-        if (context == null)
-            throw new IllegalArgumentException("Illegal null context");
-
-        this.locMan = SerleenaLocationManager.getInstance(context);
-        this.hrMan = HeartRateManager.getInstance(context);
-        this.wkMan = WakeupManager.getInstance(context);
-        pm = SerleenaPowerManager.getInstance(context);
+    public TelemetryManager(ILocationManager locMan, IHeartRateManager hrMan,
+                            IWakeupManager wm, IPowerManager pm) {
+        this.locMan = locMan;
+        this.hrMan = hrMan;
+        this.wkMan = wm;
+        this.pm = pm;
 
         this.events = new ArrayList<TelemetryEvent>();
         this.sampling = false;
@@ -191,24 +184,6 @@ public class TelemetryManager implements ITelemetryManager,
         pm.lock("HeartRateTelemetryLock");
         locMan.getSingleUpdate(this, 20);
         hrMan.getSingleUpdate(this, 20);
-    }
-
-    /**
-     * Restituisce la singola istanza della classe.
-     *
-     * Implementa il pattern Singleton.
-     *
-     * @param context Contesto dell'applicazione. Se null,
-     *                viene sollevata un'eccezione IllegalArgumentException.
-     * @return Istanza della classe.
-     */
-    public static TelemetryManager getInstance(Context context) {
-        if (context == null)
-            throw new IllegalArgumentException("Illegal null context");
-
-        if (instance == null)
-            instance = new TelemetryManager(context);
-        return instance;
     }
 
 }
