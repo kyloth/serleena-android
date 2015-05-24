@@ -50,23 +50,16 @@ import android.content.Context;
  * @author Filippo Sestini <sestini.filippo@gmail.com>
  * @version 1.0.0
  */
-public class HeartRateManager implements IHeartRateManager {
-
-    private static HeartRateManager instance;
+class HeartRateManager implements IHeartRateManager {
 
     private Context context;
 
     /**
      * Crea un oggetto HeartRateManager.
      *
-     * Il costruttore è privato per realizzare correttamente il pattern
-     * Singleton, forzando l'accesso alla sola istanza esposta dai
-     * metodi Singleton e impedendo al codice client di costruire istanze
-     * arbitrariamente.
-     *
      * @param context Contesto dell'applicazione.
      */
-    private HeartRateManager(Context context) {
+    public HeartRateManager(Context context) {
         this.context = context;
     }
 
@@ -114,22 +107,4 @@ public class HeartRateManager implements IHeartRateManager {
 
     }
 
-    /**
-     * Restituisce la singola istanza della classe.
-     *
-     * Implementa il pattern Singleton.
-     *
-     * @param context Contesto dell'applicazione. Se null, viene sollevata
-     *                un'eccezione IllegalArgumentException.
-     * @return Istanza della classe.
-     */
-    public static HeartRateManager getInstance(Context context)
-            throws IllegalArgumentException {
-        if (context == null)
-            throw new IllegalArgumentException("Illegal null context");
-
-        if (instance == null)
-            instance = new HeartRateManager(context);
-        return instance;
-    }
 }
