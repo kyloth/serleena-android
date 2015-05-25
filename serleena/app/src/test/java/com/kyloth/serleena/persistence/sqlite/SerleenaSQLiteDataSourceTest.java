@@ -145,10 +145,10 @@ public class SerleenaSQLiteDataSourceTest {
 		Quadrant q = (Quadrant) sds.getQuadrant(p);
 		GeoPoint first = q.getNorthEastPoint();
 		GeoPoint second = q.getSouthWestPoint();
-		assertTrue(first.latitude() == 0);
-		assertTrue(first.longitude() == 0);
-		assertTrue(second.latitude() == SerleenaSQLiteDataSource.QUADRANT_LATSIZE);
-		assertTrue(second.longitude() == SerleenaSQLiteDataSource.QUADRANT_LONGSIZE);
+		assertTrue(first.latitude() == -90.0);
+		assertTrue(first.longitude() == -180.0);
+		assertTrue(second.latitude() == -90.0 + SerleenaSQLiteDataSource.QUADRANT_LATSIZE);
+		assertTrue(second.longitude() == -180.0 + SerleenaSQLiteDataSource.QUADRANT_LONGSIZE);
 	}
 
 	/**
@@ -162,14 +162,16 @@ public class SerleenaSQLiteDataSourceTest {
 		Quadrant q = (Quadrant) sds.getQuadrant(p);
 		GeoPoint first = q.getNorthEastPoint();
 		GeoPoint second = q.getSouthWestPoint();
-		assertTrue(first.latitude() == 0
-		           && second.latitude() == SerleenaSQLiteDataSource.QUADRANT_LATSIZE ||
-		           first.latitude() == SerleenaSQLiteDataSource.QUADRANT_LATSIZE
-		           && second.latitude() == 2 * SerleenaSQLiteDataSource.QUADRANT_LATSIZE);
-		assertTrue(first.longitude() == 0
-		           && second.longitude() == SerleenaSQLiteDataSource.QUADRANT_LONGSIZE ||
-		           first.longitude() == SerleenaSQLiteDataSource.QUADRANT_LONGSIZE
-		           && second.longitude() == 2 * SerleenaSQLiteDataSource.QUADRANT_LONGSIZE);
+		assertTrue(first.latitude() == -90.0
+		           && second.latitude() == -90.0 + SerleenaSQLiteDataSource.QUADRANT_LATSIZE ||
+		           first.latitude() == -90.0 + SerleenaSQLiteDataSource.QUADRANT_LATSIZE
+		           && second.latitude() == -90.0 + 2 * SerleenaSQLiteDataSource.QUADRANT_LATSIZE);
+		assertTrue(first.longitude() == -180.0
+		           && second.longitude() == -180.0 + SerleenaSQLiteDataSource.QUADRANT_LONGSIZE ||
+		           first.longitude() == -180.0 + SerleenaSQLiteDataSource.QUADRANT_LONGSIZE
+		           && second.longitude() == -180.0 + 2 * SerleenaSQLiteDataSource.QUADRANT_LONGSIZE);
+	}
+
 	}
 
 	/**
