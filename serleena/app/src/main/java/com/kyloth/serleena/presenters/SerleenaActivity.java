@@ -377,6 +377,8 @@ public class SerleenaActivity extends AppCompatActivity implements ISerleenaActi
      * Segnala all'activity l'attivazione di un Percorso. L'activity si
      * occupa di inoltrare l'informazione agli altri presenter che
      * ne necessitano.
+     *
+     * @param track Percorso attivato.
      */
     @Override
     public void setActiveTrack(ITrack track) {
