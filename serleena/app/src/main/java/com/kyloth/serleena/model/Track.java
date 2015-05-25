@@ -56,7 +56,7 @@ import java.util.ArrayList;
  * @author Filippo Sestini <sestini.filippo@gmail.com>
  * @version 1.0.0
  */
-public class Track implements ITrack {
+class Track implements ITrack {
 
     private ITrackStorage storage;
 

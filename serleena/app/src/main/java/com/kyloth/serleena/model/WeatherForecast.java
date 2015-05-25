@@ -52,7 +52,7 @@ import java.util.Date;
  * @author Filippo Sestini <sestini.filippo@gmail.com>
  * @version 1.0.0
  */
-public class WeatherForecast implements IWeatherForecast {
+class WeatherForecast implements IWeatherForecast {
 
     private IWeatherStorage storage;
 

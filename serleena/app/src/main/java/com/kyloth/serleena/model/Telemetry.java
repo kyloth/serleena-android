@@ -56,7 +56,7 @@ import java.util.ArrayList;
  * @author Filippo Sestini <sestini.filippo@gmail.com>
  * @version 1.0.0
  */
-public class Telemetry implements  ITelemetry {
+class Telemetry implements  ITelemetry {
 
     private ITelemetryStorage storage;
 
