@@ -50,7 +50,6 @@ import android.widget.TextView;
 
 import com.kyloth.serleena.presentation.IExperienceSelectionPresenter;
 import com.kyloth.serleena.presentation.IExperienceSelectionView;
-import com.kyloth.serleena.presentation.ISerleenaActivity;
 
 import java.util.ArrayList;
 
