@@ -445,10 +445,11 @@ public class SerleenaSQLiteDataSource implements ISerleenaSQLiteDataSource {
         assert(ij[1] < TOT_LONG_QUADRANTS);
 
         String fileName = getRasterPath(ij[0], ij[1]);
-        GeoPoint p1 = new GeoPoint(ij[0] * QUADRANT_LATSIZE,
-                                   ij[1] * QUADRANT_LONGSIZE);
-        GeoPoint p2 = new GeoPoint((ij[0] + 1) * QUADRANT_LATSIZE,
-                                   (ij[1] + 1) * QUADRANT_LONGSIZE);
+        GeoPoint p1 = new GeoPoint((ij[0] * QUADRANT_LATSIZE - 90.0),
+                (ij[1] * QUADRANT_LONGSIZE - 180.0));
+        // Vogliamo longitudine 180.0 espressa come -180.0 (=in mod 2pi)
+        GeoPoint p2 = new GeoPoint(((ij[0] + 1) * QUADRANT_LATSIZE - 90.0),
+                (((ij[1] + 1) * QUADRANT_LONGSIZE) % 360.0) - 180.0);
 
         Bitmap raster = null;
         File file = new File(context.getFilesDir(), fileName);
