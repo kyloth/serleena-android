@@ -278,12 +278,6 @@ public class SerleenaActivity extends AppCompatActivity implements ISerleenaActi
     public boolean onOptionsItemSelected(MenuItem item) {
         int id = item.getItemId();
         String newFrag = myMenuItemIds.get(id);
-        if(newFrag.equals("MAP")) {
-            try {
-                ((IMapPresenter) myPress.get("MAP")).newUserPoint();
-                ((IMapPresenter) myPress.get("MAP")).newUserPoint();
-            } catch(NoActiveExperienceException e) {}
-        }
 
         if(newFrag.equals(curFrag)) return true;
         changeFragment(newFrag);
