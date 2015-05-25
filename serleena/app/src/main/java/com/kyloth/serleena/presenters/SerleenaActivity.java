@@ -40,45 +40,29 @@
 package com.kyloth.serleena.presenters;
 
 import android.app.Fragment;
-import android.app.FragmentManager;
 import android.app.FragmentTransaction;
 import android.os.Bundle;
-import android.support.v7.app.ActionBarActivity;
 import android.support.v7.app.AppCompatActivity;
 import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuItem;
 
-import com.kyloth.serleena.DummyCardioPresenter;
-import com.kyloth.serleena.DummyCompassPresenter;
-import com.kyloth.serleena.DummyContactsPresenter;
-import com.kyloth.serleena.DummyExpSelPresenter;
-import com.kyloth.serleena.DummyMapPresenter;
-import com.kyloth.serleena.DummySyncPresenter;
-import com.kyloth.serleena.DummyTrackPresenter;
-import com.kyloth.serleena.DummyTrackSelPresenter;
-import com.kyloth.serleena.DummyWeatherPresenter;
 import com.kyloth.serleena.R;
-import com.kyloth.serleena.common.NoActiveExperienceException;
 import com.kyloth.serleena.model.IExperience;
 import com.kyloth.serleena.model.ISerleenaDataSource;
 import com.kyloth.serleena.model.ITrack;
 import com.kyloth.serleena.model.SerleenaDataSource;
-import com.kyloth.serleena.model.Telemetry;
 import com.kyloth.serleena.persistence.sqlite.SerleenaDatabase;
 import com.kyloth.serleena.persistence.sqlite.SerleenaSQLiteDataSource;
 import com.kyloth.serleena.presentation.ICardioView;
 import com.kyloth.serleena.presentation.ICompassView;
 import com.kyloth.serleena.presentation.IContactsView;
-import com.kyloth.serleena.presentation.IExperienceSelectionPresenter;
 import com.kyloth.serleena.presentation.IExperienceSelectionView;
-import com.kyloth.serleena.presentation.IMapPresenter;
 import com.kyloth.serleena.presentation.IMapView;
 import com.kyloth.serleena.presentation.IPresenter;
 import com.kyloth.serleena.presentation.ISerleenaActivity;
 import com.kyloth.serleena.presentation.ISyncView;
 import com.kyloth.serleena.presentation.ITelemetryView;
-import com.kyloth.serleena.presentation.ITrackSelectionPresenter;
 import com.kyloth.serleena.presentation.ITrackSelectionView;
 import com.kyloth.serleena.presentation.ITrackView;
 import com.kyloth.serleena.presentation.IWeatherView;
@@ -110,6 +94,8 @@ import java.util.Map;
  * @field myMenuItemIds : Map<Integer,String> mappa di corrispondenze tra id dei menu item e visuale richiesta
  * @field curFrag : String stringa contenente il nome della visuale attualmente presente sul display
  * @field showingMenu : boolean valore che è true se e solo se il menù è aperto
+ * @field dataSource : sorgente dati utilizzata dall'activity e dai suoi presenter
+ * @field sensorManager : gestore dei sensori utilizzato dall'activity e dai suoi presenter
  * @author Sebastiano Valle <valle.sebastiano93@gmail.com>
  * @version 1.0.0
  * @see android.support.v7.app.AppCompatActivity
@@ -119,19 +105,19 @@ public class SerleenaActivity extends AppCompatActivity implements ISerleenaActi
     /**
      * Lista dei Fragment.
      */
-    private Map<String,Fragment> myFrags = new HashMap<>();
+    private Map<String,Fragment> myFrags = new HashMap<String, Fragment>();
     /**
      * Lista dei Presenter.
      */
-    private Map<String,IPresenter> myPress = new HashMap<>();
+    private Map<String,IPresenter> myPress = new HashMap<String, IPresenter>();
     /**
      * Matrice di corrispondenza per gli id dei layout.
      */
-    private Map<String,Integer> myLayoutIds = new HashMap<>();
+    private Map<String,Integer> myLayoutIds = new HashMap<String, Integer>();
     /**
      * Matrice di corrispondenza per le voci del menù.
      */
-    private Map<Integer,String> myMenuItemIds = new HashMap<>();
+    private Map<Integer,String> myMenuItemIds = new HashMap<Integer, String>();
 
     /**
      * Tag del Fragment attualmente visualizzato.
@@ -194,7 +180,8 @@ public class SerleenaActivity extends AppCompatActivity implements ISerleenaActi
                         myFrags.get("TRACKLIST"), this));
         myPress.put("EXPLIST",
                 new ExperienceSelectionPresenter(
-                        (IExperienceSelectionView) myFrags.get("EXPLIST"), this));
+                        (IExperienceSelectionView) myFrags.get("EXPLIST"),
+                        this));
         myPress.put("CARDIO",
                 new CardioPresenter(
                         (ICardioView) myFrags.get("CARDIO"), this));
