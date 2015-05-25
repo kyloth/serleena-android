@@ -86,6 +86,7 @@ public class TrackPresenter implements ITrackPresenter,
     private int checkpointToReach;
     private boolean telemetry;
     private long trackStartFullTime;
+    private GeoPoint lastKnownLocation;
 
     private ITelemetryManager telMan;
     private ILocationManager locMan;
@@ -231,7 +232,8 @@ public class TrackPresenter implements ITrackPresenter,
         AsyncTask<Void, Void, Void> task = new AsyncTask<Void, Void, Void>() {
             @Override
             protected Void doInBackground(Void... voids) {
-                updateView(loc);
+                lastKnownLocation = loc;
+                updateView(lastKnownLocation);
                 return null;
             }
         };
