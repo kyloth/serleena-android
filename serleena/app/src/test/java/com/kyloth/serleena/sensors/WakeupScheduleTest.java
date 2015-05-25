@@ -73,204 +73,204 @@ import static org.junit.Assert.assertTrue;
 @RunWith(RobolectricGradleTestRunner.class)
 @Config(constants = BuildConfig.class, emulateSdk = 19)
 public class WakeupScheduleTest {
-	IWakeupObserver goodObs;
-	IWakeupObserver badObs;
-	WakeupSchedule schedule;
-	Intent goodIntent;
-	Intent badIntent;
-	PendingIntent pGoodIntent;
-	PendingIntent pBadIntent;
+    IWakeupObserver goodObs;
+    IWakeupObserver badObs;
+    WakeupSchedule schedule;
+    Intent goodIntent;
+    Intent badIntent;
+    PendingIntent pGoodIntent;
+    PendingIntent pBadIntent;
 
-	@Before
-	public void setUp() {
-		schedule = new WakeupSchedule();
+    @Before
+    public void setUp() {
+        schedule = new WakeupSchedule();
 
-		goodObs = new IWakeupObserver() {
-			String uuid = UUID.randomUUID().toString();
-			@Override
-			public void onWakeup() {
+        goodObs = new IWakeupObserver() {
+            String uuid = UUID.randomUUID().toString();
+            @Override
+            public void onWakeup() {
 
-			}
+            }
 
-			@Override
-			public String getUUID() {
-				return uuid;
-			}
-		};
+            @Override
+            public String getUUID() {
+                return uuid;
+            }
+        };
 
-		badObs = new IWakeupObserver() {
-			String uuid = UUID.randomUUID().toString();
-			@Override
-			public void onWakeup() {
+        badObs = new IWakeupObserver() {
+            String uuid = UUID.randomUUID().toString();
+            @Override
+            public void onWakeup() {
 
-			}
+            }
 
-			@Override
-			public String getUUID() {
-				return uuid;
-			}
-		};
+            @Override
+            public String getUUID() {
+                return uuid;
+            }
+        };
 
-		goodIntent = new Intent();
-		goodIntent.putExtra("FOO", "BAR");
-		pGoodIntent = PendingIntent.getActivity(RuntimeEnvironment.application, 1, goodIntent, 0);
-		assertNotNull(pGoodIntent);
+        goodIntent = new Intent();
+        goodIntent.putExtra("FOO", "BAR");
+        pGoodIntent = PendingIntent.getActivity(RuntimeEnvironment.application, 1, goodIntent, 0);
+        assertNotNull(pGoodIntent);
 
-		badIntent = new Intent();
-		badIntent.putExtra("BAZ", "BANG");
-		pBadIntent = PendingIntent.getActivity(RuntimeEnvironment.application, 1, badIntent, 0);
-		assertNotNull(pBadIntent);
-	}
+        badIntent = new Intent();
+        badIntent.putExtra("BAZ", "BANG");
+        pBadIntent = PendingIntent.getActivity(RuntimeEnvironment.application, 1, badIntent, 0);
+        assertNotNull(pBadIntent);
+    }
 
-	/**
-	 * Controlla che dopo l'inserimento sia possibile recuperare correttamente
-	 * l'intent inserito (e non un altro).
-	 */
-	@Test
-	public void testAddAndRetrieveIntent() {
-		schedule.add(goodObs.getUUID(), goodObs, pGoodIntent, false);
-		PendingIntent retrieved = schedule.getIntent(goodObs);
-		assertTrue(retrieved != null);
-		assertTrue(retrieved == pGoodIntent);
-		assertFalse(retrieved == pBadIntent);
-	}
+    /**
+     * Controlla che dopo l'inserimento sia possibile recuperare correttamente
+     * l'intent inserito (e non un altro).
+     */
+    @Test
+    public void testAddAndRetrieveIntent() {
+        schedule.add(goodObs.getUUID(), goodObs, pGoodIntent, false);
+        PendingIntent retrieved = schedule.getIntent(goodObs);
+        assertTrue(retrieved != null);
+        assertTrue(retrieved == pGoodIntent);
+        assertFalse(retrieved == pBadIntent);
+    }
 
-	/**
-	 * Controlla che dopo l'inserimento sia possibile recuperare correttamente
-	 * l'Observer inserito (e non un altro).
-	 */
-	@Test
-	public void testAddAndRetrieveObserver() {
-		schedule.add(goodObs.getUUID(), goodObs, pGoodIntent, false);
-		IWakeupObserver retrieved = schedule.getObserver(goodObs.getUUID());
-		assertTrue(retrieved != null);
-		assertTrue(retrieved == goodObs);
-		assertFalse(retrieved == badObs);
-	}
+    /**
+     * Controlla che dopo l'inserimento sia possibile recuperare correttamente
+     * l'Observer inserito (e non un altro).
+     */
+    @Test
+    public void testAddAndRetrieveObserver() {
+        schedule.add(goodObs.getUUID(), goodObs, pGoodIntent, false);
+        IWakeupObserver retrieved = schedule.getObserver(goodObs.getUUID());
+        assertTrue(retrieved != null);
+        assertTrue(retrieved == goodObs);
+        assertFalse(retrieved == badObs);
+    }
 
-	/**
-	 * Controlla che dopo l'inserimento containsObserver dia risultato
-	 * positivo per l'observer inserito (ma non un altro)
-	 */
-	@Test
-	public void testAddAndContains() {
-		schedule.add(goodObs.getUUID(), goodObs, pGoodIntent, false);
-		assertTrue(schedule.containsObserver(goodObs));
-		assertFalse(schedule.containsObserver(badObs));
-	}
+    /**
+     * Controlla che dopo l'inserimento containsObserver dia risultato
+     * positivo per l'observer inserito (ma non un altro)
+     */
+    @Test
+    public void testAddAndContains() {
+        schedule.add(goodObs.getUUID(), goodObs, pGoodIntent, false);
+        assertTrue(schedule.containsObserver(goodObs));
+        assertFalse(schedule.containsObserver(badObs));
+    }
 
-	/**
-	 * Controlla che dopo l'inserimento isOneTimeOnly sia true
-	 * sse il parametro passato a add() era true.
-	 */
-	@Test
-	public void testOneTimeIsOneTime() {
-		schedule.add(goodObs.getUUID(), goodObs, pGoodIntent, true);
-		schedule.add(badObs.getUUID(), badObs, pBadIntent, false);
-		assertTrue(schedule.isOneTimeOnly(goodObs) == true);
-		assertTrue(schedule.isOneTimeOnly(badObs) == false);
-	}
+    /**
+     * Controlla che dopo l'inserimento isOneTimeOnly sia true
+     * sse il parametro passato a add() era true.
+     */
+    @Test
+    public void testOneTimeIsOneTime() {
+        schedule.add(goodObs.getUUID(), goodObs, pGoodIntent, true);
+        schedule.add(badObs.getUUID(), badObs, pBadIntent, false);
+        assertTrue(schedule.isOneTimeOnly(goodObs) == true);
+        assertTrue(schedule.isOneTimeOnly(badObs) == false);
+    }
 
-	/**
-	 * Controlla che dopo la rimozione di un observer containsObserver
-	 * restituisca false.
-	 */
-	@Test
-	public void testRemove() {
-		schedule.add(goodObs.getUUID(), goodObs, pGoodIntent, false);
-		PendingIntent retrieved = schedule.getIntent(goodObs);
-		assertTrue(schedule.containsObserver(goodObs));
-		schedule.remove(goodObs);
-		assertFalse(schedule.containsObserver(goodObs));
-	}
+    /**
+     * Controlla che dopo la rimozione di un observer containsObserver
+     * restituisca false.
+     */
+    @Test
+    public void testRemove() {
+        schedule.add(goodObs.getUUID(), goodObs, pGoodIntent, false);
+        PendingIntent retrieved = schedule.getIntent(goodObs);
+        assertTrue(schedule.containsObserver(goodObs));
+        schedule.remove(goodObs);
+        assertFalse(schedule.containsObserver(goodObs));
+    }
 
-	/**
-	 * Controlla che il get di un Intent non esistente sollevi una
-	 * NoSuchElementException.
-	 */
-	@Test(expected = NoSuchElementException.class)
-	public void testGetIntentThrowsNoSuchElement() {
-		schedule.getIntent(goodObs);
-	}
+    /**
+     * Controlla che il get di un Intent non esistente sollevi una
+     * NoSuchElementException.
+     */
+    @Test(expected = NoSuchElementException.class)
+    public void testGetIntentThrowsNoSuchElement() {
+        schedule.getIntent(goodObs);
+    }
 
-	/**
-	 * Controlla che il get di un observer non esistente sollevi una
-	 * NoSuchElementException.
-	 */
-	@Test(expected = NoSuchElementException.class)
-	public void testGetObserverThrowsNoSuchElement() {
-		schedule.getObserver("123456789");
-	}
+    /**
+     * Controlla che il get di un observer non esistente sollevi una
+     * NoSuchElementException.
+     */
+    @Test(expected = NoSuchElementException.class)
+    public void testGetObserverThrowsNoSuchElement() {
+        schedule.getObserver("123456789");
+    }
 
-	/**
-	 * Controlla che il get di un intent null sollevi una
-	 * IllegalArgumentException
-	 */
-	@Test(expected = IllegalArgumentException.class)
-	public void testGetIntentNoNull() {
-		schedule.getIntent(null);
-	}
+    /**
+     * Controlla che il get di un intent null sollevi una
+     * IllegalArgumentException
+     */
+    @Test(expected = IllegalArgumentException.class)
+    public void testGetIntentNoNull() {
+        schedule.getIntent(null);
+    }
 
-	/**
-	 * Controlla che il get di un observer null sollevi una
-	 * IllegalArgumentException
-	 */
-	@Test(expected = IllegalArgumentException.class)
-	public void testGetObserverNoNull() {
-		schedule.getObserver(null);
-	}
+    /**
+     * Controlla che il get di un observer null sollevi una
+     * IllegalArgumentException
+     */
+    @Test(expected = IllegalArgumentException.class)
+    public void testGetObserverNoNull() {
+        schedule.getObserver(null);
+    }
 
-	/**
-	 * Controlla che add con un Observer null e OneTime == false
-	 * sollevi IllegalArgumentException
-	 */
-	@Test(expected = IllegalArgumentException.class)
-	public void testAddNoNull1() {
-		schedule.add(null, goodObs, pGoodIntent, false);
-	}
+    /**
+     * Controlla che add con un Observer null e OneTime == false
+     * sollevi IllegalArgumentException
+     */
+    @Test(expected = IllegalArgumentException.class)
+    public void testAddNoNull1() {
+        schedule.add(null, goodObs, pGoodIntent, false);
+    }
 
-	/**
-	 * Controlla che add con un UUID null e OneTime == false
-	 * sollevi IllegalArgumentException
-	 */
-	@Test(expected = IllegalArgumentException.class)
-	public void testAddNoNull2() {
-		schedule.add(goodObs.getUUID(), null, pGoodIntent, false);
-	}
+    /**
+     * Controlla che add con un UUID null e OneTime == false
+     * sollevi IllegalArgumentException
+     */
+    @Test(expected = IllegalArgumentException.class)
+    public void testAddNoNull2() {
+        schedule.add(goodObs.getUUID(), null, pGoodIntent, false);
+    }
 
-	/**
-	 * Controlla che add con un intent null e OneTime == false
-	 * sollevi IllegalArgumentException
-	 */
-	@Test(expected = IllegalArgumentException.class)
-	public void testAddNoNull3() {
-		schedule.add(goodObs.getUUID(), goodObs, null, false);
-	}
+    /**
+     * Controlla che add con un intent null e OneTime == false
+     * sollevi IllegalArgumentException
+     */
+    @Test(expected = IllegalArgumentException.class)
+    public void testAddNoNull3() {
+        schedule.add(goodObs.getUUID(), goodObs, null, false);
+    }
 
-	/**
-	 * Controlla che add con un UUID null e OneTime == true
-	 * sollevi IllegalArgumentException
-	 */
-	@Test(expected = IllegalArgumentException.class)
-	public void testAddNoNull1A() {
-		schedule.add(null, goodObs, pGoodIntent, true);
-	}
+    /**
+     * Controlla che add con un UUID null e OneTime == true
+     * sollevi IllegalArgumentException
+     */
+    @Test(expected = IllegalArgumentException.class)
+    public void testAddNoNull1A() {
+        schedule.add(null, goodObs, pGoodIntent, true);
+    }
 
-	/**
-	 * Controlla che add con un Observer null e OneTime == true
-	 * sollevi IllegalArgumentException
-	 */
-	@Test(expected = IllegalArgumentException.class)
-	public void testAddNoNull2A() {
-		schedule.add(goodObs.getUUID(), null, pGoodIntent, true);
-	}
+    /**
+     * Controlla che add con un Observer null e OneTime == true
+     * sollevi IllegalArgumentException
+     */
+    @Test(expected = IllegalArgumentException.class)
+    public void testAddNoNull2A() {
+        schedule.add(goodObs.getUUID(), null, pGoodIntent, true);
+    }
 
-	/**
-	 * Controlla che add con un Intent null e OneTime == true
-	 * sollevi IllegalArgumentException
-	 */
-	@Test(expected = IllegalArgumentException.class)
-	public void testAddNoNull3A() {
-		schedule.add(goodObs.getUUID(), goodObs, null, true);
-	}
+    /**
+     * Controlla che add con un Intent null e OneTime == true
+     * sollevi IllegalArgumentException
+     */
+    @Test(expected = IllegalArgumentException.class)
+    public void testAddNoNull3A() {
+        schedule.add(goodObs.getUUID(), goodObs, null, true);
+    }
 }
