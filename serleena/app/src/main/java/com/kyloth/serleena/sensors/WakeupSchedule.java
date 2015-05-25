@@ -34,6 +34,7 @@ import android.app.PendingIntent;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.NoSuchElementException;
 
 /**
  * Rappresenta i wakeup pianificati utilizzando WakeupManager.
@@ -56,15 +57,34 @@ class WakeupSchedule {
     }
 
     public PendingIntent getIntent(IWakeupObserver observer) {
+        if (observer == null) {
+            throw new IllegalArgumentException();
+        }
+
+        if (!obsMap.containsKey(observer)) {
+            throw new NoSuchElementException();
+        }
+
         return obsMap.get(observer);
     }
 
     public IWakeupObserver getObserver(String uuid) {
+        if (uuid == null) {
+            throw new IllegalArgumentException();
+        }
+
+        if (!uuidMap.containsKey(uuid)) {
+            throw new NoSuchElementException();
+        }
+
         return uuidMap.get(uuid);
     }
 
     public void add(String uuid, IWakeupObserver observer,
                     PendingIntent alarmIntent, boolean oneTimeOnly) {
+        if (uuid == null || observer == null || alarmIntent == null) {
+            throw new IllegalArgumentException();
+        }
         uuidMap.put(uuid, observer);
         obsMap.put(observer, alarmIntent);
         intentMap.put(alarmIntent, uuid);
@@ -72,11 +92,23 @@ class WakeupSchedule {
     }
 
     public void remove(IWakeupObserver observer) {
+        if (observer == null) {
+            throw new IllegalArgumentException();
+        }
+
         uuidMap.remove(intentMap.remove(obsMap.remove(observer)));
         onetimeMap.remove(observer);
     }
 
     public boolean isOneTimeOnly(IWakeupObserver observer) {
+        if (observer == null) {
+            throw new IllegalArgumentException();
+        }
+
+        if (!onetimeMap.containsKey(observer)) {
+            throw new NoSuchElementException();
+        }
+
         return onetimeMap.get(observer);
     }
 
