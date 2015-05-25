@@ -473,13 +473,13 @@ public class SerleenaSQLiteDataSource implements ISerleenaSQLiteDataSource {
         SQLiteDatabase db = dbHelper.getReadableDatabase();
         ArrayList<EmergencyContact> list = new ArrayList<EmergencyContact>();
 
-        String where = "(contact_sw_corner_latitude + 90) <= " +
+        String where = "(contact_ne_corner_latitude + 90) <= " +
                 (location.latitude() + 90) + " AND " +
-                "(contact_sw_corner_longitude + 180) <= " +
+                "(contact_ne_corner_longitude + 180) <= " +
                 (location.longitude() + 180) + " AND " +
-                "(contact_ne_corner_latitude + 90) >= " +
+                "(contact_sw_corner_latitude + 90) >= " +
                 (location.latitude() + 90) + " AND " +
-                "(contact_ne_corner_longitude + 180) >= " +
+                "(contact_sw_corner_longitude + 180) >= " +
                 (location.longitude() + 180);
         Cursor result = db.query(SerleenaDatabase.TABLE_CONTACTS,
                 new String[]{"contact_name", "contact_value"}, where,
