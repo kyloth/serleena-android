@@ -126,7 +126,11 @@ public class SerleenaSQLiteDataSource implements ISerleenaSQLiteDataSource {
         assert(p.longitude() >= -180.0);
         assert(p.longitude() < 180.0);
         int ij[] = new int[2];
-        ij[0] = (int)(floor((p.latitude() + 90.0) / QUADRANT_LATSIZE));
+        if (p.latitude() == 90.0) {
+            ij[0] = TOT_LAT_QUADRANTS - 1;
+        } else {
+            ij[0] = (int) (floor((p.latitude() + 90.0) / QUADRANT_LATSIZE));
+        }
         assert(ij[0] < TOT_LAT_QUADRANTS);
         ij[1] = (int)(floor((p.longitude() + 180.0) / QUADRANT_LONGSIZE) %  TOT_LONG_QUADRANTS);
         assert(ij[1] < TOT_LONG_QUADRANTS);
