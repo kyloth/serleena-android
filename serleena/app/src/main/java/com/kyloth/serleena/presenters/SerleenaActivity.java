@@ -109,6 +109,7 @@ import java.util.Map;
  * @field myLayoutIds : Map<String,Integer> mappa di corrispondenze tra stringhe e id dei layout
  * @field myMenuItemIds : Map<Integer,String> mappa di corrispondenze tra id dei menu item e visuale richiesta
  * @field curFrag : String stringa contenente il nome della visuale attualmente presente sul display
+ * @field showingMenu : boolean valore che è true se e solo se il menù è aperto
  * @author Sebastiano Valle <valle.sebastiano93@gmail.com>
  * @version 1.0.0
  * @see android.support.v7.app.AppCompatActivity
@@ -137,7 +138,11 @@ public class SerleenaActivity extends AppCompatActivity implements ISerleenaActi
      */
     private String curFrag;
 
+    /**
+     * Valore che è true se e solo se il menù è aperto.
+     */
     private boolean showingMenu = false;
+
     private ISerleenaDataSource dataSource;
     private ISensorManager sensorManager;
 
@@ -155,7 +160,7 @@ public class SerleenaActivity extends AppCompatActivity implements ISerleenaActi
         initLayoutIds();
         initMenuItemIds();
         FragmentTransaction ft = getFragmentManager().beginTransaction();
-        changeFragment("TELEMETRY");
+        changeFragment("EXPLIST");
 
         dataSource = new SerleenaDataSource(
                 new SerleenaSQLiteDataSource(this, new SerleenaDatabase(this, 1)));
@@ -233,7 +238,7 @@ public class SerleenaActivity extends AppCompatActivity implements ISerleenaActi
      * Metodo che mappa le voci dei menù ai tag delle varie visuali e schermate.
      */
     private void initMenuItemIds() {
-        myMenuItemIds.put(R.id.screen_menu_exp,"TRACK");
+        myMenuItemIds.put(R.id.screen_menu_exp,"EXPLIST");
         myMenuItemIds.put(R.id.screen_menu_contact,"CONTACTS");
         myMenuItemIds.put(R.id.screen_menu_meteo,"WEATHER");
         myMenuItemIds.put(R.id.screen_menu_cardio,"CARDIO");
@@ -243,6 +248,8 @@ public class SerleenaActivity extends AppCompatActivity implements ISerleenaActi
 
     /**
      * Metodo che aggiunge un menù all'ActionBar.
+     *
+     * @param menu Menu che viene creato
      */
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -253,6 +260,8 @@ public class SerleenaActivity extends AppCompatActivity implements ISerleenaActi
 
     /**
      * Metodo invocato all'apertura di un menù.
+     *
+     * @param menu Menu che viene aperto
      */
     @Override
     public boolean onPrepareOptionsMenu(Menu menu) {
@@ -262,6 +271,8 @@ public class SerleenaActivity extends AppCompatActivity implements ISerleenaActi
 
     /**
      * Metodo invocato alla chiusura di un menù.
+     *
+     * @param menu Menu che viene chiuso
      */
     @Override
     public void onOptionsMenuClosed(Menu menu) {
@@ -273,17 +284,13 @@ public class SerleenaActivity extends AppCompatActivity implements ISerleenaActi
      *
      * Tale metodo ha il compito di alternare i vari Fragment in base
      * all'opzione scelta dall'utente.
+     *
+     * @param item Elemento del menù scelto
      */
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         int id = item.getItemId();
         String newFrag = myMenuItemIds.get(id);
-        if(newFrag.equals("MAP")) {
-            try {
-                ((IMapPresenter) myPress.get("MAP")).newUserPoint();
-                ((IMapPresenter) myPress.get("MAP")).newUserPoint();
-            } catch(NoActiveExperienceException e) {}
-        }
 
         if(newFrag.equals(curFrag)) return true;
         changeFragment(newFrag);
@@ -296,6 +303,8 @@ public class SerleenaActivity extends AppCompatActivity implements ISerleenaActi
      *
      * Inizialmente il Fragment precedente viene rimosso, per poi aggiungere
      * il Fragment richiesto dall'utente.
+     *
+     * @param newFrag Tag del Fragment da visualizzare
      */
     private void changeFragment(String newFrag) {
         if(curFrag != null)
