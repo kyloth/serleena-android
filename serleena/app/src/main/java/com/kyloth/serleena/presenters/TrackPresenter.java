@@ -42,6 +42,8 @@
 package com.kyloth.serleena.presenters;
 
 import android.annotation.TargetApi;
+import android.hardware.GeomagneticField;
+import android.location.Location;
 import android.os.AsyncTask;
 
 import com.kyloth.serleena.common.Checkpoint;
@@ -86,6 +88,7 @@ public class TrackPresenter implements ITrackPresenter,
     private int checkpointToReach;
     private boolean telemetry;
     private long trackStartFullTime;
+    private GeoPoint lastKnownLocation;
 
     private ITelemetryManager telMan;
     private ILocationManager locMan;
@@ -231,7 +234,8 @@ public class TrackPresenter implements ITrackPresenter,
         AsyncTask<Void, Void, Void> task = new AsyncTask<Void, Void, Void>() {
             @Override
             protected Void doInBackground(Void... voids) {
-                updateView(loc);
+                lastKnownLocation = loc;
+                updateView(lastKnownLocation);
                 return null;
             }
         };
@@ -303,25 +307,45 @@ public class TrackPresenter implements ITrackPresenter,
     /**
      * Implementa ITrackPresenter.onHeadingUpdate().
      *
-     * @param heading
+     * In base al valore di orientamento ricevuto dal sensore, e alla
+     * posizione dell'utente, calcola il valore in gradi che,
+     * sommato algebricamente attuale, restituisce la direzione del prossimo
+     * checkpoint da raggiungere. Questo valore è comunicato alla vista.
+     *
+     * @param heading Orientamento dell'utente, indicato come radianti di
+     *                rotazione attorno all'asse azimuth.
      */
     @Override
     public void onHeadingUpdate(double heading) {
-        double result;
-        // stuff
-        //view.setDirection(result);
-    }
+        Location userLocation = new Location("");
+        userLocation.setLatitude(lastKnownLocation.latitude());
+        userLocation.setLongitude(lastKnownLocation.longitude());
+        Location destinationObj = new Location("");
+        Checkpoint c = activeTrack.getCheckpoints().get(checkpointToReach);
+        destinationObj.setLatitude(c.latitude());
+        destinationObj.setLongitude(c.longitude());
 
-    /**
-     * Calcola il valore in gradi che, sommato algebricamente
-     * all'orientamento dell'utente, torna la direzione del prossimo
-     * checkpoint da raggiungere.
-     *
-     * @param userHeading Orientamento dell'utente, in radianti rispetto
-     *                    all'asse azimuth.
-     */
-    private double computeHeadingVariation(double userHeading) {
-        throw new UnsupportedOperationException();
+        float azimuth = (float) heading;
+
+        GeomagneticField geoField =
+                new GeomagneticField(
+                       Double.valueOf(userLocation.getLatitude()).floatValue(),
+                       Double.valueOf(userLocation.getLongitude()).floatValue(),
+                       Double.valueOf(userLocation.getAltitude()).floatValue(),
+                       System.currentTimeMillis());
+
+        float azimuthTrueNorth = azimuth - geoField.getDeclination();
+        float bearTo = userLocation.bearingTo(destinationObj);
+
+        if (bearTo < 0)
+            bearTo = bearTo + 360;
+
+        float direction = bearTo - azimuthTrueNorth;
+
+        if (direction < 0)
+            direction = direction + 360;
+
+        view.setDirection(direction);
     }
 
 }
