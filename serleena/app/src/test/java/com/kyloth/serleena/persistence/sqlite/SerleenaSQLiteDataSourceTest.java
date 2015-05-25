@@ -46,6 +46,7 @@ import android.database.sqlite.SQLiteDatabase;
 import com.kyloth.serleena.BuildConfig;
 import com.kyloth.serleena.common.EmergencyContact;
 import com.kyloth.serleena.common.GeoPoint;
+import com.kyloth.serleena.common.IQuadrant;
 import com.kyloth.serleena.common.Quadrant;
 import com.kyloth.serleena.common.TelemetryEvent;
 import com.kyloth.serleena.persistence.IExperienceStorage;
@@ -124,6 +125,12 @@ public class SerleenaSQLiteDataSourceTest {
 		GeoPoint p = new GeoPoint(90.0 - SerleenaSQLiteDataSource.QUADRANT_LATSIZE / 2.0,
 		                          180.0 - SerleenaSQLiteDataSource.QUADRANT_LONGSIZE / 2.0);
 		ij = sds.getIJ(p);
+		assertTrue(ij[0] == SerleenaSQLiteDataSource.TOT_LAT_QUADRANTS - 1);
+		assertTrue(ij[1] == SerleenaSQLiteDataSource.TOT_LONG_QUADRANTS - 1);
+
+		GeoPoint p2 = new GeoPoint(90.0,
+				180.0 - SerleenaSQLiteDataSource.QUADRANT_LONGSIZE / 2.0);
+		ij = sds.getIJ(p2);
 		assertTrue(ij[0] == SerleenaSQLiteDataSource.TOT_LAT_QUADRANTS - 1);
 		assertTrue(ij[1] == SerleenaSQLiteDataSource.TOT_LONG_QUADRANTS - 1);
 	}
