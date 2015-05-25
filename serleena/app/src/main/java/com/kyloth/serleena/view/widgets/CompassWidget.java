@@ -135,7 +135,7 @@ public class CompassWidget extends View {
      *
      * @param context Activity in cui è presente il widget
      * @param attrs attributi come altezza, larghezza definiti nell'XML corrispondente a MapWidget
-     * @param defStyle stile da applicare a questa vista, può corrispondere a 0 o a un'id di una risorsa
+     * @param defaultStyle stile da applicare a questa vista, può corrispondere a 0 o a un'id di una risorsa
      */
     public CompassWidget(Context context, AttributeSet attrs,int defaultStyle) {
         super(context,attrs,defaultStyle);
@@ -209,7 +209,7 @@ public class CompassWidget extends View {
      * In questo metodo ci si assicura che venga disegnata una bussola circolare e non ovale.
      *
      * @param widthMeasureSpec misura di larghezza
-     * @param widthMeasureSpec misura di altezza
+     * @param heightMeasureSpec misura di altezza
      */
     @Override
     protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
@@ -224,7 +224,7 @@ public class CompassWidget extends View {
      * @param measureSpec misura di altezza
      */
     private int measure(int measureSpec) {
-        int result = 0;
+        int result;
         int specMode = MeasureSpec.getMode(measureSpec);
         int specSize = MeasureSpec.getSize(measureSpec);
 

@@ -44,6 +44,7 @@ import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.drawable.BitmapDrawable;
+import android.support.annotation.NonNull;
 import android.util.AttributeSet;
 import android.widget.ImageView;
 
@@ -135,7 +136,7 @@ public class MapWidget extends ImageView {
      * @param canvas Oggetto su cui disegnare
      */
     @Override
-    public void onDraw(Canvas canvas) {
+    public void onDraw(@NonNull Canvas canvas) {
         if(quadrant == null) return;
         Bitmap mapRaster = quadrant.getRaster();
         canvas.drawBitmap(mapRaster,0,0,null);
@@ -166,7 +167,7 @@ public class MapWidget extends ImageView {
         img.setMaxHeight(100);
         img.setMaxWidth(100);
         Bitmap bmp = ((BitmapDrawable) img.getDrawable()).getBitmap().copy(Bitmap.Config.ARGB_8888, true);
-        bmp = bmp.createScaledBitmap(bmp,100,100,false);
+        bmp = Bitmap.createScaledBitmap(bmp,100,100,false);
         canvas.drawBitmap(bmp, left, top, null);
     }
 

@@ -138,7 +138,7 @@ public class WeatherFragment extends Fragment implements IWeatherView {
     public void setWeatherInfo(IWeatherForecast forecast) {
         image.setVisibility(ImageView.VISIBLE);
         int hour = now.get(Calendar.HOUR_OF_DAY);
-        Integer temp = null;
+        Integer temp = 0;
         WeatherForecastEnum weatherId = null;
         if(hour >= 12 && hour < 20) {
             weatherId = forecast.getAfternoonForecast();
@@ -153,7 +153,7 @@ public class WeatherFragment extends Fragment implements IWeatherView {
             temp = forecast.getNightTemperature();
         }
         Bitmap bmp = BitmapFactory.decodeResource(getResources(),weatherMap.get(weatherId));
-        bmp = bmp.createScaledBitmap(bmp,130,130,false);
+        bmp = Bitmap.createScaledBitmap(bmp,130,130,false);
         image.setImageBitmap(bmp);
         String day = new Integer(now.get(Calendar.DAY_OF_MONTH)).toString();
         if(now.get(Calendar.DAY_OF_MONTH) < 10) day = "0" + day;
