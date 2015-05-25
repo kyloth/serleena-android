@@ -42,9 +42,6 @@ package com.kyloth.serleena.view.fragments;
 import android.app.Activity;
 import android.app.Fragment;
 import android.view.KeyEvent;
-import android.view.Menu;
-import android.view.MenuInflater;
-import android.view.View;
 import android.widget.TextView;
 
 import com.kyloth.serleena.R;
@@ -93,7 +90,7 @@ public class CardioFragment extends Fragment implements ICardioView {
      */
     @Override
     public void setHeartRate(int rate) {
-        Integer rateValue = new Integer(rate);
+        Integer rateValue = rate;
         TextView hr = (TextView) getActivity().findViewById(R.id.heart_rate);
         hr.setText(rateValue.toString());
     }
