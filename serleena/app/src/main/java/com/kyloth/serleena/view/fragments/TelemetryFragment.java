@@ -104,6 +104,11 @@ public class TelemetryFragment extends Fragment implements ITelemetryView {
         presenter.pause();
     }
 
+    /**
+     * Implementa ITelemetryView.attachPresenter().
+     *
+     * @param presenter Presenter da associare alla vista.
+     */
     @Override
     public void attachPresenter(ITelemetryPresenter presenter) {
         this.presenter = presenter;

@@ -51,7 +51,10 @@ import com.kyloth.serleena.common.UserPoint;
  * @since   1.0
  */
 public interface IExperience {
+
     /**
+     * Restituisce i Percorsi dell'Esperienza.
+     * 
      * @return  Ritorna un Iterable che contiene tutti i percorsi
      *          dell'Esperienza.
      * @version 1.0
@@ -60,6 +63,8 @@ public interface IExperience {
     public Iterable<ITrack> getTracks();
 
     /**
+     * Restituisce i punti utente dell'Esperienza.
+     *
      * @return  Ritorna un Iterable che contiene tutti i Punti Utente
      *          propri dell'Esperienza, compresi quelli creati sull'orologio..
      * @version 1.0

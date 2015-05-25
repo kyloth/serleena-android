@@ -50,11 +50,16 @@ package com.kyloth.serleena.sensors;
  * @version 1.0.0
  */
 public interface IWakeupObserver {
+
     /**
      * Metodo di callback chiamato con l'update dell'oggetto
      * osservato, il quale indica in questo caso un wakeup del
      * processore.
      */
     public void onWakeup();
+
+    /**
+     * Restituisce il codice identificativo unico dell'Observer.
+     */
     public String getUUID();
 }

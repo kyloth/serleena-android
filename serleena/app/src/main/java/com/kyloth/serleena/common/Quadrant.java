@@ -73,16 +73,25 @@ public class Quadrant implements IQuadrant {
         this.raster = raster;
     }
 
+    /**
+     * Implementa IQuadrant.getRaster().
+     */
     @Override
     public Bitmap getRaster() {
         return raster;
     }
 
+    /**
+     * Implementa IQuadrant.getNorthEastPoint().
+     */
     @Override
     public GeoPoint getNorthEastPoint() {
         return northEast;
     }
 
+    /**
+     * Implementa IQuadrant.getSouthWestPoint().
+     */
     @Override
     public GeoPoint getSouthWestPoint() {
         return southWest;

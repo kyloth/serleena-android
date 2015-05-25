@@ -100,13 +100,20 @@ public class CheckpointReachedTelemetryEvent extends TelemetryEvent {
         return false;
     }
 
+    /**
+     * Overriding del metodo hashCode() della superclasse Object.
+     */
     @Override
     public int hashCode() {
         return checkpointNumber;
     }
 
+    /**
+     * Implementazione di TelemetryEvent.getType().
+     */
     @Override
     public TelemetryEventType getType() {
         return TelemetryEventType.CheckpointReached;
     }
+    
 }
