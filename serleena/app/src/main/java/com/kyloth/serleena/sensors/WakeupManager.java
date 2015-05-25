@@ -67,6 +67,24 @@ class WakeupManager extends BroadcastReceiver implements IWakeupManager {
 
     private Context context;
     private WakeupSchedule schedule;
+    private AlarmManager alarmManager;
+
+    /**
+     * Crea un oggetto WakeupManager.
+     *
+     * @param context Contesto dell'applicazione.
+     * @param alarmManager Un alarmManager diverso da quello di default; 
+     *        utile per testing.
+     */
+    public WakeupManager(Context context, AlarmManager alarmManager) {
+        if (alarmManager == null) {
+            this.alarmManager = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
+        } else {
+            this.alarmManager = alarmManager;
+        }
+        this.context = context;
+        this.schedule = new WakeupSchedule();
+    }
 
     /**
      * Crea un oggetto WakeupManager.
@@ -74,8 +92,7 @@ class WakeupManager extends BroadcastReceiver implements IWakeupManager {
      * @param context Contesto dell'applicazione.
      */
     public WakeupManager(Context context) {
-        this.context = context;
-        this.schedule = new WakeupSchedule();
+        this(context, null);
     }
 
     /**
@@ -105,8 +122,6 @@ class WakeupManager extends BroadcastReceiver implements IWakeupManager {
             millis = 1;
         String uuid = observer.getUUID();
 
-        AlarmManager alarmManager =
-                (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
         Intent intentToFire = new Intent(context, WakeupManager.class);
         intentToFire.putExtra(ALARM_UUID, uuid);
 
@@ -135,8 +150,6 @@ class WakeupManager extends BroadcastReceiver implements IWakeupManager {
         if (!schedule.containsObserver(observer))
             throw new UnregisteredObserverException();
 
-        AlarmManager alarmManager =
-                (AlarmManager) context.getSystemService (Context.ALARM_SERVICE);
         alarmManager.cancel(schedule.getIntent(observer));
         schedule.remove(observer);
     }
@@ -167,11 +180,9 @@ class WakeupManager extends BroadcastReceiver implements IWakeupManager {
     @Override
     public synchronized void onReceive(Context context, Intent intent) {
         String uuid = intent.getStringExtra(ALARM_UUID);
-
         if (uuid == null)
             throw new IllegalArgumentException("Intent not recognized");
 
         notifyObserver(schedule.getObserver(uuid));
     }
-
 }
