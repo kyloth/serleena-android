@@ -155,7 +155,7 @@ public class SerleenaActivity extends AppCompatActivity implements ISerleenaActi
         initLayoutIds();
         initMenuItemIds();
         FragmentTransaction ft = getFragmentManager().beginTransaction();
-        changeFragment("TELEMETRY");
+        changeFragment("EXPLIST");
 
         dataSource = new SerleenaDataSource(
                 new SerleenaSQLiteDataSource(this, new SerleenaDatabase(this, 1)));
@@ -233,7 +233,7 @@ public class SerleenaActivity extends AppCompatActivity implements ISerleenaActi
      * Metodo che mappa le voci dei menù ai tag delle varie visuali e schermate.
      */
     private void initMenuItemIds() {
-        myMenuItemIds.put(R.id.screen_menu_exp,"TRACK");
+        myMenuItemIds.put(R.id.screen_menu_exp,"EXPLIST");
         myMenuItemIds.put(R.id.screen_menu_contact,"CONTACTS");
         myMenuItemIds.put(R.id.screen_menu_meteo,"WEATHER");
         myMenuItemIds.put(R.id.screen_menu_cardio,"CARDIO");
