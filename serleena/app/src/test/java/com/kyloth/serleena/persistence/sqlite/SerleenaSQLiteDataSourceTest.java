@@ -172,6 +172,41 @@ public class SerleenaSQLiteDataSourceTest {
 		           && second.longitude() == -180.0 + 2 * SerleenaSQLiteDataSource.QUADRANT_LONGSIZE);
 	}
 
+	/**
+	 * Controlla che l'output di getQuadrant sia all'interno del range corretto.
+	 */
+	@Test
+	public void testGetQuadrantRange() {
+		for (int x = -180; x < 180; x++) {
+			for (int y = -90; y <= 90; y++) {
+				IQuadrant quad = sds.getQuadrant(new GeoPoint(y, x));
+				assertTrue(quad.getNorthEastPoint().latitude() >= -90);
+				assertTrue(quad.getNorthEastPoint().latitude() <= +90);
+				assertTrue(quad.getNorthEastPoint().longitude() >= -180);
+				assertTrue(quad.getNorthEastPoint().longitude() < 180);
+				assertTrue(quad.getSouthWestPoint().latitude() >= -90);
+				assertTrue(quad.getSouthWestPoint().latitude() <= +90);
+				assertTrue(quad.getSouthWestPoint().longitude() >= -180);
+				assertTrue(quad.getSouthWestPoint().longitude() < 180);
+			}
+		}
+	}
+
+	/**
+	 * Controlla che l'output di getQuadrant abbia sw >= ne
+	 */
+	@Test
+	public void testGetQuadrantSWGreaterThanNE() {
+		for (int x = -180; x < 180; x++) {
+			for (int y = -90; y <= 90; y++) {
+				IQuadrant quad = sds.getQuadrant(new GeoPoint(y, x));
+				assertTrue(quad.getNorthEastPoint().latitude() < quad.getSouthWestPoint().latitude());
+				assertTrue(quad.getNorthEastPoint().longitude() < quad.getSouthWestPoint().longitude() ||
+								quad.getNorthEastPoint().longitude() > quad.getSouthWestPoint().longitude() &&
+								quad.getNorthEastPoint().longitude() < quad.getSouthWestPoint().longitude() + 360.0
+				);
+			}
+		}
 	}
 
 	/**
