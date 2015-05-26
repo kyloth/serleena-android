@@ -32,11 +32,10 @@
  * Name: WakeupManager.java
  * Package: com.kyloth.serleena.sensors
  * Author: Filippo Sestini
- * Date: 2015-05-08
  *
  * History:
- * Version  Programmer        Date         Changes
- * 1.0.0    Filippo Sestini   2015-05-08   Creazione file e scrittura
+ * Version  Programmer        Changes
+ * 1.0.0    Filippo Sestini   Creazione file e scrittura
  *                                         codice e documentazione Javadoc
  */
 
