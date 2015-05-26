@@ -48,6 +48,13 @@ import java.util.Date;
 /**
  * Concretizza IWeatherPresenter.
  *
+ * @use Viene utilizzata solamente dall'Activity, che ne mantiene un riferimento. Il Presenter, alla creazione, si registra alla sua Vista, passando se stesso come parametro dietro interfaccia.
+ * @field view : IWeatherView Vista associata al presenter
+ * @field activity : ISerleenaActivity Activity a cui il presenter appartiene
+ * @field daysPastNow : int Giorni successivi a quello corrente la cui data corrispondente deve essere visualizzata sulla vista
+ * @field locMan : ILocationManager Sensore di posizione
+ * @field ds : ISerleenaDataSource DAO dell'applicazione
+ * @field lastKnownLocation : GeoPoint Ultima posizione geografica nota dell'utente
  * @author Filippo Sestini <sestini.filippo@gmail.com>
  * @version 1.0.0
  */

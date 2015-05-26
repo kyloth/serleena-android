@@ -45,6 +45,7 @@ package com.kyloth.serleena.presentation;
  * IContactsPresenter e' l'interfaccia del Presenter per la schermata dei
  * contatti di emergenza.
  *
+ * @use Interfaccia utilizzata dalla vista \fixedwidth{ContactsFragment} per mantenere un riferimento al Presenter associato, e comunicare con esso.
  * @author Tobia Tesan <tobia.tesan@gmail.com>
  * @version 1.0
  * @since 1.0

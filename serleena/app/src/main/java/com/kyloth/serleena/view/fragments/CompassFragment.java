@@ -53,6 +53,7 @@ import com.kyloth.serleena.view.widgets.CompassWidget;
  * Classe che implementa la schermata “Bussola”, in cui vengono fornite all'utente delle indicazioni
  * rispetto i poli geografici
  *
+ * @use Viene istanziata e utilizzata dall'Activity per la visualizzazione della schermata. Comunica con il Presenter associato attraverso l'interfaccia \fixedwidth{ICompassPresenter}.
  * @field presenter : ICompassPresenter presenter collegato ad un CompassFragment
  * @field widget : CompassWidget componente grafica che visualizza una bussola sullo schermo dello smartwatch
  * @author Sebastiano Valle <valle.sebastiano93@gmail.com>

@@ -58,6 +58,7 @@ import java.util.ArrayList;
  *
  * In questa visuale è possibile selezionare un percorso da attivare tra quelli disponibili.
  *
+ * @use Viene istanziata e utilizzata dall'Activity per la visualizzazione della schermata. Comunica con il Presenter associato attraverso l'interfaccia \fixedwidth{ITrackSelectionPresenter}.
  * @field presenter : IExperienceSelectionPresenter Presenter collegato a un ExperienceSelectionFragment
  * @field mListView : AbsListView lista di elementi
  * @field mAdapter : ArrayAdapter adattatore che collega la lista all'ExperienceSelectionFragment

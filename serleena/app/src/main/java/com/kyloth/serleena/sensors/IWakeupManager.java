@@ -52,6 +52,7 @@ import com.kyloth.serleena.common.UnregisteredObserverException;
  * di tipo IWakeupObserver registrati a un IWakeupManager tramite
  * il pattern "Observer".
  *
+ * @use Viene utilizzata da \fixedwidth{SensorManager} per restituire ai client il gestore dei \emph{wakeup}, e dal client per accedere ai servizi offerti dal sensore. È utilizzato in particolare da \fixedwidth{LocationReachedManager} e \fixedwidth{TelemetryManager}.
  * @author Gabriele Pozzan <gabriele.pozzan@studenti.unipd.it>
  * @version 1.0.0
  */

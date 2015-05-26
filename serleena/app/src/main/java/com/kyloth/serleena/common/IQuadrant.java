@@ -48,6 +48,7 @@ import android.graphics.Bitmap;
  * Rappresenta l’interfaccia di un quadrante come una regione sulla mappa, comprensiva di
  * un'immagine raster rappresentante la geografia della regione rappresentata.
  *
+ * @use Viene passato a una vista IMapView, che lo utilizza per determinare l'area di posizionamento e mostrare informazioni cartografiche.
  * @author Filippo Sestini <sestini.filippo@gmail.com>
  * @version 1.0.0
  * @since 2015-05-05

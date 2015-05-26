@@ -46,9 +46,11 @@ package com.kyloth.serleena.common;
  * Rappresenta un contatto di un’autorità locale, identificato dal contatto e
  * dal nome dell'autorità.
  *
+ * @use Viene utilizzato dalle componenti di persistenza e di presentazione per rappresentare i contatti delle autorità locali relative ad una particolare area geografica. Il presenter ContactsPresenter ottiene oggetti EmergencyContact dal DAO, e li passa alla vista IContactsView, che li mostra all'utente.
+ * @field name : String Nome del contatto
+ * @field value : String Valore del contatto
  * @author Filippo Sestini <sestini.filippo@gmail.com>
  * @version 1.0.0
- * @since 2015-05-05
  */
 public class EmergencyContact {
 

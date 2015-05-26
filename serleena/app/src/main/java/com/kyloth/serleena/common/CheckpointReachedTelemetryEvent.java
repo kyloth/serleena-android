@@ -50,6 +50,8 @@ import java.util.Date;
  * E` individuato dall'istante di campionamento e dal numero del checkpoint
  * raggiunto.
  *
+ * @use Viene istanziato da TrackPresenter e segnalato a TelemetryManager, che lo aggiunge al Tracciamento in corso. Viene inoltre restituito al codice client da oggetti di interfaccia ITelemetry, che restituiscono gli eventi di Tracciamento associati ad essi, ed è utilizzato dai DAO per la persistenza dei Tracciamenti.
+ * @field checkpointNumber : int Indice, nella lista di checkpoint del Percorso attivo, del checkpoint a cui si riferisce l'istanza.
  * @author  Filippo Sestini <sestini.filippo@gmail.com>
  * @version 1.0
  * @since   2015-05-05

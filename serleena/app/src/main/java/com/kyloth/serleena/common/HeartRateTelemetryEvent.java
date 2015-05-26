@@ -48,6 +48,8 @@ import java.util.Date;
  * Rappresenta un evento di tracciamento che registra il battito cardiaco dell'utente, individuato
  * dall'istante di campionamento e il valore campionato dall'heart rate monitor.
  *
+ * @use Viene istanziato da sensors.TelemetryManager e restituito al codice client da oggetti di interfaccia ITelemetry, che restituiscono gli eventi di Tracciamento associati ad essi. Viene inoltre utilizzato dai DAO per la persistenza dei Tracciamenti.
+ * @field heartRate : int Valore di battito cardiaco campionato
  * @author  Filippo Sestini <sestini.filippo@gmail.com>
  * @version 1.0
  * @since   2015-05-05

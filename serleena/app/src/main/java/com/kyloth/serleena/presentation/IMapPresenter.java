@@ -46,6 +46,7 @@ import com.kyloth.serleena.common.NoActiveExperienceException;
 /**
  * IMapPresenter e' l'interfaccia del Presenter della schermata Mappa.
  *
+ * @use Interfaccia utilizzata dalla vista \fixedwidth{MapFragment} per mantenere un riferimento al Presenter associato, e comunicare con esso.
  * @author Tobia Tesan <tobia.tesan@gmail.com>
  * @version 1.0
  * @since 1.0

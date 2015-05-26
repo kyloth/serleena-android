@@ -46,6 +46,7 @@ package com.kyloth.serleena.sensors;
  * Interfaccia che verrà implementata da un oggetto in grado
  * di osservare un oggetto di tipo IWakeupManager.
  *
+ * @use Viene implementata da \fixedwidth{LocationReachedManager} e \fixedwidth{TelemetryManager}.
  * @author Gabriele Pozzan <gabriele.pozzan@studenti.unipd.it>
  * @version 1.0.0
  */

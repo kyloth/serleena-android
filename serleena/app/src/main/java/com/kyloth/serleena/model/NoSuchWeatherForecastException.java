@@ -28,10 +28,26 @@
 ///////////////////////////////////////////////////////////////////////////////
 
 
+/**
+ * Name: NoSuchWeatherForecastException.java
+ * Package: com.kyloth.serleena.model
+ * Author: Filippo Sestini
+ * Date: 2015-05-18
+ *
+ * History:
+ * Version  Programmer          Date        Changes
+ * 1.0.0    Filippo Sestini     2015-05-18  Creazione file e scrittura di
+ *                                          codice e documentazione in Javadoc.
+ */
+
 package com.kyloth.serleena.model;
 
 /**
- * Created by fsestini on 5/19/15.
+ * Segnala l'assenza di dati su previsioni meteo.
+ *
+ * @use Utilizzata dai \emph{DAO} per segnalare l'assenza di dati meteo come richiesti dal chiamante.
+ * @author Filippo Sestini <sestini.filippo@gmail.com>
+ * @version 1.0.0
  */
 public class NoSuchWeatherForecastException extends Exception {
 

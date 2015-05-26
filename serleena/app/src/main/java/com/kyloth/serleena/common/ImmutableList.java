@@ -48,6 +48,7 @@ package com.kyloth.serleena.common;
  * Gli oggetti della lista sono ordinati e accessibili casualmente dato
  * l'indice dell'elemento.
  *
+ * @use Viene utilzzata dalle entità del model nei casi in cui vi sia il bisogno di restituire strutture dati accessibili casualmente, rendendo quindi l'interfaccia Iterable troppo generica, ma si voglia comunque impedirne la modifica, rendendo interfacce come Collection o List troppo permissive.
  * @author Filippo Sestini <sestini.filippo@gmail.com>
  * @version 1.0.0
  */

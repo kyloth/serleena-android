@@ -63,6 +63,13 @@ import java.util.Set;
  * Fornisce al codice client la posizione dell'utente utilizzando il modulo
  * GPS del dispositivo con il supporto delle API Android.
  *
+ * @use Viene istanziato da \fixedwidth{SensorManager} e restituito al codice client dietro interfaccia.
+ * @field lastKnownLocation : GeoPoint Ultima posizione geografica nota dell'utente
+ * @field lastUpdate : long Istante di tempo, in UNIX time, a cui corrisponde l'ultimo dato di posizione noto
+ * @field observer : Map<ILocationObserver, Integer> Mappa gli Observer agli intervalli di notifica
+ * @field locationManager : LocationManager Gestore della posizione di Android
+ * @field singleUpdates : Set<ILocationObserver> Insieme degli Observer la cui notifica deve avvenire solamente una volta
+ * @field currentInterval : int Intervallo con cui al momento viene richiesto l'aggiornamento sulla posizione alle API Android
  * @author Filippo Sestini <sestini.filippo@gmail.com>
  * @version 1.0.0
  */

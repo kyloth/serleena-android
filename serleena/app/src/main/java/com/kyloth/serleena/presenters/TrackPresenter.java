@@ -73,6 +73,18 @@ import com.kyloth.serleena.sensors.SensorNotAvailableException;
  * l'attraversamento dei checkpoint, impostando il Tracciamento e mostrando
  * informazioni utili sulla vista associata.
  *
+ * @use Viene utilizzata solamente dall'Activity, che ne mantiene un riferimento. Il Presenter, alla creazione, si registra alla sua Vista, passando se stesso come parametro dietro interfaccia.
+ * @field view : IWeatherView Vista associata al presenter
+ * @field activity : ISerleenaActivity Activity a cui il presenter appartiene
+ * @field activeTrack : ITrack Percorso attivo
+ * @field checkpointToReach : int Indice del prossimo checkpoint da raggiungere
+ * @field telemetry : boolean Indicazione dello stato di abilitazione o disabilitazione del Tracciamento
+ * @field trackStartFullTime : long Istante di inizio dell'attraversamento dek Percorso
+ * @field lastKnownLocation : GeoPoint Ultima posizione geografica conosciuta dell'utente
+ * @field telMan : ITelemetryManager Gestore dei Tracciamenti
+ * @field locMan : ILocationManager Gestore del sensore di posizione
+ * @field lrMan : ILocationReachedManager Gestore del sensore di raggiungimento posizione
+ * @field hMan : IHeadingManager Gestore del sensore di battito cardiaco
  * @author Filippo Sestini <sestini.filippo@gmail.com>
  * @version 1.0.0
  */

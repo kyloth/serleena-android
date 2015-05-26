@@ -52,6 +52,7 @@ import java.util.Date;
 /**
  * E' l’interfaccia realizzata da un datasource.
  *
+ * @use \`E possibile interrogarlo per ottenere la lista delle esperienze, delle autorit\`a competenti per un dato punto geografico o il quadrante di mappa per un dato punto. Restituisce al codice client i dati del Model dietro interfacce definite nel package stesso.
  * @author  Tobia Tesan <tobia.tesan@gmail.com>
  * @version 1.0
  * @since   1.0

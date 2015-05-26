@@ -51,6 +51,7 @@ import java.util.Date;
  * Interfaccia rappresentante un Data Access Object. per l'accesso alla
  * sorgente dati che realizza la persistenza.
  *
+ * @use Viene utilizzata nella creazione di oggetti DAO \fixedwidth{SerleenaDataSource}, che mantengono internamente riferimenti a \fixedwidth{IPersistenceDataSource}, da cui traggono i dati da restituire al client.
  * @author Filippo Sestini <sestini.filippo@gmail.com>
  * @version 1.0.0
  * @since 2015-05-05

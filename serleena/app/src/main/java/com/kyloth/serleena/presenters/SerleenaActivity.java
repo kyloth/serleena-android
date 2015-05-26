@@ -88,6 +88,7 @@ import java.util.Map;
  *
  * In questa visuale è possibile selezionare un'esperienza da attivare tra quelle disponibili.
  *
+ * @use Viene utilizzata solamente dall'Activity, che ne mantiene un riferimento. Il Presenter, alla creazione, si registra alla sua Vista, passando se stesso come parametro dietro interfaccia.
  * @field myFrags : Map<String,Fragment> lista dei Fragment istanziati nell'Activity
  * @field myPress : Map<String,IPresenter> lista degli IPresenter istanziati nell'Activity
  * @field myLayoutIds : Map<String,Integer> mappa di corrispondenze tra stringhe e id dei layout

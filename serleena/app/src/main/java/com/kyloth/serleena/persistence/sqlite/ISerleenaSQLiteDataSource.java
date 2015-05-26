@@ -51,6 +51,7 @@ import com.kyloth.serleena.persistence.IPersistenceDataSource;
  * al database SQLite dell’applicazione. Viene utilizzata dagli oggetti
  * interni al package per ottenere dati relativi alle entit`a che rappresentano.
  *
+ * @use Viene utilizzata dagli oggetti del package \fixedwidth{persistence.sqlite} come \foreignword{datasource} verso il database SQLite a cui essi appartengono. Ogni oggetti rappresentante dati memorizzati su SQLite mantiene un riferimento a un oggetto \fixedwidth{ISerleenaSQLiteDataSource} per ottenere i dati da restituire nei suoi metodi.
  * @author Filippo Sestini <sestini.filippo@gmail.com>
  * @version 1.0.0
  * @since 2015-05-06

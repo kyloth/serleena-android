@@ -51,6 +51,9 @@ import com.kyloth.serleena.sensors.IHeartRateObserver;
 /**
  * Concretizza ICardioPresenter.
  *
+ * @use Viene utilizzata solamente dall'Activity, che ne mantiene un riferimento. Il Presenter, alla creazione, si registra alla sua Vista, passando se stesso come parametro dietro interfaccia.
+ * @field hrMan : IHeartRateManager Gestore del sensore di battito cardiaco
+ * @field view : ICardioView Vista associata al Presenter
  * @author Filippo Sestini <sestini.filippo@gmail.com>
  * @version 1.0.0
  */

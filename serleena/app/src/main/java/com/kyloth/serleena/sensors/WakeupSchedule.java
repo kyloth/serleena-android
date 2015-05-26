@@ -39,15 +39,20 @@ import java.util.NoSuchElementException;
 /**
  * Rappresenta i wakeup pianificati utilizzando WakeupManager.
  *
+ * @use Viene utilizzata da \fixedwidth{SensorManager} per restituire ai client il sensore di orientamento, e dai client per accedere ai servizi offerti dal sensore. È utilizzato in particolare da \fixedwidth{CompassPresenter} e \fixedwidth{TrackPresenter}.
+ * @field uuidMap : Map<String, IWakeupObserver> Mappa degli UUID e relativi Observer
+ * @field obsMap : Map<IWakeupObserver, PendingIntent> Mappa degli Observer e relativi Intent
+ * @field intentMap : Map<PendingIntent, String> Mappa degli Intent e relativi UUID
+ * @field onetimeMap : Map<IWakeupObserver, Boolean> Mappa che associa ogni Observer a un valore che indica se l'Observer il wakeup deve avvenire una sola volta o ripetuto
  * @author Filippo Sestini <sestini.filippo@gmail.com>
  * @version 1.0.0
  */
 class WakeupSchedule {
 
-    Map<String, IWakeupObserver> uuidMap;
-    Map<IWakeupObserver, PendingIntent> obsMap;
-    Map<PendingIntent, String> intentMap;
-    Map<IWakeupObserver, Boolean> onetimeMap;
+    private Map<String, IWakeupObserver> uuidMap;
+    private Map<IWakeupObserver, PendingIntent> obsMap;
+    private Map<PendingIntent, String> intentMap;
+    private Map<IWakeupObserver, Boolean> onetimeMap;
 
     public WakeupSchedule() {
         uuidMap = new HashMap<String, IWakeupObserver>();

@@ -45,6 +45,10 @@ package com.kyloth.serleena.common;
 /**
  * Rappresenta un checkpoint, parte di un percorso, individuato dalla sua
  * posizione geografica.
+ *
+ * @use Viene istanziato dal DAO, e restituito da oggetti di interfaccia ITrack per indicare i checkpoint che costituiscono il Percorso in questione. Poichè sottoclasse di GeoPoint, viene utilizzato da TrackPresenter per stabilire la posizione geografica dei checkpoint del Percorso attivo.
+ * @author Filippo Sestini <sestini.filippo@gmail.com>
+ * @version 1.0.0
  */
 public class Checkpoint extends GeoPoint {
 

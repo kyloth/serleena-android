@@ -59,6 +59,11 @@ import java.util.ArrayList;
 /**
  * Concretizza IContactsPresenter
  *
+ * @use Viene utilizzata solamente dall'Activity, che ne mantiene un riferimento. Il Presenter, alla creazione, si registra alla sua Vista, passando se stesso come parametro dietro interfaccia.
+ * @field view : IContactsView Vista associata al Presenter
+ * @field activity : ISerleenaActivity Activity a cui il Presenter appartiene
+ * @field locMan : ILocationManager Gestore del sensore di posizione
+ * @field contacts : ImmutableList<EmergencyContact> Contatti da visualizzare sulla vista
  * @author Filippo Sestini <sestini.filippo@gmail.com>
  * @version 1.0.0
  */

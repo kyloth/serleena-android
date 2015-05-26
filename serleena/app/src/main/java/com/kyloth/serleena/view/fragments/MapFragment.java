@@ -59,6 +59,7 @@ import com.kyloth.serleena.view.widgets.MapWidget;
  * Implementa l'interfaccia IMapView, gestendo tutte le esigenze grafiche
  * riguardo alla visuale Mappa nella schermata Esperienza.
  *
+ * @use Viene istanziata e utilizzata dall'Activity per la visualizzazione della schermata. Comunica con il Presenter associato attraverso l'interfaccia \fixedwidth{IMapPresenter}.
  * @field mapWidget : MapWidget widget utilizzato per disegnare la mappa
  * @field presenter : IMapPresenter presenter da notificare all'aggiunta del Fragment all'Activity
  * @author Sebastiano Valle <valle.sebastiano93@gmail.com>

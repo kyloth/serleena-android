@@ -53,6 +53,11 @@ import java.util.ArrayList;
 /**
  * Concretizza ITelemetry.
  *
+ * @use Utilizzata dal Model e dalla parte di presentazione. L'uso principale viene fatto da \fixedwidth{TrackPresenter}, che utilizza i Tracciamenti dell'esperienza attiva per confrontarli con l'attività in corso.
+ * @field storage : ITelemetryStorage Oggetto Tracciamento del livello di persistenza, utilizzato come sorgente dati effettiva
+ * @field allEvents : Iterable<TelemetryEvent> Insieme di tutti gli eventi del Tracciamento
+ * @field locEvents : Iterable<TelemetryEvent> Insieme di tutti gli eventi del Tracciamento relativi alla posizione utente
+ * @field duration : int Durata in secondi del Tracciamento
  * @author Filippo Sestini <sestini.filippo@gmail.com>
  * @version 1.0.0
  */

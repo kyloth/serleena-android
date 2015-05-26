@@ -58,6 +58,7 @@ import java.text.SimpleDateFormat;
  * Supporta la creazione e l'apertura del database SQLite utilizzato
  * dall'applicazione serleena, secondo quando prescritto dal framework Android.
  *
+ * @use Viene utilizzato dall'activity e da \fixedwidth{SerleenaSQLiteDataSource}. Istanziato dall'activity, che lo utilizza per creare il DAO di tipo \fixedwidth{SerleenaSQLiteDataSource}. Quest'ultimo accede al database dell'applicazione attraverso l'oggetto \fixedwidth{SerleenaDatabase} con il quale è stato creato.
  * @author Filippo Sestini <sestini.filippo@gmail.com>
  * @version 1.0.0
  * @since 2015-05-05

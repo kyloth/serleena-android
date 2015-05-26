@@ -46,6 +46,7 @@ package com.kyloth.serleena.model;
  * Segnala una situazione eccezionale in cui non è possibile ottenere un
  * Tracciamento richiesto.
  *
+ * @use Viene sollevato da oggetti \fixedwidth{ITrack} in \fixedwidth{getBestTelemetry}(), per segnalare l'assenza di Tracciamenti, e quindi l'impossibilità di stabilire il migliore tra tutti.
  * @author Filippo Sestini <sestini.filippo@gmail.com>
  * @version 1.0.0
  */

@@ -54,6 +54,13 @@ import java.util.HashMap;
  * package e restituendole ai client attraverso i suoi metodi, nascondendo i
  * dettagli di creazione e aggregazione di tali classi.
  *
+ * @use Viene utilizzata direttamente dall'activity per ottenere un oggetto \fixedwidth{ISensorManager} da utilizzare in tutta l'applicazione.
+ * @field locMan : ILocationManager Gestore del sensore di posizione
+ * @field hman : IHeadingManager Gestore dell'orientamento
+ * @field hrMan : IHeartRateManager Gestore del sensore di battito cardiaco
+ * @field locReaMan : ILocationReachedManager Gestore di raggiungimento di posizione
+ * @field wMan : IWakeupManager Gestore dei wakeup
+ * @field telMan : ITelemetryManager Gestore dei Tracciamenti
  * @author Filippo Sestini <sestini.filippo@gmail.com>
  * @version 1.0.0
  */

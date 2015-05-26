@@ -62,6 +62,15 @@ import java.util.concurrent.TimeUnit;
  * Concretizza IHeadingManager utilizzando le API di gestione della
  * sensoristica di Android.
  *
+ * @use Viene istanziato da \fixedwidth{SensorManager} e restituito al codice client dietro interfaccia.
+ * @field accelerometerValues : float[] Valori ottenuti dall'accelerometro del dispositivo
+ * @field magneticFieldValues : float[] Valori ottenuti dal sensore di campo magnetico del dispositivo
+ * @field latestOrientation : double Ultimo valore di orientamento disponibile
+ * @field observers : Map<IHeadingObserver, ScheduledFuture> Mappa gli Observers a oggetti ScheduledFuture
+ * @field scheduledPool : ScheduledThreadPoolExecutor Pool di thread necessari alla notifica dei dati a più observer in modalità asincrona
+ * @field context : Context Contesto dell'applicazione
+ * @field magnetometer : Sensor Instanza della classe di Android Sensor associato al magnetometro del dispositivo
+ * @field accelerometer : Sensor Instanza della classe di Android Sensor associato all'accelerometro del dispositivo
  * @author Filippo Sestini
  * @version 1.0.0
  */

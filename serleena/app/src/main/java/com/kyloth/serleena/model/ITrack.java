@@ -49,6 +49,7 @@ import com.kyloth.serleena.common.TelemetryEvent;
  * Interfaccia realizzata da oggetti che rappresentano un
  * Percorso
  *
+ * @use Utilizzata dal Model e dalla parte di presentazione. Il principale utilizzo viene fatto da \fixedwidth{TrackPresenter}, che mantiene un riferimento al Percorso attivo per guidare l'utente nell'attraversamento del Percorso. Attraverso \fixedwidth{ITrack} è possibile inoltre aggiungere nuovi Tracciamenti al Percorso, come insieme di oggetti \fixedwidth{TelemetryEvent}.
  * @author  Tobia Tesan <tobia.tesan@gmail.com>
  * @version 1.0
  * @since   1.0

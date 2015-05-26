@@ -54,6 +54,7 @@ import com.kyloth.serleena.presentation.ITrackView;
  *
  * In questa visuale vengono visualizzate le informazioni riguardanti il percorso attivo.
  *
+ * @use Viene istanziata e utilizzata dall'Activity per la visualizzazione della schermata. Comunica con il Presenter associato attraverso l'interfaccia \fixedwidth{ITrackPresenter}.
  * @field presenter : ITrackPresenter presenter collegato a un TrackFragment
  * @field direction : Float direzione del prossimo checkpoint
  * @field totalCheckpoints : Integer numero di checkpoint totali

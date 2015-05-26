@@ -46,6 +46,10 @@ import android.graphics.Bitmap;
 /**
  * Classe che realizza l'interfaccia IQuadrant.
  *
+ * @use Viene istanziato da \fixedwidth{persistence.sqlite.SerleenaSQLiteDataSource} e restituito al chiamante dietro interfaccia.
+ * @field northEast : GeoPoint Punto a nord-est del rettangolo che individua l'area del quadrante
+ * @field southWest : GeoPoint Punto a sud-ovest del rettangolo che individua l'area del quadrante
+ * @field raster : Bitmap Immagine raster della porzione di mappa associata al quadrante
  * @author Tobia Tesan <tobia.tesan@gmail.com>
  * @version 1.0
  */

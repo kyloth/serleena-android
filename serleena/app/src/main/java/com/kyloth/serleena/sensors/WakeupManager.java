@@ -58,6 +58,10 @@ import java.util.UUID;
 /**
  * Concretizza IWakeupManager.
  *
+ * @use Viene utilizzata da \fixedwidth{SensorManager} per restituire ai client il gestore dei \emph{wakeup}, e dal client per accedere ai servizi offerti dal sensore. È utilizzato in particolare da \fixedwidth{LocationReachedManager} e \fixedwidth{TelemetryManager}.
+ * @field context : Context Contesto dell'applicazione
+ * @field schedule : WakeupSchedule Oggetto che incapsula e rappresenta la pianificazione dei wakeup
+ * @field alarmManager : Gestore degli allarmi di Android
  * @author Filippo Sestini <sestini.filippo@gmail.com>
  * @version 1.0.0
  */

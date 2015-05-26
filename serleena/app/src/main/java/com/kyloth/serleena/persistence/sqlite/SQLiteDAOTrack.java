@@ -55,6 +55,10 @@ import java.util.zip.CheckedOutputStream;
  * Implementazione di persistence.ITrackStorage per la persistenza su
  * database SQLite integrato in Android.
  *
+ * @use Istanze di \fixedwidth{SQLiteDAOTrack} vengono create e utilizzate dal DAO \fixedwidth{SerleenaSQLiteDataSource}, che le restituisce all'esterno dietro interfaccia \fixedwidth{ITrackStorage}. Mantiene un riferimento al database di appartenenza attraverso \fixedwidth{ISerleenaSQLiteDataSource}.
+ * @field id : int ID della riga di database associata all'oggetto
+ * @field dataSource : ISerleenaSQLiteDataSource Database a cui fa riferimento l'oggetto
+ * @field checkpoints : ImmutableList<Checkpoint> Lista dei checkpoints associati al Percorso rappresentato dall'oggetto
  * @author Filippo Sestini <sestini.filippo@gmail.com>
  * @version 1.0.0
  * @since 2015-05-06

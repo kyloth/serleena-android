@@ -45,11 +45,13 @@ package com.kyloth.serleena.presentation;
  * E' l'interfaccia del Presenter della schermata Bussola.
  * E' una marker interface.
  *
+ * @use Interfaccia utilizzata dalla vista \fixedwidth{TrackFragment} per mantenere un riferimento al Presenter associato, e comunicare con esso.
  * @author Tobia Tesan <tobia.tesan@gmail.com>
  * @version 1.0
  * @since 1.0
  */
 public interface ITrackPresenter extends IPresenter {
+
 	/**
 	 * Richiede al Model di avanzare al prossimo checkpoint in seguito a
 	 * segnalazione manuale da parte dell'utente.
@@ -57,4 +59,5 @@ public interface ITrackPresenter extends IPresenter {
 	 * @since 1.0
 	 */
 	void advanceCheckpoint();
+
 }

@@ -50,6 +50,7 @@ import java.util.Date;
  * Descrive l’interfaccia di un oggetto che rappresenta previsioni
  * metereologiche valide per uno specifico giorno.
  *
+ * @use Utilizzato dal model, dall'\fixedwidth{IWeatherPresenter} e dalla vista \fixedwidth{IWeatherView}.
  * @author Filippo Sestini <sestini.filippo@gmail.com>
  * @version 1.0.0
  */

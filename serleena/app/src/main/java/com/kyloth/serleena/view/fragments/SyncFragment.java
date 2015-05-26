@@ -57,6 +57,7 @@ import java.util.HashMap;
  * Classe che implementa la schermata “Sincronizzazione”, in cui è possibile richiedere la
  * sincronizzazione con la piattaforma Cloud.
  *
+ * @use Viene istanziata e utilizzata dall'Activity per la visualizzazione della schermata. Comunica con il Presenter associato attraverso l'interfaccia \fixedwidth{ISyncPresenter}.
  * @field presenter : ISyncPresenter presenter collegato a un SyncFragment
  * @field info : TextView casella di testo dove verranno visualizzate le informazioni di stato
  * @field states : HashMap<SyncStatusEnum,String> mappa di corrispondeze tra oggetti di tipo enumerativo e stringhe

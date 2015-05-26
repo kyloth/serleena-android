@@ -46,6 +46,7 @@ package com.kyloth.serleena.sensors;
  * Interfaccia ad un oggetto in grado di fornire Manager appropriati
  * per ciascun tipo di sensore.
  *
+ * @use Viene utilizzata dall'activity per fornire accesso ai sensori ai suoi Presenter.
  * @author Gabriele Pozzan <gabriele.pozzan@studenti.unipd.it>
  * @version 1.0.0
  */

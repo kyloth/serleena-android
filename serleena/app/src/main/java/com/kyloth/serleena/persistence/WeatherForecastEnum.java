@@ -28,6 +28,18 @@
 ///////////////////////////////////////////////////////////////////////////////
 
 
+/**
+ * Name: WeatherForecastEnum.java
+ * Package: com.kyloth.serleena.persistence
+ * Author: Filippo Sestini
+ * Date: 2015-05-05
+ *
+ * History:
+ * Version  Programmer          Date        Changes
+ * 1.0.0    Filippo Sestini     2015-05-05  Creazione file e scrittura di codice
+ *                                          e documentazione in Javadoc.
+ */
+
 package com.kyloth.serleena.persistence;
 
 /**

@@ -51,6 +51,10 @@ import java.util.ArrayList;
  * Implementazione di IExperienceStorage per la persistenza su database
  * SQLite.
  *
+ * @use Istanze di \fixedwidth{SQLiteDAOExperience} vengono create e utilizzate dal DAO \fixedwidth{SerleenaSQLiteDataSource}, che le restituisce all'esterno dietro interfaccia \fixedwidth{IExperienceStorage}. Mantiene un riferimento al database di appartenenza attraverso \fixedwidth{ISerleenaSQLiteDataSource}.
+ * @field name : String Nome dell'Esperienza
+ * @field id : int ID della riga di database associata all'istanza
+ * @field dataSource : ISerleenaSQLiteDataSource Database a cui fa riferimento l'oggetto
  * @author Filippo Sestini <sestini.filippo@gmail.com>
  * @version 1.0.0
  * @since 2015-05-06

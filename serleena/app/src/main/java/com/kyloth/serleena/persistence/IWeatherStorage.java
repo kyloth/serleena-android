@@ -48,6 +48,7 @@ import java.util.Date;
  * Interfaccia implementata da un oggetto che realizza la persistenza di
  * previsioni meteorologiche.
  *
+ * @use Viene utilizzata da concretizzazioni dell'interfaccia \fixedwidth{IPersistenceDataSource} per rappresentare dati memorizzati nel sistema di persistenza. Nello specifico, viene utilizzato da \fixedwidth{SerleenaSQLiteDataSource} nella restituzione di oggetti \fixedwidth{SQLiteDAOWeather}.
  * @author Filippo Sestini <sestini.filippo@gmail.com>
  * @version 1.0.0
  * @since 2015-05-05

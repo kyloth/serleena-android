@@ -46,6 +46,7 @@ package com.kyloth.serleena.sensors;
  * Segnala una condizione anomala nel codice nel quale si tenta di rilasciare
  * un lock del processore che non è stato precedentemente acquisito.
  *
+ * @use Eccezione lanciata da oggetti di interfaccia \fixedwidth{IPowerManager}
  * @author Filippo Sestini <sestini.filippo@gmail.com>
  * @version 1.0.0
  */

@@ -48,6 +48,8 @@ import java.util.List;
 /**
  * Adatta l'interfaccia ImmutableList all'interfaccia List di Java.
  *
+ * @use Viene istanziato passando l'oggetto List da adattare come parametro al costruttore. Viene utilizzato in SerleenaSQLiteDataSource per la creazione di strutture ImmutableList a partire da oggetti ArrayList.
+ * @field list : List<T> Oggetto List<T> da adattare
  * @author Filippo Sestini <sestini.filippo@gmail.com>
  * @version 1.0.0
  * @see com.kyloth.serleena.common.ImmutableList

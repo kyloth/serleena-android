@@ -45,6 +45,7 @@ package com.kyloth.serleena.presentation;
  * Interfaccia implementata da una View in grado di mostrare un
  * contatti di emergenza.
  *
+ * @use Viene utilizzato dal Presenter \fixedwidth{ContactsPresenter} per mantenere un riferimento alla vista associata, e comunicare con essa.
  * @author Tobia Tesan <tobia.tesan@gmail.com>
  * @version 1.0
  * @since 1.0

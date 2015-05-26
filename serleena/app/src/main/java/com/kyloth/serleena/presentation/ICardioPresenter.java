@@ -45,9 +45,11 @@ package com.kyloth.serleena.presentation;
  * E' l'interfaccia del Presenter della schermata Cardio.
  * E' una marker interface.
  *
+ * @use Viene utilizzato dalla vista \fixedwidth{CardioFragment} per mantenere un riferimento al Presenter associato, e comunicare con esso.
  * @author Tobia Tesan <tobia.tesan@gmail.com>
  * @version 1.0
  * @since 1.0
  */
 public interface ICardioPresenter extends IPresenter {
+
 }

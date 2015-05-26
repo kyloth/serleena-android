@@ -51,6 +51,7 @@ package com.kyloth.serleena.sensors;
  * modalità push a un oggetto IHeadingObserver registrato agli eventi
  * di IHeadingManager tramite pattern "Observer".
  *
+ * @use Viene utilizzata da \fixedwidth{SensorManager} per restituire ai client il sensore di orientamento, e dai client per accedere ai servizi offerti dal sensore. È utilizzato in particolare da \fixedwidth{CompassPresenter} e \fixedwidth{TrackPresenter}.
  * @author Gabriele Pozzan <gabriele.pozzan@studenti.unipd.it>
  * @version 1.0.0
  */

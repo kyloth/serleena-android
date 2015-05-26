@@ -51,6 +51,14 @@ import java.util.Date;
  * Rappresenta l'implementazione della persistenza di un Tracciamento su
  * database SQLite.
  *
+ * @use Istanze di \fixedwidth{SQLiteDAOWeather} vengono create e utilizzate dal DAO \fixedwidth{SerleenaSQLiteDataSource}, che le restituisce all'esterno dietro interfaccia \fixedwidth{IWeatherStorage}. Mantiene un riferimento al database di appartenenza attraverso \fixedwidth{ISerleenaSQLiteDataSource}.
+ * @field morningForecast : WeatherForecastEnum Condizione prevista per la mattina
+ * @field afternoonForecast : WeatherForecastEnum Condizione prevista per il pomeriggio
+ * @field nightForecast : WeatherForecastEnum Condizione prevista per la sera
+ * @field morningTemperature : int Temperatura prevista per la mattina
+ * @field afternoonTemperature : int Temperatura prevista per il pomeriggio
+ * @field nightTemperature : int Temperatura prevista per la sera
+ * @field date : Date Data al quale si riferiscono le previsioni
  * @author Filippo Sestini <sestini.filippo@gmail.com>
  * @version 1.0.0
  * @since 2015-05-06

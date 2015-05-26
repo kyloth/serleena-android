@@ -58,6 +58,13 @@ import com.kyloth.serleena.sensors.ILocationObserver;
 /**
  * Concretizza IMapPresenter.
  *
+ * @use Viene utilizzata solamente dall'Activity, che ne mantiene un riferimento. Il Presenter, alla creazione, si registra alla sua Vista, passando se stesso come parametro dietro interfaccia.
+ * @field view : IMapView Vista associata al Presenter
+ * @field activity : ISerleenaActivity Activity a cui il Presenter appartiene
+ * @field activeExperience : IExperience Esperienza attiva
+ * @field currentPosition : GeoPoint Posizione geografica attuale dell'utente
+ * @field locMan : ILocationManager Gestore del sensore di posizione
+ * @field currentQuadrant : IQuadrant Quadrante in cui l'utente è al momento all'interno
  * @author Filippo Sestini <sestini.filippo@gmail.com>
  * @version 1.0.0
  */

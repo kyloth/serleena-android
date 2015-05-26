@@ -48,6 +48,8 @@ import java.util.Date;
  * Rappresenta un evento di tracciamento che registra la posizione geografica dell'utente,
  * individuato dall'istante di campionamento e un oggetto GeoPoint.
  *
+ * @use Viene istanziato da sensors.TelemetryManager e restituito al codice client da oggetti di interfaccia ITelemetry, che restituiscono gli eventi di Tracciamento associati ad essi. Viene inoltre utilizzato dai DAO per la persistenza dei Tracciamenti.
+ * @field location : GeoPoint Posizione geografica campionata
  * @author  Filippo Sestini <sestini.filippo@gmail.com>
  * @version 1.0
  * @since   2015-05-05

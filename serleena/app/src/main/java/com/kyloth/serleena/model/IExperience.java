@@ -46,6 +46,7 @@ import com.kyloth.serleena.common.UserPoint;
 /**
  * Interfaccia realizzata da oggetti che rappresentano un'Esperienza.
  *
+ * @use Utilizzata dal Model e dalla parte di presentazione
  * @author  Tobia Tesan <tobia.tesan@gmail.com>
  * @version 1.0
  * @since   1.0

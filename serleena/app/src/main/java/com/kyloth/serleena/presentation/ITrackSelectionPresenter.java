@@ -45,6 +45,7 @@ package com.kyloth.serleena.presentation;
  * E' l'interfaccia realizzata dal Presenter della schermata di selezione
  * del percorso.
  *
+ * @use Interfaccia utilizzata dalla vista \fixedwidth{TrackSelectionFragment} per mantenere un riferimento al Presenter associato, e comunicare con esso.
  * @author Tobia Tesan <tobia.tesan@gmail.com>
  * @version 1.0
  * @since 1.0

@@ -56,6 +56,9 @@ import com.kyloth.serleena.sensors.SensorNotAvailableException;
  * Si occupa di presentare alla vista informazioni sull'orientamento
  * dell'utente utilizzando i servizi di sensoristica del package Sensors.
  *
+ * @use Viene utilizzata solamente dall'Activity, che ne mantiene un riferimento. Il Presenter, alla creazione, si registra alla sua Vista, passando se stesso come parametro dietro interfaccia.
+ * @field view : ICompassView Vista associata al Presenter
+ * @field activity : ISerleenaActivity Activity a cui il Presenter appartiene
  * @author Filippo Sestini <sestini.filippo@gmail.com>
  * @version 1.0.0
  * @see com.kyloth.serleena.presentation.ICompassPresenter

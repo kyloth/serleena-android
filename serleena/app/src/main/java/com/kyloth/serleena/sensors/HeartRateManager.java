@@ -47,6 +47,8 @@ import android.content.Context;
 /**
  * Concretizza IHeartRateManager
  *
+ * @use Viene istanziato da \fixedwidth{SensorManager} e restituito al codice client dietro interfaccia.
+ * @field context : Context Contesto dell'applicazione
  * @author Filippo Sestini <sestini.filippo@gmail.com>
  * @version 1.0.0
  */

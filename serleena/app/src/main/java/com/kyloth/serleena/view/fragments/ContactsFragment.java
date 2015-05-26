@@ -53,6 +53,7 @@ import com.kyloth.serleena.presentation.IContactsView;
  * Classe che implementa la schermata “Autorità locali”, in cui vengono mostrate eventuali
  * contatti di autorità locali
  *
+ * @use Viene istanziata e utilizzata dall'Activity per la visualizzazione della schermata. Comunica con il Presenter associato attraverso l'interfaccia \fixedwidth{IContactsPresenter}.
  * @field presenter : IContactsPresenter presenter collegato a un ContactsFragment
  * @author Sebastiano Valle <valle.sebastiano93@gmail.com>
  * @version 1.0.0

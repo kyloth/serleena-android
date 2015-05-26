@@ -48,6 +48,8 @@ import com.kyloth.serleena.presentation.ITelemetryView;
 /**
  * Concretizza ITelemetryPresenter.
  *
+ * @use Viene utilizzata solamente dall'Activity, che ne mantiene un riferimento. Il Presenter, alla creazione, si registra alla sua Vista, passando se stesso come parametro dietro interfaccia.
+ * @field activity : ISerleenaActivity Activity a cui il Presenter appartiene
  * @author Filippo Sestini <sestini.filippo@gmail.com>
  * @version 1.0.0
  */

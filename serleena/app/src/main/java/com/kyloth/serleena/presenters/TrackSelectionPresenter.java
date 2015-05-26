@@ -55,6 +55,10 @@ import java.util.List;
 /**
  * Concretizza ITrackSelectionPresenter.
  *
+ * @use Viene utilizzata solamente dall'Activity, che ne mantiene un riferimento. Il Presenter, alla creazione, si registra alla sua Vista, passando se stesso come parametro dietro interfaccia.
+ * @field view : IWeatherView Vista associata al presenter
+ * @field activity : ISerleenaActivity Activity a cui il presenter appartiene
+ * @field tracks : List<ITrack> Percorsi da visualizzare sulla vista
  * @author Filippo Sestini <sestini.filippo@gmail.com>
  * @version 1.0.0
  */

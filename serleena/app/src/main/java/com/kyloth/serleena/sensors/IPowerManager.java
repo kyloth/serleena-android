@@ -46,6 +46,7 @@ package com.kyloth.serleena.sensors;
  * Rappresenta un'interfaccia centralizzata e semplificata per l'acquisizione
  * di lock del processore.
  *
+ * @use Viene realizzata da \fixedwidth{SerleenaPowerManager} e utilizzata da \fixedwidth{TelemetryManager}, per evitare che il processore entri il \foreignword{sleep} durante il campionamento.
  * @author Filippo Sestini <sestini.filippo@gmail.com>
  * @version 1.0.0
  */

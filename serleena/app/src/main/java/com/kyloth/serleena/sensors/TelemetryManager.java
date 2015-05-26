@@ -60,6 +60,15 @@ import java.util.UUID;
 /**
  * Concretizza ITelemetryManager
  *
+ * @use Viene istanziato da \fixedwidth{SensorManager} e restituito al codice client dietro interfaccia
+ * @field locMan : ILocationManager Gestore del sensore della posizione
+ * @field hrMan : IHeadingManager Gestore del sensore di battito cardiaco
+ * @field wkMan : IWakeupManager Gestore dei wakeup
+ * @field events : ArrayList<TelemetryEvent> Lista di eventi campionati al momento
+ * @field pm : IPowerManager Gestore dei lock sul processore
+ * @field sampling : boolean Valore indicante se il campionamento è attivo o meno
+ * @field startTimestamp : long Istante, in UNIX time, di avvio del Tracciamento al momento avviato
+ * @field uuid : String UUID dell'oggetto in quanto IWakeupObserver
  * @author Filippo Sestini <sestini.filippo@gmail.com>
  */
 class TelemetryManager implements ITelemetryManager,

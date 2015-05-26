@@ -47,6 +47,9 @@ import android.location.Location;
 /**
  * Rappresenta un punto geografico come una coppia di valori "latitudine" e "longitudine".
  *
+ * @use Viene utilizzato dalle componenti di persistenza e di presentazione per rappresentare geneerici punti nello spazio geografico.
+ * @field latitude : double Latitudine del punto
+ * @field longitude : double Longitudine del punto
  * @author  Filippo Sestini <sestini.filippo@gmail.com>
  * @version 1.0
  * @since   2015-05-05

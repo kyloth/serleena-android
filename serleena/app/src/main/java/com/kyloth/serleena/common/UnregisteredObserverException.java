@@ -46,6 +46,7 @@ package com.kyloth.serleena.common;
  * Segnala un'operazione eseguita su un oggetto observer non
  * precedentemente registrato ad un pattern "Observer".
  *
+ * @use Dichiarata dalle interfacce di gestione della sensoristica, che fanno ampio uso del pattern Observer.
  * @author Filippo Sestini <sestini.filippo@gmail.com>
  * @version 1.0.0
  */
