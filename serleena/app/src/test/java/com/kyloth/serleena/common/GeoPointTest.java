@@ -32,11 +32,10 @@
  * Name: GeoPointTest.java
  * Package: com.kyloth.serleena.common
  * Author: Filippo Sestini
- * Date: 2015-05-05
  *
  * History:
- * Version  Programmer          Date        Changes
- * 1.0.0    Filippo Sestini     2015-05-05  Creazione file e scrittura di codice
+ * Version  Programmer       Changes
+ * 1.0.0    Filippo Sestini  Creazione file e scrittura di codice
  *                                          e documentazione in Javadoc.
  */
 
@@ -57,7 +56,6 @@ import static org.hamcrest.MatcherAssert.assertThat;
  *
  * @author Filippo Sestini <sestini.filippo@gmail.com>
  * @version 1.0.0
- * @since 2015-05-05
  */
 public class GeoPointTest {
 

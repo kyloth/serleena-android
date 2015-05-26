@@ -32,11 +32,10 @@
  * Name: SyncPresenter.java
  * Package: com.hitchikers.serleena.presenters
  * Author: Filippo Sestini
- * Date: 2015-05-21
  *
  * History:
- * Version    Programmer       Date        Changes
- * 1.0        Filippo Sestini  2015-05-21  Creazione del file
+ * Version    Programmer       Changes
+ * 1.0        Filippo Sestini  Creazione del file
  */
 
 package com.kyloth.serleena.presenters;

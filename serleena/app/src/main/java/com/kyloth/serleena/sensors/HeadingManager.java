@@ -32,13 +32,12 @@
  * Name: HeadingManager.java
  * Package: com.kyloth.serleena.sensors
  * Author: Filippo Sestini
- * Date: 2015-05-07
  *
  * History:
- * Version  Programmer        Date         Changes
- * 1.0.0    Filippo Sestini   2015-05-07   Creazione file e scrittura
+ * Version  Programmer        Changes
+ * 1.0.0    Filippo Sestini   Creazione file e scrittura
  *                                         codice e documentazione Javadoc.
- * 1.0.1    Filippo Sestini   2015-05-12   Refactoring di onSensorChanged
+ * 1.0.1    Filippo Sestini   Refactoring di onSensorChanged
  *                                         e aggiunta di onNewData().
  */
 

@@ -32,11 +32,10 @@
  * Name: IQuadrant.java
  * Package: com.kyloth.serleena.common
  * Author: Filippo Sestini
- * Date: 2015-05-05
  *
  * History:
- * Version  Programmer          Date        Changes
- * 1.0.0    Filippo Sestini     2015-05-05  Creazione file e scrittura di codice e documentazione
+ * Version  Programmer       Changes
+ * 1.0.0    Filippo Sestini  Creazione file e scrittura di codice e documentazione
  *                                          in Javadoc.
  */
 
@@ -51,7 +50,6 @@ import android.graphics.Bitmap;
  * @use Viene passato a una vista IMapView, che lo utilizza per determinare l'area di posizionamento e mostrare informazioni cartografiche.
  * @author Filippo Sestini <sestini.filippo@gmail.com>
  * @version 1.0.0
- * @since 2015-05-05
  */
 public interface IQuadrant extends IRegion {
 

@@ -32,11 +32,10 @@
  * Name: IPersistenceDataSource.java
  * Package: com.kyloth.serleena.persistence
  * Author: Filippo Sestini
- * Date: 2015-05-05
  *
  * History:
- * Version  Programmer          Date        Changes
- * 1.0.0    Filippo Sestini     2015-05-05  Creazione file e scrittura di codice
+ * Version  Programmer       Changes
+ * 1.0.0    Filippo Sestini  Creazione file e scrittura di codice
  *                                          e documentazione in Javadoc.
  */
 
@@ -54,7 +53,6 @@ import java.util.Date;
  * @use Viene utilizzata nella creazione di oggetti DAO SerleenaDataSource, che mantengono internamente riferimenti a IPersistenceDataSource, da cui traggono i dati da restituire al client.
  * @author Filippo Sestini <sestini.filippo@gmail.com>
  * @version 1.0.0
- * @since 2015-05-05
  */
 public interface IPersistenceDataSource {
 

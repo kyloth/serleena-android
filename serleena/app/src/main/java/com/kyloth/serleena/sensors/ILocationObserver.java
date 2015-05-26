@@ -32,11 +32,10 @@
  * Name: ILocationObserver.java
  * Package: com.kyloth.serleena.sensors
  * Author: Gabriele Pozzan
- * Date: 2015-05-06
  *
  * History:
- * Version  Programmer        Date         Changes
- * 1.0.0    Gabriele Pozzan   2015-05-06   Creazione file e scrittura
+ * Version  Programmer        Changes
+ * 1.0.0    Gabriele Pozzan   Creazione file e scrittura
  *                                         codice e documentazione Javadoc
  */
 

@@ -32,11 +32,10 @@
  * Name: ISerleenaSQLiteDataSource.java
  * Package: com.kyloth.serleena.persistence.sqlite
  * Author: Filippo Sestini
- * Date: 2015-05-06
  *
  * History:
- * Version  Programmer          Date        Changes
- * 1.0.0    Filippo Sestini     2015-05-06  Creazione file e scrittura di codice
+ * Version  Programmer       Changes
+ * 1.0.0    Filippo Sestini  Creazione file e scrittura di codice
  *                                          e documentazione in Javadoc.
  */
 
@@ -54,7 +53,6 @@ import com.kyloth.serleena.persistence.IPersistenceDataSource;
  * @use Viene utilizzata dagli oggetti del package persistence.sqlite come datasource verso il database SQLite a cui essi appartengono. Ogni oggetti rappresentante dati memorizzati su SQLite mantiene un riferimento a un oggetto ISerleenaSQLiteDataSource per ottenere i dati da restituire nei suoi metodi.
  * @author Filippo Sestini <sestini.filippo@gmail.com>
  * @version 1.0.0
- * @since 2015-05-06
  */
 public interface ISerleenaSQLiteDataSource extends IPersistenceDataSource {
 

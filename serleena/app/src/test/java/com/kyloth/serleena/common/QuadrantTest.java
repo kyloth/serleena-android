@@ -32,11 +32,10 @@
  * Name: UserPoint.java
  * Package: com.kyloth.serleena.common
  * Author: Tobia Tesan <tobia.tesan@gmail.com>
- * Date: 2015-05-10
  *
  * History:
- * Version  Programmer          Date        Changes
- * 1.0.0    Tobia Tesan         2015-05-10  Creazione file e scrittura di codice
+ * Version  Programmer   Changes
+ * 1.0.0    Tobia Tesan  Creazione file e scrittura di codice
  *                                          e documentazione in Javadoc.
  */
 

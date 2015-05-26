@@ -32,11 +32,10 @@
  * Name: ISerleenaActivity.java
  * Package: com.kyloth.serleena.presentation
  * Author: Filippo Sestini
- * Date: 2015-05-07
  *
  * History:
- * Version  Programmer        Date         Changes
- * 1.0.0    Filippo Sestini   2015-05-07   Creazione file e scrittura
+ * Version  Programmer        Changes
+ * 1.0.0    Filippo Sestini   Creazione file e scrittura
  *                                         codice e documentazione Javadoc
  */
 

@@ -32,11 +32,10 @@
  * Name: TelemetryEventType.java
  * Package: com.kyloth.serleena.common
  * Author: Filippo Sestini
- * Date: 2015-05-07
  *
  * History:
- * Version  Programmer          Date        Changes
- * 1.0.0    Filippo Sestini     2015-05-07  Creazione file e scrittura di
+ * Version  Programmer       Changes
+ * 1.0.0    Filippo Sestini  Creazione file e scrittura di
  *                                          codice e documentazione in Javadoc.
  */
 

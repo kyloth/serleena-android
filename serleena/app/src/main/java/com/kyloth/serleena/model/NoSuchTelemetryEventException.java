@@ -32,11 +32,10 @@
  * Name: NoSuchTelemetryEventException.java
  * Package: com.kyloth.serleena.model
  * Author: Filippo Sestini
- * Date: 2015-05-18
  *
  * History:
- * Version  Programmer          Date        Changes
- * 1.0.0    Filippo Sestini     2015-05-18  Creazione file e scrittura di
+ * Version  Programmer       Changes
+ * 1.0.0    Filippo Sestini  Creazione file e scrittura di
  *                                          codice e documentazione in Javadoc.
  */
 
