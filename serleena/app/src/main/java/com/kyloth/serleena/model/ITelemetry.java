@@ -32,11 +32,10 @@
  * Name: ITelemetry
  * Package: com.hitchikers.serleena.model
  * Author: Tobia Tesan <tobia.tesan@gmail.com>
- * Date: 2015-05-05
  *
  * History:
- * Version    Programmer    Date        Changes
- * 1.0        Tobia Tesan   2015-05-05  Creazione del file
+ * Version    Programmer   Changes
+ * 1.0        Tobia Tesan  Creazione del file
  */
 
 package com.kyloth.serleena.model;

@@ -32,11 +32,10 @@
  * Name: Track
  * Package: com.hitchikers.serleena.model
  * Author: Filippo Sestini
- * Date: 2015-05-22
  *
  * History:
- * Version    Programmer        Date        Changes
- * 1.0        Filippo Sestini   2015-05-22  Creazione del file e stesura
+ * Version    Programmer       Changes
+ * 1.0        Filippo Sestini  Creazione del file e stesura
  *                                          della documentazione Javadoc.
  */
 
