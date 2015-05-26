@@ -128,7 +128,7 @@ public class WakeupScheduleTest {
      */
     @Test
     public void testAddAndRetrieveIntent() {
-        schedule.add(goodObs.getUUID(), goodObs, pGoodIntent, false);
+        schedule.add(goodObs, pGoodIntent, false);
         PendingIntent retrieved = schedule.getIntent(goodObs);
         assertTrue(retrieved != null);
         assertTrue(retrieved == pGoodIntent);
@@ -141,7 +141,7 @@ public class WakeupScheduleTest {
      */
     @Test
     public void testAddAndRetrieveObserver() {
-        schedule.add(goodObs.getUUID(), goodObs, pGoodIntent, false);
+        schedule.add(goodObs, pGoodIntent, false);
         IWakeupObserver retrieved = schedule.getObserver(goodObs.getUUID());
         assertTrue(retrieved != null);
         assertTrue(retrieved == goodObs);
@@ -154,7 +154,7 @@ public class WakeupScheduleTest {
      */
     @Test
     public void testAddAndContains() {
-        schedule.add(goodObs.getUUID(), goodObs, pGoodIntent, false);
+        schedule.add(goodObs, pGoodIntent, false);
         assertTrue(schedule.containsObserver(goodObs));
         assertFalse(schedule.containsObserver(badObs));
     }
@@ -165,8 +165,8 @@ public class WakeupScheduleTest {
      */
     @Test
     public void testOneTimeIsOneTime() {
-        schedule.add(goodObs.getUUID(), goodObs, pGoodIntent, true);
-        schedule.add(badObs.getUUID(), badObs, pBadIntent, false);
+        schedule.add(goodObs, pGoodIntent, true);
+        schedule.add(badObs, pBadIntent, false);
         assertTrue(schedule.isOneTimeOnly(goodObs) == true);
         assertTrue(schedule.isOneTimeOnly(badObs) == false);
     }
@@ -177,7 +177,7 @@ public class WakeupScheduleTest {
      */
     @Test
     public void testRemove() {
-        schedule.add(goodObs.getUUID(), goodObs, pGoodIntent, false);
+        schedule.add(goodObs, pGoodIntent, false);
         PendingIntent retrieved = schedule.getIntent(goodObs);
         assertTrue(schedule.containsObserver(goodObs));
         schedule.remove(goodObs);
@@ -221,21 +221,12 @@ public class WakeupScheduleTest {
     }
 
     /**
-     * Controlla che add con un Observer null e OneTime == false
-     * sollevi IllegalArgumentException
-     */
-    @Test(expected = IllegalArgumentException.class)
-    public void testAddNoNull1() {
-        schedule.add(null, goodObs, pGoodIntent, false);
-    }
-
-    /**
      * Controlla che add con un UUID null e OneTime == false
      * sollevi IllegalArgumentException
      */
     @Test(expected = IllegalArgumentException.class)
     public void testAddNoNull2() {
-        schedule.add(goodObs.getUUID(), null, pGoodIntent, false);
+        schedule.add(null, pGoodIntent, false);
     }
 
     /**
@@ -244,16 +235,7 @@ public class WakeupScheduleTest {
      */
     @Test(expected = IllegalArgumentException.class)
     public void testAddNoNull3() {
-        schedule.add(goodObs.getUUID(), goodObs, null, false);
-    }
-
-    /**
-     * Controlla che add con un UUID null e OneTime == true
-     * sollevi IllegalArgumentException
-     */
-    @Test(expected = IllegalArgumentException.class)
-    public void testAddNoNull1A() {
-        schedule.add(null, goodObs, pGoodIntent, true);
+        schedule.add(goodObs, null, false);
     }
 
     /**
@@ -262,7 +244,7 @@ public class WakeupScheduleTest {
      */
     @Test(expected = IllegalArgumentException.class)
     public void testAddNoNull2A() {
-        schedule.add(goodObs.getUUID(), null, pGoodIntent, true);
+        schedule.add(null, pGoodIntent, true);
     }
 
     /**
@@ -271,6 +253,6 @@ public class WakeupScheduleTest {
      */
     @Test(expected = IllegalArgumentException.class)
     public void testAddNoNull3A() {
-        schedule.add(goodObs.getUUID(), goodObs, null, true);
+        schedule.add(goodObs, null, true);
     }
 }
