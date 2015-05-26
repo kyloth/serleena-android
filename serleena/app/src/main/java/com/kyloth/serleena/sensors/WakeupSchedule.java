@@ -85,14 +85,14 @@ class WakeupSchedule {
         return uuidMap.get(uuid);
     }
 
-    public void add(String uuid, IWakeupObserver observer,
-                    PendingIntent alarmIntent, boolean oneTimeOnly) {
-        if (uuid == null || observer == null || alarmIntent == null) {
+    public void add(IWakeupObserver observer, PendingIntent alarmIntent,
+            boolean oneTimeOnly) {
+        if (observer == null || alarmIntent == null) {
             throw new IllegalArgumentException();
         }
-        uuidMap.put(uuid, observer);
+        uuidMap.put(observer.getUUID(), observer);
         obsMap.put(observer, alarmIntent);
-        intentMap.put(alarmIntent, uuid);
+        intentMap.put(alarmIntent, observer.getUUID());
         onetimeMap.put(observer, oneTimeOnly);
     }
 

@@ -138,7 +138,7 @@ class WakeupManager extends BroadcastReceiver implements IWakeupManager {
             alarmManager.setInexactRepeating(alarmType, millis, millis,
                     alarmIntent);
 
-        schedule.add(uuid, observer, alarmIntent, oneTimeOnly);
+        schedule.add(observer, alarmIntent, oneTimeOnly);
     }
 
     /**
