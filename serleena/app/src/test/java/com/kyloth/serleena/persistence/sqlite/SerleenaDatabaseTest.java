@@ -32,11 +32,10 @@
  * Name: SerleenaDatabaseTest.java
  * Package: com.kyloth.serleena.persistence.sqlite
  * Author: Tobia Tesan <tobia.tesan@gmail.com>
- * Date: 2015-05-05
  *
  * History:
- * Version  Programmer          Date        Changes
- * 1.0      Tobia Tesan        2015-05-05  Creazione file
+ * Version  Programmer   Changes
+ * 1.0      Tobia Tesan  Creazione file
  */
 
 package com.kyloth.serleena.persistence.sqlite;
