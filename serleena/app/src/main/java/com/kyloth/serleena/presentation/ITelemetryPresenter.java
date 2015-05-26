@@ -45,7 +45,7 @@ package com.kyloth.serleena.presentation;
  * ITelemetryPresenter e' l'interfaccia del Presenter per la schermata del
  * tracciamento.
  *
- * @use Interfaccia utilizzata dalla vista \fixedwidth{TelemetryFragment} per mantenere un riferimento al Presenter associato, e comunicare con esso.
+ * @use Interfaccia utilizzata dalla vista TelemetryFragment per mantenere un riferimento al Presenter associato, e comunicare con esso.
  * @author Tobia Tesan <tobia.tesan@gmail.com>
  * @version 1.0
  * @since 1.0

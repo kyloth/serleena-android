@@ -45,7 +45,7 @@ package com.kyloth.serleena.common;
 /**
  * Rappresenta un punto utente sulla mappa.
  *
- * @use Viene utilizzato da \pathcommand{MapPresenter} per visualizzare sulla mappa i punti utente e crearne di nuovi. Gli oggetti \pathcommand{UserPoint} sono ottenuti e creati attraverso oggetti di interfaccia \pathcommand{IExperience}.
+ * @use Viene utilizzato da MapPresenter per visualizzare sulla mappa i punti utente e crearne di nuovi. Gli oggetti UserPoint sono ottenuti e creati attraverso oggetti di interfaccia IExperience.
  * @author Filippo Sestini <sestini.filippo@gmail.com>
  * @version 1.0.0
  * @since 2015-05-05

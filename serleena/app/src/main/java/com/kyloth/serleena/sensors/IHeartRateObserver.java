@@ -46,7 +46,7 @@ package com.kyloth.serleena.sensors;
  * Interfaccia che verrà implementata da un oggetto in grado
  * di osservare un oggetto di tipo IHeartRateManager.
  *
- * @use Viene implementata da \fixedwidth{CardioPresenter} e \fixedwidth{TelemetryManager} per ottenere dati sull'orientamento, rispettivamente per impostare la vista e campionare eventi di Tracciamento.
+ * @use Viene implementata da CardioPresenter e TelemetryManager per ottenere dati sull'orientamento, rispettivamente per impostare la vista e campionare eventi di Tracciamento.
  * @author Gabriele Pozzan <gabriele.pozzan@studenti.unipd.it>
  * @version 1.0.0
  */

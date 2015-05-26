@@ -48,7 +48,7 @@ import com.kyloth.serleena.common.GeoPoint;
  * Interfaccia che verrà implementata da un oggetto in grado
  * di osservare un oggetto di tipo ILocationManager.
  *
- * @use Viene implementata da \fixedwidth{MapPresenter}, \fixedwidth{TrackPresenter}, \fixedwidth{LocationReachedManager} e \fixedwidth{TelemetryManager} per ottenere dati sulla posizione.
+ * @use Viene implementata da MapPresenter, TrackPresenter, LocationReachedManager e TelemetryManager per ottenere dati sulla posizione.
  * @author Gabriele Pozzan <gabriele.pozzan@studenti.unipd.it>
  * @version 1.0.0
  */

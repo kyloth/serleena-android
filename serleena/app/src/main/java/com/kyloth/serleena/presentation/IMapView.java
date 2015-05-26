@@ -50,7 +50,7 @@ import com.kyloth.serleena.common.UserPoint;
  * mostrare una mappa con la posizione dell'utente, tra cui quella della
  * schermata Mappa.
  *
- * @use Viene utilizzato dal Presenter \fixedwidth{MapPresenter} per mantenere un riferimento alla vista associata, e comunicare con essa.
+ * @use Viene utilizzato dal Presenter MapPresenter per mantenere un riferimento alla vista associata, e comunicare con essa.
  * @author Tobia Tesan <tobia.tesan@gmail.com>
  * @version 1.0
  * @since 1.0

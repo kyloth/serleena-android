@@ -45,7 +45,7 @@ package com.kyloth.serleena.presentation;
  * E' l'interfaccia realizzata dal Presenter della schermata di selezione
  * dell'esperienza.
  *
- * @use Interfaccia utilizzata dalla vista \fixedwidth{ExperienceSelectionFragment} per mantenere un riferimento al Presenter associato, e comunicare con esso.
+ * @use Interfaccia utilizzata dalla vista ExperienceSelectionFragment per mantenere un riferimento al Presenter associato, e comunicare con esso.
  * @author Tobia Tesan <tobia.tesan@gmail.com>
  * @version 1.0
  * @since 1.0

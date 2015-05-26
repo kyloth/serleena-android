@@ -61,7 +61,7 @@ import java.util.HashMap;
  * Classe che implementa la schermata “Meteo”, in cui vengono mostrate informazioni metereologiche
  * relative ad un giorno
  *
- * @use Viene istanziata e utilizzata dall'Activity per la visualizzazione della schermata. Comunica con il Presenter associato attraverso l'interfaccia \fixedwidth{IWeatherPresenter}.
+ * @use Viene istanziata e utilizzata dall'Activity per la visualizzazione della schermata. Comunica con il Presenter associato attraverso l'interfaccia IWeatherPresenter.
  * @field presenter : IWeatherPresenter presenter collegato a un WeatherFragment
  * @field now : Calendar data da visualizzare
  * @field weatherMap : HashMap<WeatherForecastEnum,Integer> mappa di corrispondenze tra condizioni meteo e immagini da visualizzare

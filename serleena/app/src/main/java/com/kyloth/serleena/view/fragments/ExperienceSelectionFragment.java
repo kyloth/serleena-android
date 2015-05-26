@@ -58,7 +58,7 @@ import java.util.ArrayList;
  *
  * In questa visuale è possibile selezionare un'esperienza da attivare tra quelle disponibili.
  *
- * @use Viene istanziata e utilizzata dall'Activity per la visualizzazione della schermata. Comunica con il Presenter associato attraverso l'interfaccia \fixedwidth{IExperienceSelectionPresenter}.
+ * @use Viene istanziata e utilizzata dall'Activity per la visualizzazione della schermata. Comunica con il Presenter associato attraverso l'interfaccia IExperienceSelectionPresenter.
  * @field presenter : IExperienceSelectionPresenter presenter collegato a un ExperienceSelectionFragment
  * @field expNames : ArrayList<String> lista dei nomi delle esperienze
  * @field mListView : AbsListView lista di elementi

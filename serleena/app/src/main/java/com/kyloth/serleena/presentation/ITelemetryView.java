@@ -45,7 +45,7 @@ package com.kyloth.serleena.presentation;
  * Interfaccia della vista corrispondente alla visuale “Tracciamento”
  * della schermata “Esperienza”
  *
- * @use Viene utilizzato dal Presenter \fixedwidth{TelemetryPresenter} per mantenere un riferimento alla vista associata, e comunicare con essa.
+ * @use Viene utilizzato dal Presenter TelemetryPresenter per mantenere un riferimento alla vista associata, e comunicare con essa.
  * @author Tobia Tesan <tobia.tesan@gmail.com>
  * @version 1.0
  * @since 1.0

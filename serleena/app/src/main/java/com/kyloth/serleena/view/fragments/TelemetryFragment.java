@@ -56,7 +56,7 @@ import com.kyloth.serleena.presentation.ITelemetryView;
  *
  * In questa visuale è possibile attivare o disattivare il tracciamento.
  *
- * @use Viene istanziata e utilizzata dall'Activity per la visualizzazione della schermata. Comunica con il Presenter associato attraverso l'interfaccia \fixedwidth{ITelemetryPresenter}.
+ * @use Viene istanziata e utilizzata dall'Activity per la visualizzazione della schermata. Comunica con il Presenter associato attraverso l'interfaccia ITelemetryPresenter.
  * @field presenter : ITelemetryPresenter presenter collegato a un TelemetryFragment
  * @author Sebastiano Valle <valle.sebastiano93@gmail.com>
  * @version 1.0.0

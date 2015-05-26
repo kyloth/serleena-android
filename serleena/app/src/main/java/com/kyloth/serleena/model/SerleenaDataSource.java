@@ -54,7 +54,7 @@ import java.util.Date;
 /**
  * Concretizza SerleenaDataSource.
  *
- * @use Viene utilizzato direttamente solo dall'activity dell'applicazione, \fixedwidth{SerleenaActivity}. Questa si occupa di crearne un'istanza, passando al costruttore un DAO \fixedwidth{SerleenaSQLiteDataSource}, che implementa \fixedwidth{IPersistenceStorage}, e passarla ai suoi presenter dietro interfaccia IPersistenceDataSource
+ * @use Viene utilizzato direttamente solo dall'activity dell'applicazione, SerleenaActivity. Questa si occupa di crearne un'istanza, passando al costruttore un DAO SerleenaSQLiteDataSource, che implementa IPersistenceStorage, e passarla ai suoi presenter dietro interfaccia IPersistenceDataSource
  * @field dataSource : IPersistenceDataSource DAO dello strato di persistenza da utilizzare come sorgente dati effettiva
  * @author Filippo Sestini <sestini.filippo@gmail.com>
  * @version 1.0.0

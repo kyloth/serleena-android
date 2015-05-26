@@ -49,7 +49,7 @@ package com.kyloth.serleena.sensors;
  * nell'esecuzione del codice, in cui viene richiesto l'utilizzo di un sensore
  * che non è disponibile nel dispositivo.
  *
- * @use Eccezione lanciata da \fixedwidth{IHeadingManager} nel caso non siano disponibili i sensori di campo magnetico e accelerazione necessari al calcolo dell'orientamento.
+ * @use Eccezione lanciata da IHeadingManager nel caso non siano disponibili i sensori di campo magnetico e accelerazione necessari al calcolo dell'orientamento.
  * @field sensor : String Nome del sensore non disponibile
  * @author Filippo Sestini
  * @version 1.0.0

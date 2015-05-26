@@ -50,7 +50,7 @@ import com.kyloth.serleena.sensors.ISensorManager;
 /**
  * Interfaccia dell'Activity dell'applicazione serleena.
  *
- * @use Ogni \foreignword{Presenter} dell'applicazione interagisce con l'Activity attraverso questa interfaccia.
+ * @use Ogni Presenter dell'applicazione interagisce con l'Activity attraverso questa interfaccia.
  * @author Filippo Sestini <sestini.filippo@gmail.com>
  * @version 1.0.0
  */

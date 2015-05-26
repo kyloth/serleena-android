@@ -53,7 +53,7 @@ import java.util.ArrayList;
 /**
  * Concretizza ITrack.
  *
- * @use Utilizzata dal Model e dalla parte di presentazione. Il principale utilizzo viene fatto da \fixedwidth{TrackPresenter}, che mantiene un riferimento al Percorso attivo per guidare l'utente nell'attraversamento del Percorso. Attraverso \fixedwidth{ITrack} è possibile inoltre aggiungere nuovi Tracciamenti al Percorso, come insieme di oggetti \fixedwidth{TelemetryEvent}.
+ * @use Utilizzata dal Model e dalla parte di presentazione. Il principale utilizzo viene fatto da TrackPresenter, che mantiene un riferimento al Percorso attivo per guidare l'utente nell'attraversamento del Percorso. Attraverso ITrack è possibile inoltre aggiungere nuovi Tracciamenti al Percorso, come insieme di oggetti TelemetryEvent.
  * @field storage : ITrackStorage Oggetto rappresentante il Percorso memorizzato nel livello di persistenza, utilizzato come sorgente dati effettiva
  * @author Filippo Sestini <sestini.filippo@gmail.com>
  * @version 1.0.0

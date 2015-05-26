@@ -46,7 +46,7 @@ package com.kyloth.serleena.presentation;
  * in grado di visualizzare informazioni sull'orientamento rispetto ai punti
  * cardinali.
  *
- * @use Viene utilizzato dal Presenter \fixedwidth{CompassPresenter} per mantenere un riferimento alla vista associata, e comunicare con essa.
+ * @use Viene utilizzato dal Presenter CompassPresenter per mantenere un riferimento alla vista associata, e comunicare con essa.
  * @author Tobia Tesan <tobia.tesan@gmail.com>
  * @since 1.0
  * @version 1.0

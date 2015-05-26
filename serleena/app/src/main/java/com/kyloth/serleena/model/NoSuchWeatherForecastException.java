@@ -45,7 +45,7 @@ package com.kyloth.serleena.model;
 /**
  * Segnala l'assenza di dati su previsioni meteo.
  *
- * @use Utilizzata dai \emph{DAO} per segnalare l'assenza di dati meteo come richiesti dal chiamante.
+ * @use Utilizzata dai DAO per segnalare l'assenza di dati meteo come richiesti dal chiamante.
  * @author Filippo Sestini <sestini.filippo@gmail.com>
  * @version 1.0.0
  */

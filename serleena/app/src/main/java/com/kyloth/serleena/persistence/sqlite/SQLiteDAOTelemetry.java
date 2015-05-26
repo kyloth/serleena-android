@@ -49,7 +49,7 @@ import com.kyloth.serleena.persistence.ITelemetryStorage;
  * Rappresenta l'implementazione della persistenza di un Tracciamento su
  * database SQLite.
  *
- * @use Istanze di \fixedwidth{SQLiteDAOTelemetry} vengono create e utilizzate dal DAO \fixedwidth{SerleenaSQLiteDataSource}, che le restituisce all'esterno dietro interfaccia \fixedwidth{ITelemetryStorage}. Mantiene un riferimento al database di appartenenza attraverso \fixedwidth{ISerleenaSQLiteDataSource}.
+ * @use Istanze di SQLiteDAOTelemetry vengono create e utilizzate dal DAO SerleenaSQLiteDataSource, che le restituisce all'esterno dietro interfaccia ITelemetryStorage. Mantiene un riferimento al database di appartenenza attraverso ISerleenaSQLiteDataSource.
  * @field id : int ID della riga di database associata all'oggetto 
  * @field events : Iterable<TelemetryEvent> Eventi del Tracciamento rappresentato dall'istanza
  * @author Filippo Sestini <sestini.filippo@gmail.com>

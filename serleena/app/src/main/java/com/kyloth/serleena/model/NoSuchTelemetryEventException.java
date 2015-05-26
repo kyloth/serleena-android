@@ -46,7 +46,7 @@ package com.kyloth.serleena.model;
  * Segnala una situazione eccezionale in cui non è possibile ottenere un
  * evento di Tracciamento richiesto.
  *
- * @use Viene sollevato da oggetti \fixedwidth{ITelemetry} in \fixedwidth{getEvents}() (e vari overloading), per segnalare l'assenza di eventi di Tracciamento che soddisfino la richiesta descritta dai parametri.
+ * @use Viene sollevato da oggetti ITelemetry in getEvents() (e vari overloading), per segnalare l'assenza di eventi di Tracciamento che soddisfino la richiesta descritta dai parametri.
  * @author Filippo Sestini <sestini.filippo@gmail.com>
  * @version 1.0.0
  */

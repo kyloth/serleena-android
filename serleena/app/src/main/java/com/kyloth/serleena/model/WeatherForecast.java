@@ -49,7 +49,7 @@ import java.util.Date;
 /**
  * Concretizza IWeatherForecast.
  *
- * @use Viene utilizzata dal solo package Model, che ne crea le istanze in base a oggetti \fixedwidth{IWeatherStorage} ottenuti dal DAO del livello di persistenza. Questi oggetti vengono restituiti all'esterno attraverso \fixedwidth{ISerleenaDataSource}, dietro interfaccia \fixedwidth{IWeatherInfo}.
+ * @use Viene utilizzata dal solo package Model, che ne crea le istanze in base a oggetti IWeatherStorage ottenuti dal DAO del livello di persistenza. Questi oggetti vengono restituiti all'esterno attraverso ISerleenaDataSource, dietro interfaccia IWeatherInfo.
  * @field storage : IWeatherStorage Oggetto rappresentante i dati meteo memorizzati nel livello di persistenza, utilizzato come sorgente dati effettiva
  * @author Filippo Sestini <sestini.filippo@gmail.com>
  * @version 1.0.0

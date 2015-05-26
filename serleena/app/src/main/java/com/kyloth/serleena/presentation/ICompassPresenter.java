@@ -45,7 +45,7 @@ package com.kyloth.serleena.presentation;
  * E' l'interfaccia del Presenter della schermata Bussola.
  * E' una marker interface.
  *
- * @use Interfaccia utilizzata dalla vista \fixedwidth{CompassFragment} per mantenere un riferimento al Presenter associato, e comunicare con esso.
+ * @use Interfaccia utilizzata dalla vista CompassFragment per mantenere un riferimento al Presenter associato, e comunicare con esso.
  * @author Tobia Tesan <tobia.tesan@gmail.com>
  * @version 1.0
  * @since 1.0

@@ -39,7 +39,7 @@ import java.util.NoSuchElementException;
 /**
  * Rappresenta i wakeup pianificati utilizzando WakeupManager.
  *
- * @use Viene utilizzata da \fixedwidth{SensorManager} per restituire ai client il sensore di orientamento, e dai client per accedere ai servizi offerti dal sensore. È utilizzato in particolare da \fixedwidth{CompassPresenter} e \fixedwidth{TrackPresenter}.
+ * @use Viene utilizzata da SensorManager per restituire ai client il sensore di orientamento, e dai client per accedere ai servizi offerti dal sensore. È utilizzato in particolare da CompassPresenter e TrackPresenter.
  * @field uuidMap : Map<String, IWakeupObserver> Mappa degli UUID e relativi Observer
  * @field obsMap : Map<IWakeupObserver, PendingIntent> Mappa degli Observer e relativi Intent
  * @field intentMap : Map<PendingIntent, String> Mappa degli Intent e relativi UUID

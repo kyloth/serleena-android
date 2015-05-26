@@ -51,7 +51,7 @@ import java.util.ArrayList;
 /**
  * Concretizza IExperience.
  *
- * @use Viene utilizzata dal solo package Model, che ne crea le istanze in base a oggetti \fixedwidth{IExperienceStorage} ottenuti dal DAO del livello di persistenza. Questi oggetti vengono restituiti all'esterno attraverso \fixedwidth{ISerleenaDataSource}, dietro interfaccia \fixedwidth{IExperience}.
+ * @use Viene utilizzata dal solo package Model, che ne crea le istanze in base a oggetti IExperienceStorage ottenuti dal DAO del livello di persistenza. Questi oggetti vengono restituiti all'esterno attraverso ISerleenaDataSource, dietro interfaccia IExperience.
  * @field storage : IExperienceStorage Oggetto contenente i dati di persistenza dell'Esperienza
  * @field tracks : Iterable<ITrack> Insieme dei Percorsi associati all'esperienza
  * @author Filippo Sestini <sestini.filippo@gmail.com>

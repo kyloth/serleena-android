@@ -34,7 +34,7 @@ package com.kyloth.serleena.common;
  * Segnala una situazione eccezionale in cui è richiesto l'uso di un'Esperienza
  * attiva ma questa non è disponibile.
  *
- * @use Utilizzata da \fixedwidth{IMapPresenter} e \fixedwidth{MapFragment} per segnalare l'impossibilità di aggiungere punti utente su un'esperienza attiva assente.
+ * @use Utilizzata da IMapPresenter e MapFragment per segnalare l'impossibilità di aggiungere punti utente su un'esperienza attiva assente.
  * @author Filippo Sestini <sestini.filippo@gmail.com>
  * @version 1.0.0
  */

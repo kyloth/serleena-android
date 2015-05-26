@@ -86,7 +86,7 @@ import static java.lang.Math.floor;
  * Classe concreta contenente l’implementazione del data source per l’accesso al
  * database SQLite dell’applicazione.
  *
- * @use Viene istanziato dall'activity, che lo utilizza nella creazione di un DAO \fixedwidth{SerleenaDataSource}. Viene inoltre utilizzato come datasource interno agli elementi del package \fixedwidth{persistence.sqlite}, dietro interfaccia \fixedwidth{ISerleenaSQLiteDataSource}.
+ * @use Viene istanziato dall'activity, che lo utilizza nella creazione di un DAO SerleenaDataSource. Viene inoltre utilizzato come datasource interno agli elementi del package persistence.sqlite, dietro interfaccia ISerleenaSQLiteDataSource.
  * @field dbHelper : SerleenaDatabase Oggetto rappresentante il punto di accesso al database SQLite utilizzato dall'applicazione
  * @field context : Context Contesto dell'applicazione
  * @author Filippo Sestini <sestini.filippo@gmail.com>

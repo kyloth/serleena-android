@@ -62,7 +62,7 @@ import java.util.concurrent.TimeUnit;
  * Concretizza IHeadingManager utilizzando le API di gestione della
  * sensoristica di Android.
  *
- * @use Viene istanziato da \fixedwidth{SensorManager} e restituito al codice client dietro interfaccia.
+ * @use Viene istanziato da SensorManager e restituito al codice client dietro interfaccia.
  * @field accelerometerValues : float[] Valori ottenuti dall'accelerometro del dispositivo
  * @field magneticFieldValues : float[] Valori ottenuti dal sensore di campo magnetico del dispositivo
  * @field latestOrientation : double Ultimo valore di orientamento disponibile

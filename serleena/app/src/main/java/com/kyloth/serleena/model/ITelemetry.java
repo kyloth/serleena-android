@@ -50,7 +50,7 @@ import com.kyloth.serleena.common.TelemetryEventType;
  * Interfaccia realizzata da oggetti che rappresentano un
  * Tracciamento
  *
- * @use Utilizzata dal Model e dalla parte di presentazione. L'uso principale viene fatto da \fixedwidth{TrackPresenter}, che utilizza i Tracciamenti dell'esperienza attiva per confrontarli con l'attività in corso.
+ * @use Utilizzata dal Model e dalla parte di presentazione. L'uso principale viene fatto da TrackPresenter, che utilizza i Tracciamenti dell'esperienza attiva per confrontarli con l'attività in corso.
  * @author  Tobia Tesan <tobia.tesan@gmail.com>
  * @version 1.0
  * @since   1.0

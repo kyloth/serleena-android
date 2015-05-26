@@ -47,7 +47,7 @@ package com.kyloth.serleena.presentation;
  * performance registrata sul tracciato (tempi parziali, ecc...) e eventuale
  * confronto con il ghost.
  *
- * @use Viene utilizzato dal Presenter \fixedwidth{TrackPresenter} per mantenere un riferimento alla vista associata, e comunicare con essa.
+ * @use Viene utilizzato dal Presenter TrackPresenter per mantenere un riferimento alla vista associata, e comunicare con essa.
  * @author Tobia Tesan <tobia.tesan@gmail.com>
  * @version 1.0
  * @since 1.0

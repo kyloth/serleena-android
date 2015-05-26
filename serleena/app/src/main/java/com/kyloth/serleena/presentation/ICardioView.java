@@ -44,7 +44,7 @@ package com.kyloth.serleena.presentation;
 /**
  * Interfaccia realizzata da viste in grado di mostrare la frequenza cardiaca.
  *
- * @use Viene utilizzato dal Presenter \fixedwidth{CardioPresenter} per mantenere un riferimento alla vista associata, e comunicare con essa.
+ * @use Viene utilizzato dal Presenter CardioPresenter per mantenere un riferimento alla vista associata, e comunicare con essa.
  * @author Tobia Tesan <tobia.tesan@gmail.com>
  * @version 1.0
  * @since 1.0

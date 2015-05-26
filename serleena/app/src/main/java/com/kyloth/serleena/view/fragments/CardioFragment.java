@@ -53,7 +53,7 @@ import com.kyloth.serleena.presentation.ICardioView;
  * Classe che implementa la schermata “Cardio”, in cui vengono mostrate eventuali informazioni
  * relative ad un sensore Fitness collegato allo smartwatch
  *
- * @use Viene istanziata e utilizzata dall'Activity per la visualizzazione della schermata. Comunica con il Presenter associato attraverso l'interfaccia \fixedwidth{ICardioPresenter}.
+ * @use Viene istanziata e utilizzata dall'Activity per la visualizzazione della schermata. Comunica con il Presenter associato attraverso l'interfaccia ICardioPresenter.
  * @field presenter : ICardioPresenter presenter collegato a un CardioFragment
  * @author Sebastiano Valle <valle.sebastiano93@gmail.com>
  * @version 1.0.0

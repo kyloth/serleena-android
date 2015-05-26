@@ -46,7 +46,7 @@ package com.kyloth.serleena.sensors;
  * Interfaccia che verrà implementata da un oggetto in grado
  * di osservare un oggetto di tipo IHeadingManager.
  *
- * @use Viene implementata da \fixedwidth{CompassPresenter} e \fixedwidth{TrackPresenter} per ottenere dati sull'orientamento da mostrare sulla vista.
+ * @use Viene implementata da CompassPresenter e TrackPresenter per ottenere dati sull'orientamento da mostrare sulla vista.
  * @author Gabriele Pozzan <gabriele.pozzan@studenti.unipd.it>
  * @version 1.0.0
  */
