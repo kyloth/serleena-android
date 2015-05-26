@@ -32,7 +32,6 @@
  * Name: ExperienceSelectionPresenterTest.java
  * Package: com.kyloth.serleena.presenters;
  * Author: Gabriele Pozzan
- * Date: 2015-05-11
  *
  * History:
  * Version  Programmer       Changes
