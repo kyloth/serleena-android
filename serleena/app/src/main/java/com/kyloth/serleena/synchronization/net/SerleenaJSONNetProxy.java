@@ -29,7 +29,7 @@
 
 
 /**
- * Name: ISerleenaNetProxy.java
+ * Name: SerleenaJSONNetProxy.java
  * Package: com.kyloth.serleena.synchronization.net
  * Author: Tobia Tesan
  *
@@ -39,27 +39,42 @@
  */
 package com.kyloth.serleena.synchronization.net;
 
-import com.kyloth.serleena.synchronization.OutboundStream;
 import com.kyloth.serleena.synchronization.InboundStream;
+import com.kyloth.serleena.synchronization.OutboundStream;
 
 /**
- * Fornisce un'interfaccia ad alto livello verso il
- * servizio remoto.
+ * Concretizza l'interfaccia INetProxy permettendo di dialogare con
+ * il servizio KylothCloud.
  *
  * @usage Viene utilizzato da KylothCloudSynchronizer, che ne usa una istanzia
- *        per poter dialogare con un servizio remoto utilizzando primitive ad
- *        alto livello.
+ *        per poter dialogare con il servizio KylothCloud utilizzando le
+ *        primitive ad alto livello prescritte da INetProxy.
  * @author Tobia Tesan <tobia.tesan@gmail.com>
- * @version 0.0.1
+ * @field url L'URL del servizio remoto
+ * @field auth_token Il token di autorizzazione ricevuto dal servizio remoto al termine
+ *                   della procedura di handshaking, valido per l'intera vita
+ *                   dell'oggetto.
  */
-public interface ISerleenaNetProxy {
+public class SerleenaJSONNetProxy implements INetProxy {
+	String url;
+	String auth_token;
+
 	/**
-	 * Invia al servizio remoto un'oggetto di tipo OutboundStream
+	 * Costruisce un'istanza di SerleenaJSONNetProxy
+	 * @param url L'URL del servizio remoto
+	 */
+	SerleenaJSONNetProxy(String url) {
+		this.url = url;
+	}
+	/**
+	 * Invia al servizio remoto un OutboundStream con i dati raccolti localmente.
 	 *
 	 * @param stream Un OutboundStream con i dati raccolti localmente da inviare
-	 *               al servizio remoto in forma grezza
 	 */
-	void send(OutboundStream stream);
+	@Override
+	public void send(OutboundStream stream) {
+		//TODO
+	}
 
 	/**
 	 * Richiede i dati di sincronizzazione dal servizio remoto.
@@ -67,7 +82,11 @@ public interface ISerleenaNetProxy {
 	 * @return Un InboundStream contenente i dati in forma grezza provenienti
 	 *         dal servizio remoto.
 	 */
-	InboundStream get();
+	@Override
+	public InboundStream get() {
+		//TODO
+		return null;
+	}
 
 	/**
 	 * Richiede la preautorizzazione con il servizio remoto.
@@ -75,11 +94,18 @@ public interface ISerleenaNetProxy {
 	 * @return La stringa con il token temporaneo da visualizzare che
 	 *         l'utente dovra' poi confermare sull'interfaccia cloud..
 	 */
-	String preAuth();
+	@Override
+	public String preAuth() {
+		//TODO
+		return null;
+	}
 
 	/**
 	 * Richiede di eseguire la procedura di autorizzazione permanente contro
 	 * il servizio remoto.
 	 */
-	void auth();
+	@Override
+	public void auth() {
+		//TODO
+	}
 }
