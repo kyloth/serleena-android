@@ -32,11 +32,10 @@
  * Name: ImmutableList.java
  * Package: com.kyloth.serleena.common
  * Author: Filippo Sestini
- * Date: 2015-05-11
  *
  * History:
- * Version  Programmer          Date        Changes
- * 1.0.0    Filippo Sestini     2015-05-11  Creazione file e scrittura di codice
+ * Version  Programmer       Changes
+ * 1.0.0    Filippo Sestini  Creazione file e scrittura di codice
  *                                          e documentazione in Javadoc.
  */
 

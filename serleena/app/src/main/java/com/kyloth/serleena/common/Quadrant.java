@@ -32,11 +32,10 @@
  * Name: Quadrant.java
  * Package: com.kyloth.serleena.common
  * Author: Tobia Tesan
- * Date: 2015-05-05
  *
  * History:
- * Version  Programmer          Date        Changes
- * 1.0.0    Tobia Tesan         2015-05-05  Creazione file e scrittura di codice
+ * Version  Programmer   Changes
+ * 1.0.0    Tobia Tesan  Creazione file e scrittura di codice
  *                                          e documentazione in Javadoc.
  */
 package com.kyloth.serleena.common;
