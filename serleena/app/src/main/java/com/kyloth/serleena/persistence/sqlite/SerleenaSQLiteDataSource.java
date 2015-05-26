@@ -32,15 +32,14 @@
  * Name: SerleenaSQLiteDataSource.java
  * Package: com.kyloth.serleena.persistence.sqlite
  * Author: Filippo Sestini
- * Date: 2015-05-06
  *
  * History:
- * Version  Programmer          Date        Changes
- * 1.0.0    Filippo Sestini     2015-05-06  Creazione file e scrittura di codice
+ * Version  Programmer       Changes
+ * 1.0.0    Filippo Sestini  Creazione file e scrittura di codice
  *                                          e documentazione in Javadoc.
- * 1.0.1    Tobia Tesan         2015-05-07  Aggiunta di getIJ
- * 1.0.2    Tobia Tesan         2015-05-07  Aggiunta di getPath
- * 1.0.3    Tobia Tesan         2015-05-10  Riscrittura di getForecast con GregorianCalendar
+ * 1.0.1    Tobia Tesan      Aggiunta di getIJ
+ * 1.0.2    Tobia Tesan      Aggiunta di getPath
+ * 1.0.3    Tobia Tesan      Riscrittura di getForecast con GregorianCalendar
  */
 
 package com.kyloth.serleena.persistence.sqlite;
@@ -91,7 +90,6 @@ import static java.lang.Math.floor;
  * @field context : Context Contesto dell'applicazione
  * @author Filippo Sestini <sestini.filippo@gmail.com>
  * @version 1.0.0
- * @since 2015-05-06
  */
 public class SerleenaSQLiteDataSource implements ISerleenaSQLiteDataSource {
     final static int QUADRANT_LATSIZE = 10;

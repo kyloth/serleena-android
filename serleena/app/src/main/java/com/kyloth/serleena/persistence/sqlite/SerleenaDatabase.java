@@ -32,17 +32,16 @@
  * Name: SerleenaDatabase.java
  * Package: com.kyloth.serleena.persistence.sqlite
  * Author: Filippo Sestini
- * Date: 2015-05-05
  *
  * History:
- * Version  Programmer          Date        Changes
- * 1.0.0    Filippo Sestini     2015-05-05  Creazione file e scrittura di codice
+ * Version  Programmer       Changes
+ * 1.0.0    Filippo Sestini  Creazione file e scrittura di codice
  *                                          e documentazione in Javadoc.
- * 1.0.1    Tobia Tesan         2015-05-06  Aggiunti ON DELETE
- * 1.0.2    Tobia Tesan         2015-05-06  Aggiunto onConfigure.
- * 1.0.3    Filippo Sestini     2015-05-11  Aggiunta tabella 'checkpoints' al
+ * 1.0.1    Tobia Tesan      Aggiunti ON DELETE
+ * 1.0.2    Tobia Tesan      Aggiunto onConfigure.
+ * 1.0.3    Filippo Sestini  Aggiunta tabella 'checkpoints' al
  *                                          database.
- * 1.0.4    Tobia Tesan         2015-05-12  Rimossa TABLE_RASTER_MAPS
+ * 1.0.4    Tobia Tesan      Rimossa TABLE_RASTER_MAPS
  */
 
 package com.kyloth.serleena.persistence.sqlite;
@@ -61,7 +60,6 @@ import java.text.SimpleDateFormat;
  * @use Viene utilizzato dall'activity e da SerleenaSQLiteDataSource. Istanziato dall'activity, che lo utilizza per creare il DAO di tipo SerleenaSQLiteDataSource. Quest'ultimo accede al database dell'applicazione attraverso l'oggetto SerleenaDatabase con il quale è stato creato.
  * @author Filippo Sestini <sestini.filippo@gmail.com>
  * @version 1.0.0
- * @since 2015-05-05
  */
 public class SerleenaDatabase extends SQLiteOpenHelper {
 

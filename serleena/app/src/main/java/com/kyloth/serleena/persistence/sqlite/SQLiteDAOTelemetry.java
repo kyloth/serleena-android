@@ -32,11 +32,10 @@
  * Name: SQLiteDAOTelemetry.java
  * Package: com.kyloth.serleena.persistence.sqlite
  * Author: Filippo Sestini
- * Date: 2015-05-06
  *
  * History:
- * Version  Programmer          Date        Changes
- * 1.0.0    Filippo Sestini     2015-05-06  Creazione file e scrittura di codice
+ * Version  Programmer       Changes
+ * 1.0.0    Filippo Sestini  Creazione file e scrittura di codice
  *                                          e documentazione in Javadoc.
  */
 
@@ -54,7 +53,6 @@ import com.kyloth.serleena.persistence.ITelemetryStorage;
  * @field events : Iterable<TelemetryEvent> Eventi del Tracciamento rappresentato dall'istanza
  * @author Filippo Sestini <sestini.filippo@gmail.com>
  * @version 1.0.0
- * @since 2015-05-06
  * @see com.kyloth.serleena.persistence.ITelemetryStorage
  */
 class SQLiteDAOTelemetry implements ITelemetryStorage {
