@@ -45,9 +45,7 @@ package com.kyloth.serleena.synchronization;
  * collezione di IDataEntity indipendenti dal formato di rappresentazione
  * originario.
  *
- * @usage E' usato da KylothCloudSynchronizerk che gli fornisce un
- *        InboundStream prodotto da un idoneo proxy e ne raccoglie l'output
- *        per passarlo a un InboundDumpBuilder.
+ * @use E' usato da KylothCloudSynchronizerk che gli fornisce un InboundStream prodotto da un idoneo proxy e ne raccoglie l'output per passarlo a un InboundDumpBuilder.
  *
  * @author Tobia Tesan <tobia.tesan@gmail.com>
  */

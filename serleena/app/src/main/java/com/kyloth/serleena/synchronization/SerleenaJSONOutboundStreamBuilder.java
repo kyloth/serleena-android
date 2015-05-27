@@ -46,8 +46,7 @@ import com.kyloth.serleena.persistence.ITelemetryStorage;
  * Concretizza OutboundStreamBuilder in modo da poter costruire stream JSON
  * nel formato che KylothCloud si attende.
  *
- * @usage Viene usato da KylothCloudSynchronizer per costruire un OutboundStream
- *        nel formato
+ * @use Viene usato da KylothCloudSynchronizer per costruire un OutboundStream nel formato idoneo ad essere passato a SerleenaJSONNetProxy per l'invio a KylothCloud
  * @author Tobia Tesan <tobia.tesan@gmail.com>
  */
 public class SerleenaJSONOutboundStreamBuilder implements OutboundStreamBuilder {

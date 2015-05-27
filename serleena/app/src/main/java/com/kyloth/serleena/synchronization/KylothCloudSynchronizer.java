@@ -47,12 +47,7 @@ import com.kyloth.serleena.model.ISerleenaDataSource;
  *
  * @author Tobia Tesan <tobia.tesan@gmail.com>
  * @version 0.0.1
- * @usage Viene usato dall'Activity come unico entry point per le
- *        operazioni di sincronizzazione, dopo avergli fornito un
- *        dataSource e un dumpLoader (che possono e tipicamente sono lo
- *        stesso oggetto)e l'URL del servizio remoto.
- *        Si faccia riferimento ai diagrammi di sequenza della ST per
- *        i dettagli della procedura di sincronizzazione.
+ * @use Viene usato dall'Activity come unico entry point per le operazioni di sincronizzazione, dopo avergli fornito un dataSource e un dumpLoader (che possono e tipicamente sono la stesso oggetto)e l'URL del servizio remoto. Si faccia riferimento ai diagrammi di sequenza della ST per i dettagli della procedura di sincronizzazione.
  * @field instance la singola istanza
  */
 public class KylothCloudSynchronizer {

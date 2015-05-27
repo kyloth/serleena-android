@@ -43,9 +43,7 @@ package com.kyloth.serleena.synchronization;
  * Concretizza InboundStreamParser in modo da poter consumare
  * stream JSON in arrivo da KylothCloud.
  *
- * @usage Viene usato da KylothCloudSynchronizer per trasformare i dati in
- *        arrivo da KylothCloud, raccolti in un InboundStream da un INetProxy,
- *        in un formato intermedio somministrabile a un InboundDumpBuilder.
+ * @use Viene usato da KylothCloudSynchronizer per trasformare i dati in arrivo da KylothCloud, raccolti in un InboundStream da un INetProxy, in un formato intermedio somministrabile a un InboundDumpBuilder.
  * @author Tobia Tesan <tobia.tesan@gmail.com>
  */
 public class SerleenaJSONInboundStreamParser implements InboundStreamParser {
