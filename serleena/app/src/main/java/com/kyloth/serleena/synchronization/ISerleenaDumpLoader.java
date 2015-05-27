@@ -39,6 +39,21 @@
  */
 package com.kyloth.serleena.synchronization;
 
+/**
+ * Interfaccia implementata da un oggetto in grado di prendere un
+ * InboundDump e salvarlo nella memoria permanente del dispositivo,
+ * e.g. un database.
+ */
 public interface ISerleenaDumpLoader {
-    // TODO
+    /**
+     * Carica un dump di dati proveniente dall'esterno.
+     *
+     * @param dump
+     */
+    void load(InboundDump dump);
+
+    /**
+     * Svuota completamente i dati.
+     */
+    void flush();
 }
