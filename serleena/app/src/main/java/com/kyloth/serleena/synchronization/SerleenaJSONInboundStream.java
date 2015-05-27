@@ -28,8 +28,21 @@
 ///////////////////////////////////////////////////////////////////////////////
 
 
+/**
+ * Name: SerleenaJSONInboundStream.java
+ * Package: com.kyloth.serleena.synchronization
+ * Author: Tobia Tesan
+ *
+ * History:
+ * Version  Programmer        Changes
+ * 0.0.1    Tobia Tesan       Creazione file
+ */
 package com.kyloth.serleena.synchronization;
 
+/**
+ * Concretizza InboundStream, contiene uno stream JSON proveniente da
+ * KylothCloud.
+ */
 public class SerleenaJSONInboundStream implements InboundStream {
 	// TODO
 }

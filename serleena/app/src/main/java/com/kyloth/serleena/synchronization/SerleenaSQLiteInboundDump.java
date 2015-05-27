@@ -28,8 +28,21 @@
 ///////////////////////////////////////////////////////////////////////////////
 
 
+/**
+ * Name: SerleenaSQLiteInboundDump.java
+ * Package: com.kyloth.serleena.synchronization
+ * Author: Tobia Tesan
+ *
+ * History:
+ * Version  Programmer        Changes
+ * 0.0.1    Tobia Tesan       Creazione file
+ */
 package com.kyloth.serleena.synchronization;
 
+/**
+ * Concretizza InboundDump, contiene un dump SQLite leggibile da
+ * ISerleenaDumpLoader
+ */
 public class SerleenaSQLiteInboundDump implements InboundDump {
 	// TODO
 }
