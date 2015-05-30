@@ -200,30 +200,6 @@ public class SerleenaLocationManagerTest {
 		assertTrue(otherObs.getLatestLocation().equals(otherPoint));
 	}
 
-	/**
-	 * Verifica che getSingleUpdate risulti in un update della posizione
-	 * dell'osservatore.
-	 */
-	@Test
-	public void testGetSingleUpdate() {
-		Location location = getLocation(GPS_PROVIDER, point.latitude(), point.longitude());
-		shadowLocationManager.simulateLocation(location);
-		instance.getSingleUpdate(obs, 100);
-		assertTrue(obs.getLatestLocation().equals(point));
-	}
-
-	/**
-	 * Verifica che quando la location cambia l'osservatore venga
-	 * aggiornato.
-	 */
-	@Test
-	public void testLocationIsDetected() {
-		Location location = getLocation(GPS_PROVIDER, point.latitude(), point.longitude());
-		instance.attachObserver(obs, 1000);
-		shadowLocationManager.simulateLocation(location);
-		assertTrue(obs.getLatestLocation().equals(point));
-	}
-
 	@Before
 	public void setUp() {
 		obs = new StubbyLocationObserver();
