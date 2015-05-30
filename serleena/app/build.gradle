@@ -38,3 +38,38 @@ dependencies {
     testCompile 'org.apache.maven:maven-ant-tasks:2.1.3'
     testCompile "org.robolectric:robolectric:3.0-rc2"
 }
+
+
+apply plugin: "jacoco"
+
+def coverageSourceDirs = [  
+        'app/src/main/java',
+]
+
+// This differs per what flavors buildTypes etc. 
+// But this example shows the 'testDebug'
+// which is standard for Robolectric
+task jacocoTestReport(type: JacocoReport, dependsOn: "testDebug") {  
+    group = "Reporting"
+    description = "Generate Jacoco coverage reports after running tests."
+    reports {
+        xml.enabled = true
+        html.enabled = true
+    }
+    // class R is used, but usage will not be covered, so ignore this class from report
+    // This differs per plugin version (0.10 -> 0.11) 
+    // have very different fileTrees.
+    // I have added rules to Ignore Dagger/Butterknife
+    classDirectories = fileTree(
+            dir: './build/intermediates/classes/debug',
+            excludes: ['com/myapp/R*.class',
+                       '**/*$InjectAdapter.class',
+                       '**/*$ModuleAdapter.class',
+                       '**/*$ViewInjector*.class'
+            ])
+    sourceDirectories = files(coverageSourceDirs)
+    executionData = files('build/jacoco/testDebug.exec')
+    afterEvaluate {
+	// testDebug.reports.junitXml.enabled = false
+    }
+}
