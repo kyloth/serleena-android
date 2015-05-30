@@ -11,7 +11,6 @@
         android:src="@drawable/red_button"
         android:layout_marginTop="10dp"
         android:background="@null"
-        android:onClick="com.hitchhiker"
         android:clickable="true" />
 
     <TextView
