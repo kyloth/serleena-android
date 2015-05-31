@@ -63,7 +63,6 @@ public class ExperienceSelectionPresenter
 
     private List<IExperience> experiences;
     private ISerleenaActivity activity;
-    private IExperienceSelectionView view;
 
     /**
      * Crea un oggetto ExperienceSelectionPresenter.
@@ -89,7 +88,6 @@ public class ExperienceSelectionPresenter
             throw new IllegalArgumentException("Illegal null activity");
 
         this.activity = activity;
-        this.view = view;
         this.experiences = new ArrayList<IExperience>();
         List<String> names = new ArrayList<String>();
 
