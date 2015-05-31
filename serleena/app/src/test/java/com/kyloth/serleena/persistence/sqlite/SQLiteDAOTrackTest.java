@@ -48,6 +48,7 @@ import static org.mockito.Mockito.*;
 
 import java.util.Arrays;
 import java.util.Iterator;
+import java.util.List;
 
 import android.database.sqlite.SQLiteDatabase;
 
@@ -97,15 +98,14 @@ public class SQLiteDAOTrackTest {
         Checkpoint cp1 = new Checkpoint(1, 1);
         Checkpoint cp2 = new Checkpoint(2, 2);
         Checkpoint cp3 = new Checkpoint(3, 3);
-        ImmutableList<Checkpoint> cp_list = new ListAdapter(Arrays.asList
-                (new Checkpoint[] {cp1, cp2, cp3}));
+        List<Checkpoint> list = Arrays.asList(cp1, cp2, cp3);
+        ImmutableList<Checkpoint> cpList = new ListAdapter(list);
 
-        SQLiteDAOTrack daoTrack = new SQLiteDAOTrack(cp_list, 123, serleenaSQLDS);
-        ImmutableList<Checkpoint> return_list = daoTrack.getCheckpoints();
-        Iterator<Checkpoint> i_cp = return_list.iterator();
-        assertTrue(i_cp.next().latitude() == 1);
-        assertTrue(i_cp.next().latitude() == 2);
-        assertTrue(i_cp.next().latitude() == 3);
+        SQLiteDAOTrack daoTrack = new SQLiteDAOTrack(cpList, 123, serleenaSQLDS);
+        ImmutableList<Checkpoint> returnList = daoTrack.getCheckpoints();
+        assertTrue(cp1.equals(returnList.get(0)));
+        assertTrue(cp2.equals(returnList.get(1)));
+        assertTrue(cp3.equals(returnList.get(2)));
     }
 
     /**
@@ -129,11 +129,12 @@ public class SQLiteDAOTrackTest {
 
     @Test
     public void testGetTelemetries() {
-        SQLiteDAOTelemetry t1 = mock(SQLiteDAOTelemetry.class);
-        SQLiteDAOTelemetry t2 = mock(SQLiteDAOTelemetry.class);
-        Iterable<SQLiteDAOTelemetry> t_list = Arrays.asList(new SQLiteDAOTelemetry[] {t1, t2});
+        SQLiteDAOTelemetry t1 = new SQLiteDAOTelemetry(1, null);
+        SQLiteDAOTelemetry t2 = new SQLiteDAOTelemetry(2, null);
+        Iterable<SQLiteDAOTelemetry> telemetryList = Arrays.asList(t1, t2);
+
         SQLiteDAOTrack daoTrack = new SQLiteDAOTrack(null, 123, serleenaSQLDS);
-        when(serleenaSQLDS.getTelemetries(daoTrack)).thenReturn(t_list);
+        when(serleenaSQLDS.getTelemetries(daoTrack)).thenReturn(telemetryList);
         Iterable<ITelemetryStorage> result = daoTrack.getTelemetries();
         Iterator<ITelemetryStorage> i_result = result.iterator();
         assertTrue(i_result.next() == t1);
