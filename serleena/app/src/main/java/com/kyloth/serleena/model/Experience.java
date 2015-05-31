@@ -46,21 +46,19 @@ import com.kyloth.serleena.persistence.IExperienceStorage;
 import com.kyloth.serleena.persistence.ITrackStorage;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 
 /**
  * Concretizza IExperience.
  *
  * @use Viene utilizzata dal solo package Model, che ne crea le istanze in base a oggetti IExperienceStorage ottenuti dal DAO del livello di persistenza. Questi oggetti vengono restituiti all'esterno attraverso ISerleenaDataSource, dietro interfaccia IExperience.
  * @field storage : IExperienceStorage Oggetto contenente i dati di persistenza dell'Esperienza
- * @field tracks : Iterable<ITrack> Insieme dei Percorsi associati all'esperienza
  * @author Filippo Sestini <sestini.filippo@gmail.com>
  * @version 1.0.0
  */
 final class Experience implements IExperience {
 
     private IExperienceStorage storage;
-
-    private Iterable<ITrack> tracks = null;
 
     /**
      * Crea un nuovo oggetto Experience.
@@ -82,14 +80,11 @@ final class Experience implements IExperience {
      */
     @Override
     public Iterable<ITrack> getTracks() {
-        if (tracks == null) {
-            Iterable<ITrackStorage> ts = storage.getTracks();
-            ArrayList<ITrack> result = new ArrayList<ITrack>();
-            for (ITrackStorage s : ts)
-                result.add(new Track(s));
-            tracks = result;
-        }
-        return tracks;
+        Iterable<ITrackStorage> ts = storage.getTracks();
+        ArrayList<ITrack> result = new ArrayList<ITrack>();
+        for (ITrackStorage s : ts)
+            result.add(new Track(s));
+        return result;
     }
 
     /**
