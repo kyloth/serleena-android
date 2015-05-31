@@ -152,11 +152,12 @@ public class ContactsPresenter implements IContactsPresenter,
         AsyncTask<Void, Void, Void> task = new AsyncTask<Void, Void, Void>() {
             @Override
             protected Void doInBackground(Void... voids) {
-                ArrayList<EmergencyContact> list = new ArrayList<>();
+                ArrayList<EmergencyContact> list =
+                        new ArrayList<EmergencyContact>();
                 for (EmergencyContact c : ds.getContacts(loc))
                     list.add(c);
 
-                resetView(new ListAdapter<>(list));
+                resetView(new ListAdapter<EmergencyContact>(list));
                 return null;
             }
         };

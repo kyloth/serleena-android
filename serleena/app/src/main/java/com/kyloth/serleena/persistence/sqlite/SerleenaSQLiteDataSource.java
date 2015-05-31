@@ -247,7 +247,7 @@ public class SerleenaSQLiteDataSource implements ISerleenaSQLiteDataSource {
         int latIndex = result.getColumnIndexOrThrow("userpoint_x");
         int lonIndex = result.getColumnIndexOrThrow("userpoint_y");
 
-        ArrayList<UserPoint> list = new ArrayList<>();
+        ArrayList<UserPoint> list = new ArrayList<UserPoint>();
         while (result.moveToNext()) {
             double latitude = result.getDouble(latIndex);
             double longitude = result.getDouble(lonIndex);

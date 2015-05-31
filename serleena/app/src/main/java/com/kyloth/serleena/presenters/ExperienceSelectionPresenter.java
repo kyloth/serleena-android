@@ -90,8 +90,8 @@ public class ExperienceSelectionPresenter
 
         this.activity = activity;
         this.view = view;
-        this.experiences = new ArrayList<>();
-        List<String> names = new ArrayList<>();
+        this.experiences = new ArrayList<IExperience>();
+        List<String> names = new ArrayList<String>();
 
         for (IExperience exp : activity.getDataSource().getExperiences()) {
             experiences.add(exp);

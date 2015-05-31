@@ -90,7 +90,7 @@ public class TrackSelectionPresenter implements ITrackSelectionPresenter {
 
         this.activity = activity = activity;
         this.view = view;
-        this.tracks = new ArrayList<>();
+        this.tracks = new ArrayList<ITrack>();
         this.view.attachPresenter(this);
         this.view.clearList();
     }
@@ -163,7 +163,7 @@ public class TrackSelectionPresenter implements ITrackSelectionPresenter {
         AsyncTask<Void, Void, Void> task = new AsyncTask<Void, Void, Void>() {
             @Override
             protected Void doInBackground(Void... voids) {
-                List<String> names = new ArrayList<>();
+                List<String> names = new ArrayList<String>();
                 int i = 0;
 
                 for (ITrack t : experience.getTracks()) {
