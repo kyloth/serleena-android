@@ -522,15 +522,12 @@ public class SerleenaSQLiteDataSource implements ISerleenaSQLiteDataSource {
             String type = result.getString(typeIndex);
 
             TelemetryEvent event = null;
-            switch (type) {
-                case SerleenaDatabase.EVENT_TYPE_CHECKPOINT:
-                    event = new CheckpointReachedTelemetryEvent(time, value);
-                    break;
-                case SerleenaDatabase.EVENT_TYPE_HEARTRATE:
-                    event = new HeartRateTelemetryEvent(time, value);
-                    break;
-                default:
-                   /*throw new Exception();*/
+            if (type.equals(SerleenaDatabase.EVENT_TYPE_CHECKPOINT)) {
+                event = new CheckpointReachedTelemetryEvent(time, value);
+            } else if (type.equals(SerleenaDatabase.EVENT_TYPE_HEARTRATE)) {
+                event = new HeartRateTelemetryEvent(time, value);
+            } else {
+                throw new RuntimeException("Unknown event type in database");
             }
 
             list.add(event);
