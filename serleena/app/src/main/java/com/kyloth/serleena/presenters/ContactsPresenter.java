@@ -75,7 +75,7 @@ public class ContactsPresenter implements IContactsPresenter,
     private ISerleenaActivity activity;
     private ILocationManager locMan;
     private ImmutableList<EmergencyContact> contacts;
-    int index;
+    private int index;
 
     /**
      * Crea un nuovo oggetto ContactsPresenter.

@@ -98,8 +98,8 @@ public class SerleenaSQLiteDataSource implements ISerleenaSQLiteDataSource {
     final static int TOT_LONG_QUADRANTS = 360 / QUADRANT_LONGSIZE;
     final static String RASTER_PATH = "raster/";
 
-    SerleenaDatabase dbHelper;
-    Context context;
+    private SerleenaDatabase dbHelper;
+    private Context context;
 
     public SerleenaSQLiteDataSource(Context context, SerleenaDatabase dbHelper) {
         this.dbHelper = dbHelper;
