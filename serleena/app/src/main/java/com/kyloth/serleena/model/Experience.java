@@ -56,7 +56,7 @@ import java.util.ArrayList;
  * @author Filippo Sestini <sestini.filippo@gmail.com>
  * @version 1.0.0
  */
-class Experience implements IExperience {
+final class Experience implements IExperience {
 
     private IExperienceStorage storage;
 

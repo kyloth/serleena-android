@@ -65,7 +65,7 @@ import java.util.HashMap;
  */
 public class SensorManager implements ISensorManager {
 
-    private static HashMap<Context, SensorManager> instances =
+    private static final HashMap<Context, SensorManager> instances =
             new HashMap<Context, SensorManager>();
 
     private ILocationManager locMan;

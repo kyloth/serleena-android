@@ -56,7 +56,7 @@ import java.util.Date;
  */
 public class CheckpointReachedTelemetryEvent extends TelemetryEvent {
 
-    private int checkpointNumber;
+    private final int checkpointNumber;
 
     /**
      * Crea un nuovo evento di tracciamento di raggiungimento di un checkpoint.

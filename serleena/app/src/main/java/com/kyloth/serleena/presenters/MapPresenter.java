@@ -69,7 +69,7 @@ import com.kyloth.serleena.sensors.ILocationObserver;
  */
 public class MapPresenter implements IMapPresenter, ILocationObserver {
 
-    private static int UPDATE_INTERVAL_SECONDS = 30;
+    private static final int UPDATE_INTERVAL_SECONDS = 30;
 
     private IMapView view;
     private ISerleenaActivity activity;

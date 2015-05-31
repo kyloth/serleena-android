@@ -59,12 +59,12 @@ import java.util.UUID;
  */
 class LocationReachedManager implements ILocationReachedManager {
 
-    private static int LOCATION_RADIUS = 15;
+    private static final int LOCATION_RADIUS = 15;
 
-    private Map<ILocationReachedObserver, GeoPoint> observers;
-    private Map<ILocationReachedObserver, IWakeupObserver> alarms;
-    private IWakeupManager wm;
-    private ILocationManager locMan;
+    private final Map<ILocationReachedObserver, GeoPoint> observers;
+    private final Map<ILocationReachedObserver, IWakeupObserver> alarms;
+    private final IWakeupManager wm;
+    private final ILocationManager locMan;
 
     /**
      * Crea un oggetto LocationReachedManager.
@@ -170,10 +170,10 @@ class LocationReachedManager implements ILocationReachedManager {
     private class CheckDistanceAlarm implements IWakeupObserver,
             ILocationObserver {
 
-        private ILocationReachedObserver observer;
-        private ILocationManager locMan;
+        private final ILocationReachedObserver observer;
+        private final ILocationManager locMan;
 
-        private String uuid;
+        private final String uuid;
         public CheckDistanceAlarm(ILocationReachedObserver observer,
                        ILocationManager locMan) {
             this.observer = observer;

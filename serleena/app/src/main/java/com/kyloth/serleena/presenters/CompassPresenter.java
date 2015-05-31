@@ -67,8 +67,8 @@ public class CompassPresenter implements ICompassPresenter, IHeadingObserver {
 
     private static final int UPDATE_INTERVAL = 5;
 
-    private ICompassView view;
-    private ISerleenaActivity activity;
+    private final ICompassView view;
+    private final ISerleenaActivity activity;
 
     /**
      * Crea un nuovo oggetto CompassPresenter.

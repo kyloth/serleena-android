@@ -54,7 +54,7 @@ import java.util.Date;
  */
 public class LocationTelemetryEvent extends TelemetryEvent {
 
-    private GeoPoint location;
+    private final GeoPoint location;
 
     /**
      * Crea un nuovo evento di tracciamento della posizione utente.

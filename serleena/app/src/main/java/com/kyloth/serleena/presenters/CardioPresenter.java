@@ -58,8 +58,8 @@ import com.kyloth.serleena.sensors.IHeartRateObserver;
  */
 public class CardioPresenter implements ICardioPresenter, IHeartRateObserver {
 
-    private IHeartRateManager hrMan;
-    private ICardioView view;
+    private final IHeartRateManager hrMan;
+    private final ICardioView view;
 
     /**
      * Crea un nuovo oggetto CardioPresenter.
