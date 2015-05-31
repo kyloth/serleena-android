@@ -106,6 +106,7 @@ class HeadingManager implements IHeadingManager, SensorEventListener {
         observers = new HashMap<IHeadingObserver, ScheduledFuture>();
         latestOrientation = 0;
         this.context = context;
+        scheduledPool = new ScheduledThreadPoolExecutor(2);
     }
 
     /**
