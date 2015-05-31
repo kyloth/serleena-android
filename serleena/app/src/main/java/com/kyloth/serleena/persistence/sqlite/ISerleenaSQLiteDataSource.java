@@ -54,7 +54,7 @@ import com.kyloth.serleena.persistence.IPersistenceDataSource;
  * @author Filippo Sestini <sestini.filippo@gmail.com>
  * @version 1.0.0
  */
-public interface ISerleenaSQLiteDataSource extends IPersistenceDataSource {
+interface ISerleenaSQLiteDataSource extends IPersistenceDataSource {
 
     /**
      * Restituisce i Percorsi associati a una specifica esperienza.
