@@ -41,15 +41,11 @@
 
 package com.kyloth.serleena.common;
 
-import com.kyloth.serleena.common.UserPoint;
+import android.location.Location;
 
 import org.junit.Test;
 
 import java.lang.Object;
-import java.lang.String;
-import dalvik.annotation.TestTargetClass;
-import static org.hamcrest.CoreMatchers.is;
-import static org.hamcrest.MatcherAssert.assertThat;
 
 /**
  * Contiene i test di unità per la classe GeoPoint.
@@ -128,10 +124,10 @@ public class GeoPointTest {
     }
 
     /**
-     * Testa la correttezza del metodo equals().
+     * Verifica la correttezza del metodo equals().
      */
     @Test
-    public void testEqualsMethod() {
+    public void testEquals() {
         double latitude1 = 5;
         double longitude1 = 10;
         GeoPoint gp1 = new GeoPoint(latitude1, longitude1);
@@ -148,6 +144,37 @@ public class GeoPointTest {
         org.junit.Assert.assertTrue(!(gp1.equals(gp3)));
         org.junit.Assert.assertTrue(!(gp1.equals(new Object())));
         org.junit.Assert.assertTrue(!(gp1.equals(null)));
+        org.junit.Assert.assertTrue(
+                !(new GeoPoint(5, 10).equals(new GeoPoint(5, 20))));
+    }
+
+    /**
+     * Verifica la correttezza dell'overriding di hashCode().
+     */
+    @Test
+    public void testHashCode() {
+        GeoPoint gp1 = new GeoPoint(20, 30);
+        org.junit.Assert.assertTrue(gp1.hashCode() == gp1.hashCode());
+
+        GeoPoint gp2 = new GeoPoint(20, 30);
+        org.junit.Assert.assertTrue(gp1.hashCode() == gp2.hashCode());
+    }
+
+    /**
+     * Verifica la correttezza del metodo distanceTo().
+     */
+    @Test
+    public void testDistanceTo() {
+        double lat1 = 20, lon1 = 30, lat2 = -45, lon2 = 32;
+
+        float[] results = new float[1];
+        Location.distanceBetween(lat1, lon1, lat2, lon2, results);
+        float realDistance = results[0];
+
+        GeoPoint gp1 = new GeoPoint(lat1, lon1);
+        GeoPoint gp2 = new GeoPoint(lat2, lon2);
+
+        org.junit.Assert.assertTrue(gp1.distanceTo(gp2) == realDistance);
     }
 
 }
