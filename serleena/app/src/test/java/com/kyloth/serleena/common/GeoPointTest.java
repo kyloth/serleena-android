@@ -127,7 +127,7 @@ public class GeoPointTest {
      * Verifica la correttezza del metodo equals().
      */
     @Test
-    public void testEqualsMethod() {
+    public void testEquals() {
         double latitude1 = 5;
         double longitude1 = 10;
         GeoPoint gp1 = new GeoPoint(latitude1, longitude1);
