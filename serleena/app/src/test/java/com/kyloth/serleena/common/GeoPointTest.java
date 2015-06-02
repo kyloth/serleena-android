@@ -158,4 +158,21 @@ public class GeoPointTest {
         org.junit.Assert.assertTrue(gp1.hashCode() == gp2.hashCode());
     }
 
+    /**
+     * Verifica la correttezza del metodo distanceTo().
+     */
+    @Test
+    public void testDistanceTo() {
+        double lat1 = 20, lon1 = 30, lat2 = -45, lon2 = 32;
+
+        float[] results = new float[1];
+        Location.distanceBetween(lat1, lon1, lat2, lon2, results);
+        float realDistance = results[0];
+
+        GeoPoint gp1 = new GeoPoint(lat1, lon1);
+        GeoPoint gp2 = new GeoPoint(lat2, lon2);
+
+        org.junit.Assert.assertTrue(gp1.distanceTo(gp2) == realDistance);
+    }
+
 }
