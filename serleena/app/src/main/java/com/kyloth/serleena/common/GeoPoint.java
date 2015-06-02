@@ -95,6 +95,12 @@ public class GeoPoint
         return longitude;
     }
 
+    /**
+     * Restituisce la distanza da un altro punto geografico.
+     *
+     * @param other Punto da cui si vuole calcolare la distanza.
+     * @return Distanza in metri tra i due punti.
+     */
     public float distanceTo(GeoPoint other) {
         float[] results = new float[1];
         Location.distanceBetween(latitude(), longitude(), other.latitude(),
