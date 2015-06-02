@@ -144,6 +144,8 @@ public class GeoPointTest {
         org.junit.Assert.assertTrue(!(gp1.equals(gp3)));
         org.junit.Assert.assertTrue(!(gp1.equals(new Object())));
         org.junit.Assert.assertTrue(!(gp1.equals(null)));
+        org.junit.Assert.assertTrue(
+                !(new GeoPoint(5, 10).equals(new GeoPoint(5, 20))));
     }
 
     /**
