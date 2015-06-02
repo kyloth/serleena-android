@@ -146,4 +146,16 @@ public class GeoPointTest {
         org.junit.Assert.assertTrue(!(gp1.equals(null)));
     }
 
+    /**
+     * Verifica la correttezza dell'overriding di hashCode().
+     */
+    @Test
+    public void testHashCode() {
+        GeoPoint gp1 = new GeoPoint(20, 30);
+        org.junit.Assert.assertTrue(gp1.hashCode() == gp1.hashCode());
+
+        GeoPoint gp2 = new GeoPoint(20, 30);
+        org.junit.Assert.assertTrue(gp1.hashCode() == gp2.hashCode());
+    }
+
 }
