@@ -124,7 +124,7 @@ public class GeoPointTest {
     }
 
     /**
-     * Testa la correttezza del metodo equals().
+     * Verifica la correttezza del metodo equals().
      */
     @Test
     public void testEqualsMethod() {
