@@ -41,15 +41,11 @@
 
 package com.kyloth.serleena.common;
 
-import com.kyloth.serleena.common.UserPoint;
+import android.location.Location;
 
 import org.junit.Test;
 
 import java.lang.Object;
-import java.lang.String;
-import dalvik.annotation.TestTargetClass;
-import static org.hamcrest.CoreMatchers.is;
-import static org.hamcrest.MatcherAssert.assertThat;
 
 /**
  * Contiene i test di unità per la classe GeoPoint.
