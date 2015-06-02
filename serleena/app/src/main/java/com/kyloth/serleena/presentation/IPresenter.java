@@ -43,7 +43,7 @@ package com.kyloth.serleena.presentation;
 /**
  * IPresenter e' l'interfaccia di base di un Presenter.
  *
- * @use Alcuni servizi del Presenter, come l'ascolto di sensori, sono richiesti solamente quando la vista associata &#232; effettivamente visibile e mostrata a schermo. &#200; quindi fondamentale che il Presenter e la vista associata siano sincronizzati, evitando che il Presenter consumi risorse per aggiornare una vista che non &#232; visibile. Per questo motivo, l'interfaccia espone metodi per mettere in pausa e riprendere alcune attivit&#224; del Presenter in base al ciclo di vita della vista a cui &#232; associato. Ogni vista chiama questi metodi sul Presenter associato ad essa, per segnalare il suo stato di visibilità o meno.
+ * @use Alcuni servizi del Presenter, come l'ascolto di sensori, sono richiesti solamente quando la vista associata è effettivamente visibile e mostrata a schermo. È quindi fondamentale che il Presenter e la vista associata siano sincronizzati, evitando che il Presenter consumi risorse per aggiornare una vista che non è visibile. Per questo motivo, l'interfaccia espone metodi per mettere in pausa e riprendere alcune attività del Presenter in base al ciclo di vita della vista a cui è associato. Ogni vista chiama questi metodi sul Presenter associato ad essa, per segnalare il suo stato di visibilità o meno.
  * @author Tobia Tesan <tobia.tesan@gmail.com>
  * @version 1.0
  * @since 1.0
