@@ -32,100 +32,144 @@
  * Name: CompassPresenterTest.java
  * Package: com.kyloth.serleena.presenters;
  * Author: Gabriele Pozzan
- * Date: 2015-05-11
  *
  * History:
- * Version  Programmer       Date        Changes
- * 1.0.0    Gabriele Pozzan  2015-05-11  Creazione file scrittura
+ * Version  Programmer       Changes
+ * 1.0.0    Gabriele Pozzan  Creazione file scrittura
  *                                       codice e documentazione Javadoc
  */
 
 package com.kyloth.serleena.presenters;
 
-import org.junit.Test;
 import org.junit.Before;
-import static org.mockito.Mockito.*;
+import org.junit.Test;
+import org.junit.Rule;
+import org.junit.runner.RunWith;
+import org.junit.rules.ExpectedException;
 import static org.junit.Assert.*;
-import com.kyloth.serleena.presentation.ICompassPresenter;
-import com.kyloth.serleena.presentation.ICompassView;
+
+import org.robolectric.RobolectricGradleTestRunner;
+import org.robolectric.RuntimeEnvironment;
+import org.robolectric.annotation.Config;
+
+import static org.mockito.Mockito.*;
+
+import com.kyloth.serleena.BuildConfig;
 import com.kyloth.serleena.presentation.ISerleenaActivity;
-import com.kyloth.serleena.sensors.ISensorManager;
+import com.kyloth.serleena.presentation.ICompassView;
 import com.kyloth.serleena.sensors.IHeadingManager;
+import com.kyloth.serleena.sensors.ISensorManager;
+import com.kyloth.serleena.sensors.SensorManager;
 import com.kyloth.serleena.sensors.SensorNotAvailableException;
 
 /**
- * Contiene i test di unità per la classe CompassPresenter.
+ * Contiene test per la classe CompassPresenter.
+ * In particolare vengono utilizzati degli stub per il package presentation e
+ * viene integrato il package sensors.
  *
  * @author Gabriele Pozzan <gabriele.pozzan@studenti.unipd.it>
  * @version 1.0.0
  */
 
+@RunWith(RobolectricGradleTestRunner.class)
+@Config(constants = BuildConfig.class, emulateSdk = 19)
 public class CompassPresenterTest {
-    ISerleenaActivity activity;
+    int UPDATE_INTERVAL = 5;
+    ISerleenaActivity activity; //activity che ritorna veri oggetti sensors
+    ISerleenaActivity activity_mock; //activity che ritorna mock di sensors
     ICompassView view;
-    ISensorManager sm;
-    IHeadingManager hm;
-    public static final int UPDATE_INTERVAL = 5;
+    SensorManager sm;
+    ISensorManager sm_mock;
+    IHeadingManager hm_mock;
+    @Rule
+    public ExpectedException exception = ExpectedException.none();
 
     /**
-     * Inizializza i campi dati necessari ai test.
+     * Inizializza i campi dati necessari alla conduzione dei test.
      */
 
     @Before
     public void initialize() throws SensorNotAvailableException {
         activity = mock(ISerleenaActivity.class);
+        activity_mock = mock(ISerleenaActivity.class);
         view = mock(ICompassView.class);
-        sm = mock(ISensorManager.class);
-        hm = mock(IHeadingManager.class);
+        sm = SensorManager.getInstance(RuntimeEnvironment.application);
+        sm_mock = mock(ISensorManager.class);
+        hm_mock = mock(IHeadingManager.class);
         when(activity.getSensorManager()).thenReturn(sm);
-        when(sm.getHeadingSource()).thenReturn(hm);
-
+        when(activity_mock.getSensorManager()).thenReturn(sm_mock);
+        when(sm_mock.getHeadingSource()).thenReturn(hm_mock);
     }
 
     /**
-     * Verifica che il costruttore chiami il metodo attachPresenter sulla view
-     * fornendo il nuovo CompassPresenter creato come parametro.
+     * Verifica che il costruttore chiami a sua volta il metodo
+     * attachPresenter sulla view passando il nuovo oggetto creato
+     * come parametro.
      */
 
     @Test
-    public void constructorShouldCallAttachPresenterWithCorrectParam() {
+    public void testConstructor() {
         CompassPresenter cp = new CompassPresenter(view, activity);
         verify(view).attachPresenter(cp);
     }
 
     /**
-     * Verifica che il metodo resume chiami il metodo attachObserver sull'oggetto
-     * IHeadingManager fornito dall'ISensorManager passando come parametro l'oggetto
-     * CompassPresenter di invocazione e l'intervallo di aggiornamento corretto.
+     * Verifica che il metodo resume non sollevi eccezioni e in
+     * generale non causi errori con oggetti integrati da sensors.
      */
 
     @Test
-    public void resumeShouldCallAttachObserverWithCorrectParams() {
+    public void testResume() {
         CompassPresenter cp = new CompassPresenter(view, activity);
         cp.resume();
-        verify(hm).attachObserver(cp);
+
     }
 
     /**
-     * Verifica che il metodo pause chiami il metodo detachObserver sull'oggetto
-     * IHeadingManager fornito dall'ISensorManager passando come parametro l'ogetto
-     * CompassPresenter di invocazione.
+     * Verifica che il metodo resume chiami correttamente i metodi
+     * su stub di oggetti del package sensors.
      */
 
-    public void pauseShouldCallDetachObserverWithCorrectParam() {
+    @Test
+    public void testResumeWithMocks() {
+        CompassPresenter cp = new CompassPresenter(view, activity_mock);
+        cp.resume();
+        verify(hm_mock).attachObserver(cp, UPDATE_INTERVAL);
+    }
+
+    /**
+     * Verifica che il metodo pause non sollevi eccezioni o
+     * causi errori utilizzando oggetti integrati da sensors.
+     */
+
+    @Test
+    public void testPause() {
         CompassPresenter cp = new CompassPresenter(view, activity);
         cp.pause();
-        verify(hm).detachObserver(cp);
     }
 
     /**
-     * Verifica che il metodo onHeadingUpdate chiami il metodo setHeading sulla view
-     * fornendo il suo stesso parametro di invocazione.
+     * Verifica che il metodo pause chiami correttamente i metodi
+     * previsti su dei mock di oggetti del package sensors.
      */
 
-    public void onHeadingUpdateShouldForwardParamToSetHeading() {
-        CompassPresenter cp = new CompassPresenter(view, activity);
-        cp.onHeadingUpdate(13.532);
-        verify(view).setHeading(13.532);
+    @Test
+    public void testPauseWithMock() {
+        CompassPresenter cp = new CompassPresenter(view, activity_mock);
+        cp.pause();
+        verify(hm_mock).detachObserver(cp);
     }
+
+    /**
+     * Verifica che il metodo onHeadingUpdate imposti correttamente
+     * il valore della direzione sulla view.
+     */
+
+    @Test
+    public void testOnHeadingUpdate() {
+        CompassPresenter cp = new CompassPresenter(view, activity);
+        cp.onHeadingUpdate(12.4);
+        verify(view).setHeading(12.4);
+    }
+
 }
