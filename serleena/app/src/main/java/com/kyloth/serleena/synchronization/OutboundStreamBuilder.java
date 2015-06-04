@@ -48,7 +48,7 @@ import com.kyloth.serleena.persistence.ITelemetryStorage;
  * e produrre un OutboundStream da inviare al servizio remoto attraverso
  * un opportuno proxy.
  *
- * @usage Viene usato da KylothCloudSynchronizer, che vi carica le Esperienze e i Tracciamenti raccolti sul dispositivo da inviare al cloud, somministrando l'OutboundStream risultante a un idoneo proxy.
+ * @use Viene usato da KylothCloudSynchronizer, che vi carica le Esperienze e i Tracciamenti raccolti sul dispositivo da inviare al cloud, somministrando l'OutboundStream risultante a un idoneo proxy.
  */
 public interface OutboundStreamBuilder {
 	/**

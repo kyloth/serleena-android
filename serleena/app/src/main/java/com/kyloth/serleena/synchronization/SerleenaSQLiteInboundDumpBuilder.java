@@ -43,7 +43,7 @@ package com.kyloth.serleena.synchronization;
  * Concretizza InboundDumpBuilder in modo da restituire un InboundDump
  * compatibile con il formato del database interno dell'orologio.
  *
- * @usage Viene usato da KylothCloudSynchronizer per trasformare una collezione di IDataEntity provenienti da un InboundStreamParser in un dump idoneo a essere caricato nel database dell'orologio.
+ * @use Viene usato da KylothCloudSynchronizer per trasformare una collezione di IDataEntity provenienti da un InboundStreamParser in un dump idoneo a essere caricato nel database dell'orologio.
  * @author Tobia Tesan <tobia.tesan@gmail.com>
  * @version 0.1
  */

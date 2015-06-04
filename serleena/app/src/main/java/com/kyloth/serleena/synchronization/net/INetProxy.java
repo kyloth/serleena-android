@@ -46,7 +46,7 @@ import com.kyloth.serleena.synchronization.InboundStream;
  * Fornisce un'interfaccia ad alto livello verso il
  * servizio remoto.
  *
- * @usage Viene utilizzato da KylothCloudSynchronizer, che ne usa una istanzia
+ * @use Viene utilizzato da KylothCloudSynchronizer, che ne usa una istanzia
  *        per poter dialogare con un servizio remoto utilizzando primitive ad
  *        alto livello.
  * @author Tobia Tesan <tobia.tesan@gmail.com>
