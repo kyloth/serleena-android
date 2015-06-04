@@ -51,51 +51,51 @@ import com.kyloth.serleena.model.ISerleenaDataSource;
  * @field instance la singola istanza
  */
 public class KylothCloudSynchronizer {
-	static KylothCloudSynchronizer instance;
+    static KylothCloudSynchronizer instance;
 
-	/**
-	 * Ritorna l'istanza unica di KylothCloudSynchronizer
-	 */
-	public static KylothCloudSynchronizer getInstance() {
-		//TODO
-		return instance;
-	};
+    /**
+     * Ritorna l'istanza unica di KylothCloudSynchronizer
+     */
+    public static KylothCloudSynchronizer getInstance() {
+        //TODO
+        return instance;
+    };
 
-	/**
-	 * Imposta l'URL del servizio remoto con cui eseguire la sincronizzazione
-	 *
-	 * @param url l'URL del servizio remoto
-	 */
-	public void setUrl(String url) {
-		//TODO
-	}
+    /**
+     * Imposta l'URL del servizio remoto con cui eseguire la sincronizzazione
+     *
+     * @param url l'URL del servizio remoto
+     */
+    public void setUrl(String url) {
+        //TODO
+    }
 
-	/**
-	 * Esegue la preautorizzazione iniziale ottenendo
-	 * un token dal servizio remoto (cfr. ST).
-	 */
-	public void preAuth() {
-		//TODO
-	}
+    /**
+     * Esegue la preautorizzazione iniziale ottenendo
+     * un token dal servizio remoto (cfr. ST).
+     */
+    public void preAuth() {
+        //TODO
+    }
 
-	/**
-	 * Richiede la sincronizzazione bidirezionale col servizio remoto.
-	 */
-	public void sync() {
-		//TODO
-	}
+    /**
+     * Richiede la sincronizzazione bidirezionale col servizio remoto.
+     */
+    public void sync() {
+        //TODO
+    }
 
-	/**
-	 * Imposta un datasource da cui prelevare i dati per la sincronizzazione verso il cloud
-	 */
-	public void setDataSource(ISerleenaDataSource dataSource) {
-		//TODO
-	}
+    /**
+     * Imposta un datasource da cui prelevare i dati per la sincronizzazione verso il cloud
+     */
+    public void setDataSource(ISerleenaDataSource dataSource) {
+        //TODO
+    }
 
-	/**
-	 * Imposta un DumpLoader in cui caricare i dati ricevuti dal cloud.
-	 */
-	public void setDumpLoader(ISerleenaDumpLoader dumpLoader) {
-		//TODO
-	}
+    /**
+     * Imposta un DumpLoader in cui caricare i dati ricevuti dal cloud.
+     */
+    public void setDumpLoader(ISerleenaDumpLoader dumpLoader) {
+        //TODO
+    }
 }
