@@ -92,7 +92,6 @@ public class TelemetryFragment extends Fragment implements ITelemetryView {
                 }
             }
         });
-        presenter.resume();
     }
 
     /**
@@ -101,9 +100,7 @@ public class TelemetryFragment extends Fragment implements ITelemetryView {
      */
     @Override
     public void onDetach() {
-        super.onDetach();
-        presenter.pause();
-    }
+        super.onDetach();    }
 
     /**
      * Implementa ITelemetryView.attachPresenter().
@@ -131,5 +128,17 @@ public class TelemetryFragment extends Fragment implements ITelemetryView {
             presenter.enableTelemetry();
             status.setText("ON");
         }
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        presenter.resume();
+    }
+
+    @Override
+    public void onStop() {
+        super.onStop();
+        presenter.pause();
     }
 }
