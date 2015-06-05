@@ -41,6 +41,10 @@
 
 package com.kyloth.serleena.view.fragments;
 
+import android.app.Activity;
+import android.app.Fragment;
+import android.support.v7.app.AppCompatActivity;
+
 import com.kyloth.serleena.presentation.ICompassPresenter;
 import com.kyloth.serleena.presentation.ICompassView;
 import com.kyloth.serleena.presentation.ISerleenaActivity;
@@ -69,15 +73,37 @@ public class CompassFragmentTest {
     private ICompassView fragment = mock(ICompassView.class);
     private ICompassPresenter presenter = mock(ICompassPresenter.class);
 
+    /**
+     * Verifica che sia possibile creare un CompassFragment.
+     */
+
     @Test
     public void shouldCreateCompassFragment() {
         fragment = new CompassFragment();
     }
+
+    /**
+     * Verifica che sia possibile collegare un ICompassPresenter ad un
+     * CompassFragment.
+     *
+     */
 
     @Test
     public void shouldAttachCompassPresenter() {
         fragment = new CompassFragment();
         presenter = mock(ICompassPresenter.class);
         fragment.attachPresenter(presenter);
+    }
+
+    /**
+     * Verifica che sia possibile collegare un'Activity ad un
+     * CompassFragment.
+     *
+     */
+
+    @Test
+    public void shouldAttachActivity() {
+        fragment = new CompassFragment();
+        ((Fragment) fragment).onAttach(new SerleenaActivity());
     }
 }
