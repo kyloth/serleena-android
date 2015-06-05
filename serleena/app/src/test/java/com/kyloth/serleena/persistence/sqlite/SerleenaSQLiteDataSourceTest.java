@@ -48,6 +48,7 @@ import com.kyloth.serleena.common.GeoPoint;
 import com.kyloth.serleena.common.IQuadrant;
 import com.kyloth.serleena.common.Quadrant;
 import com.kyloth.serleena.common.TelemetryEvent;
+import com.kyloth.serleena.common.NoSuchWeatherForecastException;
 import com.kyloth.serleena.persistence.IExperienceStorage;
 import com.kyloth.serleena.persistence.ITelemetryStorage;
 import com.kyloth.serleena.persistence.IWeatherStorage;
@@ -403,7 +404,8 @@ public class SerleenaSQLiteDataSourceTest {
      * meteo dove presenti.
      */
     @Test
-    public void testGetWeatherInfoHit() {
+    public void testGetWeatherInfoHit()
+            throws NoSuchWeatherForecastException {
         ContentValues values = new ContentValues();
         values.put("weather_start", (
                 new GregorianCalendar(2015,
@@ -424,7 +426,6 @@ public class SerleenaSQLiteDataSourceTest {
                 (new GregorianCalendar(2015,
                                        GregorianCalendar.JANUARY,
                                        01)).getTime());
-        assertTrue(info != null);
         assertTrue(info.getAfternoonForecast() == WeatherForecastEnum.Sunny);
     }
 
@@ -433,7 +434,8 @@ public class SerleenaSQLiteDataSourceTest {
      * meteo per i margini di una regione.
      */
     @Test
-    public void testGetWeatherInfoHitMargin() {
+    public void testGetWeatherInfoHitMargin()
+            throws NoSuchWeatherForecastException {
         ContentValues values = new ContentValues();
         values.put("weather_start", (
                 new GregorianCalendar(2015,
@@ -453,16 +455,16 @@ public class SerleenaSQLiteDataSourceTest {
         IWeatherStorage info = sds.getWeatherInfo(
                 new GeoPoint(0.0, 0.0), (new GregorianCalendar(2015,
                 GregorianCalendar.JANUARY, 01)).getTime());
-        assertTrue(info != null);
         assertTrue(info.getAfternoonForecast() == WeatherForecastEnum.Sunny);
     }
 
     /**
      * Controlla che getWeatherInfo non restituisca informazioni meteo
-     * della regione sbagliata.
+     * della regione sbagliata, ma lanci un'eccezione.
      */
-    @Test
-    public void testGetWeatherInfoMissRegion() {
+    @Test(expected=NoSuchWeatherForecastException.class)
+    public void testGetWeatherInfoMissRegion()
+            throws NoSuchWeatherForecastException {
         ContentValues values = new ContentValues();
         values.put("weather_start", (
                 new GregorianCalendar(2015,
@@ -483,15 +485,15 @@ public class SerleenaSQLiteDataSourceTest {
                 new GeoPoint(1.0, 1.0),
                 (new GregorianCalendar(2015,
                         GregorianCalendar.JANUARY, 01)).getTime());
-        assertTrue(info == null);
     }
 
     /**
      * Controlla che getWeatherInfo non restituisca informazioni meteo
-     * relatiove al frame temporale sbagliato.
+     * relative al frame temporale sbagliato, ma lanci un'eccezione.
      */
-    @Test
-    public void testGetWeatherInfoMissTime() {
+    @Test(expected=NoSuchWeatherForecastException.class)
+    public void testGetWeatherInfoMissTime()
+            throws NoSuchWeatherForecastException {
         ContentValues values = new ContentValues();
         values.put("weather_start", (
                 new GregorianCalendar(2010,
@@ -512,7 +514,6 @@ public class SerleenaSQLiteDataSourceTest {
                 new GeoPoint(1.0, 1.0),
                 (new GregorianCalendar(2015,
                         GregorianCalendar.JANUARY, 01)).getTime());
-        assertTrue(info == null);
     }
 
     /**
