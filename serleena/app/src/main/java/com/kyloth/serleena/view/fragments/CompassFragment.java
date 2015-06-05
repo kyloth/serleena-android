@@ -75,7 +75,6 @@ public class CompassFragment extends Fragment implements ICompassView {
     public void onAttach(Activity activity) {
         super.onAttach(activity);
         widget = (CompassWidget) activity.findViewById(R.id.compass_widget);
-        presenter.resume();
     }
 
     /**
@@ -85,7 +84,6 @@ public class CompassFragment extends Fragment implements ICompassView {
     @Override
     public void onDetach() {
         super.onDetach();
-        presenter.pause();
     }
 
     /**
@@ -121,5 +119,17 @@ public class CompassFragment extends Fragment implements ICompassView {
      */
     public void keyDown(int keyCode, KeyEvent event) {
 
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        presenter.resume();
+    }
+
+    @Override
+    public void onStop() {
+        super.onStop();
+        presenter.pause();
     }
 }
