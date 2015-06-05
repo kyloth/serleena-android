@@ -141,8 +141,8 @@ public class ContactsFragment extends Fragment implements IContactsView {
      *
      */
     @Override
-    public void onStop() {
-        super.onStop();
+    public void onPause() {
+        super.onPause();
         presenter.pause();
     }
 }

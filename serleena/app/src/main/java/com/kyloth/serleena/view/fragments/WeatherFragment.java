@@ -208,8 +208,8 @@ public class WeatherFragment extends Fragment implements IWeatherView {
      *
      */
     @Override
-    public void onStop() {
-        super.onStop();
+    public void onPause() {
+        super.onPause();
         presenter.pause();
     }
 }

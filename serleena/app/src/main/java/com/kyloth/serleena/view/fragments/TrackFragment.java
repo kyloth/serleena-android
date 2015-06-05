@@ -290,8 +290,8 @@ public class TrackFragment extends Fragment implements ITrackView {
      *
      */
     @Override
-    public void onStop() {
-        super.onStop();
+    public void onPause() {
+        super.onPause();
         presenter.pause();
     }
 }

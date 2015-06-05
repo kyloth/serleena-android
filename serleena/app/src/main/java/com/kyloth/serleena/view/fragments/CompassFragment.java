@@ -136,8 +136,8 @@ public class CompassFragment extends Fragment implements ICompassView {
      *
      */
     @Override
-    public void onStop() {
-        super.onStop();
+    public void onPause() {
+        super.onPause();
         presenter.pause();
     }
 }

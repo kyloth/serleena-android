@@ -172,8 +172,8 @@ public class SyncFragment extends Fragment implements ISyncView {
      *
      */
     @Override
-    public void onStop() {
-        super.onStop();
+    public void onPause() {
+        super.onPause();
         presenter.pause();
     }
 }

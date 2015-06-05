@@ -126,8 +126,8 @@ public class CardioFragment extends Fragment implements ICardioView {
      *
      */
     @Override
-    public void onStop() {
-        super.onStop();
+    public void onPause() {
+        super.onPause();
         presenter.pause();
     }
 }

@@ -165,8 +165,8 @@ public class MapFragment extends Fragment implements com.kyloth.serleena.present
      *
      */
     @Override
-    public void onStop() {
-        super.onStop();
+    public void onPause() {
+        super.onPause();
         presenter.pause();
     }
 }
