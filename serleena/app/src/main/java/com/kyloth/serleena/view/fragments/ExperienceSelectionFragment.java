@@ -169,12 +169,20 @@ public class ExperienceSelectionFragment extends Fragment
     public void keyDown(int keyCode, KeyEvent event) {
     }
 
+    /**
+     * Metodo invocato quando il Fragment viene visualizzato.
+     *
+     */
     @Override
     public void onResume() {
         super.onResume();
         presenter.resume();
     }
 
+    /**
+     * Metodo invocato quando il Fragment smette di essere visualizzato.
+     *
+     */
     @Override
     public void onStop() {
         super.onStop();

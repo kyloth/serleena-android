@@ -157,12 +157,20 @@ public class SyncFragment extends Fragment implements ISyncView {
         presenter.synchronize();
     }
 
+    /**
+     * Metodo invocato quando il Fragment viene visualizzato.
+     *
+     */
     @Override
     public void onResume() {
         super.onResume();
         presenter.resume();
     }
 
+    /**
+     * Metodo invocato quando il Fragment smette di essere visualizzato.
+     *
+     */
     @Override
     public void onStop() {
         super.onStop();

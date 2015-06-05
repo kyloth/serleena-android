@@ -150,12 +150,20 @@ public class MapFragment extends Fragment implements com.kyloth.serleena.present
         catch (NoActiveExperienceException e) {}
     }
 
+    /**
+     * Metodo invocato quando il Fragment viene visualizzato.
+     *
+     */
     @Override
     public void onResume() {
         super.onResume();
         presenter.resume();
     }
 
+    /**
+     * Metodo invocato quando il Fragment smette di essere visualizzato.
+     *
+     */
     @Override
     public void onStop() {
         super.onStop();
