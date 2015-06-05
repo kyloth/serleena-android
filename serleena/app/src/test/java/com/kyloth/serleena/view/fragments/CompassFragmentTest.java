@@ -41,13 +41,18 @@
 
 package com.kyloth.serleena.view.fragments;
 
+import android.app.Activity;
 import android.app.Fragment;
 import android.app.FragmentManager;
 import android.content.Intent;
 import android.test.ActivityInstrumentationTestCase2;
+import android.test.ActivityUnitTestCase;
+import android.view.KeyEvent;
 
 import com.kyloth.serleena.presentation.ICompassPresenter;
 import com.kyloth.serleena.presenters.SerleenaActivity;
+import com.kyloth.serleena.view.fragments.CompassFragment;
+import com.kyloth.serleena.view.widgets.CompassWidget;
 
 import junit.framework.Assert;
 
@@ -60,6 +65,7 @@ import org.junit.rules.ExpectedException;
 
 import java.lang.Exception;
 import java.lang.Override;
+import java.lang.Throwable;
 
 import static org.mockito.Mockito.*;
 import static org.junit.Assert.*;
@@ -72,28 +78,37 @@ import static org.junit.Assert.*;
  * @see com.kyloth.serleena.view.fragments.CompassFragment
  */
 public class CompassFragmentTest
-        extends ActivityInstrumentationTestCase2<SerleenaActivity> {
+        extends ActivityUnitTestCase<SerleenaActivity> {
 
     private SerleenaActivity activity;
-    private CompassFragment fragment = mock(CompassFragment.class);
-    private ICompassPresenter presenter = mock(ICompassPresenter.class);
+    private CompassFragment fragment;
+    private ICompassPresenter presenter;
 
+    @Rule
+    public ExpectedException exception = ExpectedException.none();
+
+    /**
+     * Costruttore che passa alla superclasse il tipo di Activity da
+     * istanziare.
+     *
+     */
     public CompassFragmentTest() {
         super(SerleenaActivity.class);
     }
 
-    @Override
-    public void setUp() throws Exception {
-        super.setUp();
-    }
-
     /**
-     * Verifica che sia possibile creare un CompassFragment.
+     * Override di setUp della superclasse.
+     *
      */
-
-    @Test
-    public void testCreateFragment() {
-        fragment = new CompassFragment();
+    @Override
+    protected void setUp() throws Exception{
+        super.setUp();
+        Intent i = new Intent("android.intent.action.MAIN");
+        startActivity(i, null, null);
+        testAttachCompassPresenter();
+        //testClearView();
+        testSetHeading();
+        testShouldDoNothingOnKeyDown();
     }
 
     /**
@@ -101,42 +116,52 @@ public class CompassFragmentTest
      * CompassFragment.
      *
      */
-
     @Test
     public void testAttachCompassPresenter() {
         fragment = new CompassFragment();
         presenter = mock(ICompassPresenter.class);
         fragment.attachPresenter(presenter);
+        fragment.onResume();
+        fragment.onPause();
+        verify(presenter).resume();
+        verify(presenter).pause();
     }
 
     /**
-     * Verifica che sia possibile collegare un'Activity ad un
+     * Verifica che sia possibile collegare un ICompassPresenter ad un
      * CompassFragment.
      *
      */
-
     @Test
-    public void testAttachActivity() {
+    public void testSetHeading() {
         fragment = new CompassFragment();
-        Fragment f = fragment;
-        activity = getActivity();
-        activity.startActivity(new Intent("android.intent.action.MAIN"));
-        FragmentManager fm = activity.getFragmentManager();
-        Assert.assertNotNull(fm);
-        fm.beginTransaction().add(f,"TEST").commit();
-        Assert.assertEquals(f.getActivity(), activity);
+        activity = new SerleenaActivity();
+        CompassWidget wid = mock(CompassWidget.class);
+        //fragment.setHeading(20);
     }
 
     /**
-     * Verifica che sia possibile rimuovere un'Activity da un
-     * CompassFragment.
+     * Verifica che sia possibile smettere di visualizzare la bussola.
      *
      */
-
     @Test
-    public void testDetachActivity() {
+    public void testClearView() {
         fragment = new CompassFragment();
-        ((Fragment) fragment).onDetach();
-        Assert.assertEquals(((Fragment) fragment).getActivity(),null);
+        exception.expect(IllegalArgumentException.class);
+        exception.expectMessage("View not cleared");
+        fragment.clearView();
+    }
+
+    /**
+     * Verifica che alla pressione del pulsante centrale non avvenga
+     * nulla.
+     *
+     */
+    @Test
+    public void testShouldDoNothingOnKeyDown() {
+        fragment = new CompassFragment();
+        exception.expect(IllegalArgumentException.class);
+        exception.expectMessage("View not cleared");
+        fragment.keyDown(0, new KeyEvent(1,KeyEvent.KEYCODE_ENTER));
     }
 }
