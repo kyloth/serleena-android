@@ -146,7 +146,6 @@ public class SerleenaActivity extends AppCompatActivity implements ISerleenaActi
         initPresentersMap();
         initLayoutIds();
         initMenuItemIds();
-        FragmentTransaction ft = getFragmentManager().beginTransaction();
         changeFragment("EXPLIST");
 
         dataSource = new SerleenaDataSource(
