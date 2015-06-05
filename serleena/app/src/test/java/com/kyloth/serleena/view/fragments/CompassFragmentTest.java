@@ -41,22 +41,26 @@
 
 package com.kyloth.serleena.view.fragments;
 
-import android.app.Activity;
 import android.app.Fragment;
-import android.support.v7.app.AppCompatActivity;
+import android.app.FragmentManager;
+import android.content.Intent;
+import android.test.ActivityInstrumentationTestCase2;
 
 import com.kyloth.serleena.presentation.ICompassPresenter;
-import com.kyloth.serleena.presentation.ICompassView;
-import com.kyloth.serleena.presentation.ISerleenaActivity;
-import com.kyloth.serleena.presenters.CompassPresenter;
 import com.kyloth.serleena.presenters.SerleenaActivity;
-import com.kyloth.serleena.view.fragments.CompassFragment;
+
+import junit.framework.Assert;
+
 import org.junit.Test;
 
 import org.junit.Test;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.rules.ExpectedException;
+
+import java.lang.Exception;
+import java.lang.Override;
+
 import static org.mockito.Mockito.*;
 import static org.junit.Assert.*;
 
@@ -67,18 +71,28 @@ import static org.junit.Assert.*;
  * @version 1.0.0
  * @see com.kyloth.serleena.view.fragments.CompassFragment
  */
-public class CompassFragmentTest {
+public class CompassFragmentTest
+        extends ActivityInstrumentationTestCase2<SerleenaActivity> {
 
-    private ISerleenaActivity activity = mock(ISerleenaActivity.class);
-    private ICompassView fragment = mock(ICompassView.class);
+    private SerleenaActivity activity;
+    private CompassFragment fragment = mock(CompassFragment.class);
     private ICompassPresenter presenter = mock(ICompassPresenter.class);
+
+    public CompassFragmentTest() {
+        super(SerleenaActivity.class);
+    }
+
+    @Override
+    public void setUp() throws Exception {
+        super.setUp();
+    }
 
     /**
      * Verifica che sia possibile creare un CompassFragment.
      */
 
     @Test
-    public void shouldCreateCompassFragment() {
+    public void testCreateFragment() {
         fragment = new CompassFragment();
     }
 
@@ -89,7 +103,7 @@ public class CompassFragmentTest {
      */
 
     @Test
-    public void shouldAttachCompassPresenter() {
+    public void testAttachCompassPresenter() {
         fragment = new CompassFragment();
         presenter = mock(ICompassPresenter.class);
         fragment.attachPresenter(presenter);
@@ -102,8 +116,27 @@ public class CompassFragmentTest {
      */
 
     @Test
-    public void shouldAttachActivity() {
+    public void testAttachActivity() {
         fragment = new CompassFragment();
-        ((Fragment) fragment).onAttach(new SerleenaActivity());
+        Fragment f = fragment;
+        activity = getActivity();
+        activity.startActivity(new Intent("android.intent.action.MAIN"));
+        FragmentManager fm = activity.getFragmentManager();
+        Assert.assertNotNull(fm);
+        fm.beginTransaction().add(f,"TEST").commit();
+        Assert.assertEquals(f.getActivity(), activity);
+    }
+
+    /**
+     * Verifica che sia possibile rimuovere un'Activity da un
+     * CompassFragment.
+     *
+     */
+
+    @Test
+    public void testDetachActivity() {
+        fragment = new CompassFragment();
+        ((Fragment) fragment).onDetach();
+        Assert.assertEquals(((Fragment) fragment).getActivity(),null);
     }
 }
