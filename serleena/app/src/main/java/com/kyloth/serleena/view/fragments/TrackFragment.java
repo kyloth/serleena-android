@@ -101,7 +101,6 @@ public class TrackFragment extends Fragment implements ITrackView {
         nextTW = (TextView) activity.findViewById(R.id.track_checkpoint_next);
         elapsedTimeTW = (TextView) activity.findViewById(R.id.track_time_elapsed);
         ghostTimeTW = (TextView) activity.findViewById(R.id.track_ghost_time);
-        presenter.resume();
     }
 
     /**
@@ -111,7 +110,6 @@ public class TrackFragment extends Fragment implements ITrackView {
     @Override
     public void onDetach() {
         super.onDetach();
-        presenter.pause();
     }
 
     /**
@@ -276,4 +274,16 @@ public class TrackFragment extends Fragment implements ITrackView {
      * Metodo invocato alla pressione del pulsante centrale dello smartwatch.
      */
     public void keyDown(int keyCode, KeyEvent event) {    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        presenter.resume();
+    }
+
+    @Override
+    public void onStop() {
+        super.onStop();
+        presenter.pause();
+    }
 }
