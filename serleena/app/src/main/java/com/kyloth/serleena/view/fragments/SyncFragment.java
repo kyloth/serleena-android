@@ -89,7 +89,6 @@ public class SyncFragment extends Fragment implements ISyncView {
                 presenter.synchronize();
             }
         });
-        presenter.resume();
     }
 
     /**
@@ -113,7 +112,6 @@ public class SyncFragment extends Fragment implements ISyncView {
     @Override
     public void onDetach() {
         super.onDetach();
-        presenter.pause();
     }
 
     /**
@@ -157,5 +155,17 @@ public class SyncFragment extends Fragment implements ISyncView {
      */
     public void keyDown(int keyCode, KeyEvent event) {
         presenter.synchronize();
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        presenter.resume();
+    }
+
+    @Override
+    public void onStop() {
+        super.onStop();
+        presenter.pause();
     }
 }
