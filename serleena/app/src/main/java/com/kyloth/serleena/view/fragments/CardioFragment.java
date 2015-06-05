@@ -73,7 +73,6 @@ public class CardioFragment extends Fragment implements ICardioView {
         super.onAttach(activity);
         TextView hr = (TextView) getActivity().findViewById(R.id.heart_rate);
         hr.setText("NESSUN DATO DA VISUALIZZARE");
-        presenter.resume();
     }
 
     /**
@@ -83,7 +82,6 @@ public class CardioFragment extends Fragment implements ICardioView {
     @Override
     public void onDetach() {
         super.onDetach();
-        presenter.pause();
     }
 
     /**
@@ -111,5 +109,17 @@ public class CardioFragment extends Fragment implements ICardioView {
      * @param event KeyEvent avvenuto
      */
     public void keyDown(int keyCode, KeyEvent event) {
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        presenter.resume();
+    }
+
+    @Override
+    public void onStop() {
+        super.onStop();
+        presenter.pause();
     }
 }
