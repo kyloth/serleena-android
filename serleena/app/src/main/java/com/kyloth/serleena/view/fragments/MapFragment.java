@@ -86,15 +86,6 @@ public class MapFragment extends Fragment implements com.kyloth.serleena.present
     }
 
     /**
-     * Questo metodo viene invocato ogni volta che un MapFragment viene rimosso da un'Activity tramite
-     * una transazione. Viene cancellato il riferimento all'Activity a cui era legato.
-     */
-    @Override
-    public void onDetach() {
-        super.onDetach();
-    }
-
-    /**
      * Viene impostata la posizione dell'utente ed in seguito visualizzata.
      *
      * @param point posizione dell'utente

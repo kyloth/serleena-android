@@ -104,15 +104,6 @@ public class TrackFragment extends Fragment implements ITrackView {
     }
 
     /**
-     * Questo metodo viene invocato ogni volta che un TrackFragment viene rimosso da un'Activity
-     * tramite una transazione. Viene cancellato il riferimento all'Activity a cui era legato.
-     */
-    @Override
-    public void onDetach() {
-        super.onDetach();
-    }
-
-    /**
      * Metodo per eseguire un'operazione di subscribe relativa ad un ITrackPresenter.
      *
      * @param presenter oggetto collegato che verrà notificato da questo Fragment

@@ -95,14 +95,6 @@ public class TelemetryFragment extends Fragment implements ITelemetryView {
     }
 
     /**
-     * Questo metodo viene invocato ogni volta che un TelemetryFragment viene rimosso da un'Activity
-     * tramite una transazione. Viene cancellato il riferimento all'Activity a cui era legato.
-     */
-    @Override
-    public void onDetach() {
-        super.onDetach();    }
-
-    /**
      * Implementa ITelemetryView.attachPresenter().
      *
      * @param presenter Presenter da associare alla vista.

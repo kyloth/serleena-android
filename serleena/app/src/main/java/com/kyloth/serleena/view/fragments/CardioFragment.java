@@ -76,15 +76,6 @@ public class CardioFragment extends Fragment implements ICardioView {
     }
 
     /**
-     * Questo metodo viene invocato ogni volta che un CardioFragment viene rimosso da un'Activity
-     * tramite una transazione. Viene cancellato il riferimento all'Activity a cui era legato.
-     */
-    @Override
-    public void onDetach() {
-        super.onDetach();
-    }
-
-    /**
      * Metodo che visualizza sullo schermo dello smartwatch il valore del battito cardiaco.
      */
     @Override
