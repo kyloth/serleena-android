@@ -46,6 +46,7 @@ import com.kyloth.serleena.common.GeoPoint;
 import com.kyloth.serleena.common.IQuadrant;
 import com.kyloth.serleena.persistence.IExperienceStorage;
 import com.kyloth.serleena.persistence.IPersistenceDataSource;
+import com.kyloth.serleena.common.NoSuchWeatherForecastException;
 
 import java.util.ArrayList;
 import java.util.Date;

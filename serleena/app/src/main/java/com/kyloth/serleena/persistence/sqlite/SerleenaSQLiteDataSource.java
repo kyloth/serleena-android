@@ -64,6 +64,7 @@ import com.kyloth.serleena.common.LocationTelemetryEvent;
 import com.kyloth.serleena.common.Quadrant;
 import com.kyloth.serleena.common.TelemetryEvent;
 import com.kyloth.serleena.common.UserPoint;
+import com.kyloth.serleena.common.NoSuchWeatherForecastException;
 import com.kyloth.serleena.persistence.IExperienceStorage;
 import com.kyloth.serleena.persistence.ITelemetryStorage;
 import com.kyloth.serleena.persistence.ITrackStorage;
@@ -366,15 +367,20 @@ public class SerleenaSQLiteDataSource implements ISerleenaSQLiteDataSource {
     /**
      * Implementazione di IPersistenceDataStorage.getWeatherInfo().
      *
-     * @param location Posizione geografica di cui si vogliono ottenere le
-     *                 previsioni.
-     * @param date Data di cui si vogliono ottenere le previsioni.
+     * @param location  Posizione geografica di cui si vogliono ottenere le
+     *                  previsioni. Se null, viene sollevata un'eccezione
+     *                  IllegalArgumentException.
+     * @param date      Data di cui si vogliono ottenere le previsioni. Se null,
+     *                  viene sollevata un'eccezione IllegalArgumentException.
      * @return Previsioni metereologiche.
      */
     @Override
-    public IWeatherStorage getWeatherInfo(GeoPoint location, Date date) {
+    public IWeatherStorage getWeatherInfo(GeoPoint location, Date date)
+            throws IllegalArgumentException, NoSuchWeatherForecastException {
         if (date == null)
-            return null;
+            throw new IllegalArgumentException("Illegal null date");
+        if (location == null)
+            throw new IllegalArgumentException("Illegal null location");
 
         GregorianCalendar morning = new GregorianCalendar();
         morning.setTime(date);
@@ -420,14 +426,15 @@ public class SerleenaSQLiteDataSource implements ISerleenaSQLiteDataSource {
                 getForecast(location, afternoonStart, afternoonEnd);
         SimpleWeather nightWeather = getForecast(location, nightStart, nightEnd);
 
-        if (morningWeather != null && morningWeather != null && morningWeather != null) {
-            return new SQLiteDAOWeather(morningWeather.forecast(),
-                    afternoonWeather.forecast(), nightWeather.forecast(),
-                    morningWeather.temperature(), afternoonWeather.temperature(),
-                    nightWeather.temperature(), date);
-        }
+        if (morningWeather == null ||
+            morningWeather == null ||
+            morningWeather == null)
+            throw new NoSuchWeatherForecastException();
 
-        return null;
+        return new SQLiteDAOWeather(morningWeather.forecast(),
+                afternoonWeather.forecast(), nightWeather.forecast(),
+                morningWeather.temperature(), afternoonWeather.temperature(),
+                nightWeather.temperature(), date);
     }
 
     /**
