@@ -375,7 +375,7 @@ public class SerleenaSQLiteDataSource implements ISerleenaSQLiteDataSource {
      */
     @Override
     public IWeatherStorage getWeatherInfo(GeoPoint location, Date date)
-            throws IllegalArgumentException {
+            throws IllegalArgumentException, NoSuchWeatherForecastException {
         if (date == null)
             throw new IllegalArgumentException("Illegal null date");
         if (location == null)
@@ -425,14 +425,15 @@ public class SerleenaSQLiteDataSource implements ISerleenaSQLiteDataSource {
                 getForecast(location, afternoonStart, afternoonEnd);
         SimpleWeather nightWeather = getForecast(location, nightStart, nightEnd);
 
-        if (morningWeather != null && morningWeather != null && morningWeather != null) {
-            return new SQLiteDAOWeather(morningWeather.forecast(),
-                    afternoonWeather.forecast(), nightWeather.forecast(),
-                    morningWeather.temperature(), afternoonWeather.temperature(),
-                    nightWeather.temperature(), date);
-        }
+        if (morningWeather == null ||
+            morningWeather == null ||
+            morningWeather == null)
+            throw new NoSuchWeatherForecastException();
 
-        return null;
+        return new SQLiteDAOWeather(morningWeather.forecast(),
+                afternoonWeather.forecast(), nightWeather.forecast(),
+                morningWeather.temperature(), afternoonWeather.temperature(),
+                nightWeather.temperature(), date);
     }
 
     /**
