@@ -366,15 +366,20 @@ public class SerleenaSQLiteDataSource implements ISerleenaSQLiteDataSource {
     /**
      * Implementazione di IPersistenceDataStorage.getWeatherInfo().
      *
-     * @param location Posizione geografica di cui si vogliono ottenere le
-     *                 previsioni.
-     * @param date Data di cui si vogliono ottenere le previsioni.
+     * @param location  Posizione geografica di cui si vogliono ottenere le
+     *                  previsioni. Se null, viene sollevata un'eccezione
+     *                  IllegalArgumentException.
+     * @param date      Data di cui si vogliono ottenere le previsioni. Se null,
+     *                  viene sollevata un'eccezione IllegalArgumentException.
      * @return Previsioni metereologiche.
      */
     @Override
-    public IWeatherStorage getWeatherInfo(GeoPoint location, Date date) {
+    public IWeatherStorage getWeatherInfo(GeoPoint location, Date date)
+            throws IllegalArgumentException {
         if (date == null)
-            return null;
+            throw new IllegalArgumentException("Illegal null date");
+        if (location == null)
+            throw new IllegalArgumentException("Illegal null location");
 
         GregorianCalendar morning = new GregorianCalendar();
         morning.setTime(date);
