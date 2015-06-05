@@ -30,23 +30,25 @@
 
 /**
  * Name: NoSuchWeatherForecastException.java
- * Package: com.kyloth.serleena.model
+ * Package: com.kyloth.serleena.common
  * Author: Filippo Sestini
  *
  * History:
  * Version  Programmer       Changes
  * 1.0.0    Filippo Sestini  Creazione file e scrittura di
- *                                          codice e documentazione in Javadoc.
+ *                           codice e documentazione in Javadoc.
+ * 1.0.1    Filippo Sestini  Spostamento classe da package `model'
+                             a package `common'.
  */
 
-package com.kyloth.serleena.model;
+package com.kyloth.serleena.common;
 
 /**
  * Segnala l'assenza di dati su previsioni meteo.
  *
  * @use Utilizzata dai DAO per segnalare l'assenza di dati meteo come richiesti dal chiamante.
  * @author Filippo Sestini <sestini.filippo@gmail.com>
- * @version 1.0.0
+ * @version 1.0.1
  */
 public class NoSuchWeatherForecastException extends Exception {
 

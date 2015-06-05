@@ -67,6 +67,7 @@ import com.kyloth.serleena.BuildConfig;
 import com.kyloth.serleena.common.EmergencyContact;
 import com.kyloth.serleena.common.GeoPoint;
 import com.kyloth.serleena.common.Quadrant;
+import com.kyloth.serleena.common.NoSuchWeatherForecastException;
 
 /**
  * Contiene test per la classe WakeupSchedule.

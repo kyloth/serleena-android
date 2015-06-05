@@ -35,7 +35,7 @@ import android.os.AsyncTask;
 import com.kyloth.serleena.common.GeoPoint;
 import com.kyloth.serleena.model.ISerleenaDataSource;
 import com.kyloth.serleena.model.IWeatherForecast;
-import com.kyloth.serleena.model.NoSuchWeatherForecastException;
+import com.kyloth.serleena.common.NoSuchWeatherForecastException;
 import com.kyloth.serleena.presentation.ISerleenaActivity;
 import com.kyloth.serleena.presentation.IWeatherPresenter;
 import com.kyloth.serleena.presentation.IWeatherView;

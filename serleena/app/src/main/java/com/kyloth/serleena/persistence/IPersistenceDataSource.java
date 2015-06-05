@@ -44,6 +44,8 @@ package com.kyloth.serleena.persistence;
 import com.kyloth.serleena.common.EmergencyContact;
 import com.kyloth.serleena.common.GeoPoint;
 import com.kyloth.serleena.common.IQuadrant;
+import com.kyloth.serleena.common.NoSuchWeatherForecastException;
+
 import java.util.Date;
 
 /**

@@ -64,6 +64,7 @@ import com.kyloth.serleena.common.LocationTelemetryEvent;
 import com.kyloth.serleena.common.Quadrant;
 import com.kyloth.serleena.common.TelemetryEvent;
 import com.kyloth.serleena.common.UserPoint;
+import com.kyloth.serleena.common.NoSuchWeatherForecastException;
 import com.kyloth.serleena.persistence.IExperienceStorage;
 import com.kyloth.serleena.persistence.ITelemetryStorage;
 import com.kyloth.serleena.persistence.ITrackStorage;
