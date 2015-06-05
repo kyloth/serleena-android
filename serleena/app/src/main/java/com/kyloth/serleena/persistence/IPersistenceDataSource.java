@@ -67,12 +67,16 @@ public interface IPersistenceDataSource {
      * Restituisce le previsioni metereologiche relative a una
      * specifica data e posizione geografica memorizzate nella sorgente dati.
      *
+     * In caso non siano presenti nel database previsioni per data e luogo
+     * specificati, viene sollevata un'eccezione NoSuchWeatherForecastException.
+     *
      * @param location Posizione geografica di cui si vogliono ottenere le
      *                 previsioni.
      * @param date Data di cui si vogliono ottenere le previsioni.
      * @return Insieme enumerabile di oggetti IWeatherStorage.
      */
-    public IWeatherStorage getWeatherInfo(GeoPoint location, Date date);
+    public IWeatherStorage getWeatherInfo(GeoPoint location, Date date)
+            throws NoSuchWeatherForecastException;
 
     /**
      * Restituisce il quadrante che contiene il punto geografico specificato.
