@@ -74,7 +74,6 @@ public class ContactsFragment extends Fragment implements IContactsView {
     @Override
     public void onAttach(Activity activity) {
         super.onAttach(activity);
-        presenter.resume();
     }
 
     /**
@@ -84,7 +83,6 @@ public class ContactsFragment extends Fragment implements IContactsView {
     @Override
     public void onDetach() {
         super.onDetach();
-        presenter.pause();
     }
 
     /**
@@ -126,5 +124,25 @@ public class ContactsFragment extends Fragment implements IContactsView {
      */
     public void keyDown(int keyCode, KeyEvent event) {
         presenter.nextContact();
+    }
+
+    /**
+     * Metodo invocato quando il Fragment viene visualizzato.
+     *
+     */
+    @Override
+    public void onResume() {
+        super.onResume();
+        presenter.resume();
+    }
+
+    /**
+     * Metodo invocato quando il Fragment smette di essere visualizzato.
+     *
+     */
+    @Override
+    public void onPause() {
+        super.onPause();
+        presenter.pause();
     }
 }

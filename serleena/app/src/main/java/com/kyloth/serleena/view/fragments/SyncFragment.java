@@ -89,7 +89,6 @@ public class SyncFragment extends Fragment implements ISyncView {
                 presenter.synchronize();
             }
         });
-        presenter.resume();
     }
 
     /**
@@ -113,7 +112,6 @@ public class SyncFragment extends Fragment implements ISyncView {
     @Override
     public void onDetach() {
         super.onDetach();
-        presenter.pause();
     }
 
     /**
@@ -157,5 +155,25 @@ public class SyncFragment extends Fragment implements ISyncView {
      */
     public void keyDown(int keyCode, KeyEvent event) {
         presenter.synchronize();
+    }
+
+    /**
+     * Metodo invocato quando il Fragment viene visualizzato.
+     *
+     */
+    @Override
+    public void onResume() {
+        super.onResume();
+        presenter.resume();
+    }
+
+    /**
+     * Metodo invocato quando il Fragment smette di essere visualizzato.
+     *
+     */
+    @Override
+    public void onPause() {
+        super.onPause();
+        presenter.pause();
     }
 }

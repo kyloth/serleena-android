@@ -93,7 +93,6 @@ public class WeatherFragment extends Fragment implements IWeatherView {
     public void onAttach(Activity activity) {
         super.onAttach(activity);
         initFragment();
-        presenter.resume();
     }
 
     /**
@@ -117,7 +116,6 @@ public class WeatherFragment extends Fragment implements IWeatherView {
     @Override
     public void onDetach() {
         super.onDetach();
-        presenter.pause();
     }
 
     /**
@@ -193,5 +191,25 @@ public class WeatherFragment extends Fragment implements IWeatherView {
      */
     public void keyDown(int keyCode, KeyEvent event) {
         presenter.advanceDate();
+    }
+
+    /**
+     * Metodo invocato quando il Fragment viene visualizzato.
+     *
+     */
+    @Override
+    public void onResume() {
+        super.onResume();
+        presenter.resume();
+    }
+
+    /**
+     * Metodo invocato quando il Fragment smette di essere visualizzato.
+     *
+     */
+    @Override
+    public void onPause() {
+        super.onPause();
+        presenter.pause();
     }
 }

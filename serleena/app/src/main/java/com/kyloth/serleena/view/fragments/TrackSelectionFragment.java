@@ -108,7 +108,6 @@ public class TrackSelectionFragment extends Fragment
         // Set OnItemClickListener so we can be notified on item clicks
         mListView.setOnItemClickListener(this);
         setEmptyText("Nessun percorso disponibile");
-        presenter.resume();
     }
 
     /**
@@ -118,7 +117,6 @@ public class TrackSelectionFragment extends Fragment
     @Override
     public void onDetach() {
         super.onDetach();
-        presenter.pause();
     }
 
 
@@ -172,4 +170,24 @@ public class TrackSelectionFragment extends Fragment
      * @param event KeyEvent avvenuto
      */
     public void keyDown(int keyCode, KeyEvent event) {    }
+
+    /**
+     * Metodo invocato quando il Fragment viene visualizzato.
+     *
+     */
+    @Override
+    public void onResume() {
+        super.onResume();
+        presenter.resume();
+    }
+
+    /**
+     * Metodo invocato quando il Fragment smette di essere visualizzato.
+     *
+     */
+    @Override
+    public void onPause() {
+        super.onPause();
+        presenter.pause();
+    }
 }

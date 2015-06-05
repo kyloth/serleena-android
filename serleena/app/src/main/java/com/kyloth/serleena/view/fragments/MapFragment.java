@@ -83,7 +83,6 @@ public class MapFragment extends Fragment implements com.kyloth.serleena.present
     public void onAttach(Activity activity) {
         super.onAttach(activity);
         mapWidget = (MapWidget) activity.findViewById(R.id.map_image);
-        presenter.resume();
     }
 
     /**
@@ -93,7 +92,6 @@ public class MapFragment extends Fragment implements com.kyloth.serleena.present
     @Override
     public void onDetach() {
         super.onDetach();
-        presenter.pause();
     }
 
     /**
@@ -150,5 +148,25 @@ public class MapFragment extends Fragment implements com.kyloth.serleena.present
             presenter.newUserPoint();
         }
         catch (NoActiveExperienceException e) {}
+    }
+
+    /**
+     * Metodo invocato quando il Fragment viene visualizzato.
+     *
+     */
+    @Override
+    public void onResume() {
+        super.onResume();
+        presenter.resume();
+    }
+
+    /**
+     * Metodo invocato quando il Fragment smette di essere visualizzato.
+     *
+     */
+    @Override
+    public void onPause() {
+        super.onPause();
+        presenter.pause();
     }
 }

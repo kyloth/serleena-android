@@ -107,7 +107,6 @@ public class ExperienceSelectionFragment extends Fragment
 
         mListView.setOnItemClickListener(this);
         setEmptyText("Nessuna esperienza disponibile");
-        presenter.resume();
     }
 
     /**
@@ -117,7 +116,6 @@ public class ExperienceSelectionFragment extends Fragment
     @Override
     public void onDetach() {
         super.onDetach();
-        presenter.pause();
     }
 
 
@@ -169,5 +167,25 @@ public class ExperienceSelectionFragment extends Fragment
      * @param event KeyEvent avvenuto
      */
     public void keyDown(int keyCode, KeyEvent event) {
+    }
+
+    /**
+     * Metodo invocato quando il Fragment viene visualizzato.
+     *
+     */
+    @Override
+    public void onResume() {
+        super.onResume();
+        presenter.resume();
+    }
+
+    /**
+     * Metodo invocato quando il Fragment smette di essere visualizzato.
+     *
+     */
+    @Override
+    public void onPause() {
+        super.onPause();
+        presenter.pause();
     }
 }
