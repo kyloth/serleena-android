@@ -48,17 +48,28 @@ import android.content.Intent;
 import android.test.ActivityInstrumentationTestCase2;
 import android.test.ActivityUnitTestCase;
 import android.view.KeyEvent;
+import android.view.View;
 
+import com.kyloth.serleena.BuildConfig;
+import com.kyloth.serleena.model.ITrack;
 import com.kyloth.serleena.presentation.ICompassPresenter;
+import com.kyloth.serleena.presentation.ISerleenaActivity;
 import com.kyloth.serleena.presenters.SerleenaActivity;
 import com.kyloth.serleena.view.fragments.CompassFragment;
 import com.kyloth.serleena.view.widgets.CompassWidget;
+import com.kyloth.serleena.model.IExperience;
+import com.kyloth.serleena.model.ISerleenaDataSource;
+import com.kyloth.serleena.model.ITrack;
+import com.kyloth.serleena.sensors.ISensorManager;
 
 import junit.framework.Assert;
 
-import org.junit.Test;
+import org.robolectric.Robolectric;
+import org.robolectric.RobolectricGradleTestRunner;
+import org.robolectric.annotation.Config;
 
 import org.junit.Test;
+import org.junit.runner.RunWith;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.rules.ExpectedException;
@@ -66,6 +77,8 @@ import org.junit.rules.ExpectedException;
 import java.lang.Exception;
 import java.lang.Override;
 import java.lang.Throwable;
+
+import dalvik.annotation.TestTarget;
 
 import static org.mockito.Mockito.*;
 import static org.junit.Assert.*;
@@ -77,38 +90,40 @@ import static org.junit.Assert.*;
  * @version 1.0.0
  * @see com.kyloth.serleena.view.fragments.CompassFragment
  */
-public class CompassFragmentTest
-        extends ActivityUnitTestCase<SerleenaActivity> {
+@RunWith(RobolectricGradleTestRunner.class)
+@Config(constants = BuildConfig.class, emulateSdk = 19)
+public class CompassFragmentTest {
 
-    private SerleenaActivity activity;
+    private static class TestActivity
+            extends Activity implements ISerleenaActivity {
+        public void setActiveExperience(IExperience experience) { }
+        public void setActiveTrack(ITrack track) { }
+        public void enableTelemetry() {}
+        public void disableTelemetry() {}
+        public ISerleenaDataSource getDataSource() {
+            return null;
+        }
+        public ISensorManager getSensorManager() {
+            return null;
+        }
+    }
+
+    private TestActivity activity;
     private CompassFragment fragment;
     private ICompassPresenter presenter;
 
     @Rule
     public ExpectedException exception = ExpectedException.none();
 
-    /**
-     * Costruttore che passa alla superclasse il tipo di Activity da
-     * istanziare.
-     *
-     */
-    public CompassFragmentTest() {
-        super(SerleenaActivity.class);
-    }
-
-    /**
-     * Override di setUp della superclasse.
-     *
-     */
-    @Override
-    protected void setUp() throws Exception{
-        super.setUp();
-        Intent i = new Intent("android.intent.action.MAIN");
-        startActivity(i, null, null);
-        testAttachCompassPresenter();
-        //testClearView();
-        testSetHeading();
-        testShouldDoNothingOnKeyDown();
+    @Before
+    public void initialize() {
+        activity = Robolectric.buildActivity(TestActivity.class).
+                create().get();
+        Assert.assertNotNull("initialization failed", activity);
+        fragment = new CompassFragment();
+        FragmentManager fm = activity.getFragmentManager();
+        fm.beginTransaction().add(fragment,"TEST").commit();
+        Assert.assertEquals("fragment not attached",fragment.getActivity(),activity);
     }
 
     /**
@@ -118,7 +133,6 @@ public class CompassFragmentTest
      */
     @Test
     public void testAttachCompassPresenter() {
-        fragment = new CompassFragment();
         presenter = mock(ICompassPresenter.class);
         fragment.attachPresenter(presenter);
         fragment.onResume();
@@ -134,10 +148,11 @@ public class CompassFragmentTest
      */
     @Test
     public void testSetHeading() {
-        fragment = new CompassFragment();
-        activity = new SerleenaActivity();
         CompassWidget wid = mock(CompassWidget.class);
-        //fragment.setHeading(20);
+        fragment.setWidget(wid);
+        Assert.assertEquals("widget not set properly", wid, fragment.getWidget());
+        fragment.setHeading(20);
+        verify(wid).setBearing(20);
     }
 
     /**
@@ -146,10 +161,10 @@ public class CompassFragmentTest
      */
     @Test
     public void testClearView() {
-        fragment = new CompassFragment();
-        exception.expect(IllegalArgumentException.class);
-        exception.expectMessage("View not cleared");
+        CompassWidget widget = mock(CompassWidget.class);
+        fragment.setWidget(widget);
         fragment.clearView();
+        verify(widget).setVisibility(View.INVISIBLE);
     }
 
     /**
@@ -159,9 +174,6 @@ public class CompassFragmentTest
      */
     @Test
     public void testShouldDoNothingOnKeyDown() {
-        fragment = new CompassFragment();
-        exception.expect(IllegalArgumentException.class);
-        exception.expectMessage("View not cleared");
         fragment.keyDown(0, new KeyEvent(1,KeyEvent.KEYCODE_ENTER));
     }
 }
