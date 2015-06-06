@@ -77,6 +77,7 @@ import com.kyloth.serleena.view.fragments.TelemetryFragment;
 import com.kyloth.serleena.view.fragments.TrackFragment;
 import com.kyloth.serleena.view.fragments.TrackSelectionFragment;
 import com.kyloth.serleena.view.fragments.WeatherFragment;
+import com.kyloth.serleena.view.widgets.MapWidget;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -158,6 +159,8 @@ public class SerleenaActivity extends Activity implements ISerleenaActivity {
     private void initFragMap() {
         myFrags.put("TRACK", new TrackFragment());
         myFrags.put("MAP", new MapFragment());
+        ((MapFragment) myFrags.get("MAP")).
+                setMapWidget( (MapWidget)findViewById(R.id.map_image));
         myFrags.put("TELEMETRY", new TelemetryFragment());
         myFrags.put("EXPLIST", new ExperienceSelectionFragment());
         myFrags.put("TRACKLIST", new TrackSelectionFragment());
