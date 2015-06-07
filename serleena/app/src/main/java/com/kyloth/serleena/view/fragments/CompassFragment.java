@@ -74,24 +74,7 @@ public class CompassFragment extends Fragment implements ICompassView {
     @Override
     public void onAttach(Activity activity) {
         super.onAttach(activity);
-    }
-
-    /**
-     * Metodo utilizzato per impostare il widget da visualizzare
-     *
-     * @param wid Widget da visualizzare sul Fragment
-     */
-    public void setWidget(CompassWidget wid) {
-        widget = wid;
-    }
-
-    /**
-     * Metodo per ottenere il Widget visualizzato dal Fragment
-     *
-     * @return widget Il CompassWidget visualizzato sul CompassFragment
-     */
-    public CompassWidget getWidget() {
-        return widget;
+        widget = (CompassWidget) activity.findViewById(R.id.compass_widget);
     }
 
     /**
