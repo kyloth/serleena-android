@@ -129,9 +129,9 @@ public class MapFragmentTest {
                 create().get();
         Assert.assertNotNull("initialization failed", activity);
         fragment = new MapFragment();
-        FragmentManager fm = activity.getFragmentManager();
-        fm.beginTransaction().add(fragment, "TEST").commit();
-        Assert.assertEquals("fragment not attached", fragment.getActivity(), activity);
+        //FragmentManager fm = activity.getFragmentManager();
+        //fm.beginTransaction().add(fragment, "TEST").commit();
+        //Assert.assertEquals("fragment not attached", fragment.getActivity(), activity);
 
     }
 
@@ -148,61 +148,6 @@ public class MapFragmentTest {
         fragment.onPause();
         verify(presenter).resume();
         verify(presenter).pause();
-    }
-
-    /**
-     * Verifica che sia possibile impostare il widget.
-     *
-     */
-    @Test
-    public void testCanSetGetWidget() {
-        MapWidget widget = mock(MapWidget.class);
-        fragment.setMapWidget(widget);
-        Assert.assertEquals("set/get problems", widget, fragment.getMapWidget());
-    }
-
-    /**
-     * Verifica che sia possibile impostare la posizione dell'utente.
-     *
-     */
-    @Test
-    public void testCanSetUserPosition() {
-        MapWidget widget = mock(MapWidget.class);
-        GeoPoint point = mock(GeoPoint.class);
-        fragment.setMapWidget(widget);
-        fragment.setUserLocation(point);
-        verify(widget).setUserPosition(point);
-        verify(widget).draw((Canvas) any());
-    }
-
-    /**
-     * Verifica che sia possibile mostrare un quadrante.
-     *
-     */
-    @Test
-    public void testCanDisplayQuadrant() {
-        MapWidget widget = mock(MapWidget.class);
-        IQuadrant q = mock(IQuadrant.class);
-        fragment.setMapWidget(widget);
-        fragment.displayQuadrant(q);
-        verify(widget).setQuadrant(q);
-        verify(widget).draw((Canvas) any());
-    }
-
-    /**
-     * Verifica che sia possibile mostrare un quadrante.
-     *
-     */
-    @Test
-    public void testCanDisplayUPs() {
-        MapWidget widget = mock(MapWidget.class);
-        ArrayList<UserPoint> a = new ArrayList<>();
-        a.add(mock(UserPoint.class));
-        a.add(mock(UserPoint.class));
-        fragment.setMapWidget(widget);
-        fragment.displayUP(a);
-        verify(widget).setUserPoints(a);
-        verify(widget).draw((Canvas) any());
     }
 
     /**
