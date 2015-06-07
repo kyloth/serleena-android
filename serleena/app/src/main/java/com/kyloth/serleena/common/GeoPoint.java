@@ -141,4 +141,8 @@ public class GeoPoint
         return newLocation;
     }
 
+    public float bearingTo(GeoPoint other) {
+        return this.toLocation().bearingTo(other.toLocation());
+    }
+
 }
