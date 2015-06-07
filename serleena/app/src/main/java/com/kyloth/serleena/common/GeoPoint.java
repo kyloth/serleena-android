@@ -134,4 +134,11 @@ public class GeoPoint
         return (int)(latitude + longitude);
     }
 
+    public Location toLocation() {
+        Location newLocation = new Location("");
+        newLocation.setLatitude(latitude);
+        newLocation.setLongitude(longitude);
+        return newLocation;
+    }
+
 }
