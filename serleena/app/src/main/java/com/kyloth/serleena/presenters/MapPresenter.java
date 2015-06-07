@@ -199,7 +199,8 @@ public class MapPresenter implements IMapPresenter, ILocationObserver {
         AsyncTask<Void, Void, Void> task = new AsyncTask<Void, Void, Void>() {
             @Override
             protected Void doInBackground(Void... voids) {
-                if (!currentQuadrant.contains(currentPosition)) {
+                if (currentQuadrant != null &&
+                        !currentQuadrant.contains(currentPosition)) {
                     currentQuadrant = ds.getQuadrant(currentPosition);
                     view.displayQuadrant(currentQuadrant);
                     Iterable<UserPoint> ups =
