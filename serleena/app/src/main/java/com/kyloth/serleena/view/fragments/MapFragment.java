@@ -82,14 +82,7 @@ public class MapFragment extends Fragment implements com.kyloth.serleena.present
     @Override
     public void onAttach(Activity activity) {
         super.onAttach(activity);
-    }
-
-    public void setMapWidget(MapWidget widget){
-        mapWidget = widget;
-    }
-
-    public MapWidget getMapWidget() {
-        return mapWidget;
+        mapWidget = (MapWidget) activity.findViewById(R.id.map_image);
     }
 
     /**
