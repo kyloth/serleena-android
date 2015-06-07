@@ -179,4 +179,13 @@ public class GeoPointTest {
         assertEquals(realDistance, gp1.distanceTo(gp2), 0);
     }
 
+    @Test
+    public void testToLocation() {
+        android.location.Location l = new Location("");
+        l.setLatitude(32d);
+        l.setLongitude(43d);
+        assertEquals(32d, l.getLatitude(), 0);
+        assertEquals(43d, l.getLatitude(), 0);
+    }
+
 }
