@@ -42,10 +42,12 @@
 package com.kyloth.serleena.common;
 
 import android.location.Location;
+import android.location.LocationManager;
 
 import org.junit.Test;
-
 import java.lang.Object;
+
+import static org.junit.Assert.*;
 
 /**
  * Contiene i test di unità per la classe GeoPoint.
@@ -174,7 +176,7 @@ public class GeoPointTest {
         GeoPoint gp1 = new GeoPoint(lat1, lon1);
         GeoPoint gp2 = new GeoPoint(lat2, lon2);
 
-        org.junit.Assert.assertTrue(gp1.distanceTo(gp2) == realDistance);
+        assertEquals(realDistance, gp1.distanceTo(gp2), 0);
     }
 
 }
