@@ -52,8 +52,7 @@ import com.kyloth.serleena.model.IExperience;
 import com.kyloth.serleena.model.ISerleenaDataSource;
 import com.kyloth.serleena.model.ITrack;
 import com.kyloth.serleena.model.SerleenaDataSource;
-import com.kyloth.serleena.persistence.sqlite.SerleenaDatabase;
-import com.kyloth.serleena.persistence.sqlite.SerleenaSQLiteDataSource;
+import com.kyloth.serleena.persistence.sqlite.SQLiteDataSourceFactory;
 import com.kyloth.serleena.presentation.ICardioView;
 import com.kyloth.serleena.presentation.ICompassView;
 import com.kyloth.serleena.presentation.IContactsView;
@@ -148,8 +147,8 @@ public class SerleenaActivity extends AppCompatActivity implements ISerleenaActi
         initMenuItemIds();
         changeFragment("EXPLIST");
 
-        dataSource = new SerleenaDataSource(
-                new SerleenaSQLiteDataSource(this, new SerleenaDatabase(this, 1)));
+        SQLiteDataSourceFactory factory = SQLiteDataSourceFactory.getInstance();
+        dataSource = new SerleenaDataSource(factory.createDataSource(this));
         sensorManager = SensorManager.getInstance(this);
     }
 

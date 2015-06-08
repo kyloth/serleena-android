@@ -30,7 +30,7 @@
 
 /**
  * Name: SerleenaDataSourceTest.java
- * Package: com.kyloth.serleena.presenters;
+ * Package: com.kyloth.serleena.model;
  * Author: Gabriele Pozzan
  *
  * History:
@@ -50,14 +50,11 @@ import org.junit.runner.RunWith;
 import static org.junit.Assert.*;
 import org.junit.Before;
 import org.junit.After;
-import static org.mockito.Mockito.*;
 import org.robolectric.RobolectricGradleTestRunner;
 import org.robolectric.RuntimeEnvironment;
 import org.robolectric.annotation.Config;
 
-import android.content.Context;
 import android.content.ContentValues;
-import android.test.AndroidTestCase;
 import android.database.sqlite.SQLiteDatabase;
 
 import com.kyloth.serleena.persistence.sqlite.SerleenaSQLiteDataSource;
@@ -70,7 +67,7 @@ import com.kyloth.serleena.common.Quadrant;
 import com.kyloth.serleena.common.NoSuchWeatherForecastException;
 
 /**
- * Contiene test per la classe WakeupSchedule.
+ * Contiene test per la classe SerleenaDataSource.
  *
  * @author Gabriele Pozzan <gabriele.pozzan@studenti.unipd.it>
  * @version 1.0.0
