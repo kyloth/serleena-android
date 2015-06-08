@@ -63,7 +63,6 @@ import com.kyloth.serleena.sensors.ILocationObserver;
  * @field activeExperience : IExperience Esperienza attiva
  * @field currentPosition : GeoPoint Posizione geografica attuale dell'utente
  * @field locMan : ILocationManager Gestore del sensore di posizione
- * @field currentQuadrant : IQuadrant Quadrante in cui l'utente è al momento all'interno
  * @author Filippo Sestini <sestini.filippo@gmail.com>
  * @version 1.0.0
  */
@@ -76,7 +75,6 @@ public class MapPresenter implements IMapPresenter, ILocationObserver {
     private IExperience activeExperience;
     private GeoPoint currentPosition;
     private ILocationManager locMan;
-    private IQuadrant currentQuadrant;
 
     /**
      * Crea un oggetto MapPresenter.
@@ -199,15 +197,10 @@ public class MapPresenter implements IMapPresenter, ILocationObserver {
         AsyncTask<Void, Void, Void> task = new AsyncTask<Void, Void, Void>() {
             @Override
             protected Void doInBackground(Void... voids) {
-                if (currentQuadrant != null &&
-                        !currentQuadrant.contains(currentPosition)) {
-                    currentQuadrant = ds.getQuadrant(currentPosition);
-                    view.displayQuadrant(currentQuadrant);
-                    Iterable<UserPoint> ups =
-                            activeExperience.getUserPoints();
-                    view.displayUP(ups);
-                }
-
+                IQuadrant quadrant = ds.getQuadrant(currentPosition);
+                view.displayQuadrant(quadrant);
+                Iterable<UserPoint> ups = activeExperience.getUserPoints();
+                view.displayUP(ups);
                 view.setUserLocation(currentPosition);
                 return null;
             }
