@@ -96,6 +96,8 @@ public class MapPresenter implements IMapPresenter, ILocationObserver {
         if (activity == null)
             throw new IllegalArgumentException("Illegal null activity");
 
+        this.activity = activity;
+        this.view = view;
         locMan = activity.getSensorManager().getLocationSource();
         view.attachPresenter(this);
     }
