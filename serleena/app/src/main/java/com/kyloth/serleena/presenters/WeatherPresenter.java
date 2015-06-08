@@ -75,10 +75,12 @@ public class WeatherPresenter implements IWeatherPresenter, ILocationObserver {
             throw new IllegalArgumentException("Illegal null view");
         if (activity == null)
             throw new IllegalArgumentException("Illegal null activity");
-
-        view.attachPresenter(this);
-        locMan = activity.getSensorManager().getLocationSource();
-        ds = activity.getDataSource();
+	
+	this.view = view;
+	this.activity = activity;
+        this.view.attachPresenter(this);
+        this.locMan = activity.getSensorManager().getLocationSource();
+        this.ds = activity.getDataSource();
         daysPastNow = 0;
     }
 
