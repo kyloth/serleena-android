@@ -61,6 +61,7 @@ import android.database.sqlite.SQLiteDatabase;
 
 import com.kyloth.serleena.BuildConfig;
 import com.kyloth.serleena.common.GeoPoint;
+import com.kyloth.serleena.common.NoSuchWeatherForecastException;
 import com.kyloth.serleena.persistence.sqlite.SerleenaDatabase;
 import com.kyloth.serleena.persistence.sqlite.SerleenaSQLiteDataSource;
 import com.kyloth.serleena.persistence.WeatherForecastEnum;
@@ -141,5 +142,34 @@ public class WeatherForecastTest {
         assertTrue(forecast.getAfternoonTemperature() == 2);
         assertTrue(forecast.getNightTemperature() == 2);
         assertTrue(forecast.date().equals(time));
+    }
+
+    /**
+     * Verifica che venga sollevata un'eccezione di tipo
+     * NoSuchWeatherForecastException qualora si richiedessero
+     * informazioni meteo per una località non coperta.
+     */
+
+    @Test
+    public void testExceptionWrongLocation() throws NoSuchWeatherForecastException {
+        GeoPoint fail_location = new GeoPoint(3.0, 3.0);
+        Date time = new Date(new GregorianCalendar(2015, GregorianCalendar.JANUARY, 01, 12, 00, 00).getTimeInMillis());
+        exception.expect(NoSuchWeatherForecastException.class);
+        WeatherForecast forecast = (WeatherForecast) dataSource.getWeatherInfo(fail_location, time);
+
+    }
+
+    /**
+     * Verifica che venga sollevata un'eccezione di tipo
+     * NoSuchWeatherForecastException qualora si richiedessero
+     * informazioni meteo per una data non coperta.
+     */
+
+    @Test
+    public void testExceptionWrongDate() throws NoSuchWeatherForecastException {
+        GeoPoint location = new GeoPoint(1.0, 1.0);
+        Date fail_time = new Date(new GregorianCalendar(2016, GregorianCalendar.JANUARY, 01, 12, 00, 00).getTimeInMillis());
+        exception.expect(NoSuchWeatherForecastException.class);
+        WeatherForecast forecast = (WeatherForecast) dataSource.getWeatherInfo(location, fail_time);
     }
 }
