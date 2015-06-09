@@ -51,10 +51,9 @@ public class AzimuthMagneticNorthTest {
     @Test
     public void testCorrectResult() {
         AzimuthMagneticNorth az = new AzimuthMagneticNorth(0);
-        GeoPoint loc = new GeoPoint(0.593411946, 2.05948852);
+        GeoPoint loc = new GeoPoint(34, -118);
         float result = az.toTrueNorth(loc);
-        System.out.println(result);
-        assertEquals(0.20943951, result, 0.05);
+        assertEquals(-12, result, 0.5);
     }
 
     @Test
