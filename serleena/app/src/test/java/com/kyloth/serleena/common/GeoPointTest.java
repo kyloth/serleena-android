@@ -42,10 +42,15 @@
 package com.kyloth.serleena.common;
 
 import android.location.Location;
+import android.location.LocationManager;
 
 import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.robolectric.RobolectricTestRunner;
 
 import java.lang.Object;
+
+import static org.junit.Assert.*;
 
 /**
  * Contiene i test di unità per la classe GeoPoint.
@@ -53,6 +58,7 @@ import java.lang.Object;
  * @author Filippo Sestini <sestini.filippo@gmail.com>
  * @version 1.0.0
  */
+@RunWith(RobolectricTestRunner.class)
 public class GeoPointTest {
 
     /**
@@ -174,7 +180,15 @@ public class GeoPointTest {
         GeoPoint gp1 = new GeoPoint(lat1, lon1);
         GeoPoint gp2 = new GeoPoint(lat2, lon2);
 
-        org.junit.Assert.assertTrue(gp1.distanceTo(gp2) == realDistance);
+        assertEquals(realDistance, gp1.distanceTo(gp2), 0);
+    }
+
+    @Test
+    public void testToLocation() {
+        GeoPoint gp = new GeoPoint(30, 40);
+        Location l = gp.toLocation();
+        assertEquals(l.getLatitude(), 30, 0);
+        assertEquals(l.getLongitude(), 40, 0);
     }
 
 }
