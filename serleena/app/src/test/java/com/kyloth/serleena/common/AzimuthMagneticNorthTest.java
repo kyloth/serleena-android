@@ -30,23 +30,25 @@
 
 package com.kyloth.serleena.common;
 
-import android.hardware.GeomagneticField;
-
 import org.junit.Test;
-
-import java.lang.Float;
-import java.lang.System;
+import org.junit.runner.RunWith;
+import org.robolectric.RobolectricTestRunner;
 
 import static org.junit.Assert.*;
 
 /**
- * Created by fsestini on 6/7/15.
+ * Contiene i test di unità per la classe AzimuthMagneticNorth.
+ *
+ * @author Filippo Sestini <sestini.filippo@gmail.com>
+ * @version 1.0.0
  */
+@RunWith(RobolectricTestRunner.class)
 public class AzimuthMagneticNorthTest {
-    /*
-        lat 34° = 0.593411946
-        lon 118° = 2.05948852
-        decl ~12° = 0.20943951
+
+    /**
+     * Verifica che i risultati restituiti dalla correzione da nord
+     * magnetico a nord reale siano esatti, confrontando i dati restituiti
+     * con valori noti a priori.
      */
     @Test
     public void testCorrectResult() {
