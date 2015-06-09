@@ -56,4 +56,32 @@ public class AzimuthMagneticNorthTest {
         assertEquals(-12, result, 0.5);
     }
 
+    /**
+     * Verifica che il passaggio di un parametro null al metodo toTrueNorth()
+     * sollevi un'eccezione.
+     */
+    @Test(expected = IllegalArgumentException.class)
+    public void testThatNullArgumentThrows() {
+        AzimuthMagneticNorth az = new AzimuthMagneticNorth(0);
+        az.toTrueNorth(null);
+    }
+
+    /**
+     * Verifica che un valore di azimuth fuori range (negativo) sollevi
+     * un'eccezione alla costruzione dell'istanza.
+     */
+    @Test(expected = IllegalArgumentException.class)
+    public void testThatAzimuthOutOfRangeThrows1() {
+        new AzimuthMagneticNorth(-10);
+    }
+
+    /**
+     * Verifica che un valore di azimuth fuori range (> 360) sollevi
+     * un'eccezione alla costruzione dell'istanza.
+     */
+    @Test(expected = IllegalArgumentException.class)
+    public void testThatAzimuthOutOfRangeThrows2() {
+        new AzimuthMagneticNorth(400);
+    }
+
 }
