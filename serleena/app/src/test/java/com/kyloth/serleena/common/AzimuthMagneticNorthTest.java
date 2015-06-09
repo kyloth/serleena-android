@@ -56,12 +56,4 @@ public class AzimuthMagneticNorthTest {
         assertEquals(-12, result, 0.5);
     }
 
-    @Test
-    public void foo() {
-        GeomagneticField geoField =
-                new GeomagneticField(20f, 20f, 0, System.currentTimeMillis());
-
-        float declination = geoField.getDeclination();
-        assertTrue(declination != 0);
-    }
 }
