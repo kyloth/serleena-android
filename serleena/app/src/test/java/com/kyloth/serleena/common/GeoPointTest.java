@@ -181,11 +181,10 @@ public class GeoPointTest {
 
     @Test
     public void testToLocation() {
-        android.location.Location l = new Location("");
-        l.setLatitude(32d);
-        l.setLongitude(43d);
-        assertEquals(32d, l.getLatitude(), 0);
-        assertEquals(43d, l.getLatitude(), 0);
+        GeoPoint gp = new GeoPoint(30, 40);
+        Location l = gp.toLocation();
+        assertEquals(l.getLatitude(), 30, 0);
+        assertEquals(l.getLongitude(), 40, 0);
     }
 
 }
