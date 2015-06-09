@@ -40,10 +40,15 @@ public class AzimuthMagneticNorth {
     private final float azimuthMagneticNorth;
 
     public AzimuthMagneticNorth(float azimuthMagneticNorth) {
+        if (azimuthMagneticNorth < 0 || azimuthMagneticNorth > 360)
+            throw new IllegalArgumentException("azimuth out of range");
+
         this.azimuthMagneticNorth = azimuthMagneticNorth;
     }
 
     public float toTrueNorth(GeoPoint location) {
+        if (location == null)
+            throw new IllegalArgumentException("Illegal null location");
         GeomagneticField geoField =
                 new GeomagneticField(
                         Double.valueOf(location.latitude()).floatValue(),
