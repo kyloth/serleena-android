@@ -28,17 +28,36 @@
 ///////////////////////////////////////////////////////////////////////////////
 
 
+/**
+ * Name: AzimuthMagneticNorth.java
+ * Package: com.kyloth.serleena.common
+ * Author: Filippo Sestini
+ *
+ * History:
+ * Version  Programmer       Changes
+ * 1.0.0    Filippo Sestini  Creazione file e scrittura di codice e documentazione
+ *                                          in Javadoc.
+ */
+
 package com.kyloth.serleena.common;
 
 import android.hardware.GeomagneticField;
-import android.location.Location;
 
 /**
- * Created by fsestini on 6/7/15.
+ * Rappresenta un valore di rotazione sull'asse azimuth, centrato sul nord
+ * magnetico.
  */
 public class AzimuthMagneticNorth {
     private final float azimuthMagneticNorth;
 
+    /**
+     * Crea un nuovo oggetto AzimuthMagneticNorth. Un valore pari a 0 indica un
+     * orientamento esatto verso il nord magnetico.
+     *
+     * @param azimuthMagneticNorth Rotazione, in gradi, attorno all'asse
+     *                             azimuth. Un valore < 0 o > 360 solleva
+     *                             un'eccezione IllegalArgumentException.
+     */
     public AzimuthMagneticNorth(float azimuthMagneticNorth) {
         if (azimuthMagneticNorth < 0 || azimuthMagneticNorth > 360)
             throw new IllegalArgumentException("azimuth out of range");
@@ -46,6 +65,16 @@ public class AzimuthMagneticNorth {
         this.azimuthMagneticNorth = azimuthMagneticNorth;
     }
 
+    /**
+     * Restituisce il valore di orientamento rappresentato dall'istanza
+     * rispetto al nord reale, in base alla declinazione del campo magnetico
+     * della posizione geografica specificata.
+     *
+     * @param location Posizione geografica in base al quale calcolare la
+     *                 declinazione del campo magnetico.
+     * @return Rotazione in gradi, sull'asse azimuth rispetto al nord reale. Un
+     * valore 0 indica un orientamento esatto verso il nord reale.
+     */
     public float toTrueNorth(GeoPoint location) {
         if (location == null)
             throw new IllegalArgumentException("Illegal null location");
