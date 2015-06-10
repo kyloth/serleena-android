@@ -72,6 +72,7 @@ public class SerleenaSensorManager implements ISensorManager {
     private ILocationManager locMan;
     private IHeadingManager hMan;
     private IHeartRateManager hrMan;
+    private ITrackCrossing tc;
     private IWakeupManager wMan;
     private ITelemetryManager telMan;
 
@@ -104,6 +105,7 @@ public class SerleenaSensorManager implements ISensorManager {
         locMan = new SerleenaLocationManager(context);
         hrMan = new HeartRateManager(context);
         wMan = new WakeupManager(context);
+        tc = new TrackCrossing(new LocationReachedManager(wMan, locMan));
         telMan = new TelemetryManager(locMan, hrMan, wMan, SerleenaPowerManager
                 .getInstance(context));
         try {
@@ -167,6 +169,16 @@ public class SerleenaSensorManager implements ISensorManager {
     @Override
     public ITelemetryManager getTelemetryManager() {
         return telMan;
+    }
+
+    /**
+     * Implementa ISensorManager.getTrackCrossingManager().
+     *
+     * @return Oggetto ITrackCrossing
+     */
+    @Override
+    public ITrackCrossing getTrackCrossingManager() {
+        return tc;
     }
 
 }

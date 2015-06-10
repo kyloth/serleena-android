@@ -90,4 +90,12 @@ public interface ISensorManager {
      * @return Oggetto di tipo ITelemetryManager.
      */
     public ITelemetryManager getTelemetryManager();
+
+    /**
+     * Restituisce un Manager che offre servizi per l'attraversamento di
+     * Percorsi.
+     *
+     * @return Oggetto ITrackCrossing
+     */
+    ITrackCrossing getTrackCrossingManager();
 }
