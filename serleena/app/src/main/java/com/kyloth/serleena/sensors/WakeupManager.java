@@ -57,7 +57,7 @@ import java.util.UUID;
 /**
  * Concretizza IWakeupManager.
  *
- * @use Viene utilizzata da SensorManager per restituire ai client il gestore dei wakeup, e dal client per accedere ai servizi offerti dal sensore. È utilizzato in particolare da LocationReachedManager e TelemetryManager.
+ * @use Viene utilizzata da SerleenaSensorManager per restituire ai client il gestore dei wakeup, e dal client per accedere ai servizi offerti dal sensore. È utilizzato in particolare da LocationReachedManager e TelemetryManager.
  * @field context : Context Contesto dell'applicazione
  * @field schedule : WakeupSchedule Oggetto che incapsula e rappresenta la pianificazione dei wakeup
  * @field alarmManager : Gestore degli allarmi di Android

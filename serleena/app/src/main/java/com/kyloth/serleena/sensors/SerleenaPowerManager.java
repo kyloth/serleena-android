@@ -50,7 +50,7 @@ import java.util.Map;
 /**
  * Concretizza IPowerManager.
  *
- * @use Viene utilizzato da SensorManager, che ne ottiene l'istanza e la utilizza per costruire TelemetryManager, a cui viene passato dietro interfaccia.
+ * @use Viene utilizzato da SerleenaSensorManager, che ne ottiene l'istanza e la utilizza per costruire TelemetryManager, a cui viene passato dietro interfaccia.
  * @field locks : Map<String, PowerManager.WakeLock> Mappa che associa lock del processore a stringhe identificative, per poterli rilasciare selettivamente
  * @field pm : PowerManager Oggetto di Android utilizzato per effettuare power management
  * @author Filippo Sestini <sestini.filippo@gmail.com>

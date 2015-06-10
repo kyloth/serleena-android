@@ -51,6 +51,8 @@ import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
 import android.os.AsyncTask;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 import java.util.HashMap;
 import java.util.concurrent.ScheduledFuture;
@@ -61,13 +63,11 @@ import java.util.concurrent.TimeUnit;
  * Concretizza IHeadingManager utilizzando le API di gestione della
  * sensoristica di Android.
  *
- * @use Viene istanziato da SensorManager e restituito al codice client dietro interfaccia.
+ * @use Viene istanziato da SerleenaSensorManager e restituito al codice client dietro interfaccia.
  * @field accelerometerValues : float[] Valori ottenuti dall'accelerometro del dispositivo
  * @field magneticFieldValues : float[] Valori ottenuti dal sensore di campo magnetico del dispositivo
  * @field latestOrientation : double Ultimo valore di orientamento disponibile
- * @field observers : Map<IHeadingObserver, ScheduledFuture> Mappa gli Observers a oggetti ScheduledFuture
- * @field scheduledPool : ScheduledThreadPoolExecutor Pool di thread necessari alla notifica dei dati a più observer in modalità asincrona
- * @field context : Context Contesto dell'applicazione
+ * @field observers : List<IHeadingObserver> Lista degli observers registrati agli eventi del manager
  * @field magnetometer : Sensor Instanza della classe di Android Sensor associato al magnetometro del dispositivo
  * @field accelerometer : Sensor Instanza della classe di Android Sensor associato all'accelerometro del dispositivo
  * @author Filippo Sestini
@@ -79,22 +79,21 @@ class HeadingManager implements IHeadingManager, SensorEventListener {
     private float[] accelerometerValues;
     private float[] magneticFieldValues;
     private double latestOrientation;
-    private Map<IHeadingObserver, ScheduledFuture> observers;
-    private ScheduledThreadPoolExecutor scheduledPool;
-    private Context context;
-    private Sensor magnetometer;
-    private Sensor accelerometer;
+    private final List<IHeadingObserver> observers;
+    private final Sensor magnetometer;
+    private final Sensor accelerometer;
+    private SensorManager sm;
 
     /**
      * Crea un nuovo oggetto HeadingManager associato a un contesto di
      * applicazione specificato.
      *
-     * @param context Oggetto Context in cui viene eseguito l'HeadingManager.
+     * @param sensorManager Gestore dei sensori di sistema.
      */
-    public HeadingManager(Context context) throws
+    public HeadingManager(SensorManager sensorManager) throws
             SensorNotAvailableException {
-        SensorManager sm = (SensorManager)
-                context.getSystemService(Context.SENSOR_SERVICE);
+
+        this.sm = sensorManager;
         accelerometer = sm.getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
         magnetometer = sm.getDefaultSensor(Sensor.TYPE_MAGNETIC_FIELD);
 
@@ -103,10 +102,9 @@ class HeadingManager implements IHeadingManager, SensorEventListener {
         if (magnetometer == null)
             throw new SensorNotAvailableException("magnetometer");
 
-        observers = new HashMap<IHeadingObserver, ScheduledFuture>();
+        observers = new ArrayList<IHeadingObserver>();
         latestOrientation = 0;
-        this.context = context;
-        scheduledPool = new ScheduledThreadPoolExecutor(2);
+        magneticFieldValues = accelerometerValues = null;
     }
 
     /**
@@ -121,34 +119,25 @@ class HeadingManager implements IHeadingManager, SensorEventListener {
      */
     @Override
     public synchronized void onSensorChanged(SensorEvent sensorEvent) {
-        onNewData(sensorEvent.values, sensorEvent.sensor.getType());
-    }
+        if (sensorEvent.sensor.getType() == Sensor.TYPE_ACCELEROMETER)
+            accelerometerValues = sensorEvent.values;
+        else if (sensorEvent.sensor.getType() == Sensor.TYPE_MAGNETIC_FIELD)
+            magneticFieldValues = sensorEvent.values;
+        else
+            return;
 
-    /**
-     * Elabora dati raw provenienti dai sensori.
-     *
-     * @param values Dati rilevati dai sensori.
-     * @param sensorType Tipo di sensore che ha generato i dati.
-     */
-    public synchronized void onNewData(float[] values, int sensorType) {
-        if (sensorType == Sensor.TYPE_ACCELEROMETER)
-            accelerometerValues = values;
-        else if (sensorType == Sensor.TYPE_MAGNETIC_FIELD)
-            magneticFieldValues = values;
-        else return;
+        if (accelerometerValues != null && magneticFieldValues != null) {
+            AsyncTask<Void, Void, Double> t =
+                    new AsyncTask<Void, Void, Double>() {
+                @Override
+                protected Double doInBackground(Void... params) {
+                    onRawDataReceived(accelerometerValues, magneticFieldValues);
+                    return null;
+                }
+            };
 
-        AsyncTask<Void, Void, Double> t = new AsyncTask<Void, Void, Double>() {
-            @Override
-            protected Double doInBackground(Void... params) {
-                return computeOrientation();
-            }
-            @Override
-            protected void onPostExecute(Double result) {
-                latestOrientation = result;
-            }
-        };
-
-        t.execute();
+            t.execute();
+        }
     }
 
     /**
@@ -167,27 +156,12 @@ class HeadingManager implements IHeadingManager, SensorEventListener {
      * Implmentazione di IHeadingManager.attachObserver().
      *
      * @param observer IHeadingObserver da registrare.
-     * @param interval Intervallo di tempo, in secondi,
-     *                 ogni qual volta si vuole notificare l'observer.
      */
     @Override
     @TargetApi(19)
-    public synchronized void attachObserver(final IHeadingObserver observer,
-                                            int interval) {
-        Runnable task = new Runnable() {
-            @Override
-            public void run() {
-                notifyObserver(observer);
-            }
-        };
-
-        ScheduledFuture sf = scheduledPool.schedule(task, interval,
-                TimeUnit.SECONDS);
-        observers.put(observer, sf);
-
+    public synchronized void attachObserver(final IHeadingObserver observer) {
+        observers.add(observer);
         if (observers.size() == 1) {
-            SensorManager sm = (SensorManager)
-                    context.getSystemService(Context.SENSOR_SERVICE);
             sm.registerListener(this, accelerometer,
                     SensorManager.SENSOR_DELAY_UI);
             sm.registerListener(this, magnetometer,
@@ -204,58 +178,45 @@ class HeadingManager implements IHeadingManager, SensorEventListener {
     @Override
     @TargetApi(19)
     public synchronized void detachObserver(IHeadingObserver observer) {
-        ScheduledFuture sf = observers.get(observer);
-        sf.cancel(true);
         observers.remove(observer);
 
-        if (observers.size() == 0) {
-            SensorManager sm = (SensorManager)
-                    context.getSystemService(Context.SENSOR_SERVICE);
+        if (observers.size() == 0)
             sm.unregisterListener(this);
-        }
     }
 
     /**
-     * Implementazione di IHeadingManager.getSingleUpdate().
-     *
-     * @return Orientamento in gradi rispetto ai punti cardinali.
+     * Implementazione di IHeadingManager.notifyObservers().
      */
     @Override
-    public synchronized double getSingleUpdate() {
-        return latestOrientation;
+    public synchronized void notifyObservers() {
+        for (IHeadingObserver o : observers)
+            o.onHeadingUpdate(latestOrientation);
     }
 
     /**
-     * Implementazione di IHeadingManager.notifyObserver().
+     * Utilizza dati grezzi forniti da sensoristica o fonti esterne relativi
+     * al campo magnetico e l'accelerazione del dispositivo per calcolare
+     * l'orientamento del dispositivo, che viene comunicato agli observer
+     * registrati all'istanza.
      *
-     * @param observer Oggetto IHeadingObserver da notificare.
+     * @param accelerometerValues Valori di accelerazione del dispositivo
+     *                            sugli assi x, y, z.
+     * @param magnetometerValues Valori di campo magnetico del dispositivo
+     *                           sugli assi x, y, z.
      */
-    @Override
-    public synchronized void notifyObserver(IHeadingObserver observer) {
-        observer.onHeadingUpdate(latestOrientation);
-    }
+    public void onRawDataReceived(float[] accelerometerValues, float[]
+            magnetometerValues) {
+        if (accelerometerValues == null || magnetometerValues == null)
+            throw new IllegalArgumentException("Illegal null sensor values");
 
-    /**
-     * Calcola l'orientamento del dispositivo.
-     *
-     * Utilizza i dati raw forniti dai sensori accelerometro e campo magnetico
-     * per calcolare l'orientamento del dispositivo.
-     *
-     * @return Gradi di rotazione sull'asse azimuth.
-     */
-    @TargetApi(19)
-    private synchronized double computeOrientation() {
         float[] values = new float[3];
         float[] R = new float[9];
         SensorManager.getRotationMatrix(R, null, accelerometerValues,
-                magneticFieldValues);
+                magnetometerValues);
         SensorManager.getOrientation(R, values);
 
-        values[0] = (float) Math.toDegrees(values[0]); // Azimuth
-        values[1] = (float) Math.toDegrees(values[1]); // Pitch
-        values[2] = (float) Math.toDegrees(values[2]); // Roll
-
-        return values[0];
+        latestOrientation = (float) Math.toDegrees(values[0]); // Azimuth
+        notifyObservers();
     }
 
 }

@@ -62,7 +62,7 @@ import java.util.Set;
  * Fornisce al codice client la posizione dell'utente utilizzando il modulo
  * GPS del dispositivo con il supporto delle API Android.
  *
- * @use Viene istanziato da SensorManager e restituito al codice client dietro interfaccia.
+ * @use Viene istanziato da SerleenaSensorManager e restituito al codice client dietro interfaccia.
  * @field lastKnownLocation : GeoPoint Ultima posizione geografica nota dell'utente
  * @field lastUpdate : long Istante di tempo, in UNIX time, a cui corrisponde l'ultimo dato di posizione noto
  * @field observer : Map<ILocationObserver, Integer> Mappa gli Observer agli intervalli di notifica

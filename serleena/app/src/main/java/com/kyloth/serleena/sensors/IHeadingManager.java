@@ -50,7 +50,7 @@ package com.kyloth.serleena.sensors;
  * modalità push a un oggetto IHeadingObserver registrato agli eventi
  * di IHeadingManager tramite pattern "Observer".
  *
- * @use Viene utilizzata da SensorManager per restituire ai client il sensore di orientamento, e dai client per accedere ai servizi offerti dal sensore. È utilizzato in particolare da CompassPresenter e TrackPresenter.
+ * @use Viene utilizzata da SerleenaSensorManager per restituire ai client il sensore di orientamento, e dai client per accedere ai servizi offerti dal sensore. È utilizzato in particolare da CompassPresenter e TrackPresenter.
  * @author Gabriele Pozzan <gabriele.pozzan@studenti.unipd.it>
  * @version 1.0.0
  */
@@ -58,12 +58,12 @@ package com.kyloth.serleena.sensors;
 public interface IHeadingManager {
     /**
      * Registra un IHeadingObserver che, tramite il pattern "Observer"
-     * sarà notificato, a un intervallo fissato, dei cambiamenti di stato.
+     * sarà notificato, a intervalli regolari, dei cambiamenti di stato.
      *
      * @param observer IHeadingObserver da registrare.
-     * @param interval Intervallo di tempo per la notifica all'oggetto "observer".
      */
-    public void attachObserver(IHeadingObserver observer, int interval);
+    public void attachObserver(IHeadingObserver observer);
+
     /**
      * Cancella la registrazione di un IHeadingObserver.
      *
@@ -71,19 +71,10 @@ public interface IHeadingManager {
      *                 questo oggetto sarà cancellata.
      */
     public void detachObserver(IHeadingObserver observer);
-    /**
-     * Permette di ottenere un aggiornamento dei dati di orientamento su
-     * richiesta esplicita.
-     *
-     * @return Orientamento in gradi rispetto ai punti cardinali.
-     */
-    public double getSingleUpdate();
 
     /**
      * Metodo "notify" basato sull'omonimo metodo della classe "Subject" del
      * Design Pattern "Observer".
-     *
-     * @param observer Oggetto IHeadingObserver da notificare.
      */
-    public void notifyObserver(IHeadingObserver observer);
+    public void notifyObservers();
 }

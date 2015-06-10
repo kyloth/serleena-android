@@ -29,7 +29,7 @@
 
 
 /**
- * Name: SensorManager.java
+ * Name: SerleenaSensorManager.java
  * Package: com.kyloth.serleena.sensors
  * Author: Filippo Sestini
  *
@@ -42,6 +42,7 @@
 package com.kyloth.serleena.sensors;
 
 import android.content.Context;
+import android.hardware.SensorManager;
 
 import java.util.HashMap;
 
@@ -63,10 +64,10 @@ import java.util.HashMap;
  * @author Filippo Sestini <sestini.filippo@gmail.com>
  * @version 1.0.0
  */
-public class SensorManager implements ISensorManager {
+public class SerleenaSensorManager implements ISensorManager {
 
-    private static final HashMap<Context, SensorManager> instances =
-            new HashMap<Context, SensorManager>();
+    private static final HashMap<Context, SerleenaSensorManager> instances =
+            new HashMap<Context, SerleenaSensorManager>();
 
     private ILocationManager locMan;
     private IHeadingManager hMan;
@@ -82,12 +83,12 @@ public class SensorManager implements ISensorManager {
      * associata al contesto specificato.
      *
      * @param context Contesto dell'applicazione di cui si vuole ottenere il
-     *                SensorManager associato.
-     * @return Singola istanza di SensorManager associata al contesto.
+     *                SerleenaSensorManager associato.
+     * @return Singola istanza di SerleenaSensorManager associata al contesto.
      */
-    public static SensorManager getInstance(Context context) {
+    public static SerleenaSensorManager getInstance(Context context) {
         if (instances.get(context) == null)
-            instances.put(context, new SensorManager(context));
+            instances.put(context, new SerleenaSensorManager(context));
         return instances.get(context);
     }
 
@@ -100,7 +101,7 @@ public class SensorManager implements ISensorManager {
      * @param context Contesto dell'applicazione.
      * @see Context
      */
-    private SensorManager(Context context) {
+    private SerleenaSensorManager(Context context) {
         locMan = new SerleenaLocationManager(context);
         hrMan = new HeartRateManager(context);
         wMan = new WakeupManager(context);
@@ -108,7 +109,9 @@ public class SensorManager implements ISensorManager {
         telMan = new TelemetryManager(locMan, hrMan, wMan, SerleenaPowerManager
                 .getInstance(context));
         try {
-            hMan = new HeadingManager(context);
+            SensorManager sm = (SensorManager) context.getSystemService
+                    (Context.SENSOR_SERVICE);
+            hMan = new HeadingManager(sm);
         } catch (SensorNotAvailableException e) {
             hMan = null;
         }

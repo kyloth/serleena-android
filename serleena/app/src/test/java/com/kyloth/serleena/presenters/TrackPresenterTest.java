@@ -179,7 +179,7 @@ public class TrackPresenterTest {
         verify(locMan).attachObserver(presenter, 60);
         when(sMan.getHeadingSource()).thenReturn(hMan);
         presenter.resume();
-        verify(hMan).attachObserver(presenter, 60);
+        verify(hMan).attachObserver(presenter);
         presenter.pause();
         verify(hMan).detachObserver(presenter);
     }
