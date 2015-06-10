@@ -120,30 +120,18 @@ class HeadingManager implements IHeadingManager, SensorEventListener {
      */
     @Override
     public synchronized void onSensorChanged(SensorEvent sensorEvent) {
-        onNewData(sensorEvent.values, sensorEvent.sensor.getType());
-    }
-
-    /**
-     * Elabora dati raw provenienti dai sensori.
-     *
-     * @param values Dati rilevati dai sensori.
-     * @param sensorType Tipo di sensore che ha generato i dati.
-     */
-    public synchronized void onNewData(float[] values, int sensorType) {
-        if (sensorType == Sensor.TYPE_ACCELEROMETER)
-            accelerometerValues = values;
-        else if (sensorType == Sensor.TYPE_MAGNETIC_FIELD)
-            magneticFieldValues = values;
-        else return;
+        if (sensorEvent.sensor.getType() == Sensor.TYPE_ACCELEROMETER)
+            accelerometerValues = sensorEvent.values;
+        else if (sensorEvent.sensor.getType() == Sensor.TYPE_MAGNETIC_FIELD)
+            magneticFieldValues = sensorEvent.values;
+        else
+            return;
 
         AsyncTask<Void, Void, Double> t = new AsyncTask<Void, Void, Double>() {
             @Override
             protected Double doInBackground(Void... params) {
-                return computeOrientation();
-            }
-            @Override
-            protected void onPostExecute(Double result) {
-                latestOrientation = result;
+                onRawDataReceived(accelerometerValues, magneticFieldValues);
+                return null;
             }
         };
 
@@ -204,26 +192,26 @@ class HeadingManager implements IHeadingManager, SensorEventListener {
     }
 
     /**
-     * Calcola l'orientamento del dispositivo.
+     * Utilizza dati grezzi forniti da sensoristica o fonti esterne relativi
+     * al campo magnetico e l'accelerazione del dispositivo per calcolare
+     * l'orientamento del dispositivo, che viene comunicato agli observer
+     * registrati all'istanza.
      *
-     * Utilizza i dati raw forniti dai sensori accelerometro e campo magnetico
-     * per calcolare l'orientamento del dispositivo.
-     *
-     * @return Gradi di rotazione sull'asse azimuth.
+     * @param accelerometerValues Valori di accelerazione del dispositivo
+     *                            sugli assi x, y, z.
+     * @param magnetometerValues Valori di campo magnetico del dispositivo
+     *                           sugli assi x, y, z.
      */
-    @TargetApi(19)
-    private synchronized double computeOrientation() {
+    public void onRawDataReceived(float[] accelerometerValues, float[]
+            magnetometerValues) {
         float[] values = new float[3];
         float[] R = new float[9];
         SensorManager.getRotationMatrix(R, null, accelerometerValues,
-                magneticFieldValues);
+                magnetometerValues);
         SensorManager.getOrientation(R, values);
 
-        values[0] = (float) Math.toDegrees(values[0]); // Azimuth
-        values[1] = (float) Math.toDegrees(values[1]); // Pitch
-        values[2] = (float) Math.toDegrees(values[2]); // Roll
-
-        return values[0];
+        latestOrientation = (float) Math.toDegrees(values[0]); // Azimuth
+        notifyObservers();
     }
 
 }
