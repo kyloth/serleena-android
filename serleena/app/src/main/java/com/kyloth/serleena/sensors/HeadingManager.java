@@ -68,7 +68,6 @@ import java.util.concurrent.TimeUnit;
  * @field magneticFieldValues : float[] Valori ottenuti dal sensore di campo magnetico del dispositivo
  * @field latestOrientation : double Ultimo valore di orientamento disponibile
  * @field observers : List<IHeadingObserver> Lista degli observers registrati agli eventi del manager
- * @field context : Context Contesto dell'applicazione
  * @field magnetometer : Sensor Instanza della classe di Android Sensor associato al magnetometro del dispositivo
  * @field accelerometer : Sensor Instanza della classe di Android Sensor associato all'accelerometro del dispositivo
  * @author Filippo Sestini
