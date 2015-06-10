@@ -106,6 +106,7 @@ class HeadingManager implements IHeadingManager, SensorEventListener {
         observers = new ArrayList<IHeadingObserver>();
         latestOrientation = 0;
         sm = (SensorManager) context.getSystemService(Context.SENSOR_SERVICE);
+        magneticFieldValues = accelerometerValues = null;
     }
 
     /**
