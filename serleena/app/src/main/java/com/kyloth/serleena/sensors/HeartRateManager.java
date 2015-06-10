@@ -46,7 +46,7 @@ import android.content.Context;
 /**
  * Concretizza IHeartRateManager
  *
- * @use Viene istanziato da SensorManager e restituito al codice client dietro interfaccia.
+ * @use Viene istanziato da SerleenaSensorManager e restituito al codice client dietro interfaccia.
  * @field context : Context Contesto dell'applicazione
  * @author Filippo Sestini <sestini.filippo@gmail.com>
  * @version 1.0.0

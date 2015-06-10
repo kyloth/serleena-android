@@ -49,7 +49,7 @@ import com.kyloth.serleena.common.UnregisteredObserverException;
  * in base alla posizione dell'Escursionista, il raggiungimento di un punto
  * geografico definito.
  *
- * @use Viene utilizzata da SensorManager per restituire ai client il gestore di raggiungimento di posizione, e dal client per accedere ai servizi offerti dal sensore. È utilizzato in particolare da TrackPresenter.
+ * @use Viene utilizzata da SerleenaSensorManager per restituire ai client il gestore di raggiungimento di posizione, e dal client per accedere ai servizi offerti dal sensore. È utilizzato in particolare da TrackPresenter.
  * @author Gabriele Pozzan <gabriele.pozzan@studenti.unipd.it>
  * @version 1.0.0
  */

@@ -52,7 +52,7 @@ import com.kyloth.serleena.common.UnregisteredObserverException;
  * modalità push a un oggetto ILocationObserver registrato agli eventi
  * di ILocationManager tramite pattern "Observer".
  *
- * @use Viene utilizzata da SensorManager per restituire ai client il sensore di posizione, e dal client per accedere ai servizi offerti dal sensore. È utilizzato in particolare da MapPresenter, TrackPresenter, LocationReachedManager e TelemetryManager.
+ * @use Viene utilizzata da SerleenaSensorManager per restituire ai client il sensore di posizione, e dal client per accedere ai servizi offerti dal sensore. È utilizzato in particolare da MapPresenter, TrackPresenter, LocationReachedManager e TelemetryManager.
  * @author Gabriele Pozzan <gabriele.pozzan@studenti.unipd.it>
  * @version 1.0.0
  */

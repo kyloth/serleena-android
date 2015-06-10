@@ -66,7 +66,7 @@ import com.kyloth.serleena.presentation.ITrackSelectionView;
 import com.kyloth.serleena.presentation.ITrackView;
 import com.kyloth.serleena.presentation.IWeatherView;
 import com.kyloth.serleena.sensors.ISensorManager;
-import com.kyloth.serleena.sensors.SensorManager;
+import com.kyloth.serleena.sensors.SerleenaSensorManager;
 import com.kyloth.serleena.view.fragments.CardioFragment;
 import com.kyloth.serleena.view.fragments.CompassFragment;
 import com.kyloth.serleena.view.fragments.ContactsFragment;
@@ -149,7 +149,7 @@ public class SerleenaActivity extends AppCompatActivity implements ISerleenaActi
 
         SQLiteDataSourceFactory factory = SQLiteDataSourceFactory.getInstance();
         dataSource = new SerleenaDataSource(factory.createDataSource(this));
-        sensorManager = SensorManager.getInstance(this);
+        sensorManager = SerleenaSensorManager.getInstance(this);
     }
 
     /**

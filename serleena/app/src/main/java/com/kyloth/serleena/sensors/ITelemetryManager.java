@@ -50,7 +50,7 @@ import com.kyloth.serleena.common.TelemetryEventType;
  * interromperlo e segnalare manualmente eventi da registrare nel
  * Tracciamento in corso.
  *
- * @use Viene utilizzata da SensorManager per restituire ai client il gestore dei Tracciamenti, e dal client per accedere ai servizi offerti dal sensore. È utilizzato in particolare da TrackPresenter per governare il Tracciamento.
+ * @use Viene utilizzata da SerleenaSensorManager per restituire ai client il gestore dei Tracciamenti, e dal client per accedere ai servizi offerti dal sensore. È utilizzato in particolare da TrackPresenter per governare il Tracciamento.
  * @author Gabriele Pozzan <gabriele.pozzan@studenti.unipd.it>
  * @version 1.0.0
  */

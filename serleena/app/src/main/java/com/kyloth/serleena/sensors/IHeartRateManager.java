@@ -49,7 +49,7 @@ package com.kyloth.serleena.sensors;
  * modalità push a un oggetto IHeartRateObserver registrato agli eventi
  * di IHeartRateManager tramite pattern "Observer".
  *
- * @use Viene utilizzata da SensorManager per restituire ai client il sensore di battito cardiaco, e dal client per accedere ai servizi offerti dal sensore. È utilizzato in particolare da CardioPresenter e TelemetryManager, quest'ultimo per il campionamento di eventi di Tracciamento.
+ * @use Viene utilizzata da SerleenaSensorManager per restituire ai client il sensore di battito cardiaco, e dal client per accedere ai servizi offerti dal sensore. È utilizzato in particolare da CardioPresenter e TelemetryManager, quest'ultimo per il campionamento di eventi di Tracciamento.
  * @author Gabriele Pozzan <gabriele.pozzan@studenti.unipd.it>
  * @version 1.0.0
  */

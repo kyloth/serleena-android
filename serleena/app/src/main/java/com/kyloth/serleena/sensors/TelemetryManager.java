@@ -59,7 +59,7 @@ import java.util.UUID;
 /**
  * Concretizza ITelemetryManager
  *
- * @use Viene istanziato da SensorManager e restituito al codice client dietro interfaccia
+ * @use Viene istanziato da SerleenaSensorManager e restituito al codice client dietro interfaccia
  * @field locMan : ILocationManager Gestore del sensore della posizione
  * @field hrMan : IHeadingManager Gestore del sensore di battito cardiaco
  * @field wkMan : IWakeupManager Gestore dei wakeup

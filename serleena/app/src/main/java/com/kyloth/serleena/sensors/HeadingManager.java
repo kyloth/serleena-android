@@ -63,7 +63,7 @@ import java.util.concurrent.TimeUnit;
  * Concretizza IHeadingManager utilizzando le API di gestione della
  * sensoristica di Android.
  *
- * @use Viene istanziato da SensorManager e restituito al codice client dietro interfaccia.
+ * @use Viene istanziato da SerleenaSensorManager e restituito al codice client dietro interfaccia.
  * @field accelerometerValues : float[] Valori ottenuti dall'accelerometro del dispositivo
  * @field magneticFieldValues : float[] Valori ottenuti dal sensore di campo magnetico del dispositivo
  * @field latestOrientation : double Ultimo valore di orientamento disponibile
@@ -83,7 +83,7 @@ class HeadingManager implements IHeadingManager, SensorEventListener {
     private List<IHeadingObserver> observers;
     private Sensor magnetometer;
     private Sensor accelerometer;
-    android.hardware.SensorManager sm;
+    private SensorManager sm;
 
     /**
      * Crea un nuovo oggetto HeadingManager associato a un contesto di
