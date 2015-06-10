@@ -42,6 +42,7 @@
 package com.kyloth.serleena.sensors;
 
 import android.content.Context;
+import android.hardware.SensorManager;
 
 import java.util.HashMap;
 
@@ -108,7 +109,9 @@ public class SerleenaSensorManager implements ISensorManager {
         telMan = new TelemetryManager(locMan, hrMan, wMan, SerleenaPowerManager
                 .getInstance(context));
         try {
-            hMan = new HeadingManager(context);
+            SensorManager sm = (SensorManager) context.getSystemService
+                    (Context.SENSOR_SERVICE);
+            hMan = new HeadingManager(sm);
         } catch (SensorNotAvailableException e) {
             hMan = null;
         }

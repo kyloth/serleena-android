@@ -89,12 +89,12 @@ class HeadingManager implements IHeadingManager, SensorEventListener {
      * Crea un nuovo oggetto HeadingManager associato a un contesto di
      * applicazione specificato.
      *
-     * @param context Oggetto Context in cui viene eseguito l'HeadingManager.
+     * @param sensorManager Gestore dei sensori di sistema.
      */
-    public HeadingManager(Context context) throws
+    public HeadingManager(SensorManager sensorManager) throws
             SensorNotAvailableException {
-        SensorManager sm = (SensorManager)
-                context.getSystemService(Context.SENSOR_SERVICE);
+
+        this.sm = sensorManager;
         accelerometer = sm.getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
         magnetometer = sm.getDefaultSensor(Sensor.TYPE_MAGNETIC_FIELD);
 
@@ -105,7 +105,6 @@ class HeadingManager implements IHeadingManager, SensorEventListener {
 
         observers = new ArrayList<IHeadingObserver>();
         latestOrientation = 0;
-        sm = (SensorManager) context.getSystemService(Context.SENSOR_SERVICE);
         magneticFieldValues = accelerometerValues = null;
     }
 
