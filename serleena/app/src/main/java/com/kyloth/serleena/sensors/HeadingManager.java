@@ -79,9 +79,9 @@ class HeadingManager implements IHeadingManager, SensorEventListener {
     private float[] accelerometerValues;
     private float[] magneticFieldValues;
     private double latestOrientation;
-    private List<IHeadingObserver> observers;
-    private Sensor magnetometer;
-    private Sensor accelerometer;
+    private final List<IHeadingObserver> observers;
+    private final Sensor magnetometer;
+    private final Sensor accelerometer;
     private SensorManager sm;
 
     /**
