@@ -83,6 +83,7 @@ class HeadingManager implements IHeadingManager, SensorEventListener {
     private List<IHeadingObserver> observers;
     private Sensor magnetometer;
     private Sensor accelerometer;
+    android.hardware.SensorManager sm;
 
     /**
      * Crea un nuovo oggetto HeadingManager associato a un contesto di
@@ -104,7 +105,7 @@ class HeadingManager implements IHeadingManager, SensorEventListener {
 
         observers = new ArrayList<IHeadingObserver>();
         latestOrientation = 0;
-        this.context = context;
+        sm = (SensorManager) context.getSystemService(Context.SENSOR_SERVICE);
     }
 
     /**
@@ -171,8 +172,6 @@ class HeadingManager implements IHeadingManager, SensorEventListener {
     public synchronized void attachObserver(final IHeadingObserver observer) {
         observers.add(observer);
         if (observers.size() == 1) {
-            SensorManager sm = (SensorManager)
-                    context.getSystemService(Context.SENSOR_SERVICE);
             sm.registerListener(this, accelerometer,
                     SensorManager.SENSOR_DELAY_UI);
             sm.registerListener(this, magnetometer,
@@ -191,9 +190,7 @@ class HeadingManager implements IHeadingManager, SensorEventListener {
     public synchronized void detachObserver(IHeadingObserver observer) {
         observers.remove(observer);
 
-        if (observers.size() == 0) {
-            SensorManager sm = (SensorManager)
-                    context.getSystemService(Context.SENSOR_SERVICE);
+        if (observers.size() == 0)
             sm.unregisterListener(this);
         }
     }
