@@ -58,12 +58,12 @@ package com.kyloth.serleena.sensors;
 public interface IHeadingManager {
     /**
      * Registra un IHeadingObserver che, tramite il pattern "Observer"
-     * sarà notificato, a un intervallo fissato, dei cambiamenti di stato.
+     * sarà notificato, a intervalli regolari, dei cambiamenti di stato.
      *
      * @param observer IHeadingObserver da registrare.
-     * @param interval Intervallo di tempo per la notifica all'oggetto "observer".
      */
-    public void attachObserver(IHeadingObserver observer, int interval);
+    public void attachObserver(IHeadingObserver observer);
+
     /**
      * Cancella la registrazione di un IHeadingObserver.
      *
@@ -82,8 +82,6 @@ public interface IHeadingManager {
     /**
      * Metodo "notify" basato sull'omonimo metodo della classe "Subject" del
      * Design Pattern "Observer".
-     *
-     * @param observer Oggetto IHeadingObserver da notificare.
      */
-    public void notifyObserver(IHeadingObserver observer);
+    public void notifyObservers();
 }

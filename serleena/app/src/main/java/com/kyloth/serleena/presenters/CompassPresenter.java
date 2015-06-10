@@ -93,7 +93,7 @@ public class CompassPresenter implements ICompassPresenter, IHeadingObserver {
         try {
             ISensorManager sm = activity.getSensorManager();
             IHeadingManager hm = sm.getHeadingSource();
-            hm.attachObserver(this, UPDATE_INTERVAL);
+            hm.attachObserver(this);
         } catch (SensorNotAvailableException ex) {
             view.clearView();
         }

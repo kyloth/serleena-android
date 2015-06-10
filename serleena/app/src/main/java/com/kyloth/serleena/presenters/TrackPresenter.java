@@ -184,7 +184,7 @@ public class TrackPresenter implements ITrackPresenter,
         locMan.attachObserver(this, UPDATE_INTERVAL_SECONDS);
         try {
             hMan = activity.getSensorManager().getHeadingSource();
-            hMan.attachObserver(this, UPDATE_INTERVAL_SECONDS);
+            hMan.attachObserver(this);
         } catch (SensorNotAvailableException e) {
             hMan = null;
         }
