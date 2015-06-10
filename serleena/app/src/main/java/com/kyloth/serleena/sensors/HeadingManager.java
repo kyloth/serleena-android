@@ -126,15 +126,18 @@ class HeadingManager implements IHeadingManager, SensorEventListener {
         else
             return;
 
-        AsyncTask<Void, Void, Double> t = new AsyncTask<Void, Void, Double>() {
-            @Override
-            protected Double doInBackground(Void... params) {
-                onRawDataReceived(accelerometerValues, magneticFieldValues);
-                return null;
-            }
-        };
+        if (accelerometerValues != null && magneticFieldValues != null) {
+            AsyncTask<Void, Void, Double> t =
+                    new AsyncTask<Void, Void, Double>() {
+                @Override
+                protected Double doInBackground(Void... params) {
+                    onRawDataReceived(accelerometerValues, magneticFieldValues);
+                    return null;
+                }
+            };
 
-        t.execute();
+            t.execute();
+        }
     }
 
     /**
@@ -203,6 +206,9 @@ class HeadingManager implements IHeadingManager, SensorEventListener {
      */
     public void onRawDataReceived(float[] accelerometerValues, float[]
             magnetometerValues) {
+        if (accelerometerValues == null || magnetometerValues == null)
+            throw new IllegalArgumentException("Illegal null sensor values");
+
         float[] values = new float[3];
         float[] R = new float[9];
         SensorManager.getRotationMatrix(R, null, accelerometerValues,
