@@ -66,6 +66,16 @@ public interface ITelemetry {
     public Iterable<TelemetryEvent> getEvents();
 
     /**
+     * Restituisce gli eventi che soddisfano il predicato specificato.
+     *
+     * @param predicate Predicato.
+     * @return Insieme enumerabile di eventi che soddisfano il predicato.
+     */
+    public Iterable<TelemetryEvent> getEvents(Predicate<TelemetryEvent>
+                                                      predicate)
+            throws NoSuchTelemetryEventException;
+
+    /**
      * Restituisce la durata totale del Tracciamento.
      *
      * @return  Durata temporale in secondi del Tracciamento.

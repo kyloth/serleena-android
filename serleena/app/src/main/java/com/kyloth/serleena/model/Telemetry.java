@@ -41,6 +41,7 @@
 
 package com.kyloth.serleena.model;
 
+import com.android.internal.util.Predicate;
 import com.kyloth.serleena.common.GeoPoint;
 import com.kyloth.serleena.common.LocationTelemetryEvent;
 import com.kyloth.serleena.common.TelemetryEvent;
@@ -91,6 +92,29 @@ class Telemetry implements  ITelemetry {
         if (allEvents == null)
             allEvents = storage.getEvents();
         return allEvents;
+    }
+
+    /**
+     * Implementa ITelemetry.getEvents().
+     *
+     * @param predicate Predicato.
+     * @return Insieme enumerabile di eventi che soddisfano il predicato.
+     */
+    @Override
+    public Iterable<TelemetryEvent> getEvents(
+            Predicate<TelemetryEvent> predicate)
+            throws NoSuchTelemetryEventException {
+        Iterable<TelemetryEvent> events = this.getEvents();
+        ArrayList<TelemetryEvent> result = new ArrayList<TelemetryEvent>();
+
+        for (TelemetryEvent e : events)
+            if (predicate.apply(e))
+                result.add(e);
+
+        if (result.size() == 0)
+            throw new NoSuchTelemetryEventException();
+
+        return result;
     }
 
     /**
