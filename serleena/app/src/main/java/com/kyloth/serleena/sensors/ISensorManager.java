@@ -76,14 +76,6 @@ public interface ISensorManager {
     public IHeartRateManager getHeartRateSource();
 
     /**
-     * Restituisce un Manager per permettere la notifica a determinati
-     * oggetti al raggiungimento di particolari punti geografici.
-     *
-     * @return Oggetto di tipo ILocationReachedManager.
-     */
-    public ILocationReachedManager getLocationReachedSource();
-
-    /**
      * Restituisce un Manager per ottenere notifiche di wakeup del
      * processore utilizzando RTC.
      *

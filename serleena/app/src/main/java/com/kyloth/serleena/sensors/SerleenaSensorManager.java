@@ -72,7 +72,6 @@ public class SerleenaSensorManager implements ISensorManager {
     private ILocationManager locMan;
     private IHeadingManager hMan;
     private IHeartRateManager hrMan;
-    private ILocationReachedManager locReaMan;
     private IWakeupManager wMan;
     private ITelemetryManager telMan;
 
@@ -105,7 +104,6 @@ public class SerleenaSensorManager implements ISensorManager {
         locMan = new SerleenaLocationManager(context);
         hrMan = new HeartRateManager(context);
         wMan = new WakeupManager(context);
-        locReaMan = new LocationReachedManager(wMan, locMan);
         telMan = new TelemetryManager(locMan, hrMan, wMan, SerleenaPowerManager
                 .getInstance(context));
         try {
@@ -149,16 +147,6 @@ public class SerleenaSensorManager implements ISensorManager {
     @Override
     public IHeartRateManager getHeartRateSource() {
         return hrMan;
-    }
-
-    /**
-     * Implementa ISensorManager.getLocationReachedSource().
-     *
-     * @return Oggetto ILocationReachedManager.
-     */
-    @Override
-    public ILocationReachedManager getLocationReachedSource() {
-        return locReaMan;
     }
 
     /**
