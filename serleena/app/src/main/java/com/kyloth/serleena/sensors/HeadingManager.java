@@ -192,17 +192,6 @@ class HeadingManager implements IHeadingManager, SensorEventListener {
 
         if (observers.size() == 0)
             sm.unregisterListener(this);
-        }
-    }
-
-    /**
-     * Implementazione di IHeadingManager.getSingleUpdate().
-     *
-     * @return Orientamento in gradi rispetto ai punti cardinali.
-     */
-    @Override
-    public synchronized double getSingleUpdate() {
-        return latestOrientation;
     }
 
     /**

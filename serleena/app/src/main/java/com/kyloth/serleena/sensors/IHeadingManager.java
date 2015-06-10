@@ -71,13 +71,6 @@ public interface IHeadingManager {
      *                 questo oggetto sarà cancellata.
      */
     public void detachObserver(IHeadingObserver observer);
-    /**
-     * Permette di ottenere un aggiornamento dei dati di orientamento su
-     * richiesta esplicita.
-     *
-     * @return Orientamento in gradi rispetto ai punti cardinali.
-     */
-    public double getSingleUpdate();
 
     /**
      * Metodo "notify" basato sull'omonimo metodo della classe "Subject" del
