@@ -42,7 +42,7 @@ package com.kyloth.serleena.presenters;
 import android.app.Fragment;
 import android.app.FragmentTransaction;
 import android.os.Bundle;
-import android.support.v7.app.AppCompatActivity;
+import android.app.Activity;
 import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -100,7 +100,7 @@ import java.util.Map;
  * @version 1.0.0
  * @see android.support.v7.app.AppCompatActivity
  */
-public class SerleenaActivity extends AppCompatActivity implements ISerleenaActivity {
+public class SerleenaActivity extends Activity implements ISerleenaActivity {
 
     /**
      * Lista dei Fragment.
