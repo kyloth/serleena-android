@@ -115,17 +115,18 @@ public class MapPresenter implements IMapPresenter, ILocationObserver {
         if (activeExperience == null)
             throw new NoActiveExperienceException();
 
-        ILocationObserver observer = new ILocationObserver() {
-            @Override
-            public void onLocationUpdate(GeoPoint loc) {
-                currentPosition = loc;
-                activeExperience.addUserPoints(
-                        new UserPoint(currentPosition.latitude(),
-                                currentPosition.longitude()));
-            }
-        };
-
-        locMan.getSingleUpdate(observer, 30);
+        if (currentPosition != null) {
+            AsyncTask<Void, Void, Void> task = new AsyncTask<Void,Void,Void>() {
+                @Override
+                protected Void doInBackground(Void... params) {
+                    activeExperience.addUserPoints(
+                            new UserPoint(currentPosition.latitude(),
+                                    currentPosition.longitude()));
+                    return null;
+                }
+            };
+            task.execute();
+        }
     }
 
     /**
