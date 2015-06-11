@@ -148,17 +148,4 @@ public class MapPresenterTest {
         verify(locMan).detachObserver(mp);
     }
 
-    /**
-     * Verifica che il metodo onLocationUpdate lanci un'eccezione
-     * di tipo IllegalArgumentException con messaggio "Illegal null
-     * GeoPoint" quando chiamato con GeoPoint nullo.
-     */
-
-    @Test
-    public void onLocationUpdateShouldThrowExceptionWhenNullGeoPoint() {
-        MapPresenter mp = new MapPresenter(view, activity);
-        exception.expect(IllegalArgumentException.class);
-        exception.expectMessage("Illegal null GeoPoint");
-        mp.onLocationUpdate(null);
-    }
 }

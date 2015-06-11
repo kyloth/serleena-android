@@ -82,4 +82,9 @@ public interface IMapView {
 	 * @since 1.0
 	 */
 	void attachPresenter(IMapPresenter presenter);
+
+    /**
+     * Pulisce la vista.
+     */
+	void clear();
 }

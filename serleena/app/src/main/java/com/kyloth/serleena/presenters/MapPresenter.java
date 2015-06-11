@@ -115,17 +115,18 @@ public class MapPresenter implements IMapPresenter, ILocationObserver {
         if (activeExperience == null)
             throw new NoActiveExperienceException();
 
-        ILocationObserver observer = new ILocationObserver() {
-            @Override
-            public void onLocationUpdate(GeoPoint loc) {
-                currentPosition = loc;
-                activeExperience.addUserPoints(
-                        new UserPoint(currentPosition.latitude(),
-                                currentPosition.longitude()));
-            }
-        };
-
-        locMan.getSingleUpdate(observer, 30);
+        if (currentPosition != null) {
+            AsyncTask<Void, Void, Void> task = new AsyncTask<Void,Void,Void>() {
+                @Override
+                protected Void doInBackground(Void... params) {
+                    activeExperience.addUserPoints(
+                            new UserPoint(currentPosition.latitude(),
+                                    currentPosition.longitude()));
+                    return null;
+                }
+            };
+            task.execute();
+        }
     }
 
     /**
@@ -159,16 +160,19 @@ public class MapPresenter implements IMapPresenter, ILocationObserver {
      * @param loc Valore di tipo GeoPoint che indica la posizione attuale
      *            dell'utente rilevata dai sensori. Se null,
      *            viene sollevata un'eccezione IllegalArgumentException.
-     * @throws IllegalArgumentException
      */
     @Override
-    public synchronized void onLocationUpdate(final GeoPoint loc)
-            throws IllegalArgumentException {
-        if (loc == null)
-            throw new IllegalArgumentException("Illegal null GeoPoint");
+    public synchronized void onLocationUpdate(final GeoPoint loc) {
+        AsyncTask<Void, Void, Void> task = new AsyncTask<Void, Void, Void>() {
+            @Override
+            protected Void doInBackground(Void... params) {
+                currentPosition = loc;
+                updateView(currentPosition);
+                return null;
+            }
+        };
 
-        currentPosition = loc;
-        updateView(currentPosition);
+        task.execute();
     }
 
     /**
@@ -183,8 +187,10 @@ public class MapPresenter implements IMapPresenter, ILocationObserver {
      * @throws IllegalArgumentException
      */
     public synchronized void setActiveExperience(IExperience experience) {
+        if (experience == null)
+            throw new IllegalArgumentException("Illegal null experience");
         this.activeExperience = experience;
-        updateView(currentPosition);
+        view.clear();
     }
 
     /*
@@ -193,24 +199,24 @@ public class MapPresenter implements IMapPresenter, ILocationObserver {
      * Crea un flusso di controllo asincrono che si occupa di ottenere e
      * comunicare alla vista gli elementi della mappa senza bloccare il
      * thread dela UI.
+     *
+     * @param location Posizione in base a cui aggiornare la vista. Se null,
+     * viene sollevata un'eccezione InvalidArgumentException.
      */
-    public void updateView(final GeoPoint location) {
-        final ISerleenaDataSource ds = activity.getDataSource();
+    public void updateView(GeoPoint location) {
+        if (location == null)
+            throw new IllegalArgumentException("Illegal null location");
 
-        AsyncTask<Void, Void, Void> task = new AsyncTask<Void, Void, Void>() {
-            @Override
-            protected Void doInBackground(Void... voids) {
-                IQuadrant quadrant = ds.getQuadrant(location);
-                view.displayQuadrant(quadrant);
-                Iterable<UserPoint> ups = activeExperience.getUserPoints();
-                view.displayUP(ups);
-                view.setUserLocation(location);
-                return null;
-            }
-        };
-
-        task.execute();
+        ISerleenaDataSource ds = activity.getDataSource();
+        IQuadrant quadrant = ds.getQuadrant(location);
+        view.displayQuadrant(quadrant);
+        view.setUserLocation(location);
+        if (activeExperience != null) {
+            Iterable<UserPoint> ups = activeExperience.getUserPoints();
+            view.displayUP(ups);
+        }
     }
+
 
 }
 
