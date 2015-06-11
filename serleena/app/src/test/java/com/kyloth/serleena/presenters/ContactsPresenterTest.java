@@ -63,7 +63,7 @@ import android.database.sqlite.SQLiteDatabase;
 import com.kyloth.serleena.BuildConfig;
 import com.kyloth.serleena.presentation.IContactsView;
 import com.kyloth.serleena.presentation.ISerleenaActivity;
-import com.kyloth.serleena.sensors.SensorManager;
+import com.kyloth.serleena.sensors.SerleenaSensorManager;
 import com.kyloth.serleena.model.SerleenaDataSource;
 import com.kyloth.serleena.common.ListAdapter;
 import com.kyloth.serleena.common.GeoPoint;
@@ -91,7 +91,7 @@ public class ContactsPresenterTest {
 
     IContactsView view;
     ISerleenaActivity activity;
-    SensorManager sm;
+    SerleenaSensorManager sm;
     int UPDATE_INTERVAL_SECONDS = 180;
 
     @Rule
@@ -105,7 +105,7 @@ public class ContactsPresenterTest {
     public void initialize() {
         view = mock(IContactsView.class);
         activity = mock(ISerleenaActivity.class);
-        sm = SensorManager.getInstance(RuntimeEnvironment.application);
+        sm = SerleenaSensorManager.getInstance(RuntimeEnvironment.application);
         when(activity.getSensorManager()).thenReturn(sm);
 
         serleenaDB = new SerleenaDatabase(RuntimeEnvironment.application, "sample.db", null, 1);

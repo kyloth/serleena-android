@@ -63,7 +63,7 @@ import com.kyloth.serleena.BuildConfig;
 import com.kyloth.serleena.presentation.IWeatherView;
 import com.kyloth.serleena.presentation.ISerleenaActivity;
 import com.kyloth.serleena.sensors.ISensorManager;
-import com.kyloth.serleena.sensors.SensorManager;
+import com.kyloth.serleena.sensors.SerleenaSensorManager;
 import com.kyloth.serleena.sensors.ILocationManager;
 import com.kyloth.serleena.model.SerleenaDataSource;
 import com.kyloth.serleena.model.IWeatherForecast;
@@ -94,7 +94,7 @@ public class WeatherPresenterTest {
     IWeatherView view;
     ISerleenaActivity activity;
     ISerleenaActivity activity_mock;
-    SensorManager sm;
+    SerleenaSensorManager sm;
 
     /**
      * Mock di sensors per verificare le chiamate all'interno dei metodi.
@@ -114,7 +114,7 @@ public class WeatherPresenterTest {
         view = mock(IWeatherView.class);
         activity = mock(ISerleenaActivity.class);
         activity_mock = mock(ISerleenaActivity.class);
-        sm = SensorManager.getInstance(RuntimeEnvironment.application);
+        sm = SerleenaSensorManager.getInstance(RuntimeEnvironment.application);
         sm_mock = mock(ISensorManager.class);
         locMan = mock(ILocationManager.class);
         when(activity_mock.getSensorManager()).thenReturn(sm_mock);

@@ -59,7 +59,7 @@ import com.kyloth.serleena.presentation.ISerleenaActivity;
 import com.kyloth.serleena.presentation.ICardioView;
 import com.kyloth.serleena.sensors.IHeartRateManager;
 import com.kyloth.serleena.sensors.ISensorManager;
-import com.kyloth.serleena.sensors.SensorManager;
+import com.kyloth.serleena.sensors.SerleenaSensorManager;
 import com.kyloth.serleena.sensors.SensorNotAvailableException;
 
 /**
@@ -78,7 +78,7 @@ public class CardioPresenterTest {
     ISerleenaActivity activity; //activity che ritorna veri oggetti sensors
     ISerleenaActivity activity_mock; //activity che ritorna mock di sensors
     ICardioView view;
-    SensorManager sm;
+    SerleenaSensorManager sm;
     ISensorManager sm_mock;
     IHeartRateManager hm_mock;
     @Rule
@@ -93,7 +93,7 @@ public class CardioPresenterTest {
         activity = mock(ISerleenaActivity.class);
         activity_mock = mock(ISerleenaActivity.class);
         view = mock(ICardioView.class);
-        sm = SensorManager.getInstance(RuntimeEnvironment.application);
+        sm = SerleenaSensorManager.getInstance(RuntimeEnvironment.application);
         sm_mock = mock(ISensorManager.class);
         hm_mock = mock(IHeartRateManager.class);
         when(activity.getSensorManager()).thenReturn(sm);
