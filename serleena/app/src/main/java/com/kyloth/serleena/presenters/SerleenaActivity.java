@@ -31,56 +31,39 @@
 /**
  * Name: SerleenaActivity
  * Package: com.kyloth.serleena.presenters
- * Author: Sebastiano Valle
+ * Author: Filippo Sestini
  *
  * History:
  * Version   Programmer         Changes
- * 1.0.0     Sebastiano Valle   Creazione del file, scrittura del codice e di Javadoc
+ * 1.0.0     Filippo Sestini    Creazione del file, scrittura del codice e di
+ *                              Javadoc
  */
 package com.kyloth.serleena.presenters;
 
 import android.app.Fragment;
-import android.app.FragmentTransaction;
 import android.os.Bundle;
 import android.app.Activity;
 import android.view.KeyEvent;
-import android.view.Menu;
-import android.view.MenuItem;
 
 import com.kyloth.serleena.R;
-import com.kyloth.serleena.model.IExperience;
 import com.kyloth.serleena.model.ISerleenaDataSource;
-import com.kyloth.serleena.model.ITrack;
 import com.kyloth.serleena.model.SerleenaDataSource;
 import com.kyloth.serleena.persistence.sqlite.SQLiteDataSourceFactory;
-import com.kyloth.serleena.presentation.ICardioView;
-import com.kyloth.serleena.presentation.ICompassView;
-import com.kyloth.serleena.presentation.IContactsView;
-import com.kyloth.serleena.presentation.IExperienceSelectionView;
-import com.kyloth.serleena.presentation.IMapView;
-import com.kyloth.serleena.presentation.IPresenter;
+import com.kyloth.serleena.presentation.IObjectListObserver;
 import com.kyloth.serleena.presentation.ISerleenaActivity;
-import com.kyloth.serleena.presentation.ISyncView;
-import com.kyloth.serleena.presentation.ITelemetryView;
-import com.kyloth.serleena.presentation.ITrackSelectionView;
-import com.kyloth.serleena.presentation.ITrackView;
-import com.kyloth.serleena.presentation.IWeatherView;
 import com.kyloth.serleena.sensors.ISensorManager;
 import com.kyloth.serleena.sensors.SerleenaSensorManager;
-import com.kyloth.serleena.view.fragments.CardioFragment;
 import com.kyloth.serleena.view.fragments.CompassFragment;
 import com.kyloth.serleena.view.fragments.ContactsFragment;
 import com.kyloth.serleena.view.fragments.ExperienceSelectionFragment;
 import com.kyloth.serleena.view.fragments.MapFragment;
-import com.kyloth.serleena.view.fragments.SyncFragment;
+import com.kyloth.serleena.view.fragments.ObjectListFragment;
 import com.kyloth.serleena.view.fragments.TelemetryFragment;
 import com.kyloth.serleena.view.fragments.TrackFragment;
 import com.kyloth.serleena.view.fragments.TrackSelectionFragment;
 import com.kyloth.serleena.view.fragments.WeatherFragment;
 
-import java.util.HashMap;
-import java.util.Map;
-
+import java.util.ArrayList;
 
 /**
  * Classe che implementa ISerleenaActivity.
@@ -88,64 +71,79 @@ import java.util.Map;
  * In questa visuale è possibile selezionare un'esperienza da attivare tra quelle disponibili.
  *
  * @use Viene utilizzata solamente dall'Activity, che ne mantiene un riferimento. Il Presenter, alla creazione, si registra alla sua Vista, passando se stesso come parametro dietro interfaccia.
- * @field myFrags : Map<String,Fragment> lista dei Fragment istanziati nell'Activity
- * @field myPress : Map<String,IPresenter> lista degli IPresenter istanziati nell'Activity
- * @field myLayoutIds : Map<String,Integer> mappa di corrispondenze tra stringhe e id dei layout
- * @field myMenuItemIds : Map<Integer,String> mappa di corrispondenze tra id dei menu item e visuale richiesta
- * @field curFrag : String stringa contenente il nome della visuale attualmente presente sul display
- * @field showingMenu : boolean valore che è true se e solo se il menù è aperto
  * @field dataSource : sorgente dati utilizzata dall'activity e dai suoi presenter
  * @field sensorManager : gestore dei sensori utilizzato dall'activity e dai suoi presenter
  * @author Sebastiano Valle <valle.sebastiano93@gmail.com>
  * @version 1.0.0
  * @see android.support.v7.app.AppCompatActivity
  */
-public class SerleenaActivity extends Activity implements ISerleenaActivity {
-
-    /**
-     * Lista dei Fragment.
-     */
-    private Map<String,Fragment> myFrags = new HashMap<String, Fragment>();
-    /**
-     * Lista dei Presenter.
-     */
-    private Map<String,IPresenter> myPress = new HashMap<String, IPresenter>();
-    /**
-     * Matrice di corrispondenza per gli id dei layout.
-     */
-    private Map<String,Integer> myLayoutIds = new HashMap<String, Integer>();
-    /**
-     * Matrice di corrispondenza per le voci del menù.
-     */
-    private Map<Integer,String> myMenuItemIds = new HashMap<Integer, String>();
-
-    /**
-     * Tag del Fragment attualmente visualizzato.
-     */
-    private String curFrag;
-
-    /**
-     * Valore che è true se e solo se il menù è aperto.
-     */
-    private boolean showingMenu = false;
+public class SerleenaActivity extends Activity
+        implements ISerleenaActivity, IObjectListObserver {
 
     private ISerleenaDataSource dataSource;
     private ISensorManager sensorManager;
 
+    private TrackFragment trackFragment;
+    private CompassFragment compassFragment;
+    private ContactsFragment contactsFragment;
+    private TelemetryFragment telemetryFragment;
+    private WeatherFragment weatherFragment;
+    private MapFragment mapFragment;
+    private ExperienceSelectionFragment experienceSelectionFragment;
+    private TrackSelectionFragment trackSelectionFragment;
+    private ObjectListFragment menuFragment;
+    private ObjectListFragment experienceFragment;
+
     /**
-     * Metodo invocato alla creazione dell'Activity. Vengono inizializzate le
-     * mappe e viene visualizzato il Fragment iniziale
-     *
-     * @param savedInstanceState istanza che viene rigenerata dal sistema operativo dopo una terminazione dell'applicazione
+     * Ridefinisce Activity.onCreate().
      */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        initFragMap();
-        initPresentersMap();
-        initLayoutIds();
-        initMenuItemIds();
-        changeFragment("EXPLIST");
+        setContentView(R.layout.activity_serleena);
+
+        if (findViewById(R.id.main_container) != null) {
+            if (savedInstanceState != null)
+                return;
+
+            trackFragment = new TrackFragment();
+            compassFragment = new CompassFragment();
+            contactsFragment = new ContactsFragment();
+            experienceSelectionFragment = new ExperienceSelectionFragment();
+            trackSelectionFragment = new TrackSelectionFragment();
+            telemetryFragment = new TelemetryFragment();
+            weatherFragment = new WeatherFragment();
+            mapFragment = new MapFragment();
+            experienceFragment = new ObjectListFragment() {
+                @Override
+                public String toString() {
+                    return "Esperienza";
+                }
+            };
+            menuFragment = new ObjectListFragment();
+
+            ArrayList<Object> expList = new ArrayList<>();
+            expList.add(telemetryFragment);
+            expList.add(mapFragment);
+            expList.add(experienceSelectionFragment);
+            expList.add(trackSelectionFragment);
+            expList.add(trackFragment);
+
+            experienceFragment.setList(expList);
+            experienceFragment.attachObserver(this);
+
+            ArrayList<Object> menuList = new ArrayList<>();
+            menuList.add(experienceFragment);
+            menuList.add(weatherFragment);
+            menuList.add(contactsFragment);
+            menuList.add(compassFragment);
+
+            menuFragment.setList(menuList);
+            menuFragment.attachObserver(this);
+
+            getFragmentManager().beginTransaction()
+                    .add(R.id.main_container, menuFragment).commit();
+        }
 
         SQLiteDataSourceFactory factory = SQLiteDataSourceFactory.getInstance();
         dataSource = new SerleenaDataSource(factory.createDataSource(this));
@@ -153,202 +151,16 @@ public class SerleenaActivity extends Activity implements ISerleenaActivity {
     }
 
     /**
-     * Metodo che istanzia i Fragment nell'Activity e li mappa a dei tag.
-     */
-    private void initFragMap() {
-        myFrags.put("TRACK", new TrackFragment());
-        myFrags.put("MAP", new MapFragment());
-        myFrags.put("TELEMETRY", new TelemetryFragment());
-        myFrags.put("EXPLIST", new ExperienceSelectionFragment());
-        myFrags.put("TRACKLIST", new TrackSelectionFragment());
-        myFrags.put("CONTACTS", new ContactsFragment());
-        myFrags.put("WEATHER", new WeatherFragment());
-        myFrags.put("CARDIO", new CardioFragment());
-        myFrags.put("COMPASS", new CompassFragment());
-        myFrags.put("SYNC", new SyncFragment());
-    }
-
-    /**
-     * Metodo che istanzia i Presenter nell'Activity e li mappa a dei tag.
-     */
-    private void initPresentersMap() {
-        myPress.put("MAP",
-                new MapPresenter((IMapView) myFrags.get("MAP"), this));
-        myPress.put("TRACKLIST",
-                new TrackSelectionPresenter((ITrackSelectionView)
-                        myFrags.get("TRACKLIST"), this, null));
-        myPress.put("EXPLIST",
-                new ExperienceSelectionPresenter(
-                        (IExperienceSelectionView) myFrags.get("EXPLIST"),
-                        this));
-        myPress.put("CARDIO",
-                new CardioPresenter(
-                        (ICardioView) myFrags.get("CARDIO"), this));
-        myPress.put("TELEMETRY",
-                new TelemetryPresenter(
-                        (ITelemetryView) myFrags.get("TELEMETRY"), this));
-        myPress.put("CONTACTS",
-                new ContactsPresenter(
-                        (IContactsView) myFrags.get("CONTACTS"), this));
-        myPress.put("TRACK",
-                new TrackPresenter(
-                        (ITrackView) myFrags.get("TRACK"), this));
-        myPress.put("WEATHER",
-                new WeatherPresenter(
-                        (IWeatherView) myFrags.get("WEATHER"),this));
-        myPress.put("SYNC",
-                new SyncPresenter(
-                        (ISyncView) myFrags.get("SYNC"),this));
-        myPress.put("COMPASS",
-                new CompassPresenter(
-                        (ICompassView) myFrags.get("COMPASS"),this));
-    }
-
-    /**
-     * Metodo che mappa i tag ai layout da visualizzare.
-     */
-    private void initLayoutIds() {
-        myLayoutIds.put("TRACK", R.layout.fragment_track);
-        myLayoutIds.put("MAP", R.layout.fragment_map);
-        myLayoutIds.put("TELEMETRY", R.layout.fragment_telemetry);
-        myLayoutIds.put("EXPLIST", R.layout.fragment_exp_selection_list);
-        myLayoutIds.put("TRACKLIST", R.layout.fragment_track_selection_list);
-        myLayoutIds.put("CONTACTS", R.layout.fragment_contacts);
-        myLayoutIds.put("WEATHER", R.layout.fragment_weather);
-        myLayoutIds.put("CARDIO",R.layout.fragment_cardio);
-        myLayoutIds.put("COMPASS", R.layout.fragment_compass_screen);
-        myLayoutIds.put("SYNC", R.layout.fragment_sync_screen);
-    }
-
-    /**
-     * Metodo che mappa le voci dei menù ai tag delle varie visuali e schermate.
-     */
-    private void initMenuItemIds() {
-        myMenuItemIds.put(R.id.screen_menu_exp,"EXPLIST");
-        myMenuItemIds.put(R.id.screen_menu_contact,"CONTACTS");
-        myMenuItemIds.put(R.id.screen_menu_meteo,"WEATHER");
-        myMenuItemIds.put(R.id.screen_menu_cardio,"CARDIO");
-        myMenuItemIds.put(R.id.screen_menu_compass,"COMPASS");
-        myMenuItemIds.put(R.id.screen_menu_sync, "SYNC");
-    }
-
-    /**
-     * Metodo che aggiunge un menù all'ActionBar.
-     *
-     * @param menu Menu che viene creato
-     */
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.menu_serleena, menu);
-        showingMenu = true;
-        return true;
-    }
-
-    /**
-     * Metodo invocato all'apertura di un menù.
-     *
-     * @param menu Menu che viene aperto
-     */
-    @Override
-    public boolean onPrepareOptionsMenu(Menu menu) {
-        showingMenu = true;
-        return true;
-    }
-
-    /**
-     * Metodo invocato alla chiusura di un menù.
-     *
-     * @param menu Menu che viene chiuso
-     */
-    @Override
-    public void onOptionsMenuClosed(Menu menu) {
-        showingMenu = false;
-    }
-
-    /**
-     * Metodo che gestisce la selezione di voci nel menù presente nella ActionBar.
-     *
-     * Tale metodo ha il compito di alternare i vari Fragment in base
-     * all'opzione scelta dall'utente.
-     *
-     * @param item Elemento del menù scelto
-     */
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        int id = item.getItemId();
-        String newFrag = myMenuItemIds.get(id);
-
-        if(newFrag.equals(curFrag)) return true;
-        changeFragment(newFrag);
-        return true;
-    }
-
-    /**
-     * Metodo utilizzato per rimpiazzare un Fragment (o aggiungerne uno se non
-     * vi è alcun Fragment visualizzato) sull'Activity.
-     *
-     * Inizialmente il Fragment precedente viene rimosso, per poi aggiungere
-     * il Fragment richiesto dall'utente.
-     *
-     * @param newFrag Tag del Fragment da visualizzare
-     */
-    private void changeFragment(String newFrag) {
-        if(curFrag != null)
-            removeFragment();
-        curFrag = newFrag;
-        getFragmentManager().
-                beginTransaction()
-                .add(myFrags.get(curFrag), curFrag)
-                .commit();
-        setContentView(myLayoutIds.get(curFrag));
-    }
-
-    /**
-     * Metodo utilizzato per rimuovere un Fragment dal FragmentManager
-     * dell'Activity.
-     */
-    private void removeFragment() {
-        FragmentTransaction ft = getFragmentManager().beginTransaction();
-        Fragment old = getFragmentManager().findFragmentByTag(curFrag);
-        ft.remove(old);
-        ft.commit();
-    }
-
-    /**
-     * Metodo richiamato
-     *
-     * @param keyCode tasto premuto
-     * @param event KeyEvent avvenuto
-     * @return true se l'evento viene gestito correttamente
+     * Ridefinisce Activity.onKeyDown().
      */
     @Override
     public boolean onKeyDown(int keyCode, KeyEvent event) {
-        if(keyCode == KeyEvent.KEYCODE_DPAD_DOWN)
-            if(showingMenu)
-                closeOptionsMenu();
-            else
-                openOptionsMenu();
-        if(keyCode == KeyEvent.KEYCODE_DPAD_UP) {
-            if(curFrag.equals("EXPLIST")) changeFragment("TRACKLIST");
-            if(curFrag.equals("TRACKLIST")) changeFragment("TRACK");
-            if(curFrag.equals("TRACK")) changeFragment("MAP");
-            if(curFrag.equals("MAP")) changeFragment("TELEMETRY");
-            if(curFrag.equals("TELEMETRY")) changeFragment("EXPLIST");
+        if (keyCode == KeyEvent.KEYCODE_MENU) {
+            getFragmentManager().beginTransaction()
+                    .replace(R.id.main_container, menuFragment).commit();
+            return true;
         }
-        if(keyCode == KeyEvent.KEYCODE_ENTER) {
-            Fragment frag = myFrags.get(curFrag);
-            if(frag instanceof MapFragment)
-                ((MapFragment) frag).keyDown(keyCode,event);
-            if(frag instanceof TelemetryFragment)
-                ((TelemetryFragment) frag).keyDown(keyCode,event);
-            if(frag instanceof WeatherFragment)
-                ((WeatherFragment) frag).keyDown(keyCode,event);
-            if(frag instanceof ContactsFragment)
-                ((ContactsFragment) frag).keyDown(keyCode,event);
-            if(frag instanceof SyncFragment)
-                ((SyncFragment) frag).keyDown(keyCode,event);
-        }
-        return true;
+        return super.onKeyDown(keyCode, event);
     }
 
     /**
@@ -365,6 +177,18 @@ public class SerleenaActivity extends Activity implements ISerleenaActivity {
     @Override
     public ISensorManager getSensorManager() {
         return sensorManager;
+    }
+
+    /**
+     * Implementa IObjectListObserver.onObjectSelected().
+     *
+     * @param obj Oggetto selezionato.
+     */
+    @Override
+    public void onObjectSelected(Object obj) {
+        Fragment f = (Fragment) obj;
+        getFragmentManager().beginTransaction()
+                .replace(R.id.main_container, f).commit();
     }
 
 }
