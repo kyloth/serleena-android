@@ -163,9 +163,16 @@ public class MapPresenter implements IMapPresenter, ILocationObserver {
      */
     @Override
     public synchronized void onLocationUpdate(final GeoPoint loc) {
+        AsyncTask<Void, Void, Void> task = new AsyncTask<Void, Void, Void>() {
+            @Override
+            protected Void doInBackground(Void... params) {
+                currentPosition = loc;
+                updateView(currentPosition);
+                return null;
+            }
+        };
 
-        currentPosition = loc;
-        updateView(currentPosition);
+        task.execute();
     }
 
     /**
