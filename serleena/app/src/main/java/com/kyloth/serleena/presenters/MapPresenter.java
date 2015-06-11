@@ -210,9 +210,11 @@ public class MapPresenter implements IMapPresenter, ILocationObserver {
         ISerleenaDataSource ds = activity.getDataSource();
         IQuadrant quadrant = ds.getQuadrant(location);
         view.displayQuadrant(quadrant);
-        Iterable<UserPoint> ups = activeExperience.getUserPoints();
-        view.displayUP(ups);
         view.setUserLocation(location);
+        if (activeExperience != null) {
+            Iterable<UserPoint> ups = activeExperience.getUserPoints();
+            view.displayUP(ups);
+        }
     }
 
 
