@@ -183,6 +183,8 @@ public class MapPresenter implements IMapPresenter, ILocationObserver {
      * @throws IllegalArgumentException
      */
     public synchronized void setActiveExperience(IExperience experience) {
+        if (experience == null)
+            throw new IllegalArgumentException("Illegal null experience");
         this.activeExperience = experience;
         view.clear();
     }
