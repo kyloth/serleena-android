@@ -160,13 +160,9 @@ public class MapPresenter implements IMapPresenter, ILocationObserver {
      * @param loc Valore di tipo GeoPoint che indica la posizione attuale
      *            dell'utente rilevata dai sensori. Se null,
      *            viene sollevata un'eccezione IllegalArgumentException.
-     * @throws IllegalArgumentException
      */
     @Override
-    public synchronized void onLocationUpdate(final GeoPoint loc)
-            throws IllegalArgumentException {
-        if (loc == null)
-            throw new IllegalArgumentException("Illegal null GeoPoint");
+    public synchronized void onLocationUpdate(final GeoPoint loc) {
 
         currentPosition = loc;
         updateView(currentPosition);
