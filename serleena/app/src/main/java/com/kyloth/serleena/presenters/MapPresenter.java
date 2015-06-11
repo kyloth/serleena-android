@@ -199,10 +199,14 @@ public class MapPresenter implements IMapPresenter, ILocationObserver {
      * Crea un flusso di controllo asincrono che si occupa di ottenere e
      * comunicare alla vista gli elementi della mappa senza bloccare il
      * thread dela UI.
+     *
+     * @param location Posizione in base a cui aggiornare la vista. Se null,
+     * viene sollevata un'eccezione InvalidArgumentException.
      */
     public void updateView(final GeoPoint location) {
+        if (location == null)
+            throw new IllegalArgumentException("Illegal null location");
         final ISerleenaDataSource ds = activity.getDataSource();
-
         AsyncTask<Void, Void, Void> task = new AsyncTask<Void, Void, Void>() {
             @Override
             protected Void doInBackground(Void... voids) {
