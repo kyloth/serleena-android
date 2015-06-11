@@ -203,24 +203,18 @@ public class MapPresenter implements IMapPresenter, ILocationObserver {
      * @param location Posizione in base a cui aggiornare la vista. Se null,
      * viene sollevata un'eccezione InvalidArgumentException.
      */
-    public void updateView(final GeoPoint location) {
+    public void updateView(GeoPoint location) {
         if (location == null)
             throw new IllegalArgumentException("Illegal null location");
-        final ISerleenaDataSource ds = activity.getDataSource();
-        AsyncTask<Void, Void, Void> task = new AsyncTask<Void, Void, Void>() {
-            @Override
-            protected Void doInBackground(Void... voids) {
-                IQuadrant quadrant = ds.getQuadrant(location);
-                view.displayQuadrant(quadrant);
-                Iterable<UserPoint> ups = activeExperience.getUserPoints();
-                view.displayUP(ups);
-                view.setUserLocation(location);
-                return null;
-            }
-        };
 
-        task.execute();
+        ISerleenaDataSource ds = activity.getDataSource();
+        IQuadrant quadrant = ds.getQuadrant(location);
+        view.displayQuadrant(quadrant);
+        Iterable<UserPoint> ups = activeExperience.getUserPoints();
+        view.displayUP(ups);
+        view.setUserLocation(location);
     }
+
 
 }
 
