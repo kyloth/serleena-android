@@ -51,6 +51,7 @@ import com.kyloth.serleena.presentation.ICompassView;
 import com.kyloth.serleena.presentation.ISerleenaActivity;
 import com.kyloth.serleena.sensors.ISensorManager;
 import com.kyloth.serleena.sensors.IHeadingManager;
+import com.kyloth.serleena.sensors.SensorNotAvailableException;
 
 /**
  * Contiene i test di unità per la classe CompassPresenter.
@@ -71,7 +72,7 @@ public class CompassPresenterTest {
      */
 
     @Before
-    public void initialize() {
+    public void initialize() throws SensorNotAvailableException {
         activity = mock(ISerleenaActivity.class);
         view = mock(ICompassView.class);
         sm = mock(ISensorManager.class);
@@ -102,7 +103,7 @@ public class CompassPresenterTest {
     public void resumeShouldCallAttachObserverWithCorrectParams() {
         CompassPresenter cp = new CompassPresenter(view, activity);
         cp.resume();
-        verify(hm).attachObserver(cp, UPDATE_INTERVAL);
+        verify(hm).attachObserver(cp);
     }
 
     /**
