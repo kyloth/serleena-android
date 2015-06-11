@@ -39,9 +39,12 @@
  */
 package com.kyloth.serleena.view.fragments;
 
-import android.app.Activity;
 import android.app.Fragment;
-import android.view.KeyEvent;
+import android.os.Bundle;
+import android.support.annotation.Nullable;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.kyloth.serleena.R;
@@ -59,57 +62,84 @@ import com.kyloth.serleena.presentation.IContactsView;
  * @version 1.0.0
  * @see android.app.Fragment
  */
-public class ContactsFragment extends Fragment implements IContactsView {
+public class ContactsFragment extends Fragment
+        implements IContactsView, View.OnClickListener {
 
-    /**
-     * Presenter collegato a un ContactsFragment
-     */
     private IContactsPresenter presenter;
 
     /**
-     * Metodo che collega un ContactsFragment al proprio Presenter.
+     * Crea un nuovo oggetto ContactsFragment.
+     */
+    public ContactsFragment() {
+        /* Null object pattern. */
+        presenter = new IContactsPresenter() {
+            @Override
+            public void nextContact() { }
+            @Override
+            public void resume() { }
+            @Override
+            public void pause() { }
+        };
+    }
+
+    /**
+     * Ridefinisce Fragment.onCreateView().
+     */
+    @Nullable
+    @Override
+    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+                             Bundle savedInstanceState) {
+        ViewGroup group = (ViewGroup) inflater.inflate(
+                R.layout.fragment_contacts, container, false);
+        for (int i = 0; i < group.getChildCount(); i++)
+            group.getChildAt(i).setOnClickListener(this);
+        return group;
+    }
+
+    /**
+     * Imposta un presenter per la vista.
      */
     @Override
-    public void attachPresenter(IContactsPresenter presenter) throws IllegalArgumentException {
+    public void attachPresenter(IContactsPresenter presenter)
+            throws IllegalArgumentException {
+        if (presenter == null)
+            throw new IllegalArgumentException("Illegal null presenter");
         this.presenter = presenter;
     }
 
     /**
-     * Metodo che richiede a un ContactsFragment di visualizzare un contatto
+     * Visualizza il contatto specificato sulla vista.
      */
     @Override
     public void displayContact(String name, String contact) {
-        TextView textName = (TextView) getActivity().findViewById(R.id.contact_name);
-        TextView textValue = (TextView) getActivity().findViewById(R.id.contact_value);
+        if (name == null || contact == null)
+            throw new IllegalArgumentException("Illegal null contact");
+
+        TextView textName =
+                (TextView) getActivity().findViewById(R.id.contact_name_text);
+        TextView textValue =
+                (TextView) getActivity().findViewById(R.id.contact_value_text);
         textName.setText(name);
         textValue.setText(contact);
     }
 
     /**
-     * Metodo che rimuove il contatto visualizzato
+     * Pulisce la vista.
      */
     @Override
     public void clearView() {
-        TextView textName = (TextView) getActivity().findViewById(R.id.contact_name);
-        TextView textValue = (TextView) getActivity().findViewById(R.id.contact_value);
-        textValue.setText("NESSUN CONTATTO");
-        textName.setText("DA VISUALIZZARE");
+        TextView textName =
+                (TextView) getActivity().findViewById(R.id.contact_name_text);
+        TextView textValue =
+                (TextView) getActivity().findViewById(R.id.contact_value_text);
+        textName.setText("NESSUN CONTATTO");
+        textValue.setText("DA VISUALIZZARE");
     }
 
     /**
-     * Metodo che richiede la visualizzazione del contatto successivo alla pressione del pulsante
-     * centrale.
+     * Ridefinizione di Fragment.onResume().
      *
-     * @param keyCode tasto premuto
-     * @param event KeyEvent avvenuto
-     */
-    public void keyDown(int keyCode, KeyEvent event) {
-        presenter.nextContact();
-    }
-
-    /**
-     * Metodo invocato quando il Fragment viene visualizzato.
-     *
+     * Segnala al presenter che la vista è in stato attivo e visibile.
      */
     @Override
     public void onResume() {
@@ -118,12 +148,32 @@ public class ContactsFragment extends Fragment implements IContactsView {
     }
 
     /**
-     * Metodo invocato quando il Fragment smette di essere visualizzato.
+     * Ridefinizione di Fragment.onPause().
      *
+     * Segnala al presenter che la vista è in stato non visibile.
      */
     @Override
     public void onPause() {
         super.onPause();
         presenter.pause();
     }
+
+    /**
+     * Ridefinisce View.OnClickListener.onClick().
+     *
+     * @param v Vista che ha scatenato l'evento.
+     */
+    @Override
+    public void onClick(View v) {
+        presenter.nextContact();
+    }
+
+    /**
+     * Ridefinisce Object.toString().
+     */
+    @Override
+    public String toString() {
+        return "Autorità locali";
+    }
+
 }

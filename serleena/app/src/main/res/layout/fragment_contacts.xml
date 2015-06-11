@@ -1,31 +1,33 @@
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools" android:layout_width="match_parent"
-    android:layout_height="match_parent" tools:context="com.kyloth.serleena.view.fragments.ContactsFragment">
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              xmlns:tools="http://schemas.android.com/tools" android:layout_width="match_parent"
+              android:layout_height="match_parent"
+              android:orientation="vertical"
+              tools:context="com.kyloth.serleena.view.fragments.ContactsFragment">
 
     <ImageView
-        android:layout_width="154dp"
-        android:layout_height="92dp"
+        android:layout_width="85px"
+        android:layout_height="85px"
         android:id="@+id/contact_image"
         android:contentDescription="@string/contact_image"
         android:layout_gravity="center_horizontal|top"
         android:src="@drawable/contact"
-        android:layout_marginTop="20sp" />
+        android:layout_marginTop="10px"
+        android:layout_marginBottom="5px"/>
 
     <TextView
-        android:layout_width="fill_parent"
-        android:layout_height="64dp"
-        android:id="@+id/contact_name"
-        android:layout_gravity="center_horizontal|top"
-        android:gravity="bottom|center"
-        android:textSize="26sp"
-        android:layout_marginTop="220sp" />
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceMedium"
+        android:text="Contact name"
+        android:id="@+id/contact_name_text"
+        android:layout_gravity="center_horizontal"/>
 
     <TextView
-        android:layout_width="fill_parent"
-        android:layout_height="81dp"
-        android:id="@+id/contact_value"
-        android:layout_gravity="center_horizontal|top"
-        android:textSize="30sp"
-        android:gravity="center_vertical|center"
-        android:layout_marginTop="150sp" />
-</FrameLayout>
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceMedium"
+        android:text="Contact value"
+        android:id="@+id/contact_value_text"
+        android:layout_gravity="center_horizontal"/>
+
+</LinearLayout>
