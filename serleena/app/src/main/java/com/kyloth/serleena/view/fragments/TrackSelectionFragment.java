@@ -110,15 +110,6 @@ public class TrackSelectionFragment extends Fragment
         setEmptyText("Nessun percorso disponibile");
     }
 
-    /**
-     * Questo metodo viene invocato ogni volta che un TrackSelectionFragment viene rimosso da un'Activity
-     * tramite una transazione. Viene cancellato il riferimento all'Activity a cui era legato.
-     */
-    @Override
-    public void onDetach() {
-        super.onDetach();
-    }
-
 
     /**
      * Questo metodo gestisce i click su una voce della lista.

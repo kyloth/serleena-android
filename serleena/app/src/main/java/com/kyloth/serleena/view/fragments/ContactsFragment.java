@@ -67,25 +67,6 @@ public class ContactsFragment extends Fragment implements IContactsView {
     private IContactsPresenter presenter;
 
     /**
-     * Questo metodo viene invocato ogni volta che ContactsFragment viene collegato ad un'Activity.
-     *
-     * @param activity Activity che ha appena terminato una transazione in cui viene aggiunto il corrente Fragment
-     */
-    @Override
-    public void onAttach(Activity activity) {
-        super.onAttach(activity);
-    }
-
-    /**
-     * Questo metodo viene invocato ogni volta che un ContactsFragment viene rimosso da un'Activity
-     * tramite una transazione. Viene cancellato il riferimento all'Activity a cui era legato.
-     */
-    @Override
-    public void onDetach() {
-        super.onDetach();
-    }
-
-    /**
      * Metodo che collega un ContactsFragment al proprio Presenter.
      */
     @Override

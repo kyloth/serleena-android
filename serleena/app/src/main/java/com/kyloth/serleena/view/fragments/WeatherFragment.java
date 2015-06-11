@@ -110,15 +110,6 @@ public class WeatherFragment extends Fragment implements IWeatherView {
     }
 
     /**
-     * Questo metodo viene invocato ogni volta che un WeatherFragment viene rimosso da un'Activity
-     * tramite una transazione. Viene cancellato il riferimento all'Activity a cui era legato.
-     */
-    @Override
-    public void onDetach() {
-        super.onDetach();
-    }
-
-    /**
      * Metodo utilizzato per collegare un presenter a un WeatherFragment
      *
      * @param presenter Presenter a cui viene collegato un WeatherFragment

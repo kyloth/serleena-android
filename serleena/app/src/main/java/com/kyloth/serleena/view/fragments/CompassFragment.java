@@ -78,15 +78,6 @@ public class CompassFragment extends Fragment implements ICompassView {
     }
 
     /**
-     * Questo metodo viene invocato ogni volta che un CompassFragment viene rimosso da un'Activity
-     * tramite una transazione. Viene cancellato il riferimento all'Activity a cui era legato.
-     */
-    @Override
-    public void onDetach() {
-        super.onDetach();
-    }
-
-    /**
      * Metodo utilizzato per impostare l'orientamento del CompassWidget visualizzato.
      */
     @Override
