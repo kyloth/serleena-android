@@ -184,7 +184,7 @@ public class MapPresenter implements IMapPresenter, ILocationObserver {
      */
     public synchronized void setActiveExperience(IExperience experience) {
         this.activeExperience = experience;
-        updateView(currentPosition);
+        view.clear();
     }
 
     /*
