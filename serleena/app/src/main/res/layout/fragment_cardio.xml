@@ -2,26 +2,18 @@
     xmlns:tools="http://schemas.android.com/tools" android:layout_width="match_parent"
     android:layout_height="match_parent" tools:context="com.kyloth.serleena.view.fragments.CardioFragment">
 
+
     <ImageView
-        android:layout_width="match_parent"
-        android:layout_height="150dp"
-        android:id="@+id/heart_image"
+        android:layout_width="197dp"
+        android:layout_height="128dp"
+        android:id="@+id/imageView"
         android:layout_gravity="center_horizontal|top"
-        android:src="@drawable/heart_image"
-        android:contentDescription="@string/heartDesc"
-        android:layout_marginTop="20dp" />
+        android:src="@drawable/heart_image"/>
 
     <TextView
-        android:layout_width="match_parent"
-        android:layout_height="106dp"
-        android:textAppearance="?android:attr/textAppearanceLarge"
-        android:text="@string/heart_rate"
-        android:id="@+id/heart_rate"
-        android:layout_gravity="center_horizontal|top"
-        android:textSize="25sp"
-        android:layout_marginBottom="20sp"
-        android:textAlignment="center"
-        android:gravity="center"
-        android:layout_marginTop="140sp" />
-
+        android:layout_width="wrap_content"
+        android:layout_height="37dp"
+        android:text="60 bpm"
+        android:id="@+id/heartrate_text"
+        android:layout_gravity="center_horizontal|bottom"/>
 </FrameLayout>

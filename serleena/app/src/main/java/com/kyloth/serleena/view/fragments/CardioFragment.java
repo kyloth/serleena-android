@@ -37,11 +37,15 @@
  * Version   Programmer         Changes
  * 1.0.0     Sebastiano Valle   Creazione del file, scrittura del codice e di Javadoc
  */
+
 package com.kyloth.serleena.view.fragments;
 
-import android.app.Activity;
 import android.app.Fragment;
-import android.view.KeyEvent;
+import android.os.Bundle;
+import android.support.annotation.Nullable;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.kyloth.serleena.R;
@@ -50,8 +54,8 @@ import com.kyloth.serleena.presentation.ICardioView;
 
 
 /**
- * Classe che implementa la schermata “Cardio”, in cui vengono mostrate eventuali informazioni
- * relative ad un sensore Fitness collegato allo smartwatch
+ * Implementa la schermata “Cardio”, in cui vengono mostrate informazioni
+ * relative ad un eventuale sensore Fitness collegato allo smartwatch
  *
  * @use Viene istanziata e utilizzata dall'Activity per la visualizzazione della schermata. Comunica con il Presenter associato attraverso l'interfaccia ICardioPresenter.
  * @field presenter : ICardioPresenter presenter collegato a un CardioFragment
@@ -62,31 +66,37 @@ import com.kyloth.serleena.presentation.ICardioView;
 public class CardioFragment extends Fragment implements ICardioView {
 
     ICardioPresenter presenter;
+    TextView hr;
 
-    /**
-     * Questo metodo viene invocato ogni volta che un CardioFragment viene collegato ad un'Activity.
-     *
-     * @param activity Activity che ha appena terminato una transazione in cui viene aggiunto il corrente Fragment
-     */
+    public CardioFragment() {
+        /* Null object pattern */
+        presenter = new ICardioPresenter() {
+            @Override
+            public void resume() { }
+            @Override
+            public void pause() { }
+        };
+    }
+
+    @Nullable
     @Override
-    public void onAttach(Activity activity) {
-        super.onAttach(activity);
-        TextView hr = (TextView) getActivity().findViewById(R.id.heart_rate);
-        hr.setText("NESSUN DATO DA VISUALIZZARE");
+    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+                             Bundle savedInstanceState) {
+        View v = super.onCreateView(inflater, container, savedInstanceState);
+        hr = (TextView) v.findViewById(R.id.heartrate_text);
+        return v;
     }
 
     /**
-     * Metodo che visualizza sullo schermo dello smartwatch il valore del battito cardiaco.
+     * Indica alla vista il valore di battito cardiaco da visualizzare.
      */
     @Override
     public void setHeartRate(int rate) {
-        Integer rateValue = rate;
-        TextView hr = (TextView) getActivity().findViewById(R.id.heart_rate);
-        hr.setText(rateValue.toString());
+        hr.setText(String.valueOf(rate) + " bpm");
     }
 
     /**
-     * Questo metodo serve per collegare un CardioFragment al proprio presenter.
+     * Aggancia un Presenter alla vista.
      */
     @Override
     public void attachPresenter(ICardioPresenter presenter) {
@@ -94,17 +104,9 @@ public class CardioFragment extends Fragment implements ICardioView {
     }
 
     /**
-     * Metodo invocato alla pressione del pulsante centrale dello smartwatch.
+     * Ridefinizione di Fragment.onResume().
      *
-     * @param keyCode tasto premuto
-     * @param event KeyEvent avvenuto
-     */
-    public void keyDown(int keyCode, KeyEvent event) {
-    }
-
-    /**
-     * Metodo invocato quando il Fragment smette di essere visualizzato.
-     *
+     * Segnala al presenter che la vista è in stato attivo e visibile.
      */
     @Override
     public void onResume() {
@@ -113,12 +115,14 @@ public class CardioFragment extends Fragment implements ICardioView {
     }
 
     /**
-     * Metodo invocato quando il Fragment smette di essere visualizzato.
+     * Ridefinizione di Fragment.onPause().
      *
+     * Segnala al presenter che la vista è in stato non visibile.
      */
     @Override
     public void onPause() {
         super.onPause();
         presenter.pause();
     }
+
 }
