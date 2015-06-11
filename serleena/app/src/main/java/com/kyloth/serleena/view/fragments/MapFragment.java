@@ -138,6 +138,14 @@ public class MapFragment extends Fragment implements com.kyloth.serleena.present
     }
 
     /**
+     * Implementa IMapView.clear().
+     */
+    @Override
+    public void clear() {
+
+    }
+
+    /**
      * Metodo che richiede la creazione di un Punto Utente.
      *
      * @param keyCode tasto premuto
