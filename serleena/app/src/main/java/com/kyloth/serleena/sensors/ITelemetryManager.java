@@ -66,19 +66,14 @@ public interface ITelemetryManager {
     public Iterable<TelemetryEvent> getEvents();
 
     /**
-     * Avvia il Tracciamento.
-     *
-     * Se vi è già un Tracciamento avviato, questo viene perso.
+     * Abilita il Tracciamento.
      */
-    public void start();
+    public void enable();
 
     /**
-     * Ferma il Tracciamento.
-     *
-     * Se nessun Tracciamento era stato avviato in precedenza, il metodo non ha
-     * alcun effetto.
+     * Disabilita il Tracciamento.
      */
-    public void stop();
+    public void disable();
 
     /**
      * Permette di segnalare manualmente eventi da registrare
