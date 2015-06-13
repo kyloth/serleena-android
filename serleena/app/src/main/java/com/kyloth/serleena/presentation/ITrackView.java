@@ -52,74 +52,75 @@ package com.kyloth.serleena.presentation;
  * @since 1.0
  */
 public interface ITrackView {
-	/**
-	 * Lega un Presenter alla vista.
-	 *
-	 * @since 1.0
-	 */
-	void attachPresenter(ITrackPresenter presenter);
+    /**
+     * Lega un Presenter alla vista.
+     *
+     * @since 1.0
+     */
+    void attachPresenter(ITrackPresenter presenter);
 
-	/**
-	 * Pulisce la vista.
-	 *
-	 * @since 1.0
-	 */
-	void clearView();
+    /**
+     * Pulisce la vista.
+     *
+     * @since 1.0
+     */
+    void clearView();
 
-	/**
-	 * Imposta l'orientamento suggerito - l'orientamento ossia
-	 * verso cui dirigersi per incontrare il successivo checkpoint.
-	 *
-	 * @param heading Orientamento espresso in gradi (0.0 ... 360.0),
-	 *                modulo 360.0.
-	 * @since 1.0
-	 */
-	void setDirection(float heading);
+    /**
+     * Imposta l'orientamento suggerito - l'orientamento ossia
+     * verso cui dirigersi per incontrare il successivo checkpoint.
+     *
+     * @param heading Orientamento espresso in gradi (0.0 ... 360.0),
+     *                modulo 360.0.
+     * @since 1.0
+     */
+    void setDirection(float heading);
 
-	/**
-	 * Imposta la distanza dal successivo checkpoint.
-	 *
-	 * @param distance distanza espressa in metri
-	 * @since 1.0
-	 */
-	void setDistance(int distance);
+    /**
+     * Imposta la distanza dal successivo checkpoint.
+     *
+     * @param distance distanza espressa in metri
+     * @since 1.0
+     */
+    void setDistance(int distance);
 
-	/**
-	 * Imposta il tempo parziale rilevato all'ultimo checkpoint
-	 * per visualizzarlo a schermo.
+    /**
+     * Imposta il tempo parziale rilevato all'ultimo checkpoint
+     * per visualizzarlo a schermo.
      *
      * @param seconds Secondi trascorsi dall'inizio del Percorso all'ultimo
      *                checkpoint attraversato.
-	 *
-	 * @since 1.0
-	 */
-	void setLastPartial(int seconds);
+     *
+     * @since 1.0
+     */
+    void setLastPartial(int seconds);
 
-	/**
-	 * Imposta il guadagno netto sul ghost rilevato all'ultimo checkpoint.
-	 *
-	 * @since 1.0
-	 */
-	void setDelta(int seconds);
+    /**
+     * Imposta il guadagno netto sul ghost rilevato all'ultimo checkpoint.
+     *
+     * @since 1.0
+     */
+    void setDelta(int seconds);
 
-	/**
-	 * Imposta il numero del prossimo checkpoint per la visualizzazione a video.
-	 *
-	 * @since 1.0
-	 */
-	void setCheckpointNo(int n);
+    /**
+     * Imposta il numero del prossimo checkpoint per la visualizzazione a video.
+     *
+     * @since 1.0
+     */
+    void setCheckpointNo(int n);
 
-	/**
-	 * Imposta il numero complessivo dei checkpoint del percorso.
-	 *
-	 * @since 1.0
-	 */
-	void setTotalCheckpoints(int n);
+    /**
+     * Imposta il numero complessivo dei checkpoint del percorso.
+     *
+     * @since 1.0
+     */
+    void setTotalCheckpoints(int n);
 
-	/**
-	 * Informa la vista se il Tracciamento e' abilitato o meno.
-	 *
-	 * @since 1.0
-	 */
-	void telemetryEnabled(boolean b);
+    /**
+     * Informa la vista se il Tracciamento e' abilitato o meno.
+     *
+     * @since 1.0
+     */
+    void telemetryEnabled(boolean b);
+
 }
