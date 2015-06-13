@@ -65,7 +65,8 @@ import java.util.UUID;
  * @author Filippo Sestini <sestini.filippo@gmail.com>
  */
 class TelemetryManager implements ITelemetryManager,
-        ILocationObserver, IHeartRateObserver, IWakeupObserver {
+        ILocationObserver, IHeartRateObserver, IWakeupObserver,
+        ITrackCrossingObserver {
 
     private static int SAMPLING_RATE_SECONDS = 60;
 
@@ -206,4 +207,34 @@ class TelemetryManager implements ITelemetryManager,
     public String getUUID() {
         return uuid;
     }
+
+    /**
+     * Implementa ITrackCrossedObserver.onCheckpointCrossed().
+     *
+     * @param checkpointNumber Indice del checkpoint appena attraversato.
+     */
+    @Override
+    public void onCheckpointCrossed(int checkpointNumber) {
+        if (enabled) {
+            if (checkpointNumber == 0)
+                start();
+            try {
+                events.add(new CheckpointReachedTelemetryEvent(
+                        tc.lastPartialTime(),
+                        checkpointNumber
+                ));
+
+                int total = tc.getTrack().getCheckpoints().size();
+                if (checkpointNumber == total - 1) {
+                    stop();
+                    tc.getTrack().createTelemetry(getEvents());
+                }
+            } catch (NoTrackCrossingException e) {}
+        }
+
+    }
+
+    @Override
+    public void onTrackSet() { }
+
 }
