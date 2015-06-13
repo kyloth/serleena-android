@@ -261,6 +261,11 @@ public class TrackFragment extends Fragment implements ITrackView {
         displayInfo();
     }
 
+    @Override
+    public void displayTrackEnded() {
+        throw new UnsupportedOperationException();
+    }
+
     /**
      * Metodo invocato alla pressione del pulsante centrale dello smartwatch.
      */
