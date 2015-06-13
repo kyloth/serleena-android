@@ -65,7 +65,7 @@ import java.util.UUID;
  * @field wkMan : IWakeupManager Gestore dei wakeup
  * @field events : ArrayList<TelemetryEvent> Lista di eventi campionati al momento
  * @field pm : IPowerManager Gestore dei lock sul processore
- * @field sampling : boolean Valore indicante se il campionamento è attivo o meno
+ * @field enabled : boolean Valore indicante se il campionamento è abilitato
  * @field startTimestamp : long Istante, in UNIX time, di avvio del Tracciamento al momento avviato
  * @field uuid : String UUID dell'oggetto in quanto IWakeupObserver
  * @author Filippo Sestini <sestini.filippo@gmail.com>
@@ -81,7 +81,7 @@ class TelemetryManager implements ITelemetryManager,
     private ITrackCrossing tc;
     private ArrayList<TelemetryEvent> events;
     private IPowerManager pm;
-    private boolean sampling;
+    private boolean enabled;
     private long startTimestamp;
     private String uuid;
     /**
@@ -103,7 +103,7 @@ class TelemetryManager implements ITelemetryManager,
 
         this.tc.attachObserver(this);
         this.events = new ArrayList<TelemetryEvent>();
-        this.sampling = false;
+        this.enabled = false;
         uuid = UUID.randomUUID().toString();
     }
 
