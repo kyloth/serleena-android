@@ -107,7 +107,7 @@ public class SerleenaSensorManager implements ISensorManager {
         wMan = new WakeupManager(context);
         tc = new TrackCrossing(new LocationReachedManager(wMan, locMan));
         telMan = new TelemetryManager(locMan, hrMan, wMan, SerleenaPowerManager
-                .getInstance(context));
+                .getInstance(context), tc);
         try {
             SensorManager sm = (SensorManager) context.getSystemService
                     (Context.SENSOR_SERVICE);

@@ -78,6 +78,7 @@ class TelemetryManager implements ITelemetryManager,
     private ILocationManager locMan;
     private IHeartRateManager hrMan;
     private IWakeupManager wkMan;
+    private ITrackCrossing tc;
     private ArrayList<TelemetryEvent> events;
     private IPowerManager pm;
     private boolean sampling;
@@ -89,13 +90,18 @@ class TelemetryManager implements ITelemetryManager,
      * Il Manager utilizza altre risorse del dispositivo, passate come
      * parametri al costruttore.
      */
-    public TelemetryManager(ILocationManager locMan, IHeartRateManager hrMan,
-                            IWakeupManager wm, IPowerManager pm) {
+    public TelemetryManager(ILocationManager locMan,
+                            IHeartRateManager hrMan,
+                            IWakeupManager wm,
+                            IPowerManager pm,
+                            ITrackCrossing trackCrossing) {
         this.locMan = locMan;
         this.hrMan = hrMan;
         this.wkMan = wm;
         this.pm = pm;
+        this.tc = trackCrossing;
 
+        this.tc.attachObserver(this);
         this.events = new ArrayList<TelemetryEvent>();
         this.sampling = false;
         uuid = UUID.randomUUID().toString();
