@@ -118,14 +118,36 @@ class TelemetryManager implements ITelemetryManager,
     }
 
     /**
-     * Implementa ITelemetryManager.start().
+     * Implementa ITelemetryManager.enable().
+     *
+     * Se vi è un percorso già iniziato e non è pertanto possibile abilitare il
+     * Tracciamento in corso d'opera, viene sollevata un'eccezione
+     * TrackAlreadyStartedException.
      */
     @Override
-    public synchronized void start() {
-        if (!sampling) {
-            wkMan.attachObserver(this, SAMPLING_RATE_SECONDS, false);
-            sampling = true;
+    public synchronized void enable()
+            throws TrackAlreadyStartedException {
+        try {
+            if (tc.getNextCheckpoint() == 0)
+                enabled = true;
+            else
+                throw new TrackAlreadyStartedException();
+        } catch (NoTrackCrossingException|TrackEndedException e) {
+            enabled = true;
         }
+    }
+
+    /**
+     * Implementa ITelemetryManager.disable().
+     */
+    @Override
+    public synchronized void disable() {
+        stop();
+        enabled = false;
+    }
+
+    private void start() {
+        wkMan.attachObserver(this, SAMPLING_RATE_SECONDS, false);
         events.clear();
         startTimestamp = System.currentTimeMillis() / 1000L;
     }
