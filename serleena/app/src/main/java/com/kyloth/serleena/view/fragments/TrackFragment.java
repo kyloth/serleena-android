@@ -266,6 +266,11 @@ public class TrackFragment extends Fragment implements ITrackView {
         throw new UnsupportedOperationException();
     }
 
+    @Override
+    public void clearDelta() {
+
+    }
+
     /**
      * Metodo invocato alla pressione del pulsante centrale dello smartwatch.
      */

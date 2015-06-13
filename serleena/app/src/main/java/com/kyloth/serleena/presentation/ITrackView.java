@@ -124,4 +124,6 @@ public interface ITrackView {
     void telemetryEnabled(boolean b);
 
     void displayTrackEnded();
+
+    void clearDelta();
 }
