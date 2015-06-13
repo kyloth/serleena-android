@@ -41,19 +41,13 @@
 
 package com.kyloth.serleena.sensors;
 
-import android.content.Context;
-import android.location.LocationManager;
-import android.os.PowerManager;
-
 import com.kyloth.serleena.common.CheckpointReachedTelemetryEvent;
 import com.kyloth.serleena.common.GeoPoint;
 import com.kyloth.serleena.common.HeartRateTelemetryEvent;
 import com.kyloth.serleena.common.LocationTelemetryEvent;
 import com.kyloth.serleena.common.TelemetryEvent;
-import com.kyloth.serleena.common.TelemetryEventType;
 
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.UUID;
 
 /**
