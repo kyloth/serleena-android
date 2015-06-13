@@ -371,21 +371,6 @@ public class SerleenaActivity extends Activity implements ISerleenaActivity {
     }
 
     /**
-     * Implementazione di ISerleenaActivity.setActiveTrack().
-     *
-     * Segnala all'activity l'attivazione di un Percorso. L'activity si
-     * occupa di inoltrare l'informazione agli altri presenter che
-     * ne necessitano.
-     *
-     * @param track Percorso attivato.
-     */
-    @Override
-    public void setActiveTrack(ITrack track) {
-        TrackPresenter presenter = (TrackPresenter) myPress.get("TRACK");
-        presenter.setActiveTrack(track);
-    }
-
-    /**
      * Implementa ISerleenaActivity.getDataSource().
      */
     @Override

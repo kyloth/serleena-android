@@ -68,18 +68,6 @@ public interface ISerleenaActivity {
     public void setActiveExperience(IExperience experience);
 
     /**
-     * Imposta il percorso attivo.
-     *
-     * Il metodo è chiamato dal Presenter che si occupa
-     * dell'impostazione del Percorso attivo. Tale
-     * informazione viene segnalata dall'activity a tutti i
-     * presenter che ne hanno bisogno.
-     *
-     * @param track Percorso da attivare.
-     */
-    public void setActiveTrack(ITrack track);
-
-    /**
      * Restituisce il data source dell'applicazione.
      *
      * @return Data source dell'applicazione.
