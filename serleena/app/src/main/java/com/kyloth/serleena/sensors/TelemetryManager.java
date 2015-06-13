@@ -130,15 +130,8 @@ class TelemetryManager implements ITelemetryManager,
         startTimestamp = System.currentTimeMillis() / 1000L;
     }
 
-    /**
-     * Implementa ITelemetryManager.stop().
-     */
-    @Override
-    public synchronized void stop() {
-        if (sampling) {
-            wkMan.detachObserver(this);
-            sampling = false;
-        }
+    private void stop() {
+        wkMan.detachObserver(this);
     }
 
     /**
