@@ -142,16 +142,6 @@ class TelemetryManager implements ITelemetryManager,
     }
 
     /**
-     * Implementa ITelemetryManager.signalEvent().
-     *
-     * @param event Evento di Tracciamento da registrare.
-     */
-    @Override
-    public void signalEvent(TelemetryEvent event) {
-        events.add(event);
-    }
-
-    /**
      * Implementa IHeartRateObserver.onHeartRateUpdate().
      *
      * Registra un evento HeartRateTelemetryEvent all'ottenimento di dati
