@@ -386,34 +386,6 @@ public class SerleenaActivity extends Activity implements ISerleenaActivity {
     }
 
     /**
-     * Implementa ISerleenaActivity.enableTelemetry().
-     *
-     * Segnala all'activity l'abilitazione del Tracciamento. L'activity si
-     * occupa di inoltrare l'informazione agli altri presenter che
-     * ne necessitano.
-     */
-    @Override
-    public void enableTelemetry() {
-        TelemetryPresenter presenter =
-                (TelemetryPresenter) myPress.get("TELEMETRY");
-        presenter.enableTelemetry();
-    }
-
-    /**
-     * Implementa ISerleenaActivity.disableTelemetry().
-     *
-     * Segnala all'activity l'disabilitazione del Tracciamento. L'activity si
-     * occupa di inoltrare l'informazione agli altri presenter che
-     * ne necessitano.
-     */
-    @Override
-    public void disableTelemetry() {
-        TelemetryPresenter presenter =
-                (TelemetryPresenter) myPress.get("TELEMETRY");
-        presenter.disableTelemetry();
-    }
-
-    /**
      * Implementa ISerleenaActivity.getDataSource().
      */
     @Override

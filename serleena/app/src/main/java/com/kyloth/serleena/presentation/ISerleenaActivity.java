@@ -80,28 +80,6 @@ public interface ISerleenaActivity {
     public void setActiveTrack(ITrack track);
 
     /**
-     * Abilita il Tracciamento per il Percorso attivo.
-     *
-     * Il metodo è chiamato dal Presenter che si occupa
-     * dell'abilitazione e disabilitazione del Tracciamento. Tale
-     * informazione viene segnalata dall'activity a tutti i
-     * presenter che ne hanno bisogno. Se non è attivo alcun Percorso,
-     * il metodo non ha effetto.
-     */
-    public void enableTelemetry();
-
-    /**
-     * Disabilita il Tracciamento per il Percorso attivo.
-     *
-     * Il metodo è chiamato dal Presenter che si occupa
-     * dell'abilitazione e disabilitazione del Tracciamento. Tale
-     * informazione viene segnalata dall'activity a tutti i
-     * presenter che ne hanno bisogno. Se non è attivo alcun Percorso,
-     * il metodo non ha effetto.
-     */
-    public void disableTelemetry();
-
-    /**
      * Restituisce il data source dell'applicazione.
      *
      * @return Data source dell'applicazione.
