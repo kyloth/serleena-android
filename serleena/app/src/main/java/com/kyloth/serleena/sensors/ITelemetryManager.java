@@ -75,12 +75,4 @@ public interface ITelemetryManager {
      */
     public void disable();
 
-    /**
-     * Permette di segnalare manualmente eventi da registrare
-     * nel Tracciamento in corso.
-     *
-     * @param event Evento di Tracciamento da registrare.
-     */
-    public void signalEvent(TelemetryEvent event);
-
 }
