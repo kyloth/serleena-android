@@ -141,6 +141,16 @@ class TelemetryManager implements ITelemetryManager,
         enabled = false;
     }
 
+    /**
+     * Implementa ITelemetryManager.isEnabled().
+     *
+     * @return True se il Tracciamento è abilitato.
+     */
+    @Override
+    public boolean isEnabled() {
+        return enabled;
+    }
+
     private void start() {
         wkMan.attachObserver(this, SAMPLING_RATE_SECONDS, false);
         events.clear();

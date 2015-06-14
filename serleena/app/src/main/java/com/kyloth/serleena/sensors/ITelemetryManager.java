@@ -79,4 +79,11 @@ public interface ITelemetryManager {
      */
     public void disable();
 
+    /**
+     * Indica lo stato di abilitazione/disabilitazione del Tracciamento.
+     *
+     * @return True se il Tracciamento è abilitato.
+     */
+    boolean isEnabled();
+
 }
