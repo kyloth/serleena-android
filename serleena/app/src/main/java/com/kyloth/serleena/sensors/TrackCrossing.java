@@ -117,7 +117,6 @@ public final class TrackCrossing implements ITrackCrossing,
             locReachMan.detachObserver(this);
         } catch (UnregisteredObserverException ex) { }
 
-        notifyObservers();
         long now = System.currentTimeMillis() / 1000L;
         lastPartial = (int) (now - trackStartTimestamp);
 
@@ -130,6 +129,8 @@ public final class TrackCrossing implements ITrackCrossing,
             nextCheckpointIndex = track.getCheckpoints().size();
             track = null;
         }
+
+        notifyObservers();
     }
 
     @Override
