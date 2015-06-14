@@ -93,7 +93,7 @@ import static org.mockito.Mockito.*;
 import static org.junit.Assert.*;
 
 /**
- * Contiene i test di unit‡ per la classe CompassFragment.
+ * Contiene i test di unit√† per la classe CompassFragment.
  *
  * @author Sebastiano Valle <valle.sebastiano93@gmail.com>
  * @version 1.0.0
