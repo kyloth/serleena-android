@@ -67,8 +67,12 @@ public interface ITelemetryManager {
 
     /**
      * Abilita il Tracciamento.
+     *
+     * Se vi è un Percorso già avviato e non è possibile pertanto abilitare
+     * il Tracciamento, viene sollevata un'eccezione
+     * TrackAlreadyStartedException.
      */
-    public void enable();
+    public void enable() throws TrackAlreadyStartedException;
 
     /**
      * Disabilita il Tracciamento.
