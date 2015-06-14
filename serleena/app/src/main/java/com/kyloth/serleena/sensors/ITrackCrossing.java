@@ -70,15 +70,12 @@ public interface ITrackCrossing {
      * corso.
      *
      * Se non vi è un Percorso in corso, viene sollevata un'eccezione
-     * NoTrackCrossingException. Se il Percorso è terminato, viene sollevata
-     * un'eccezione TrackEndedException.
+     * NoTrackCrossingException.
      *
      * @return
-     * @throws TrackEndedException
      * @throws NoTrackCrossingException
      */
-    int getNextCheckpoint() throws TrackEndedException,
-            NoTrackCrossingException;
+    int getNextCheckpoint() throws NoTrackCrossingException;
 
     /**
      * Registra un observer agli eventi dell'oggetto.
@@ -134,29 +131,4 @@ public interface ITrackCrossing {
 
     ITrack getTrack() throws NoTrackCrossingException;
 
-    /**
-     * Confronta il tempo parziale del Percorso in corso con il Tracciamento
-     * migliore di tale Percorso.
-     *
-     * Se il Percorso non possiede Tracciamenti, viene sollevata un'eccezione
-     * NoSuchTelemetryException.
-     *
-     * Se il Tracciamento non contiene campionamenti di attraversamento di un
-     * checkpoint corrispondente, viene sollevata un'eccezione
-     * NoSuchTelemetryEventException.
-     *
-     * Se non sono stati attraversati checkpoint nel Percorso in corso, viene
-     * sollevata un'eccezione NoSuchCheckpointException.
-     *
-     * Se non vi è alcun Percorso in corso o appena terminato, viene
-     * sollevata un'eccezione NoTrackCrossingException.
-     *
-     * @return Differenza tra il Percorso in corso e il Tracciamento
-     * specificato.
-     * @throws NoSuchTelemetryException
-     * @throws NoSuchTelemetryEventException
-     * @throws NoSuchCheckpointException
-     */
-    int comparePartialAgainstBest() throws NoSuchTelemetryException,
-            NoSuchTelemetryEventException, NoSuchCheckpointException, NoTrackCrossingException;
 }

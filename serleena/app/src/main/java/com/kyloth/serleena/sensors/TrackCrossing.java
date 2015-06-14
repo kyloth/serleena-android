@@ -164,28 +164,4 @@ public final class TrackCrossing implements ITrackCrossing,
             o.onCheckpointCrossed(nextCheckpointIndex - 1);
     }
 
-    @Override
-    public int comparePartialAgainstBest()
-            throws NoSuchTelemetryEventException, NoSuchCheckpointException,
-            NoSuchTelemetryException, NoTrackCrossingException {
-        if (track == null)
-            throw new NoTrackCrossingException();
-        final int lastCrossed = this.getLastCrossed();
-        ITelemetry best = track.getBestTelemetry();
-
-        Predicate<TelemetryEvent> p = new Predicate<TelemetryEvent>() {
-            @Override
-            public boolean apply(TelemetryEvent telemetryEvent) {
-                return telemetryEvent.getType() ==
-                        TelemetryEventType.CheckpointReached &&
-                        ((CheckpointReachedTelemetryEvent)telemetryEvent)
-                        .checkpointNumber() == lastCrossed;
-            }
-        };
-
-        Iterable<TelemetryEvent> events = best.getEvents(p);
-        TelemetryEvent event = events.iterator().next();
-        return lastPartial - event.timestamp();
-    }
-
 }
