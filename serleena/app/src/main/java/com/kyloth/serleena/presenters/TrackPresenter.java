@@ -91,7 +91,7 @@ import com.kyloth.serleena.sensors.TrackEndedException;
 public class TrackPresenter implements ITrackPresenter, ITrackCrossingObserver,
         ILocationObserver, IHeadingObserver {
 
-    private static int UPDATE_INTERVAL_SECONDS = 60;
+    public static int UPDATE_INTERVAL_SECONDS = 60;
 
     private ITrackView view;
     private ISerleenaActivity activity;
