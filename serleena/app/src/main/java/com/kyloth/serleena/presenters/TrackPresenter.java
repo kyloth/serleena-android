@@ -172,7 +172,9 @@ public class TrackPresenter implements ITrackPresenter, ITrackCrossingObserver,
 
             locMan.attachObserver(this, UPDATE_INTERVAL_SECONDS);
             hMan.attachObserver(this);
-        } catch (NoTrackCrossingException ee) {}
+        } catch (NoTrackCrossingException ee) {
+            view.clearView();
+        }
     }
 
     /**
