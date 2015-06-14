@@ -280,10 +280,8 @@ public class TrackPresenter implements ITrackPresenter, ITrackCrossingObserver,
      * Implementa ITrackPresenter.advanceCheckpoint().
      */
     @Override
-    public void advanceCheckpoint() {
-        try {
-            tc.advanceCheckpoint();
-        } catch (NoTrackCrossingException e) {}
+    public void advanceCheckpoint() throws NoTrackCrossingException {
+        tc.advanceCheckpoint();
     }
 
     /**
