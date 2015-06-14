@@ -128,7 +128,26 @@ public class TrackPresenter implements ITrackPresenter, ITrackCrossingObserver,
         this.locMan = activity.getSensorManager().getLocationSource();
         try {
             this.hMan = activity.getSensorManager().getHeadingSource();
-        } catch (SensorNotAvailableException e) {}
+        } catch (SensorNotAvailableException e) {
+            /* Null object pattern */
+            this.hMan = new IHeadingManager() {
+                @Override
+                public void attachObserver(IHeadingObserver observer) {
+                    if (observer == null)
+                        throw new IllegalArgumentException("Illegal null " +
+                                "observer");
+                }
+                @Override
+                public void detachObserver(IHeadingObserver observer)
+                        throws IllegalArgumentException {
+                    if (observer == null)
+                        throw new IllegalArgumentException("Illegal null " +
+                                "observer");
+                }
+                @Override
+                public void notifyObservers() { }
+            };
+        }
     }
 
     /**
@@ -152,12 +171,7 @@ public class TrackPresenter implements ITrackPresenter, ITrackCrossingObserver,
             updateCheckpoints(lastCheckpoint, total);
 
             locMan.attachObserver(this, UPDATE_INTERVAL_SECONDS);
-            try {
-                hMan = activity.getSensorManager().getHeadingSource();
-                hMan.attachObserver(this);
-            } catch (SensorNotAvailableException e) {
-                hMan = null;
-            }
+            hMan.attachObserver(this);
         } catch (NoTrackCrossingException ee) {}
     }
 
@@ -169,11 +183,8 @@ public class TrackPresenter implements ITrackPresenter, ITrackCrossingObserver,
     @Override
     public synchronized void pause() {
         active = false;
-        try {
-            locMan.detachObserver(this);
-            if (hMan != null)
-                hMan.detachObserver(this);
-        } catch (UnregisteredObserverException e) { }
+        locMan.detachObserver(this);
+        hMan.detachObserver(this);
     }
 
     /**
