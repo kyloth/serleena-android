@@ -159,15 +159,15 @@ public class TrackPresenter implements ITrackPresenter, ITrackCrossingObserver,
     public synchronized void resume() {
         active = true;
 
-        int lastCheckpoint;
         try {
-            lastCheckpoint = tc.getLastCrossed();
-        } catch (NoSuchCheckpointException e) {
-            lastCheckpoint = -1;
-        }
+            int lastCheckpoint, total;
 
-        try {
-            int total = tc.getTrack().getCheckpoints().size();
+            try {
+                lastCheckpoint = tc.getLastCrossed();
+            } catch (NoSuchCheckpointException e) {
+                lastCheckpoint = -1;
+            }
+            total = tc.getTrack().getCheckpoints().size();
             updateCheckpoints(lastCheckpoint, total);
 
             locMan.attachObserver(this, UPDATE_INTERVAL_SECONDS);
