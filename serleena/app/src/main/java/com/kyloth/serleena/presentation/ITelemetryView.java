@@ -57,4 +57,11 @@ public interface ITelemetryView {
      * @since 1.0
      */
     void attachPresenter(ITelemetryPresenter presenter);
+
+    /**
+     * Mostra sulla vista un messaggio di errore informativo del fatto che non
+     * sia possibile abilitare il Tracciamento perchè il Percorso è già avviato.
+     */
+    void displayTrackStartedError();
+
 }

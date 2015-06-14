@@ -55,6 +55,7 @@ import com.kyloth.serleena.presentation.ITelemetryView;
 public class TelemetryPresenter implements ITelemetryPresenter {
 
     private ITelemetryManager telMan;
+    private ITelemetryView view;
 
     /**
      * Crea un oggetto TelemetryPresenter.
@@ -77,6 +78,7 @@ public class TelemetryPresenter implements ITelemetryPresenter {
             throw new IllegalArgumentException("Illegal null activity");
 
         this.telMan = activity.getSensorManager().getTelemetryManager();
+        this.view = view;
         view.attachPresenter(this);
     }
 
@@ -91,7 +93,7 @@ public class TelemetryPresenter implements ITelemetryPresenter {
         try {
             telMan.enable();
         } catch (TrackAlreadyStartedException e) {
-            // TODO mostra sulla vista messaggio di errore
+            view.displayTrackStartedError();
         }
     }
 
