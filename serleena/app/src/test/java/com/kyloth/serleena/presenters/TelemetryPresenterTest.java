@@ -154,4 +154,27 @@ public class TelemetryPresenterTest {
         verify(telMan).disable();
     }
 
+    /**
+     * Verifica che un tentativo di abilitazione del Tracciamento con
+     * Percorso già avviato causi una segnalazione alla vista.
+     */
+    @Test
+    public void enablingWithTrackAlreadyStartedShouldThrow() throws
+            TrackAlreadyStartedException {
+        ITelemetryManager telMan = mock(ITelemetryManager.class);
+        ISensorManager sm = mock(ISensorManager.class);
+        ISerleenaActivity activity = mock(ISerleenaActivity.class);
+        when(sm.getTelemetryManager()).thenReturn(telMan);
+        when(activity.getSensorManager()).thenReturn(sm);
+
+        Mockito.doThrow(TrackAlreadyStartedException.class)
+                .when(telMan).enable();
+
+        ITelemetryView view = mock(ITelemetryView.class);
+        TelemetryPresenter tp =
+                new TelemetryPresenter(view, activity);
+        tp.enableTelemetry();
+        verify(view).displayTrackStartedError();
+    }
+
 }
