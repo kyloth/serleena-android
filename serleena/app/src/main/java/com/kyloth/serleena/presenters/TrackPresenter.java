@@ -325,28 +325,6 @@ public class TrackPresenter implements ITrackPresenter, ITrackCrossingObserver,
     }
 
     @Override
-    public void onTrackSet() {
-        try {
-            final int totalCheckpoints = tc.getTrack().getCheckpoints().size();
-            view.clearView();
-            view.setTotalCheckpoints(totalCheckpoints);
-
-            if (active) {
-                AsyncTask<Void, Void, Void> task =
-                        new AsyncTask<Void, Void, Void>() {
-                            @Override
-                            protected Void doInBackground(Void... params) {
-                                updateCheckpoints(-1, totalCheckpoints);
-                                return null;
-                            }
-                        };
-                task.execute();
-            }
-
-        } catch (NoTrackCrossingException e) {}
-    }
-
-    @Override
     public void onCheckpointCrossed(final int checkpointNumber) {
         if (active) {
             try {

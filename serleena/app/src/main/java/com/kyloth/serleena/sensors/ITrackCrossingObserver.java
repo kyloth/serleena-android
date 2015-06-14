@@ -36,6 +36,5 @@ import com.kyloth.serleena.common.Checkpoint;
  * Created by fsestini on 6/6/15.
  */
 public interface ITrackCrossingObserver {
-    void onTrackSet();
     void onCheckpointCrossed(int checkpointNumber);
 }

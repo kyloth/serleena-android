@@ -246,7 +246,4 @@ class TelemetryManager implements ITelemetryManager,
 
     }
 
-    @Override
-    public void onTrackSet() { }
-
 }
