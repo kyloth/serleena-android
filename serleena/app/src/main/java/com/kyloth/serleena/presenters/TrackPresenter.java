@@ -205,8 +205,10 @@ public class TrackPresenter implements ITrackPresenter, ITrackCrossingObserver,
             protected Void doInBackground(Void... voids) {
                 try {
                     updateDirection(lastKnownLocation, lastKnownHeading);
-                    updateDistance(lastKnownLocation);
                 } catch (NoTrackCrossingException e) {}
+                try {
+                    updateDistance(lastKnownLocation);
+                } catch (NoTrackCrossingException ee) {}
                 return null;
             }
         };
