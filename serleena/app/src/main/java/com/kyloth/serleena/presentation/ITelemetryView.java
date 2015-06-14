@@ -51,10 +51,10 @@ package com.kyloth.serleena.presentation;
  */
 
 public interface ITelemetryView {
-	/**
-	 * Lega un Presenter alla vista.
-	 *
-	 * @since 1.0
-	 */
-	void attachPresenter(ITelemetryPresenter presenter);
+    /**
+     * Lega un Presenter alla vista.
+     *
+     * @since 1.0
+     */
+    void attachPresenter(ITelemetryPresenter presenter);
 }
