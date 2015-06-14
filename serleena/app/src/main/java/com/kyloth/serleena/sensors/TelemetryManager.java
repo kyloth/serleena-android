@@ -68,7 +68,8 @@ class TelemetryManager implements ITelemetryManager,
         ILocationObserver, IHeartRateObserver, IWakeupObserver,
         ITrackCrossingObserver {
 
-    private static int SAMPLING_RATE_SECONDS = 60;
+    public static int SAMPLING_RATE_SECONDS = 60;
+    public static int SENSOR_TIMEOUT_SECONDS = 20;
 
     private ILocationManager locMan;
     private IHeartRateManager hrMan;
@@ -209,8 +210,8 @@ class TelemetryManager implements ITelemetryManager,
     public void onWakeup() {
         pm.lock("LocationTelemetryLock");
         pm.lock("HeartRateTelemetryLock");
-        locMan.getSingleUpdate(this, 20);
-        hrMan.getSingleUpdate(this, 20);
+        locMan.getSingleUpdate(this, SENSOR_TIMEOUT_SECONDS);
+        hrMan.getSingleUpdate(this, SENSOR_TIMEOUT_SECONDS);
     }
 
     @Override
