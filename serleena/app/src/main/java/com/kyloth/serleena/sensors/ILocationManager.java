@@ -88,7 +88,7 @@ public interface ILocationManager {
      * @throws java.lang.IllegalArgumentException
      */
     public void detachObserver(ILocationObserver observer)
-            throws UnregisteredObserverException, IllegalArgumentException;
+            throws IllegalArgumentException;
 
     /**
      * Permette di ottenere un singolo 1aggiornamento dei dati di posizione su
