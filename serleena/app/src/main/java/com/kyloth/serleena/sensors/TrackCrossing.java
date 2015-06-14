@@ -90,7 +90,8 @@ public final class TrackCrossing implements ITrackCrossing,
     @Override
     public int getNextCheckpoint()
             throws NoTrackCrossingException {
-        if (track == null)
+        if (track == null ||
+                nextCheckpointIndex == track.getCheckpoints().size())
             throw new NoTrackCrossingException();
         return nextCheckpointIndex;
     }
@@ -127,7 +128,6 @@ public final class TrackCrossing implements ITrackCrossing,
             locReachMan.attachObserver(this, nextCheckpoint);
         } else {
             nextCheckpointIndex = track.getCheckpoints().size();
-            track = null;
         }
 
         notifyObservers();

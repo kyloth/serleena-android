@@ -314,18 +314,7 @@ public class TrackCrossingTest {
     */
 
     @Test(expected = NoTrackCrossingException.class)
-    public void testThatGetTrackWithNoTrackThrows1() throws
-            NoTrackCrossingException {
-        ITrack track = getOneCheckpointTrack();
-        TrackCrossing tc = new TrackCrossing(mock(ILocationReachedManager
-                .class));
-        tc.startTrack(track);
-        tc.onLocationReached();
-        tc.getTrack();
-    }
-
-    @Test(expected = NoTrackCrossingException.class)
-    public void testThatGetTrackWithNoTrackThrows2() throws
+    public void testThatGetTrackWithNoTrackThrows() throws
             NoTrackCrossingException {
         TrackCrossing tc = new TrackCrossing(mock(ILocationReachedManager
                 .class));
