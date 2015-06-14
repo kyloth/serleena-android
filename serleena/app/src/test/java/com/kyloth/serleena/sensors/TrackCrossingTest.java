@@ -266,53 +266,6 @@ public class TrackCrossingTest {
         tc.getNextCheckpoint();
     }
 
-    /**
-     * Verifica che il confronto restituito da compareAgainstBest() produca
-     * valori corretti confrontandoli con dati noti.
-     */
-    /*
-    @Test
-    public void testComparisonAgainstBestTelemetry() throws
-            NoTrackCrossingException,
-            NoSuchTelemetryEventException, NoSuchCheckpointException, NoSuchTelemetryException {
-
-        TrackCrossing tc = getTrackCrossing();
-        final Checkpoint cp = mock(Checkpoint.class);
-        ImmutableList<Checkpoint> il = new ImmutableList<Checkpoint>() {
-            @Override
-            public int size() { return Integer.MAX_VALUE; }
-            @Override
-            public Checkpoint get(int index) { return cp; }
-            @Override
-            public Iterator<Checkpoint> iterator() { return null; }
-        };
-        ITrack track = mock(ITrack.class);
-        when(track.getCheckpoints()).thenReturn(il);
-
-        tc.startTrack(track);
-        tc.advanceCheckpoint();
-        tc.advanceCheckpoint();
-        tc.advanceCheckpoint();
-        int lastPartial = tc.lastPartialTime();
-
-        ITelemetry tel = mock(ITelemetry.class);
-        CheckpointReachedTelemetryEvent event = mock
-                (CheckpointReachedTelemetryEvent.class);
-        ArrayList<TelemetryEvent> list = new ArrayList<TelemetryEvent>();
-        list.add(event);
-
-        when(event.checkpointNumber()).thenReturn(2);
-        when(event.timestamp()).thenReturn(200);
-        Predicate<TelemetryEvent> p = any();
-        when(tel.getEvents(p)).thenReturn(list);
-        when(track.getBestTelemetry()).thenReturn(tel);
-
-        int expected = lastPartial - 200;
-        int result = tc.comparePartialAgainstBest();
-        assertEquals(result, expected, 0);
-    }
-    */
-
     @Test(expected = NoTrackCrossingException.class)
     public void testThatGetTrackWithNoTrackThrows() throws
             NoTrackCrossingException {
