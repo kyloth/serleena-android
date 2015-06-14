@@ -41,16 +41,23 @@
 
 package com.kyloth.serleena.presenters;
 
+import android.app.Activity;
+
 import org.junit.Test;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.rules.ExpectedException;
+import org.mockito.Mockito;
+
 import static org.mockito.Mockito.*;
 import static org.junit.Assert.*;
 import com.kyloth.serleena.presentation.ICompassPresenter;
 import com.kyloth.serleena.presentation.ITelemetryView;
 import com.kyloth.serleena.presentation.ISerleenaActivity;
 import com.kyloth.serleena.sensors.ISensorManager;
+import com.kyloth.serleena.sensors.ITelemetryManager;
+import com.kyloth.serleena.sensors.ITrackCrossing;
+import com.kyloth.serleena.sensors.TrackAlreadyStartedException;
 
 /**
  * Contiene i test di unità per la classe TelemetryPresenter.
@@ -60,56 +67,53 @@ import com.kyloth.serleena.sensors.ISensorManager;
  */
 
 public class TelemetryPresenterTest {
-    ISerleenaActivity activity;
-    ITelemetryView view;
-    ISensorManager sm;
-    @Rule
-    public ExpectedException exception = ExpectedException.none();
 
-    /**
-     * Inizializza i campi dati necessari alla conduzione dei test.
-     */
+    private ISerleenaActivity getActivity() {
+        ITelemetryManager telMan = mock(ITelemetryManager.class);
+        ISensorManager sm = mock(ISensorManager.class);
+        ISerleenaActivity activity = mock(ISerleenaActivity.class);
+        when(sm.getTelemetryManager()).thenReturn(telMan);
+        when(activity.getSensorManager()).thenReturn(sm);
 
-    @Before
-    public void initialize() {
-        activity = mock(ISerleenaActivity.class);
-        view = mock(ITelemetryView.class);
+        return activity;
     }
 
     /**
      * Verifica che il costruttore lanci un'eccezione IllegalArgumentException
-     * con messaggio "Illegal null view" al tentativo di costruire un oggetto
-     * con view nulla.
+     * quando vengono passati parametri null al costruttore.
      */
-
-    @Test
-    public void constructorShouldThrowWxceptionWhenNullView() {
-        exception.expect(IllegalArgumentException.class);
-        exception.expectMessage("Illegal null view");
-        TelemetryPresenter null_view_tp = new TelemetryPresenter(null, activity);
+    @Test(expected = IllegalArgumentException.class)
+    public void constructorShouldThrowExceptionWhenNullArguments1() {
+        new TelemetryPresenter(null, getActivity());
     }
 
     /**
      * Verifica che il costruttore lanci un'eccezione IllegalArgumentException
-     * con messaggio "Illegal null activity" al tentativo di costruire un oggetto
-     * con activity nulla.
+     * quando vengono passati parametri null al costruttore.
      */
+    @Test(expected = IllegalArgumentException.class)
+    public void constructorShouldThrowExceptionWhenNullArguments2() {
+        new TelemetryPresenter(mock(ITelemetryView.class), null);
+    }
 
-    @Test
-    public void constructorShouldThrowExceptionWhenNullActivity() {
-        exception.expect(IllegalArgumentException.class);
-        exception.expectMessage("Illegal null activity");
-        TelemetryPresenter null_view_tp = new TelemetryPresenter(view, null);
+    /**
+     * Verifica che il costruttore lanci un'eccezione IllegalArgumentException
+     * quando vengono passati parametri null al costruttore.
+     */
+    @Test(expected = IllegalArgumentException.class)
+    public void constructorShouldThrowExceptionWhenNullArguments3() {
+        new TelemetryPresenter(null, null);
     }
 
     /**
      * Verifica che il costruttore chiami il metodo attachPresenter sulla view
      * fornendo il nuovo TelemetryPresenter creato come parametro.
      */
-
     @Test
     public void constructorShouldCallAttachPresenterWithCorrectParam() {
-        TelemetryPresenter tp = new TelemetryPresenter(view, activity);
+        ITelemetryView view = mock(ITelemetryView.class);
+        TelemetryPresenter tp =
+                new TelemetryPresenter(view, getActivity());
         verify(view).attachPresenter(tp);
     }
 
@@ -117,24 +121,37 @@ public class TelemetryPresenterTest {
      * Verifica che il metodo enableTelemetry chiami a sua volta il metodo
      * enableTelemetry su activity.
      */
-
     @Test
-    public void enableTelemetryShouldForwardCallToActivity() {
-        TelemetryPresenter tp = new TelemetryPresenter(view, activity);
+    public void enableTelemetryShouldForwardCallToActivity()
+            throws TrackAlreadyStartedException {
+        ITelemetryManager telMan = mock(ITelemetryManager.class);
+        ISensorManager sm = mock(ISensorManager.class);
+        ISerleenaActivity activity = mock(ISerleenaActivity.class);
+        when(sm.getTelemetryManager()).thenReturn(telMan);
+        when(activity.getSensorManager()).thenReturn(sm);
+
+        TelemetryPresenter tp =
+                new TelemetryPresenter(mock(ITelemetryView.class), activity);
         tp.enableTelemetry();
-        verify(activity).enableTelemetry();
+        verify(telMan).enable();
     }
 
     /**
      * Verifica che il metodo disableTelemetry chiami a sua volta il metodo
      * disableTelemetry su activity.
      */
-
     @Test
     public void disableTelemetryShouldForwardCallToActivity() {
-        TelemetryPresenter tp = new TelemetryPresenter(view, activity);
+        ITelemetryManager telMan = mock(ITelemetryManager.class);
+        ISensorManager sm = mock(ISensorManager.class);
+        ISerleenaActivity activity = mock(ISerleenaActivity.class);
+        when(sm.getTelemetryManager()).thenReturn(telMan);
+        when(activity.getSensorManager()).thenReturn(sm);
+
+        TelemetryPresenter tp =
+                new TelemetryPresenter(mock(ITelemetryView.class), activity);
         tp.disableTelemetry();
-        verify(activity).disableTelemetry();
+        verify(telMan).disable();
     }
 
 }
