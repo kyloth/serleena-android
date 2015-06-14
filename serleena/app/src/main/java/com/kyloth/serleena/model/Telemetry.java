@@ -65,10 +65,6 @@ class Telemetry implements  ITelemetry {
 
     private ITelemetryStorage storage;
 
-    private Iterable<TelemetryEvent> allEvents = null;
-    private Iterable<TelemetryEvent> locEvents = null;
-    private int duration = -1;
-
     /**
      * Crea un nuovo oggetto Telemetry.
      *
@@ -89,9 +85,7 @@ class Telemetry implements  ITelemetry {
      */
     @Override
     public Iterable<TelemetryEvent> getEvents() {
-        if (allEvents == null)
-            allEvents = storage.getEvents();
-        return allEvents;
+        return storage.getEvents();
     }
 
     /**
@@ -124,13 +118,11 @@ class Telemetry implements  ITelemetry {
      */
     @Override
     public int getDuration() {
-        if (duration == -1) {
-            duration = 0;
-            Iterable<TelemetryEvent> allEvents = this.getEvents();
-            for (TelemetryEvent e : allEvents)
-                if (e.timestamp() > duration)
-                    duration = e.timestamp();
-        }
+        int duration = 0;
+        Iterable<TelemetryEvent> allEvents = this.getEvents();
+        for (TelemetryEvent e : allEvents)
+            if (e.timestamp() > duration)
+                duration = e.timestamp();
         return duration;
     }
 
