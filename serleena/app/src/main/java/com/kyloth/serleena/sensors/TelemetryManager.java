@@ -128,7 +128,7 @@ class TelemetryManager implements ITelemetryManager,
                 enabled = true;
             else
                 throw new TrackAlreadyStartedException();
-        } catch (NoTrackCrossingException|TrackEndedException e) {
+        } catch (NoTrackCrossingException e) {
             enabled = true;
         }
     }

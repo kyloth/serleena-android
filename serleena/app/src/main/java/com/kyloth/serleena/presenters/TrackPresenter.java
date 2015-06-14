@@ -210,14 +210,12 @@ public class TrackPresenter implements ITrackPresenter, ITrackCrossingObserver,
      */
     public void updateDirection(GeoPoint loc, double heading)
             throws NoTrackCrossingException {
-        try {
-            Checkpoint cp =
-                    tc.getTrack().getCheckpoints().get(tc.getNextCheckpoint());
-            float bearingTo = loc.bearingTo(cp);
-            float azimuthTrueNorth =
-                    new AzimuthMagneticNorth((float)heading).toTrueNorth(loc);
-            view.setDirection(bearingTo - azimuthTrueNorth);
-        } catch (TrackEndedException e) {}
+        Checkpoint cp =
+                tc.getTrack().getCheckpoints().get(tc.getNextCheckpoint());
+        float bearingTo = loc.bearingTo(cp);
+        float azimuthTrueNorth =
+                new AzimuthMagneticNorth((float)heading).toTrueNorth(loc);
+        view.setDirection(bearingTo - azimuthTrueNorth);
     }
 
     /**
@@ -229,12 +227,10 @@ public class TrackPresenter implements ITrackPresenter, ITrackCrossingObserver,
      */
     public void updateDistance(GeoPoint here)
             throws NoTrackCrossingException {
-        try {
-            Checkpoint cp =
-                    tc.getTrack().getCheckpoints().get(tc.getNextCheckpoint());
-            int distance = Math.round(here.distanceTo(cp));
-            view.setDistance(distance);
-        } catch (TrackEndedException e) {}
+        int next = tc.getNextCheckpoint();
+        Checkpoint cp = tc.getTrack().getCheckpoints().get(next);
+        int distance = Math.round(here.distanceTo(cp));
+        view.setDistance(distance);
     }
 
     /**
