@@ -238,6 +238,7 @@ class TelemetryManager implements ITelemetryManager,
                 int total = tc.getTrack().getCheckpoints().size();
                 if (checkpointNumber == total - 1) {
                     stop();
+                    enabled = false;
                     tc.getTrack().createTelemetry(getEvents());
                 }
             } catch (NoTrackCrossingException e) {}
