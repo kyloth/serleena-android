@@ -40,6 +40,8 @@
 
 package com.kyloth.serleena.presentation;
 
+import com.kyloth.serleena.sensors.NoTrackCrossingException;
+
 /**
  * E' l'interfaccia del Presenter della schermata Bussola.
  * E' una marker interface.
@@ -57,6 +59,6 @@ public interface ITrackPresenter extends IPresenter {
 	 *
 	 * @since 1.0
 	 */
-	void advanceCheckpoint();
+	void advanceCheckpoint() throws NoTrackCrossingException;
 
 }
