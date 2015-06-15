@@ -47,6 +47,7 @@ import com.kyloth.serleena.model.ITrack;
 import com.kyloth.serleena.presentation.ISerleenaActivity;
 import com.kyloth.serleena.presentation.ITrackSelectionPresenter;
 import com.kyloth.serleena.presentation.ITrackSelectionView;
+import com.kyloth.serleena.sensors.ITrackCrossing;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -113,7 +114,9 @@ public class TrackSelectionPresenter implements ITrackSelectionPresenter {
         if (index < 0 || index >= tracks.size())
             throw new IllegalArgumentException("Index out of range");
 
-        activity.setActiveTrack(tracks.get(index));
+        ITrackCrossing tc =
+            activity.getSensorManager().getTrackCrossingManager();
+        tc.startTrack(tracks.get(index));
     }
 
     /**

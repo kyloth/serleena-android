@@ -70,7 +70,8 @@ public interface IHeadingManager {
      * @param observer IHeadingObserver la cui registrazione come "observer" di
      *                 questo oggetto sarà cancellata.
      */
-    public void detachObserver(IHeadingObserver observer);
+    public void detachObserver(IHeadingObserver observer)
+            throws IllegalArgumentException;
 
     /**
      * Metodo "notify" basato sull'omonimo metodo della classe "Subject" del

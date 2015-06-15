@@ -45,7 +45,6 @@ import android.content.Context;
 import android.location.Location;
 
 import com.kyloth.serleena.common.GeoPoint;
-import com.kyloth.serleena.common.UnregisteredObserverException;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -112,23 +111,17 @@ class LocationReachedManager implements ILocationReachedManager {
      *
      * @param observer Oggetto da deregistrare ILocationReachedManager. Se null,
      *                 viene sollevata un'eccezione IllegalArgumentException.
-     *                 Se non precedentemente registrato,
-     *                 viene sollevata un'eccezione
-     *                 UnregisteredObserverException.
      * @throws IllegalArgumentException
-     * @throws UnregisteredObserverException
      */
     @Override
     public synchronized void detachObserver(ILocationReachedObserver observer)
-            throws IllegalArgumentException, UnregisteredObserverException {
-
+            throws IllegalArgumentException {
         if (observer == null)
             throw new IllegalArgumentException("Illegal null observer");
-        if (!observers.containsKey(observer))
-            throw new UnregisteredObserverException();
-
-        observers.remove(observer);
-        wm.detachObserver(alarms.remove(observer));
+        if (observers.containsKey(observer)) {
+            observers.remove(observer);
+            wm.detachObserver(alarms.remove(observer));
+        }
     }
 
     /**

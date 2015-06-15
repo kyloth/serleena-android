@@ -43,18 +43,21 @@ package com.kyloth.serleena.presenters;
 import com.kyloth.serleena.presentation.ISerleenaActivity;
 import com.kyloth.serleena.presentation.ITelemetryPresenter;
 import com.kyloth.serleena.presentation.ITelemetryView;
+import com.kyloth.serleena.sensors.ITelemetryManager;
+import com.kyloth.serleena.sensors.TrackAlreadyStartedException;
 
 /**
  * Concretizza ITelemetryPresenter.
  *
  * @use Viene utilizzata solamente dall'Activity, che ne mantiene un riferimento. Il Presenter, alla creazione, si registra alla sua Vista, passando se stesso come parametro dietro interfaccia.
- * @field activity : ISerleenaActivity Activity a cui il Presenter appartiene
+ * @field telMan : ITelemetryManager Gestore dei Tracciamenti dell'applicazione
  * @author Filippo Sestini <sestini.filippo@gmail.com>
  * @version 1.0.0
  */
 public class TelemetryPresenter implements ITelemetryPresenter {
 
-    private ISerleenaActivity activity;
+    private ITelemetryManager telMan;
+    private ITelemetryView view;
 
     /**
      * Crea un oggetto TelemetryPresenter.
@@ -76,7 +79,8 @@ public class TelemetryPresenter implements ITelemetryPresenter {
         if (activity == null)
             throw new IllegalArgumentException("Illegal null activity");
 
-        this.activity = activity;
+        this.telMan = activity.getSensorManager().getTelemetryManager();
+        this.view = view;
         view.attachPresenter(this);
     }
 
@@ -88,7 +92,11 @@ public class TelemetryPresenter implements ITelemetryPresenter {
      */
     @Override
     public void enableTelemetry() {
-        activity.enableTelemetry();
+        try {
+            telMan.enable();
+        } catch (TrackAlreadyStartedException e) {
+            view.displayTrackStartedError();
+        }
     }
 
     /**
@@ -99,7 +107,7 @@ public class TelemetryPresenter implements ITelemetryPresenter {
      */
     @Override
     public void disableTelemetry() {
-        activity.disableTelemetry();
+        telMan.disable();
     }
 
     /**

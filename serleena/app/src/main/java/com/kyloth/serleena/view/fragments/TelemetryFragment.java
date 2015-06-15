@@ -105,6 +105,14 @@ public class TelemetryFragment extends Fragment implements ITelemetryView {
     }
 
     /**
+     * Implementa ITelemetryView.displayTrackStartedError().
+     */
+    @Override
+    public void displayTrackStartedError() {
+        throw new UnsupportedOperationException();
+    }
+
+    /**
      * Metodo che richiede la abilitazione o la disabilitazione del tracciamento.
      *
      * @param keyCode tasto premuto

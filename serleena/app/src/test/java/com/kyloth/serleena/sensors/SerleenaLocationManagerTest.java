@@ -47,7 +47,6 @@ import android.location.LocationManager;
 
 import com.kyloth.serleena.BuildConfig;
 import com.kyloth.serleena.common.GeoPoint;
-import com.kyloth.serleena.common.UnregisteredObserverException;
 import com.kyloth.serleena.sensors.ILocationObserver;
 import com.kyloth.serleena.sensors.SerleenaLocationManager;
 
@@ -155,30 +154,6 @@ public class SerleenaLocationManagerTest {
 	@Test(expected = IllegalArgumentException.class)
 	public void testDetachNoNullObserver() {
 		instance.detachObserver(null);
-	}
-
-	/**
-	 * Verifica che quando attach viene chiamato con un osservatore
-	 * non precendentemente registrato come argomento sollevi una
-	 * UnregisteredObserverException
-	 */
-	@Test(expected = UnregisteredObserverException.class)
-	public void testDetachNoNonAttachedObserver() {
-		instance.attachObserver(obs, 1000);
-		instance.detachObserver(otherObs);
-	}
-
-	/**
-	 * Verifica che quando attach viene chiamato con un osservatore
-	 * gia' precendentemente de-registrato come argomento sollevi una
-	 * UnregisteredObserverException
-	 */
-	@Test(expected = UnregisteredObserverException.class)
-	public void testDetachAlreadyDetachedObserver() {
-		instance.attachObserver(obs, 1000);
-		instance.attachObserver(otherObs, 1000);
-		instance.detachObserver(otherObs);
-		instance.detachObserver(otherObs);
 	}
 
 	/**

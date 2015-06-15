@@ -28,27 +28,11 @@
 ///////////////////////////////////////////////////////////////////////////////
 
 
-/**
- * Name: UnregisteredObserverException.java
- * Package: com.kyloth.serleena.common
- * Author: Filippo Sestini
- *
- * History:
- * Version  Programmer       Changes
- * 1.0.0    Filippo Sestini  Creazione file e scrittura
- *                                       codice e documentazione Javadoc
- */
-
-package com.kyloth.serleena.common;
+package com.kyloth.serleena.sensors;
 
 /**
- * Segnala un'operazione eseguita su un oggetto observer non
- * precedentemente registrato ad un pattern "Observer".
- *
- * @use Dichiarata dalle interfacce di gestione della sensoristica, che fanno ampio uso del pattern Observer.
- * @author Filippo Sestini <sestini.filippo@gmail.com>
- * @version 1.0.0
+ * Created by fsestini on 6/6/15.
  */
-public class UnregisteredObserverException extends RuntimeException {
+public class NoSuchCheckpointException extends Exception {
 
 }

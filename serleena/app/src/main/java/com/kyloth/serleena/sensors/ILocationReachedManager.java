@@ -42,7 +42,6 @@
 package com.kyloth.serleena.sensors;
 
 import com.kyloth.serleena.common.GeoPoint;
-import com.kyloth.serleena.common.UnregisteredObserverException;
 
 /**
  * Interfaccia che verrà implementata da un oggetto in grado di segnalare,
@@ -75,10 +74,7 @@ public interface ILocationReachedManager {
      *
      * @param observer Oggetto da deregistrare ILocationReachedManager. Se null,
      *                 viene sollevata un'eccezione IllegalArgumentException.
-     *                 Se non precedentemente registrato,
-     *                 viene sollevata un'eccezione
-     *                 UnregisteredObserverException.
      */
-    public void detachObserver(ILocationReachedObserver observer) throws
-            IllegalArgumentException, UnregisteredObserverException;
+    public void detachObserver(ILocationReachedObserver observer)
+            throws IllegalArgumentException;
 }

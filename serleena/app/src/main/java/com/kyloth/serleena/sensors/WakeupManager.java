@@ -48,8 +48,6 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 
-import com.kyloth.serleena.common.UnregisteredObserverException;
-
 import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
@@ -147,14 +145,13 @@ class WakeupManager extends BroadcastReceiver implements IWakeupManager {
      */
     @Override
     public synchronized void detachObserver(IWakeupObserver observer)
-            throws IllegalArgumentException, UnregisteredObserverException {
+            throws IllegalArgumentException {
         if (observer == null)
             throw new IllegalArgumentException("Illegal null observer");
-        if (!schedule.containsObserver(observer))
-            throw new UnregisteredObserverException();
-
-        alarmManager.cancel(schedule.getIntent(observer));
-        schedule.remove(observer);
+        if (schedule.containsObserver(observer)) {
+            alarmManager.cancel(schedule.getIntent(observer));
+            schedule.remove(observer);
+        }
     }
 
     /**
@@ -167,11 +164,9 @@ class WakeupManager extends BroadcastReceiver implements IWakeupManager {
             throws IllegalArgumentException {
         if (observer == null)
             throw new IllegalArgumentException("Illegal null observer");
-        try {
-            if (schedule.isOneTimeOnly(observer))
-                detachObserver(observer);
-            observer.onWakeup();
-        } catch (UnregisteredObserverException ex) { }
+        if (schedule.isOneTimeOnly(observer))
+            detachObserver(observer);
+        observer.onWakeup();
     }
 
     /**

@@ -41,19 +41,13 @@
 
 package com.kyloth.serleena.sensors;
 
-import android.content.Context;
-import android.location.LocationManager;
-import android.os.PowerManager;
-
 import com.kyloth.serleena.common.CheckpointReachedTelemetryEvent;
 import com.kyloth.serleena.common.GeoPoint;
 import com.kyloth.serleena.common.HeartRateTelemetryEvent;
 import com.kyloth.serleena.common.LocationTelemetryEvent;
 import com.kyloth.serleena.common.TelemetryEvent;
-import com.kyloth.serleena.common.TelemetryEventType;
 
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.UUID;
 
 /**
@@ -65,22 +59,25 @@ import java.util.UUID;
  * @field wkMan : IWakeupManager Gestore dei wakeup
  * @field events : ArrayList<TelemetryEvent> Lista di eventi campionati al momento
  * @field pm : IPowerManager Gestore dei lock sul processore
- * @field sampling : boolean Valore indicante se il campionamento è attivo o meno
+ * @field enabled : boolean Valore indicante se il campionamento è abilitato
  * @field startTimestamp : long Istante, in UNIX time, di avvio del Tracciamento al momento avviato
  * @field uuid : String UUID dell'oggetto in quanto IWakeupObserver
  * @author Filippo Sestini <sestini.filippo@gmail.com>
  */
 class TelemetryManager implements ITelemetryManager,
-        ILocationObserver, IHeartRateObserver, IWakeupObserver {
+        ILocationObserver, IHeartRateObserver, IWakeupObserver,
+        ITrackCrossingObserver {
 
-    private static int SAMPLING_RATE_SECONDS = 60;
+    public static int SAMPLING_RATE_SECONDS = 60;
+    public static int SENSOR_TIMEOUT_SECONDS = 20;
 
     private ILocationManager locMan;
     private IHeartRateManager hrMan;
     private IWakeupManager wkMan;
+    private ITrackCrossing tc;
     private ArrayList<TelemetryEvent> events;
     private IPowerManager pm;
-    private boolean sampling;
+    private boolean enabled;
     private long startTimestamp;
     private String uuid;
     /**
@@ -89,15 +86,20 @@ class TelemetryManager implements ITelemetryManager,
      * Il Manager utilizza altre risorse del dispositivo, passate come
      * parametri al costruttore.
      */
-    public TelemetryManager(ILocationManager locMan, IHeartRateManager hrMan,
-                            IWakeupManager wm, IPowerManager pm) {
+    public TelemetryManager(ILocationManager locMan,
+                            IHeartRateManager hrMan,
+                            IWakeupManager wm,
+                            IPowerManager pm,
+                            ITrackCrossing trackCrossing) {
         this.locMan = locMan;
         this.hrMan = hrMan;
         this.wkMan = wm;
         this.pm = pm;
+        this.tc = trackCrossing;
 
+        this.tc.attachObserver(this);
         this.events = new ArrayList<TelemetryEvent>();
-        this.sampling = false;
+        this.enabled = false;
         uuid = UUID.randomUUID().toString();
     }
 
@@ -112,37 +114,52 @@ class TelemetryManager implements ITelemetryManager,
     }
 
     /**
-     * Implementa ITelemetryManager.start().
+     * Implementa ITelemetryManager.enable().
+     *
+     * Se vi è un percorso già iniziato e non è pertanto possibile abilitare il
+     * Tracciamento in corso d'opera, viene sollevata un'eccezione
+     * TrackAlreadyStartedException.
      */
     @Override
-    public synchronized void start() {
-        if (!sampling) {
-            wkMan.attachObserver(this, SAMPLING_RATE_SECONDS, false);
-            sampling = true;
+    public synchronized void enable()
+            throws TrackAlreadyStartedException {
+        try {
+            if (tc.getNextCheckpoint() == 0)
+                enabled = true;
+            else
+                throw new TrackAlreadyStartedException();
+        } catch (NoTrackCrossingException e) {
+            enabled = true;
         }
+    }
+
+    /**
+     * Implementa ITelemetryManager.disable().
+     */
+    @Override
+    public synchronized void disable() {
+        stop();
+        enabled = false;
+    }
+
+    /**
+     * Implementa ITelemetryManager.isEnabled().
+     *
+     * @return True se il Tracciamento è abilitato.
+     */
+    @Override
+    public boolean isEnabled() {
+        return enabled;
+    }
+
+    private void start() {
+        wkMan.attachObserver(this, SAMPLING_RATE_SECONDS, false);
         events.clear();
         startTimestamp = System.currentTimeMillis() / 1000L;
     }
 
-    /**
-     * Implementa ITelemetryManager.stop().
-     */
-    @Override
-    public synchronized void stop() {
-        if (sampling) {
-            wkMan.detachObserver(this);
-            sampling = false;
-        }
-    }
-
-    /**
-     * Implementa ITelemetryManager.signalEvent().
-     *
-     * @param event Evento di Tracciamento da registrare.
-     */
-    @Override
-    public void signalEvent(TelemetryEvent event) {
-        events.add(event);
+    private void stop() {
+        wkMan.detachObserver(this);
     }
 
     /**
@@ -193,12 +210,40 @@ class TelemetryManager implements ITelemetryManager,
     public void onWakeup() {
         pm.lock("LocationTelemetryLock");
         pm.lock("HeartRateTelemetryLock");
-        locMan.getSingleUpdate(this, 20);
-        hrMan.getSingleUpdate(this, 20);
+        locMan.getSingleUpdate(this, SENSOR_TIMEOUT_SECONDS);
+        hrMan.getSingleUpdate(this, SENSOR_TIMEOUT_SECONDS);
     }
 
     @Override
     public String getUUID() {
         return uuid;
     }
+
+    /**
+     * Implementa ITrackCrossedObserver.onCheckpointCrossed().
+     *
+     * @param checkpointNumber Indice del checkpoint appena attraversato.
+     */
+    @Override
+    public void onCheckpointCrossed(int checkpointNumber) {
+        if (enabled) {
+            if (checkpointNumber == 0)
+                start();
+            try {
+                events.add(new CheckpointReachedTelemetryEvent(
+                        tc.lastPartialTime(),
+                        checkpointNumber
+                ));
+
+                int total = tc.getTrack().getCheckpoints().size();
+                if (checkpointNumber == total - 1) {
+                    stop();
+                    enabled = false;
+                    tc.getTrack().createTelemetry(getEvents());
+                }
+            } catch (NoTrackCrossingException e) {}
+        }
+
+    }
+
 }

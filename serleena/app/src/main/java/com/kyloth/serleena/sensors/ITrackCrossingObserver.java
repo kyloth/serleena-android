@@ -29,61 +29,31 @@
 
 
 /**
- * Name: ITelemetryManager.java
+ * Name: ITrackCrossingObserver.java
  * Package: com.kyloth.serleena.sensors
- * Author: Gabriele Pozzan
+ * Author: Filippo Sestini
  *
  * History:
  * Version  Programmer        Changes
- * 1.0.0    Gabriele Pozzan   Creazione file e scrittura
+ * 1.0.0    Filippo Sestini   Creazione file e scrittura
  *                                         codice e documentazione Javadoc
  */
 
 package com.kyloth.serleena.sensors;
 
-import com.kyloth.serleena.common.TelemetryEvent;
-import com.kyloth.serleena.common.TelemetryEventType;
-
 /**
- * Interfaccia di un oggetto che offrirà al codice client servizi
- * di registrazione del Tracciamento con la possibilità di avviarlo,
- * interromperlo e segnalare manualmente eventi da registrare nel
- * Tracciamento in corso.
+ * Rappresenta l'interfaccia di un oggetto in ascolto di eventi di
+ * attraversamento di checkpoint da un ITrackCrossing.
  *
- * @use Viene utilizzata da SerleenaSensorManager per restituire ai client il gestore dei Tracciamenti, e dal client per accedere ai servizi offerti dal sensore. È utilizzato in particolare da TrackPresenter per governare il Tracciamento.
- * @author Gabriele Pozzan <gabriele.pozzan@studenti.unipd.it>
+ * @author Filippo Sestini <sestini.filippo@gmail.com>
  * @version 1.0.0
  */
-
-public interface ITelemetryManager {
-
-    /**
-     * Restituisce gli eventi di Tracciamento registrati dall'ultimo avvio del
-     * Tracciamento all'invocazione del metodo.
-     *
-     * @return  Insieme enumerabile di eventi di Tracciamento.
-     */
-    public Iterable<TelemetryEvent> getEvents();
+public interface ITrackCrossingObserver {
 
     /**
-     * Abilita il Tracciamento.
-     *
-     * Se vi è un Percorso già avviato e non è possibile pertanto abilitare
-     * il Tracciamento, viene sollevata un'eccezione
-     * TrackAlreadyStartedException.
+     * Segnala l'avvenuto attraversamento di un checkpoint, nel Percorso in
+     * corso.
      */
-    public void enable() throws TrackAlreadyStartedException;
-
-    /**
-     * Disabilita il Tracciamento.
-     */
-    public void disable();
-
-    /**
-     * Indica lo stato di abilitazione/disabilitazione del Tracciamento.
-     *
-     * @return True se il Tracciamento è abilitato.
-     */
-    boolean isEnabled();
+    void onCheckpointCrossed(int checkpointNumber);
 
 }

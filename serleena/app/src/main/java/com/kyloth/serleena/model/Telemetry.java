@@ -41,6 +41,7 @@
 
 package com.kyloth.serleena.model;
 
+import com.android.internal.util.Predicate;
 import com.kyloth.serleena.common.GeoPoint;
 import com.kyloth.serleena.common.LocationTelemetryEvent;
 import com.kyloth.serleena.common.TelemetryEvent;
@@ -64,10 +65,6 @@ class Telemetry implements  ITelemetry {
 
     private ITelemetryStorage storage;
 
-    private Iterable<TelemetryEvent> allEvents = null;
-    private Iterable<TelemetryEvent> locEvents = null;
-    private int duration = -1;
-
     /**
      * Crea un nuovo oggetto Telemetry.
      *
@@ -88,117 +85,30 @@ class Telemetry implements  ITelemetry {
      */
     @Override
     public Iterable<TelemetryEvent> getEvents() {
-        if (allEvents == null)
-            allEvents = storage.getEvents();
-        return allEvents;
+        return storage.getEvents();
     }
 
     /**
      * Implementa ITelemetry.getEvents().
      *
-     * @param from L'inizio dell'intervallo, comprensivo degli
-     *             eventi da restituire, espresso in secondi dall'avvio del
-     *             Tracciamento.
-     *             Se from > to, o < 0, viene sollevata un'eccezione
-     *             IllegalArgumentException.
-     * @param to L'inizio dell'intervallo, comprensivo degli
-     *           eventi da restituire, espresso in secondi dall'avvio del
-     *           Tracciamento.
-     *           Se from > to, o < 0, viene sollevata un'eccezione
-     *           IllegalArgumentException.
-     * @return Insieme enumerabile di eventi di Tracciamento.
-     * @throws NoSuchTelemetryEventException
-     * @throws IllegalArgumentException
+     * @param predicate Predicato.
+     * @return Insieme enumerabile di eventi che soddisfano il predicato.
      */
     @Override
-    public Iterable<TelemetryEvent> getEvents(int from, int to)
-            throws NoSuchTelemetryEventException, IllegalArgumentException {
-        if (from < 0 || to < 0)
-            throw new IllegalArgumentException("Illegal time below zero");
-        if (from > to)
-            throw new IllegalArgumentException("Illegal time segment");
-
-        Iterable<TelemetryEvent> allEvents = this.getEvents();
-        ArrayList<TelemetryEvent> result = new ArrayList<TelemetryEvent>();
-
-        for (TelemetryEvent e : allEvents)
-            if (from <= e.timestamp() && e.timestamp() <= to)
-                result.add(e);
-
-        if (result.size() == 0)
-            throw new NoSuchTelemetryEventException();
-        return result;
-    }
-
-    /**
-     * Implementa ITelemetry.getEvents().
-     *
-     * @param type Tipo di eventi da restituire.
-     * @return Insieme enumerabile di eventi di Tracciamento.
-     * @throws NoSuchTelemetryEventException
-     */
-    @Override
-    public Iterable<TelemetryEvent> getEvents(TelemetryEventType type)
+    public Iterable<TelemetryEvent> getEvents(
+            Predicate<TelemetryEvent> predicate)
             throws NoSuchTelemetryEventException {
-
-        if (type == TelemetryEventType.Location && locEvents != null)
-            return locEvents;
-
-        Iterable<TelemetryEvent> allEvents = this.getEvents();
+        Iterable<TelemetryEvent> events = this.getEvents();
         ArrayList<TelemetryEvent> result = new ArrayList<TelemetryEvent>();
 
-        for (TelemetryEvent e : allEvents)
-            if (e.getType() == type)
+        for (TelemetryEvent e : events)
+            if (predicate.apply(e))
                 result.add(e);
 
         if (result.size() == 0)
             throw new NoSuchTelemetryEventException();
 
-        if (type == TelemetryEventType.Location)
-            locEvents = result;
-
         return result;
-    }
-
-    /**
-     * Implementa ITelemetry.getEventAtLocation().
-     *
-     * @param loc Posizione campionata dall'evento che si vuole ottenere. Se
-     *            null, viene sollevata un'eccezione IllegalArgumentException.
-     * @param tolerance Tolleranza, in metri, indicante quanto la posizione
-     *                  registrata dall'evento restituito può discostarsi dal
-     *                  valore richiesto. Se < 0, viene sollevata
-     *                  un'eccezione IllegalOperationException.
-     * @return Evento di Tracciamento di tipo LocationTelemetryEvent.
-     * @throws NoSuchTelemetryEventException
-     * @throws IllegalArgumentException
-     */
-    @Override
-    public LocationTelemetryEvent getEventAtLocation(GeoPoint loc,
-                                                     int tolerance)
-            throws NoSuchTelemetryEventException, IllegalArgumentException {
-        if (loc == null)
-            throw new IllegalArgumentException("Illegal null location");
-        if (tolerance < 0)
-            throw new IllegalArgumentException("Illegal tolerance below zero");
-
-        Iterable<TelemetryEvent> events =
-                this.getEvents(TelemetryEventType.Location);
-        int distance = Integer.MAX_VALUE;
-        LocationTelemetryEvent event = null;
-
-        for (TelemetryEvent e : events) {
-            LocationTelemetryEvent lte = (LocationTelemetryEvent)e;
-            int thisDistance = Math.round(lte.location().distanceTo(loc));
-            if (thisDistance <= tolerance && thisDistance < distance) {
-                event = lte;
-                distance = thisDistance;
-            }
-        }
-
-        if (event == null)
-            throw new NoSuchTelemetryEventException();
-        return event;
     }
 
     /**
@@ -208,13 +118,11 @@ class Telemetry implements  ITelemetry {
      */
     @Override
     public int getDuration() {
-        if (duration == -1) {
-            duration = 0;
-            Iterable<TelemetryEvent> allEvents = this.getEvents();
-            for (TelemetryEvent e : allEvents)
-                if (e.timestamp() > duration)
-                    duration = e.timestamp();
-        }
+        int duration = 0;
+        Iterable<TelemetryEvent> allEvents = this.getEvents();
+        for (TelemetryEvent e : allEvents)
+            if (e.timestamp() > duration)
+                duration = e.timestamp();
         return duration;
     }
 

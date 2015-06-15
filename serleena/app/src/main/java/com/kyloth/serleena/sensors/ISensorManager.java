@@ -76,14 +76,6 @@ public interface ISensorManager {
     public IHeartRateManager getHeartRateSource();
 
     /**
-     * Restituisce un Manager per permettere la notifica a determinati
-     * oggetti al raggiungimento di particolari punti geografici.
-     *
-     * @return Oggetto di tipo ILocationReachedManager.
-     */
-    public ILocationReachedManager getLocationReachedSource();
-
-    /**
      * Restituisce un Manager per ottenere notifiche di wakeup del
      * processore utilizzando RTC.
      *
@@ -98,4 +90,12 @@ public interface ISensorManager {
      * @return Oggetto di tipo ITelemetryManager.
      */
     public ITelemetryManager getTelemetryManager();
+
+    /**
+     * Restituisce un Manager che offre servizi per l'attraversamento di
+     * Percorsi.
+     *
+     * @return Oggetto ITrackCrossing
+     */
+    ITrackCrossing getTrackCrossingManager();
 }

@@ -28,40 +28,10 @@
 ///////////////////////////////////////////////////////////////////////////////
 
 
-/**
- * Name: ITelemetryView
- * Package: com.hitchikers.serleena.presentation
- * Author: Tobia Tesan <tobia.tesan@gmail.com>
- * 
- * History: 
- * Version    Programmer   Changes
- * 1.0        Tobia Tesan  Creazione del file
- */
-
-package com.kyloth.serleena.presentation;
+package com.kyloth.serleena.sensors;
 
 /**
- * Interfaccia della vista corrispondente alla visuale “Tracciamento”
- * della schermata “Esperienza”
- *
- * @use Viene utilizzato dal Presenter TelemetryPresenter per mantenere un riferimento alla vista associata, e comunicare con essa.
- * @author Tobia Tesan <tobia.tesan@gmail.com>
- * @version 1.0
- * @since 1.0
+ * Created by fsestini on 6/9/15.
  */
-
-public interface ITelemetryView {
-    /**
-     * Lega un Presenter alla vista.
-     *
-     * @since 1.0
-     */
-    void attachPresenter(ITelemetryPresenter presenter);
-
-    /**
-     * Mostra sulla vista un messaggio di errore informativo del fatto che non
-     * sia possibile abilitare il Tracciamento perchè il Percorso è già avviato.
-     */
-    void displayTrackStartedError();
-
+public class NoTrackCrossingException extends Exception {
 }
