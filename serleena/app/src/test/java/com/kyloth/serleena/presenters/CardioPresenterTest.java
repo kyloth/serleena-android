@@ -29,7 +29,7 @@
 
 
 /**
- * Name: CompassPresenterTest.java
+ * Name: CardioPresenterTest.java
  * Package: com.kyloth.serleena.presenters;
  * Author: Gabriele Pozzan
  *
@@ -56,14 +56,14 @@ import static org.mockito.Mockito.*;
 
 import com.kyloth.serleena.BuildConfig;
 import com.kyloth.serleena.presentation.ISerleenaActivity;
-import com.kyloth.serleena.presentation.ICompassView;
-import com.kyloth.serleena.sensors.IHeadingManager;
+import com.kyloth.serleena.presentation.ICardioView;
+import com.kyloth.serleena.sensors.IHeartRateManager;
 import com.kyloth.serleena.sensors.ISensorManager;
 import com.kyloth.serleena.sensors.SerleenaSensorManager;
 import com.kyloth.serleena.sensors.SensorNotAvailableException;
 
 /**
- * Contiene test per la classe CompassPresenter.
+ * Contiene test per la classe CardioPresenter.
  * In particolare vengono utilizzati degli stub per il package presentation e
  * viene integrato il package sensors.
  *
@@ -73,14 +73,14 @@ import com.kyloth.serleena.sensors.SensorNotAvailableException;
 
 @RunWith(RobolectricGradleTestRunner.class)
 @Config(constants = BuildConfig.class, emulateSdk = 19)
-public class CompassPresenterTest {
-    int UPDATE_INTERVAL = 5;
+public class CardioPresenterTest {
+    int UPDATE_INTERVAL = 15;
     ISerleenaActivity activity; //activity che ritorna veri oggetti sensors
     ISerleenaActivity activity_mock; //activity che ritorna mock di sensors
-    ICompassView view;
+    ICardioView view;
     SerleenaSensorManager sm;
     ISensorManager sm_mock;
-    IHeadingManager hm_mock;
+    IHeartRateManager hm_mock;
     @Rule
     public ExpectedException exception = ExpectedException.none();
 
@@ -92,13 +92,13 @@ public class CompassPresenterTest {
     public void initialize() throws SensorNotAvailableException {
         activity = mock(ISerleenaActivity.class);
         activity_mock = mock(ISerleenaActivity.class);
-        view = mock(ICompassView.class);
+        view = mock(ICardioView.class);
         sm = SerleenaSensorManager.getInstance(RuntimeEnvironment.application);
         sm_mock = mock(ISensorManager.class);
-        hm_mock = mock(IHeadingManager.class);
+        hm_mock = mock(IHeartRateManager.class);
         when(activity.getSensorManager()).thenReturn(sm);
         when(activity_mock.getSensorManager()).thenReturn(sm_mock);
-        when(sm_mock.getHeadingSource()).thenReturn(hm_mock);
+        when(sm_mock.getHeartRateSource()).thenReturn(hm_mock);
     }
 
     /**
@@ -109,7 +109,7 @@ public class CompassPresenterTest {
 
     @Test
     public void testConstructor() {
-        CompassPresenter cp = new CompassPresenter(view, activity);
+        CardioPresenter cp = new CardioPresenter(view, activity);
         verify(view).attachPresenter(cp);
     }
 
@@ -120,7 +120,7 @@ public class CompassPresenterTest {
 
     @Test
     public void testResume() {
-        CompassPresenter cp = new CompassPresenter(view, activity);
+        CardioPresenter cp = new CardioPresenter(view, activity);
         cp.resume();
 
     }
@@ -132,9 +132,9 @@ public class CompassPresenterTest {
 
     @Test
     public void testResumeWithMocks() {
-        CompassPresenter cp = new CompassPresenter(view, activity_mock);
+        CardioPresenter cp = new CardioPresenter(view, activity_mock);
         cp.resume();
-        verify(hm_mock).attachObserver(cp);
+        verify(hm_mock).attachObserver(cp, UPDATE_INTERVAL);
     }
 
     /**
@@ -144,7 +144,7 @@ public class CompassPresenterTest {
 
     @Test
     public void testPause() {
-        CompassPresenter cp = new CompassPresenter(view, activity);
+        CardioPresenter cp = new CardioPresenter(view, activity);
         cp.pause();
     }
 
@@ -155,21 +155,21 @@ public class CompassPresenterTest {
 
     @Test
     public void testPauseWithMock() {
-        CompassPresenter cp = new CompassPresenter(view, activity_mock);
+        CardioPresenter cp = new CardioPresenter(view, activity_mock);
         cp.pause();
         verify(hm_mock).detachObserver(cp);
     }
 
     /**
-     * Verifica che il metodo onHeadingUpdate imposti correttamente
-     * il valore della direzione sulla view.
+     * Verifica che il metodo onHeartRateUpdate imposti correttamente
+     * il valore dell'heart rate sulla view.
      */
 
     @Test
-    public void testOnHeadingUpdate() {
-        CompassPresenter cp = new CompassPresenter(view, activity);
-        cp.onHeadingUpdate(12.4);
-        verify(view).setHeading(12.4);
+    public void testOnHeartRateUpdate() {
+        CardioPresenter cp = new CardioPresenter(view, activity);
+        cp.onHeartRateUpdate(53);
+        verify(view).setHeartRate(53);
     }
 
 }

@@ -37,6 +37,8 @@
  * Version  Programmer       Changes
  * 1.0.0    Gabriele Pozzan  Creazione file scrittura
  *                                       codice e documentazione Javadoc
+ * 2.0.0    Gabriele Pozzan  Aggiunta integrazione con gli altri package,
+ *                                       incrementata copertura
  */
 
 package com.kyloth.serleena.presenters;
@@ -45,29 +47,53 @@ import org.junit.Test;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.rules.ExpectedException;
+import org.junit.runner.RunWith;
 import static org.mockito.Mockito.*;
+import org.mockito.ArgumentCaptor;
 import static org.junit.Assert.*;
 
+import java.util.List;
+
+import org.robolectric.RobolectricGradleTestRunner;
+import org.robolectric.RuntimeEnvironment;
+import org.robolectric.annotation.Config;
+
+import android.database.sqlite.SQLiteDatabase;
+
+import com.kyloth.serleena.BuildConfig;
 import com.kyloth.serleena.presentation.IContactsView;
 import com.kyloth.serleena.presentation.ISerleenaActivity;
-import com.kyloth.serleena.sensors.ISensorManager;
-import com.kyloth.serleena.sensors.ILocationManager;
+import com.kyloth.serleena.sensors.SerleenaSensorManager;
+import com.kyloth.serleena.model.SerleenaDataSource;
+import com.kyloth.serleena.common.ListAdapter;
+import com.kyloth.serleena.common.GeoPoint;
+import com.kyloth.serleena.persistence.sqlite.SerleenaSQLiteDataSource;
+import com.kyloth.serleena.persistence.sqlite.SerleenaDatabase;
 
 /**
- * Contiene i test di unità per la classe ContactsPresenter.
+ * Contiene test per la classe ContactsPresenter.
+ * In particolare vengono integrate le componenti dei package sensors,
+ * common, model e persistence; vengono utilizzati degli stub per
+ * il package presentation.
  *
  * @author Gabriele Pozzan <gabriele.pozzan@studenti.unipd.it>
  * @version 1.0.0
  */
 
+@RunWith(RobolectricGradleTestRunner.class)
+@Config(constants = BuildConfig.class, emulateSdk = 19)
 public class ContactsPresenterTest {
 
-    private ContactsPresenter cp;
-    private IContactsView view;
-    private ISerleenaActivity activity;
-    private ISensorManager sensor_manager;
-    private ILocationManager locMan;
-    private int UPDATE_INTERVAL_SECONDS = 180;
+    SQLiteDatabase db;
+    SerleenaDatabase serleenaDB;
+    SerleenaSQLiteDataSource serleenaSQLDS;
+    SerleenaDataSource dataSource;
+
+    IContactsView view;
+    ISerleenaActivity activity;
+    SerleenaSensorManager sm;
+    int UPDATE_INTERVAL_SECONDS = 180;
+
     @Rule
     public ExpectedException exception = ExpectedException.none();
 
@@ -79,10 +105,32 @@ public class ContactsPresenterTest {
     public void initialize() {
         view = mock(IContactsView.class);
         activity = mock(ISerleenaActivity.class);
-        sensor_manager = mock(ISensorManager.class);
-        locMan = mock(ILocationManager.class);
-        when(activity.getSensorManager()).thenReturn(sensor_manager);
-        when(sensor_manager.getLocationSource()).thenReturn(locMan);
+        sm = SerleenaSensorManager.getInstance(RuntimeEnvironment.application);
+        when(activity.getSensorManager()).thenReturn(sm);
+
+        serleenaDB = new SerleenaDatabase(RuntimeEnvironment.application, "sample.db", null, 1);
+        db = serleenaDB.getWritableDatabase();
+        serleenaDB.onConfigure(db);
+        serleenaDB.onUpgrade(db, 1, 2);
+
+        serleenaSQLDS = new SerleenaSQLiteDataSource(RuntimeEnvironment.application, serleenaDB);
+        dataSource = new SerleenaDataSource(serleenaSQLDS);
+
+        String insert_contact_1 = "INSERT INTO contacts " +
+                                  "(contact_id, contact_name, contact_value, " +
+                                  "contact_ne_corner_latitude, contact_ne_corner_longitude, " +
+                                  "contact_sw_corner_latitude, contact_sw_corner_longitude) " +
+                                  "VALUES (1, 'Contact_1', '1', 0, 0, 2, 2)";
+        String insert_contact_2 = "INSERT INTO contacts " +
+                                  "(contact_id, contact_name, contact_value, " +
+                                  "contact_ne_corner_latitude, contact_ne_corner_longitude, " +
+                                  "contact_sw_corner_latitude, contact_sw_corner_longitude) " +
+                                  "VALUES (2, 'Contact_2', '2', 0, 0, 2, 2)";
+        db.execSQL(insert_contact_1);
+        db.execSQL(insert_contact_2);
+
+        when(activity.getDataSource()).thenReturn(dataSource);
+
     }
 
     /**
@@ -94,7 +142,7 @@ public class ContactsPresenterTest {
     public void constructorShouldThrowExceptionWhenNullView() {
         exception.expect(IllegalArgumentException.class);
         exception.expectMessage("Illegal null view");
-        cp = new ContactsPresenter(null, activity);
+        ContactsPresenter cp = new ContactsPresenter(null, activity);
     }
 
     /**
@@ -107,56 +155,67 @@ public class ContactsPresenterTest {
     public void constructorShouldThrowExceptionWhenNullActivity() {
         exception.expect(IllegalArgumentException.class);
         exception.expectMessage("Illegal null activity");
-        cp = new ContactsPresenter(view, null);
+        ContactsPresenter cp = new ContactsPresenter(view, null);
     }
 
     /**
-     * Verifica che il costruttore chiami il metodo attachPresenter su view
-     * fornendo come parametro il nuovo oggetto ContactsPresenter creato.
+     * Verifica che il metodo resume chiamato con oggetti del
+     * package sensors non sollevi eccezioni e in generale non
+     * causi errori.
      */
 
     @Test
-    public void constructorShouldCallAttachPresenterWithCorrectParam() {
-        cp = new ContactsPresenter(view, activity);
-        verify(view).attachPresenter(cp);
+    public void testResume() {
+        ContactsPresenter presenter = new ContactsPresenter(view, activity);
+        presenter.resume();
     }
 
     /**
-     * Verifica che il metodo resume chiami il metodo attachObserver su
-     * locMan (di tipo ILocationManager) fornendo come parametri l'oggetto
-     * ContactsPresenter di invocazione e il corretto intervallo di aggiornamento.
+     * Verifica che il metodo pause chiamato con oggetti del
+     * package sensors non sollevi eccezioni e in generale
+     * non causi errori.
      */
 
     @Test
-    public void resumeShouldCallAttachObserverWithCorrectParams() {
-        cp = new ContactsPresenter(view, activity);
-        cp.resume();
-        verify(locMan).attachObserver(cp, UPDATE_INTERVAL_SECONDS);
+    public void testPause() {
+        ContactsPresenter presenter = new ContactsPresenter(view, activity);
+        presenter.resume();
+        presenter.pause();
     }
 
     /**
-     * Verifica che il metodo pause chiami il metodo detachObserver su
-     * locMan (ILocationManager) fornendo come parametro l'oggetto
-     * ContactsPresenter di invocazione.
+     * Verifica che il metodo onLocationUpdate lanci un'eccezione
+     * di tipo IllegalArgumentException con messaggio "Illegal
+     * null location" se invocato con un GeoPoint nullo.
      */
 
     @Test
-    public void pauseShouldCallDetachObserverWithCorrectParam() {
-        cp = new ContactsPresenter(view, activity);
-        cp.pause();
-        verify(locMan).detachObserver(cp);
-    }
-
-    /**
-     * Verifica che il metodo onLocationUpdate lanci un'eccezione IllegalArgumentException
-     * con messaggio "Illegal null location" quando chiamato con parametro nullo.
-     */
-
-    @Test
-    public void onLocationUpdateShouldThrowExceptionWhenNullGeoPoint() {
-        cp = new ContactsPresenter(view, activity);
+    public void testOnLocationUpdateExceptionNullLocation() {
         exception.expect(IllegalArgumentException.class);
         exception.expectMessage("Illegal null location");
-        cp.onLocationUpdate(null);
+        ContactsPresenter presenter = new ContactsPresenter(view, activity);
+        presenter.onLocationUpdate(null);
     }
+
+    /**
+     * Verifica che il metodo nextContact aggiorni correttamente
+     * la view, nello specifico controlla che i contatti vengano
+     * mostrati come in una lista circolare.
+     */
+
+    @Test
+    public void testNextContact() {
+        ContactsPresenter presenter = new ContactsPresenter(view, activity);
+        presenter.nextContact();
+        presenter.onLocationUpdate(new GeoPoint(1, 1));
+        ArgumentCaptor<String> strCaptor = ArgumentCaptor.forClass(String.class);
+        presenter.nextContact();
+        presenter.nextContact();
+        verify(view, timeout(200).times(3)).displayContact(strCaptor.capture(), any(String.class));
+        List<String> capturedStrings = strCaptor.getAllValues();
+        assertTrue(capturedStrings.get(0).equals("Contact_1"));
+        assertTrue(capturedStrings.get(1).equals("Contact_2"));
+        assertTrue(capturedStrings.get(2).equals("Contact_1"));
+    }
+
 }

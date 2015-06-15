@@ -37,6 +37,8 @@
  * Version  Programmer       Changes
  * 1.0.0    Gabriele Pozzan  Creazione file scrittura
  *                                       codice e documentazione Javadoc
+ * 2.0.0    Gabriele Pozzan  Aggiunta integrazione con gli altri package,
+ *                                       incrementata copertura
  */
 
 package com.kyloth.serleena.presenters;
@@ -44,29 +46,53 @@ package com.kyloth.serleena.presenters;
 import org.junit.Test;
 import org.junit.Before;
 import org.junit.Rule;
+import org.junit.runner.RunWith;
 import org.junit.rules.ExpectedException;
 import static org.mockito.Mockito.*;
 import static org.junit.Assert.*;
 
+import java.util.Iterator;
+
+import org.robolectric.RobolectricGradleTestRunner;
+import org.robolectric.RuntimeEnvironment;
+import org.robolectric.annotation.Config;
+
+import android.database.sqlite.SQLiteDatabase;
+
+import com.kyloth.serleena.BuildConfig;
+import com.kyloth.serleena.model.SerleenaDataSource;
+import com.kyloth.serleena.model.IExperience;
 import com.kyloth.serleena.presentation.IMapView;
 import com.kyloth.serleena.presentation.ISerleenaActivity;
+import com.kyloth.serleena.common.IQuadrant;
 import com.kyloth.serleena.common.NoActiveExperienceException;
-import com.kyloth.serleena.sensors.ILocationManager;
-import com.kyloth.serleena.sensors.ISensorManager;
+import com.kyloth.serleena.common.GeoPoint;
+import com.kyloth.serleena.sensors.SerleenaSensorManager;
+import com.kyloth.serleena.persistence.sqlite.SerleenaSQLiteDataSource;
+import com.kyloth.serleena.persistence.sqlite.SerleenaDatabase;
+
 
 /**
- * Contiene i test di unità per la classe MapPresenter.
+ * Contiene test per la classe MapPresenter.
  *
  * @author Gabriele Pozzan <gabriele.pozzan@studenti.unipd.it>
  * @version 1.0.0
  */
 
+@RunWith(RobolectricGradleTestRunner.class)
+@Config(constants = BuildConfig.class, emulateSdk = 19)
 public class MapPresenterTest {
+
+    SQLiteDatabase db;
+    SerleenaDatabase serleenaDB;
+    SerleenaSQLiteDataSource serleenaSQLDS;
+    SerleenaDataSource dataSource;
+
     int UPDATE_INTERVAL_SECONDS = 30;
     IMapView view;
     ISerleenaActivity activity;
-    ISensorManager sensMan;
-    ILocationManager locMan;
+    SerleenaSensorManager sm;
+    
     @Rule
     public ExpectedException exception = ExpectedException.none();
 
@@ -78,10 +104,26 @@ public class MapPresenterTest {
     public void initialize() {
         view = mock(IMapView.class);
         activity = mock(ISerleenaActivity.class);
-        sensMan = mock(ISensorManager.class);
-        locMan = mock(ILocationManager.class);
-        when(activity.getSensorManager()).thenReturn(sensMan);
-        when(sensMan.getLocationSource()).thenReturn(locMan);
+        sm = SerleenaSensorManager.getInstance(RuntimeEnvironment.application);
+	when(activity.getSensorManager()).thenReturn(sm);
+
+	serleenaDB = new SerleenaDatabase(RuntimeEnvironment.application, "sample.db", null, 1);
+        db = serleenaDB.getWritableDatabase();
+        serleenaDB.onConfigure(db);
+        serleenaDB.onUpgrade(db, 1, 2);
+
+        serleenaSQLDS = new SerleenaSQLiteDataSource(RuntimeEnvironment.application, serleenaDB);
+        dataSource = new SerleenaDataSource(serleenaSQLDS);
+	when(activity.getDataSource()).thenReturn(dataSource);
+	
+	String insert_experience = "INSERT INTO experiences " +
+	    "(experience_id, experience_name) " +
+	    "VALUES (1, 'Experience')";
+	String insert_ups = "INSERT INTO user_points " +
+	    "(userpoint_id, userpoint_x, userpoint_y, userpoint_experience) " +
+	    "VALUES (1, 5, 5, 1)";
+	db.execSQL(insert_experience);
+	db.execSQL(insert_ups);
     }
 
     /**
@@ -125,27 +167,73 @@ public class MapPresenterTest {
     }
 
     /**
-     * Verifica che il metodo resume fornisca correttamente i parametri
-     * al metodo attachObserver chiamato sul LocationManager.
+     * Verifica che il metodo updateView lanci un'eccezione
+     * di tipo IllegalArgumentException con messaggio "Illegal null
+     * location" quando chiamato con GeoPoint nullo.
      */
 
     @Test
-    public void resumeShouldForwardCorrectParams() {
+    public void updateViewShouldThrowExceptionWhenNullGeoPoint() {
         MapPresenter mp = new MapPresenter(view, activity);
-        mp.resume();
-        verify(locMan).attachObserver(mp, UPDATE_INTERVAL_SECONDS);
+        exception.expect(IllegalArgumentException.class);
+        exception.expectMessage("Illegal null location");
+        mp.updateView(null);
     }
-
+    
     /**
-     * Verifica che il metodo pause fornisca correttamente il parametro
-     * al metodo detachObserver chiamato sul LocationManager.
+     * Verifica che il metodo resume non sollevi eccezioni e in
+     * generale non causi errori.
      */
-
+   
     @Test
-    public void pauseShouldForwardCorrectParam() {
-        MapPresenter mp = new MapPresenter(view, activity);
-        mp.pause();
-        verify(locMan).detachObserver(mp);
+    public void testResume() {
+	MapPresenter mp = new MapPresenter(view, activity);
+	mp.resume();
+    }
+    
+    /**
+     * Verifica che il metodo pause non sollevi eccezioni e in generale
+     * non causi errori.
+     */
+    
+    @Test
+    public void testPause() {
+	MapPresenter mp = new MapPresenter(view, activity);
+	mp.resume();
+	mp.pause();
+    }
+    
+    /**
+     * Verifica che il metodo updateView, chiamato da onLocationUpdate,
+     * chiami a sua volta i metodi corretti sull'oggetto view.
+     */
+    
+    @Test
+    public void testUpdateView() {
+	MapPresenter mp = new MapPresenter(view, activity);
+	Iterable<IExperience> experiences = dataSource.getExperiences();
+	GeoPoint location = new GeoPoint(5, 4);
+	mp.onLocationUpdate(location);	
+	mp.setActiveExperience(experiences.iterator().next());
+	mp.onLocationUpdate(location);
+	verify(view, timeout(200).times(2)).displayQuadrant(any(IQuadrant.class));
+	verify(view, timeout(200).times(2)).setUserLocation(any(GeoPoint.class));
+	verify(view, timeout(200).times(1)).displayUP(any(Iterable.class));
+    }
+    
+    /**
+     * Verifica che il metodo newUserPoint non causi errori o sollevi
+     * eccezioni.
+     */
+    
+    @Test
+    public void testNewUserPoint() throws NoActiveExperienceException {
+	MapPresenter mp = new MapPresenter(view, activity);	
+	Iterable<IExperience> experiences = dataSource.getExperiences();
+	mp.setActiveExperience(experiences.iterator().next());
+	mp.newUserPoint();
+	mp.onLocationUpdate(new GeoPoint(5, 4));
+	mp.newUserPoint();	
     }
 
 }

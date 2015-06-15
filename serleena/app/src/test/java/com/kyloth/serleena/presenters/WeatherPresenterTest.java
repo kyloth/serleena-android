@@ -37,6 +37,8 @@
  * Version  Programmer       Changes
  * 1.0.0    Gabriele Pozzan  Creazione file scrittura
  *                                       codice e documentazione Javadoc
+ * 2.0.0    Gabriele Pozzan  Aggiunta integrazione con gli altri package,
+ *                                       incrementata copertura
  */
 
 package com.kyloth.serleena.presenters;
@@ -44,28 +46,62 @@ package com.kyloth.serleena.presenters;
 import org.junit.Test;
 import org.junit.Before;
 import org.junit.Rule;
+import org.junit.runner.RunWith;
 import org.junit.rules.ExpectedException;
 import static org.mockito.Mockito.*;
 import static org.junit.Assert.*;
 
+import org.robolectric.RobolectricGradleTestRunner;
+import org.robolectric.RuntimeEnvironment;
+import org.robolectric.annotation.Config;
+
+import android.database.sqlite.SQLiteDatabase;
+
+import java.util.Date;
+
+import com.kyloth.serleena.BuildConfig;
 import com.kyloth.serleena.presentation.IWeatherView;
 import com.kyloth.serleena.presentation.ISerleenaActivity;
 import com.kyloth.serleena.sensors.ISensorManager;
+import com.kyloth.serleena.sensors.SerleenaSensorManager;
 import com.kyloth.serleena.sensors.ILocationManager;
+import com.kyloth.serleena.model.SerleenaDataSource;
+import com.kyloth.serleena.model.IWeatherForecast;
+import com.kyloth.serleena.persistence.sqlite.SerleenaDatabase;
+import com.kyloth.serleena.persistence.sqlite.SerleenaSQLiteDataSource;
+import com.kyloth.serleena.common.GeoPoint;
 
 /**
- * Contiene i test di unità per la classe WeatherPresenter.
+ * Contiene test per la classe WeatherPresenter.
+ * In particolare vengono integrate le componenti dei package
+ * sensors, common, model e persistence; vengono usati degli stub
+ * per il package presentation.
  *
  * @author Gabriele Pozzan <gabriele.pozzan@studenti.unipd.it>
  * @version 1.0.0
  */
 
+@RunWith(RobolectricGradleTestRunner.class)
+@Config(constants = BuildConfig.class, emulateSdk = 19)
 public class WeatherPresenterTest {
+
+    SQLiteDatabase db;
+    SerleenaDatabase serleenaDB;
+    SerleenaSQLiteDataSource serleenaSQLDS;
+    SerleenaDataSource dataSource;
+
     int LOCATION_UPDATE_INTERVAL_SECONDS = 60;
     IWeatherView view;
     ISerleenaActivity activity;
-    ISensorManager manager;
+    ISerleenaActivity activity_mock;
+    SerleenaSensorManager sm;
+
+    /**
+     * Mock di sensors per verificare le chiamate all'interno dei metodi.
+     */
+    ISensorManager sm_mock;
     ILocationManager locMan;
+
     @Rule
     public ExpectedException exception = ExpectedException.none();
 
@@ -77,10 +113,32 @@ public class WeatherPresenterTest {
     public void initialize() {
         view = mock(IWeatherView.class);
         activity = mock(ISerleenaActivity.class);
-        manager = mock(ISensorManager.class);
+        activity_mock = mock(ISerleenaActivity.class);
+        sm = SerleenaSensorManager.getInstance(RuntimeEnvironment.application);
+        sm_mock = mock(ISensorManager.class);
         locMan = mock(ILocationManager.class);
-        when(activity.getSensorManager()).thenReturn(manager);
-        when(manager.getLocationSource()).thenReturn(locMan);
+        when(activity_mock.getSensorManager()).thenReturn(sm_mock);
+        when(sm_mock.getLocationSource()).thenReturn(locMan);
+        when(activity.getSensorManager()).thenReturn(sm);
+
+        serleenaDB = new SerleenaDatabase(RuntimeEnvironment.application, "sample.db", null, 1);
+        db = serleenaDB.getWritableDatabase();
+        serleenaDB.onConfigure(db);
+        serleenaDB.onUpgrade(db, 1, 2);
+        serleenaSQLDS = new SerleenaSQLiteDataSource(RuntimeEnvironment.application, serleenaDB);
+        dataSource = new SerleenaDataSource(serleenaSQLDS);
+
+        when(activity.getDataSource()).thenReturn(dataSource);
+        Date date = new Date();
+
+
+        String insertForecast = "INSERT INTO weather_forecasts " +
+                                "(weather_id, weather_start, weather_end, weather_condition, " +
+                                "weather_temperature, weather_ne_corner_latitude, " +
+                                "weather_ne_corner_longitude, weather_sw_corner_latitude, " +
+                                "weather_sw_corner_longitude) " +
+                                " VALUES (1, 0, 1749122263, 1, 10, 0, 0, 2, 2)";
+        db.execSQL(insertForecast);
     }
 
     /**
@@ -110,56 +168,72 @@ public class WeatherPresenterTest {
     }
 
     /**
-     * Verifica che il metodo present sollevi un'eccezione di tipo
-     * IllegalArgumentException con messaggio "Illegal null location"
-     * quando invocato con GeoPoint nullo.
+     * Verifica che il metodo resume non sollevi eccezioni e in
+     * generale non generi errori. Verifica inoltre che il metodo
+     * chiami correttamente il metodo attachObserver su locMan.
      */
 
     @Test
-    public void presentShouldThrowExceptionWhenNullLocation() {
-        WeatherPresenter wp = new WeatherPresenter(view, activity);
-        exception.expect(IllegalArgumentException.class);
-        exception.expectMessage("Illegal null location");
-        wp.present(0, null);
+    public void testResume() {
+        WeatherPresenter presenter = new WeatherPresenter(view, activity);
+        presenter.resume();
+        WeatherPresenter presenter_mock = new WeatherPresenter(view, activity_mock);
+        presenter_mock.resume();
+        verify(locMan).attachObserver(presenter_mock, LOCATION_UPDATE_INTERVAL_SECONDS);
     }
 
     /**
-     * Verifica che il metodo onLocationUpdate sollevi un'eccezione di
-     * tipo IllegalArgumentException con messaggio "Illegal null location"
-     * quando invocato con GeoPoint nullo.
+     * Verifica che il metodo pause non sollevi eccezioni e in
+     * generale non generi errori. Verifica inoltre che il metodo
+     * chiami correttamente il metodo detachObserver su locMan.
+     */
+
+    @Test
+    public void testPause() {
+        WeatherPresenter presenter = new WeatherPresenter(view, activity);
+        presenter.resume();
+        presenter.pause();
+        WeatherPresenter presenter_mock = new WeatherPresenter(view, activity_mock);
+        presenter_mock.pause();
+        verify(locMan).detachObserver(presenter_mock);
+    }
+
+    /**
+     * Verifica che il metodo onLocationUpdate sollevi un'eccezione
+     * di tipo IllegalArgumentException con messaggio "Illegal null
+     * location" se invocata con GeoPoint nullo.
      */
 
     @Test
     public void onLocationUpdateShouldThrowExceptionWhenNullLocation() {
-        WeatherPresenter wp = new WeatherPresenter(view, activity);
+        WeatherPresenter presenter = new WeatherPresenter(view, activity);
         exception.expect(IllegalArgumentException.class);
         exception.expectMessage("Illegal null location");
-        wp.onLocationUpdate(null);
+        presenter.onLocationUpdate(null);
     }
 
     /**
-     * Verifica che il metodo resume chiami a sua volta il metodo attachObserver
-     * sull' ILocationManager passando come parametri se stesso e l'intervallo
-     * di aggiornamento corretto.
+     * Verifica il metodo present attraverso le chiamate dei metodi
+     * onLocationUpdate e advanceDate.
      */
 
     @Test
-    public void resumeShouldForwardCorrectParams() {
-        WeatherPresenter wp = new WeatherPresenter(view, activity);
-        wp.resume();
-        verify(locMan).attachObserver(wp, LOCATION_UPDATE_INTERVAL_SECONDS);
-    }
+    public void testPresent() {
+        WeatherPresenter presenter = new WeatherPresenter(view, activity);
+        presenter.onLocationUpdate(new GeoPoint(1, 1));
 
-    /**
-     * Verifica che il metodo pause chiami a sua volta il metodo detachObserver
-     * sull'ILocationManager passando come parametro se stesso.
-     */
-
-    @Test
-    public void pauseShouldForwardCorrectParam() {
-        WeatherPresenter wp = new WeatherPresenter(view, activity);
-        wp.pause();
-        verify(locMan).detachObserver(wp);
+        verify(view, timeout(200).times(2)).setDate(any(Date.class));
+        verify(view, timeout(200).times(1)).setWeatherInfo(any(IWeatherForecast.class));
+        /* Nel db non sono presenti informazioni meteo
+           per una localita con coordinate 15, 15
+        */
+        presenter.onLocationUpdate(new GeoPoint(15, 15));
+        /* Nella prossima chiamata viene mantenuta la
+           località impostata per ultima, dunque non ci
+           saranno informazioni meteo disponibili.
+        */
+        presenter.advanceDate();
+        verify(view, timeout(200).times(2)).clearWeatherInfo();
     }
 
 }
