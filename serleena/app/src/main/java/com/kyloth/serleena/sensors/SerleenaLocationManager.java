@@ -49,7 +49,6 @@ import android.os.Bundle;
 import android.os.Handler;
 
 import com.kyloth.serleena.common.GeoPoint;
-import com.kyloth.serleena.common.UnregisteredObserverException;
 
 import java.util.HashMap;
 import java.util.HashSet;
@@ -146,24 +145,18 @@ class SerleenaLocationManager implements ILocationManager,
      *
      * @param observer ILocationObserver la cui registrazione come "observer" di
      *                 questo oggetto sarà cancellata. Se null, viene lanciata
-     *                 un'eccezione IllegalArgumentException. Se non
-     *                 precedentemente registrato,
-     *                 viene lanciata un'eccezione
-     *                 UnregisteredObserverException.
-     * @throws UnregisteredObserverException
+     *                 un'eccezione IllegalArgumentException.
      * @throws IllegalArgumentException
      */
     @Override
     public synchronized void detachObserver(ILocationObserver observer)
-            throws UnregisteredObserverException, IllegalArgumentException {
-
+            throws IllegalArgumentException {
         if (observer == null)
             throw new IllegalArgumentException("Illegal null observer");
-        if (!observers.containsKey(observer))
-            throw new UnregisteredObserverException();
-
-        observers.remove(observer);
-        adjustGpsUpdateRate();
+        if (observers.containsKey(observer)) {
+            observers.remove(observer);
+            adjustGpsUpdateRate();
+        }
     }
 
     /**

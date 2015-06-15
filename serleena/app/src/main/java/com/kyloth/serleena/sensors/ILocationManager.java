@@ -42,7 +42,6 @@
 package com.kyloth.serleena.sensors;
 
 import com.kyloth.serleena.common.GeoPoint;
-import com.kyloth.serleena.common.UnregisteredObserverException;
 
 /**
  * Interfaccia che verrà implementata da un oggetto in grado di fornire
@@ -80,11 +79,7 @@ public interface ILocationManager {
      *
      * @param observer ILocationObserver la cui registrazione come "observer" di
      *                 questo oggetto sarà cancellata. Se null, viene lanciata
-     *                 un'eccezione IllegalArgumentException. Se non
-     *                 precedentemente registrato,
-     *                 viene lanciata un'eccezione
-     *                 UnregisteredObserverException.
-     * @throws UnregisteredObserverException
+     *                 un'eccezione IllegalArgumentException.
      * @throws java.lang.IllegalArgumentException
      */
     public void detachObserver(ILocationObserver observer)

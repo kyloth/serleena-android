@@ -36,7 +36,6 @@ import com.kyloth.serleena.common.CheckpointReachedTelemetryEvent;
 import com.kyloth.serleena.common.ImmutableList;
 import com.kyloth.serleena.common.TelemetryEvent;
 import com.kyloth.serleena.common.TelemetryEventType;
-import com.kyloth.serleena.common.UnregisteredObserverException;
 import com.kyloth.serleena.model.ITelemetry;
 import com.kyloth.serleena.model.ITrack;
 import com.kyloth.serleena.model.NoSuchTelemetryEventException;
@@ -114,9 +113,7 @@ public final class TrackCrossing implements ITrackCrossing,
         if (track == null)
             throw new NoTrackCrossingException();
 
-        try {
-            locReachMan.detachObserver(this);
-        } catch (UnregisteredObserverException ex) { }
+        locReachMan.detachObserver(this);
 
         long now = System.currentTimeMillis() / 1000L;
         lastPartial = (int) (now - trackStartTimestamp);
