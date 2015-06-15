@@ -28,23 +28,29 @@
 ///////////////////////////////////////////////////////////////////////////////
 
 
+/**
+ * Name: TrackCrossing.java
+ * Package: com.kyloth.serleena.sensors
+ * Author: Filippo Sestini
+ *
+ * History:
+ * Version  Programmer        Changes
+ * 1.0.0    Filippo Sestini   Creazione file e scrittura
+ *                                         codice e documentazione Javadoc
+ */
+
 package com.kyloth.serleena.sensors;
 
-import com.android.internal.util.Predicate;
 import com.kyloth.serleena.common.Checkpoint;
-import com.kyloth.serleena.common.CheckpointReachedTelemetryEvent;
-import com.kyloth.serleena.common.ImmutableList;
-import com.kyloth.serleena.common.TelemetryEvent;
-import com.kyloth.serleena.common.TelemetryEventType;
-import com.kyloth.serleena.model.ITelemetry;
 import com.kyloth.serleena.model.ITrack;
-import com.kyloth.serleena.model.NoSuchTelemetryEventException;
-import com.kyloth.serleena.model.NoSuchTelemetryException;
 
 import java.util.ArrayList;
 
 /**
- * Created by fsestini on 6/6/15.
+ * Implementa ITrackCrossing
+ *
+ * @author Filippo Sestini <sestini.filippo@gmail.com>
+ * @version 1.0.0
  */
 public final class TrackCrossing implements ITrackCrossing,
         ILocationReachedObserver {
@@ -56,6 +62,12 @@ public final class TrackCrossing implements ITrackCrossing,
     private long trackStartTimestamp;
     private int lastPartial;
 
+    /**
+     * Crea un oggetto TrackCrossing.
+     *
+     * Se il parametro ILocationReachedManager è null, viene sollevata
+     * un'eccezione IllegalArgumentException.
+     */
     public TrackCrossing(ILocationReachedManager locReachMan) {
         if (locReachMan == null)
             throw new IllegalArgumentException("Illegal location reached " +
@@ -65,6 +77,9 @@ public final class TrackCrossing implements ITrackCrossing,
         observers = new ArrayList<ITrackCrossingObserver>();
     }
 
+    /**
+     * Implementa ITrackCrossing.startTrack().
+     */
     @Override
     public void startTrack(ITrack track) {
         if (track == null)
@@ -79,6 +94,9 @@ public final class TrackCrossing implements ITrackCrossing,
         } catch (NoTrackCrossingException e) {}
     }
 
+    /**
+     * Implementa ITrackCrossing.getLastCrossed().
+     */
     @Override
     public int getLastCrossed() throws NoSuchCheckpointException {
         if (nextCheckpointIndex == 0)
@@ -86,6 +104,9 @@ public final class TrackCrossing implements ITrackCrossing,
         return nextCheckpointIndex - 1;
     }
 
+    /**
+     * Implementa ITrackCrossing.getNextCheckpoint().
+     */
     @Override
     public int getNextCheckpoint()
             throws NoTrackCrossingException {
@@ -95,18 +116,27 @@ public final class TrackCrossing implements ITrackCrossing,
         return nextCheckpointIndex;
     }
 
+    /**
+     * Implementa ITrackCrossing.attachObserver().
+     */
     @Override
     public synchronized void attachObserver(ITrackCrossingObserver observer) {
         if (!observers.contains(observer))
             observers.add(observer);
     }
 
+    /**
+     * Implementa ITrackCrossing.detachObserver().
+     */
     @Override
     public synchronized void detachObserver(ITrackCrossingObserver observer) {
         if (observers.contains(observer))
             observers.remove(observer);
     }
 
+    /**
+     * Implementa ITrackCrossing.advanceCheckpoint().
+     */
     @Override
     public synchronized void advanceCheckpoint()
             throws NoTrackCrossingException {
@@ -130,6 +160,9 @@ public final class TrackCrossing implements ITrackCrossing,
         notifyObservers();
     }
 
+    /**
+     * Implementa ITrackCrossing.lastPartialTime().
+     */
     @Override
     public int lastPartialTime() throws NoTrackCrossingException {
         if (track == null)
@@ -159,6 +192,9 @@ public final class TrackCrossing implements ITrackCrossing,
         return true;
     }
 
+    /**
+     * Implementa ITrackCrossing.onLocationReached().
+     */
     @Override
     public synchronized void onLocationReached() {
         try {
@@ -166,6 +202,11 @@ public final class TrackCrossing implements ITrackCrossing,
         } catch (NoTrackCrossingException e) { }
     }
 
+    /**
+     * Implementa ITrackCrossing.notifyObservers().
+     *
+     * @throws NoTrackCrossingException
+     */
     @Override
     public void notifyObservers()
             throws NoTrackCrossingException {

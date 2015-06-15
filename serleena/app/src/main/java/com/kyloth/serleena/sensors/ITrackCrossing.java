@@ -28,6 +28,17 @@
 ///////////////////////////////////////////////////////////////////////////////
 
 
+/**
+ * Name: ITrackCrossing.java
+ * Package: com.kyloth.serleena.sensors
+ * Author: Filippo Sestini
+ *
+ * History:
+ * Version  Programmer        Changes
+ * 1.0.0    Filippo Sestini   Creazione file e scrittura
+ *                                         codice e documentazione Javadoc
+ */
+
 package com.kyloth.serleena.sensors;
 
 import com.kyloth.serleena.common.Checkpoint;
