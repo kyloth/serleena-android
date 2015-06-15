@@ -138,6 +138,9 @@ public final class TrackCrossing implements ITrackCrossing,
         return lastPartial;
     }
 
+    /**
+     * Implementa ITrackCrossing.getTrack().
+     */
     @Override
     public ITrack getTrack() throws NoTrackCrossingException {
         if (track == null)

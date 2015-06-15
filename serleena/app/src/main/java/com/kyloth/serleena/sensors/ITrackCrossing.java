@@ -129,6 +129,15 @@ public interface ITrackCrossing {
      */
     int lastPartialTime() throws NoTrackCrossingException;
 
+    /**
+     * Restituisce il Percorso in corso o appena conclusosi.
+     *
+     * Se non vi è alcun Percorso in corso, viene sollevata un'eccezione
+     * NoTrackCrossingException.
+     *
+     * @return Oggetto ITrack rappresentante il Percorso.
+     * @throws NoTrackCrossingException
+     */
     ITrack getTrack() throws NoTrackCrossingException;
 
     /**
