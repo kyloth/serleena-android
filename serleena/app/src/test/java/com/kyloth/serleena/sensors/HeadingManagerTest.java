@@ -28,6 +28,17 @@
 ///////////////////////////////////////////////////////////////////////////////
 
 
+/**
+ * Name: HeadingManagerTest.java
+ * Package: com.kyloth.serleena.sensors;
+ * Author: Filippo Sestini
+ *
+ * History:
+ * Version  Programmer       Changes
+ * 1.0.0    Filippo Sestini  Creazione file scrittura
+ *                           codice e documentazione Javadoc
+ */
+
 package com.kyloth.serleena.sensors;
 
 import android.hardware.Sensor;
@@ -44,19 +55,44 @@ import java.util.concurrent.ExecutionException;
 import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.*;
 
+/**
+ * Contiene i test di unità per la classe HeadingManager.
+ *
+ * @author Filippo Sestini <sestini.filippo@gmail.com>
+ * @version 1.0.0
+ */
 @RunWith(RobolectricTestRunner.class)
 public class HeadingManagerTest {
 
+    private HeadingManager getManager()
+            throws SensorNotAvailableException {
+        SensorManager sm = mock(SensorManager.class);
+        when(sm.getDefaultSensor(Sensor.TYPE_MAGNETIC_FIELD)).thenReturn(mock
+                (Sensor.class));
+        when(sm.getDefaultSensor(Sensor.TYPE_ACCELEROMETER)).thenReturn(mock
+                (Sensor.class));
+        return new HeadingManager(sm);
+    }
+
+    /**
+     * Verifica che la costruzione di un oggetto HeadingManager sollevi
+     * un'eccezione quando non è disponibile l'accelerometro del dispositivo.
+     */
     @Test(expected = SensorNotAvailableException.class)
-    public void testThatNullSensorsThowException1()
+    public void ctorShouldThrowWhenSensorNotAvailable1()
             throws SensorNotAvailableException {
         SensorManager sm = mock(SensorManager.class);
         when(sm.getDefaultSensor(Sensor.TYPE_ACCELEROMETER)).thenReturn(null);
         new HeadingManager(sm);
     }
 
+    /**
+     * Verifica che la costruzione di un oggetto HeadingManager sollevi
+     * un'eccezione quando non è disponibile il sensore di campo magnetico del
+     * dispositivo.
+     */
     @Test(expected = SensorNotAvailableException.class)
-    public void testThatNullSensorsThowException2()
+    public void ctorShouldThrowWhenSensorNotAvailable2()
             throws SensorNotAvailableException {
         SensorManager sm = mock(SensorManager.class);
         when(sm.getDefaultSensor(Sensor.TYPE_MAGNETIC_FIELD)).thenReturn(null);
@@ -66,11 +102,10 @@ public class HeadingManagerTest {
     /**
      * Verifica che gli observer vengano notificati correttamente in base al
      * loro stato di registrazione o non registrazione.
-     *
-     * @throws SensorNotAvailableException
      */
     @Test
-    public void testThatObserversGetNotifiedCorrectly() throws SensorNotAvailableException {
+    public void testThatObserversGetNotifiedCorrectly()
+            throws SensorNotAvailableException {
         SensorManager sm = mock(SensorManager.class);
         when(sm.getDefaultSensor(Sensor.TYPE_MAGNETIC_FIELD)).thenReturn(mock
                 (Sensor.class));
@@ -96,18 +131,14 @@ public class HeadingManagerTest {
         verifyNoMoreInteractions(o2);
     }
 
-    private HeadingManager getManager() throws SensorNotAvailableException {
-        SensorManager sm = mock(SensorManager.class);
-        when(sm.getDefaultSensor(Sensor.TYPE_MAGNETIC_FIELD)).thenReturn(mock
-                (Sensor.class));
-        when(sm.getDefaultSensor(Sensor.TYPE_ACCELEROMETER)).thenReturn(mock
-                (Sensor.class));
-        return new HeadingManager(sm);
-    }
-
+    /**
+     * Verifica che l'oggetto HeadingManager calcoli il valore di orientamento
+     * corretto attravero il confronto con dati noti.
+     */
     @Test
-    public void testCorrectHeadingCalculationAndNotification() throws
-            SensorNotAvailableException, ExecutionException, InterruptedException {
+    public void testCorrectHeadingCalculationAndNotification()
+            throws SensorNotAvailableException, ExecutionException,
+            InterruptedException {
         final float[] accelerometerValues = new float[] { 11, 22, 33 };
         final float[] magneticFieldValues = new float[] { 32, 21, 10 };
         final HeadingManager hm = getManager();
@@ -126,8 +157,14 @@ public class HeadingManagerTest {
         verify(o).onHeadingUpdate(expected);
     }
 
+    /**
+     * Verifica la corretta registrazione e deregistrazione ai sensori del
+     * dispositivo, in base al numero di observer registrati all'oggetto
+     * HeadingManager.
+     */
     @Test
-    public void testSensorManagerRegistrationUnregistration() throws SensorNotAvailableException {
+    public void testSensorManagerRegistrationUnregistration()
+            throws SensorNotAvailableException {
         SensorManager sm = mock(SensorManager.class);
         Sensor accelerometer = mock(Sensor.class);
         Sensor magnetometer = mock(Sensor.class);
@@ -180,6 +217,10 @@ public class HeadingManagerTest {
                 .SENSOR_DELAY_UI);
     }
 
+    /**
+     * Verifica che il metodo onRawDataReceived() sollevi un eccezione in caso
+     * di parametri null.
+     */
     @Test(expected = IllegalArgumentException.class)
     public void testThatPassingNullToOnRawDataReceiverThrows1()
             throws SensorNotAvailableException {
@@ -188,6 +229,10 @@ public class HeadingManagerTest {
         hm.onRawDataReceived(null, values);
     }
 
+    /**
+     * Verifica che il metodo onRawDataReceived() sollevi un eccezione in caso
+     * di parametri null.
+     */
     @Test(expected = IllegalArgumentException.class)
     public void testThatPassingNullToOnRawDataReceiverThrows2()
             throws SensorNotAvailableException {
@@ -196,6 +241,10 @@ public class HeadingManagerTest {
         hm.onRawDataReceived(values, null);
     }
 
+    /**
+     * Verifica che il metodo onRawDataReceived() sollevi un eccezione in caso
+     * di parametri null.
+     */
     @Test(expected = IllegalArgumentException.class)
     public void testThatPassingNullToOnRawDataReceiverThrows3()
             throws SensorNotAvailableException {
