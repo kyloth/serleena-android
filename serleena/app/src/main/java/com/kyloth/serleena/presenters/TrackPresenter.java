@@ -55,7 +55,6 @@ import com.kyloth.serleena.model.ITelemetry;
 import com.kyloth.serleena.model.NoSuchTelemetryEventException;
 import com.kyloth.serleena.model.NoSuchTelemetryException;
 import com.kyloth.serleena.sensors.NoSuchCheckpointException;
-import com.kyloth.serleena.common.UnregisteredObserverException;
 import com.kyloth.serleena.presentation.ISerleenaActivity;
 import com.kyloth.serleena.presentation.ITrackPresenter;
 import com.kyloth.serleena.presentation.ITrackView;
@@ -159,21 +158,20 @@ public class TrackPresenter implements ITrackPresenter, ITrackCrossingObserver,
     public synchronized void resume() {
         active = true;
 
-        try {
-            int lastCheckpoint, total;
+        AsyncTask<Void, Void, Void> task =
+                new AsyncTask<Void, Void, Void>() {
+                    @Override
+                    protected Void doInBackground(Void... params) {
+                        updateCheckpoints();
+                        updateDelta();
+                        return null;
+                    }
+                };
+        task.execute();
 
-            try {
-                lastCheckpoint = tc.getLastCrossed();
-            } catch (NoSuchCheckpointException e) {
-                lastCheckpoint = -1;
-            }
-            total = tc.getTrack().getCheckpoints().size();
-            updateCheckpoints(lastCheckpoint, total);
-
+        if (tc.isTrackCrossing()) {
             locMan.attachObserver(this, UPDATE_INTERVAL_SECONDS);
             hMan.attachObserver(this);
-        } catch (NoTrackCrossingException ee) {
-            view.clearView();
         }
     }
 
@@ -242,6 +240,9 @@ public class TrackPresenter implements ITrackPresenter, ITrackCrossingObserver,
      */
     public void updateDistance(GeoPoint here)
             throws NoTrackCrossingException {
+        if (here == null)
+            throw new IllegalArgumentException("Illegal null location");
+
         int next = tc.getNextCheckpoint();
         Checkpoint cp = tc.getTrack().getCheckpoints().get(next);
         int distance = Math.round(here.distanceTo(cp));
@@ -292,54 +293,63 @@ public class TrackPresenter implements ITrackPresenter, ITrackCrossingObserver,
      *
      * Nel caso si sia raggiunto l'ultimo percorso, l'informazione viene
      * comunicata alla vista.
-     *
-     * @param checkpointNumber Indice dell'ultimo checkpoint attraversato.
      */
-    public synchronized void updateCheckpoints(final int checkpointNumber,
-                                               int total) {
-        if (checkpointNumber == total - 1)
-            view.displayTrackEnded();
-        else
-            view.setCheckpointNo(checkpointNumber + 2);
-
+    public synchronized void updateCheckpoints() {
         try {
+            int checkpointNumber;
+            try {
+                checkpointNumber = tc.getLastCrossed();
+            } catch (NoSuchCheckpointException e) {
+                checkpointNumber = -1;
+            }
+
+            int total = tc.getTrack().getCheckpoints().size();
+            if (checkpointNumber == total - 1)
+                view.displayTrackEnded();
+            else
+                view.setCheckpointNo(checkpointNumber + 2);
+
             view.setLastPartial(tc.lastPartialTime());
+        } catch (NoTrackCrossingException ee) {
+            view.clearView();
+        }
+    }
+
+    public synchronized void updateDelta() {
+        try {
+            final int checkpointNumber = tc.getLastCrossed();
             ITelemetry best = tc.getTrack().getBestTelemetry();
             Predicate<TelemetryEvent> p = new Predicate<TelemetryEvent>() {
                 @Override
                 public boolean apply(TelemetryEvent telemetryEvent) {
                     return telemetryEvent.getType() ==
                             TelemetryEventType.CheckpointReached &&
-                            ((CheckpointReachedTelemetryEvent)telemetryEvent)
+                            ((CheckpointReachedTelemetryEvent) telemetryEvent)
                                     .checkpointNumber() == checkpointNumber;
                 }
             };
             Iterable<TelemetryEvent> events = best.getEvents(p);
             TelemetryEvent event = events.iterator().next();
             view.setDelta(tc.lastPartialTime() - event.timestamp());
-        } catch (NoTrackCrossingException|NoSuchTelemetryException|
-                 NoSuchTelemetryEventException e) {
+        } catch (NoSuchTelemetryException|NoSuchTelemetryEventException|
+                NoTrackCrossingException|NoSuchCheckpointException e) {
             view.clearDelta();
         }
-
     }
 
     @Override
     public void onCheckpointCrossed(final int checkpointNumber) {
         if (active) {
-            try {
-                final int totalCheckpoints = tc.getTrack().getCheckpoints()
-                        .size();
-                AsyncTask<Void, Void, Void> task =
-                        new AsyncTask<Void, Void, Void>() {
-                    @Override
-                    protected Void doInBackground(Void... params) {
-                        updateCheckpoints(checkpointNumber, totalCheckpoints);
-                        return null;
-                    }
-                };
-                task.execute();
-            } catch (NoTrackCrossingException e) {}
+            AsyncTask<Void, Void, Void> task =
+                    new AsyncTask<Void, Void, Void>() {
+                @Override
+                protected Void doInBackground(Void... params) {
+                    updateCheckpoints();
+                    updateDelta();
+                    return null;
+                }
+            };
+            task.execute();
         }
     }
 
