@@ -131,4 +131,11 @@ public interface ITrackCrossing {
 
     ITrack getTrack() throws NoTrackCrossingException;
 
+    /**
+     * Restituisce lo stato del Percorso.
+     *
+     * @return True se il Percorso è in attraversamento.
+     */
+    boolean isTrackCrossing();
+
 }

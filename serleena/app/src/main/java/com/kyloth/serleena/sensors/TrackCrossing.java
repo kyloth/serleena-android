@@ -145,6 +145,17 @@ public final class TrackCrossing implements ITrackCrossing,
         return track;
     }
 
+    /**
+     * Implementa ITrackCrossing.isTrackCrossing().
+     */
+    @Override
+    public boolean isTrackCrossing() {
+        if (track == null ||
+                nextCheckpointIndex == track.getCheckpoints().size())
+            return false;
+        return true;
+    }
+
     @Override
     public synchronized void onLocationReached() {
         try {
