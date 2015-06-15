@@ -28,13 +28,32 @@
 ///////////////////////////////////////////////////////////////////////////////
 
 
+/**
+ * Name: ITrackCrossingObserver.java
+ * Package: com.kyloth.serleena.sensors
+ * Author: Filippo Sestini
+ *
+ * History:
+ * Version  Programmer        Changes
+ * 1.0.0    Filippo Sestini   Creazione file e scrittura
+ *                                         codice e documentazione Javadoc
+ */
+
 package com.kyloth.serleena.sensors;
 
-import com.kyloth.serleena.common.Checkpoint;
-
 /**
- * Created by fsestini on 6/6/15.
+ * Rappresenta l'interfaccia di un oggetto in ascolto di eventi di
+ * attraversamento di checkpoint da un ITrackCrossing.
+ *
+ * @author Filippo Sestini <sestini.filippo@gmail.com>
+ * @version 1.0.0
  */
 public interface ITrackCrossingObserver {
+
+    /**
+     * Segnala l'avvenuto attraversamento di un checkpoint, nel Percorso in
+     * corso.
+     */
     void onCheckpointCrossed(int checkpointNumber);
+
 }
