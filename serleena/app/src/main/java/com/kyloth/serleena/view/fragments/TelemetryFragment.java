@@ -109,7 +109,7 @@ public class TelemetryFragment extends Fragment implements ITelemetryView {
      */
     @Override
     public void displayTrackStartedError() {
-        throw new UnsopportedOperationException();
+        throw new UnsupportedOperationException();
     }
 
     /**
