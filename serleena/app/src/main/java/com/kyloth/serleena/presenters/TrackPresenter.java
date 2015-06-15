@@ -93,7 +93,6 @@ public class TrackPresenter implements ITrackPresenter, ITrackCrossingObserver,
     public static int UPDATE_INTERVAL_SECONDS = 60;
 
     private ITrackView view;
-    private ISerleenaActivity activity;
 
     private GeoPoint lastKnownLocation;
     private double lastKnownHeading;
@@ -122,7 +121,6 @@ public class TrackPresenter implements ITrackPresenter, ITrackCrossingObserver,
         view.attachPresenter(this);
 
         this.view = view;
-        this.activity = activity;
         this.tc = activity.getSensorManager().getTrackCrossingManager();
         this.locMan = activity.getSensorManager().getLocationSource();
         try {
