@@ -134,7 +134,7 @@ public class CompassPresenterTest {
     public void testResumeWithMocks() {
         CompassPresenter cp = new CompassPresenter(view, activity_mock);
         cp.resume();
-        verify(hm_mock).attachObserver(cp, UPDATE_INTERVAL);
+        verify(hm_mock).attachObserver(cp);
     }
 
     /**
