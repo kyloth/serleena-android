@@ -285,9 +285,7 @@ public class TrackPresenter implements ITrackPresenter, ITrackCrossingObserver,
 
     /**
      * Aggiorna le informazioni sull'ultimo checkpoint attraversato, mostrate
-     * dalla vista associata al presenter, ossia il numero del prossimo
-     * checkpoint da attraversare e la differenza con la prestazione migliore
-     * sul percorso.
+     * dalla vista associata al presenter.
      *
      * Nel caso si sia raggiunto l'ultimo percorso, l'informazione viene
      * comunicata alla vista.
@@ -313,6 +311,10 @@ public class TrackPresenter implements ITrackPresenter, ITrackCrossingObserver,
         }
     }
 
+    /**
+     * Aggiorna la vista con la differenza tra il tempo parziale e la
+     * prestazione migliore registrata per lo stesso Percorso.
+     */
     public synchronized void updateDelta() {
         try {
             final int checkpointNumber = tc.getLastCrossed();
@@ -335,6 +337,12 @@ public class TrackPresenter implements ITrackPresenter, ITrackCrossingObserver,
         }
     }
 
+    /**
+     * Implementa ITrackCrossingObserver.onCheckpointCrossed().
+     *
+     * Se il Presenter è attivo, viene programmato un aggiornamento asincrono
+     * della vista.
+     */
     @Override
     public void onCheckpointCrossed(final int checkpointNumber) {
         if (active) {
