@@ -40,6 +40,8 @@
 
 package com.kyloth.serleena.presentation;
 
+import com.kyloth.serleena.model.IExperience;
+
 /**
  * E' l'interfaccia realizzata dalla Vista della schermata di selezione
  * dell'esperienza.
@@ -55,7 +57,7 @@ public interface IExperienceSelectionView {
 	 *
 	 * @since 1.0
 	 */
-	void setList(Iterable<String> names);
+	void setExperiences(Iterable<IExperience> experiences);
 
 	/**
 	 * Lega un Presenter alla vista.
