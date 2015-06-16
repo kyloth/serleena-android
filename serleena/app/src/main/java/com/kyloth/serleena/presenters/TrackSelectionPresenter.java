@@ -84,6 +84,9 @@ public class TrackSelectionPresenter
             throw new IllegalArgumentException("Illegal null view");
         if (activity == null)
             throw new IllegalArgumentException("Illegal null activity");
+        if (source == null)
+            throw new IllegalArgumentException("Illegal null experience " +
+                    "activation source");
 
         this.activity = activity;
         this.view = view;
