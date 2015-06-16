@@ -108,27 +108,6 @@ public class TrackSelectionPresenter implements ITrackSelectionPresenter {
 
     }
 
-    /**
-     * Segnala al presenter l'esperienza correntemente attiva.
-     *
-     * All'attivazione di una nuova esperienza, l'activity segnala al
-     * presenter in modo che esso possa aggiornare la vista con i Percorsi
-     * corretti.
-     * L'aggiornamento viene effettuato creando un flusso di controllo
-     * asincrono che enumera i Percorsi associati all'esperienza attivata e
-     * li utilizza per popolare la vista.
-     *
-     * @param experience Esperienza appena attivata. Se null,
-     *                   viene sollevata un'eccezione IllegalArgumentException.
-     * @throws IllegalArgumentException
-     */
-    public synchronized void setActiveExperience(IExperience experience)
-            throws IllegalArgumentException {
-        if (experience == null)
-            throw new IllegalArgumentException("Illegal null experience");
-        view.setTracks(experience.getTracks());
-    }
-
     @Override
     public void activateTrack(ITrack track) throws IllegalArgumentException {
         if (track == null)
