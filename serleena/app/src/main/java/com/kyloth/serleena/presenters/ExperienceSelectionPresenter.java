@@ -88,15 +88,8 @@ public class ExperienceSelectionPresenter
             throw new IllegalArgumentException("Illegal null activity");
 
         this.activity = activity;
-        this.experiences = new ArrayList<IExperience>();
-        List<String> names = new ArrayList<String>();
 
-        for (IExperience exp : activity.getDataSource().getExperiences()) {
-            experiences.add(exp);
-            names.add(exp.getName());
-        }
-
-        view.setList(names);
+        view.setExperiences(activity.getDataSource().getExperiences());
         view.attachPresenter(this);
     }
 
