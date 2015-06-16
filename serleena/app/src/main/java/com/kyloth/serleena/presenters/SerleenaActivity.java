@@ -176,7 +176,7 @@ public class SerleenaActivity extends Activity implements ISerleenaActivity {
                 new MapPresenter((IMapView) myFrags.get("MAP"), this));
         myPress.put("TRACKLIST",
                 new TrackSelectionPresenter((ITrackSelectionView)
-                        myFrags.get("TRACKLIST"), this));
+                        myFrags.get("TRACKLIST"), this, null));
         myPress.put("EXPLIST",
                 new ExperienceSelectionPresenter(
                         (IExperienceSelectionView) myFrags.get("EXPLIST"),
@@ -349,25 +349,6 @@ public class SerleenaActivity extends Activity implements ISerleenaActivity {
                 ((SyncFragment) frag).keyDown(keyCode,event);
         }
         return true;
-    }
-
-    /**
-     * Implementazione di ISerleenaActivity.setActiveExperience().
-     *
-     * Segnala all'activity l'attivazione di un'Esperienza. L'activity si
-     * occupa di inoltrare l'informazione agli altri presenter che
-     * ne necessitano.
-     *
-     * @param experience Esperienza attivata.
-     */
-    @Override
-    public void setActiveExperience(IExperience experience) {
-        TrackSelectionPresenter tsPres =
-                (TrackSelectionPresenter) myPress.get("TRACKLIST");
-        tsPres.setActiveExperience(experience);
-        MapPresenter mPres =
-                (MapPresenter) myPress.get("MAP");
-        mPres.setActiveExperience(experience);
     }
 
     /**

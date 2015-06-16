@@ -56,18 +56,6 @@ import com.kyloth.serleena.sensors.ISensorManager;
 public interface ISerleenaActivity {
 
     /**
-     * Imposta l'esperienza attiva.
-     *
-     * Il metodo è chiamato dal Presenter che si occupa
-     * dell'impostazione dell'Esperienza attiva. Tale
-     * informazione viene segnalata dall'activity a tutti i
-     * presenter che ne hanno bisogno.
-     *
-     * @param experience Esperienza da attivare.
-     */
-    public void setActiveExperience(IExperience experience);
-
-    /**
      * Restituisce il data source dell'applicazione.
      *
      * @return Data source dell'applicazione.
