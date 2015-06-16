@@ -113,36 +113,4 @@ public class ExperienceSelectionPresenterTest {
         new ExperienceSelectionPresenter(view, null);
     }
 
-    /**
-     * Verifica che il metodo activateExperience lanci un'eccezione IllegalArgumentException
-     * con messaggio "Index out of range" quando si fornisca come parametro un indice inferiore
-     * a zero o superiore alla dimensione della lista delle Esperienze.
-     */
-    @Test
-    public void activateExperienceShouldThrowExceptionWhenIndexOutOfRange() {
-        ExperienceSelectionPresenter esp = new ExperienceSelectionPresenter(view, activity);
-        exception.expect(IllegalArgumentException.class);
-        exception.expectMessage("Index out of range");
-        esp.activateExperience(-1);
-        exception.expect(IllegalArgumentException.class);
-        exception.expectMessage("Index out of range");
-        esp.activateExperience(4);
-    }
-
-    /**
-     * Verifica che il metodo activateExperience chiami il metodo setActiveExperience su
-     * activity fornendo come parametro la corretta Esperienza.
-     */
-
-    @Test
-    public void activateExperienceShouldPassCorrectParameter() {
-        ExperienceSelectionPresenter esp = new ExperienceSelectionPresenter(view, activity);
-        esp.activateExperience(0);
-        verify(activity).setActiveExperience(exp_1);
-        esp.activateExperience(1);
-        verify(activity).setActiveExperience(exp_2);
-        esp.activateExperience(2);
-        verify(activity).setActiveExperience(exp_3);
-    }
-
 }
