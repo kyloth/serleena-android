@@ -51,9 +51,11 @@ import java.util.ArrayList;
 
 import com.kyloth.serleena.model.IExperience;
 import com.kyloth.serleena.model.ISerleenaDataSource;
+import com.kyloth.serleena.presentation.IExperienceActivationObserver;
 import com.kyloth.serleena.presentation.IExperienceSelectionPresenter;
 import com.kyloth.serleena.presentation.IExperienceSelectionView;
 import com.kyloth.serleena.presentation.ISerleenaActivity;
+import com.kyloth.serleena.sensors.ISensorManager;
 
 
 /**
@@ -67,32 +69,19 @@ public class ExperienceSelectionPresenterTest {
 
     private ISerleenaActivity activity;
     private IExperienceSelectionView view;
-    private ISerleenaDataSource source;
-    private IExperience exp_1;
-    private IExperience exp_2;
-    private IExperience exp_3;
-    private ArrayList<IExperience> exp_list;
-    @Rule
-    public ExpectedException exception = ExpectedException.none();
+    private Iterable<IExperience> exps;
 
     /**
      * Inizializza i campi dati necessari a condurre i test.
      */
-
     @Before
     public void initialize() {
         activity = mock(ISerleenaActivity.class);
         view = mock(IExperienceSelectionView.class);
-        source = mock(ISerleenaDataSource.class);
-        exp_1 = mock(IExperience.class);
-        exp_2 = mock(IExperience.class);
-        exp_3 = mock(IExperience.class);
-        exp_list = new ArrayList<IExperience>();
-        exp_list.add(exp_1);
-        exp_list.add(exp_2);
-        exp_list.add(exp_3);
-        when(activity.getDataSource()).thenReturn(source);
-        when(source.getExperiences()).thenReturn(exp_list);
+        exps = new ArrayList<IExperience>();
+        ISerleenaDataSource ds = mock(ISerleenaDataSource.class);
+        when(ds.getExperiences()).thenReturn(exps);
+        when(activity.getDataSource()).thenReturn(ds);
     }
 
     /**
@@ -120,6 +109,82 @@ public class ExperienceSelectionPresenterTest {
     @Test(expected = IllegalArgumentException.class)
     public void constructorShouldThrowExceptionWhenNullArguments() {
         new ExperienceSelectionPresenter(null, null);
+    }
+
+    @Test(expected = IllegalArgumentException.class)
+    public void activateExperienceShouldThrowWhenNullExperience() {
+        new ExperienceSelectionPresenter(view, activity)
+                .activateExperience(null);
+    }
+
+    /**
+     * Verifica che il passaggio di null come parametro a attachObserver()
+     * sollevi un'eccezione.
+     */
+    @Test(expected = IllegalArgumentException.class)
+    public void nullObserversShouldThrow1() {
+        new ExperienceSelectionPresenter(view, activity).attachObserver(null);
+    }
+
+    /**
+     * Verifica che il passaggio di null come parametro a detachObserver()
+     * sollevi un'eccezione.
+     */
+    @Test(expected = IllegalArgumentException.class)
+    public void nullObserversShouldThrow2() {
+        new ExperienceSelectionPresenter(view, activity).detachObserver(null);
+    }
+
+    @Test(expected = RuntimeException.class)
+    public void notifyObserversWithNoExperienceShouldThrow() {
+        new ExperienceSelectionPresenter(view, activity).notifyObservers();
+    }
+
+    /**
+     * Verifica che gli observer vengano notificati correttamente.
+     */
+    @Test
+    public void observersNotificationShouldWorkCorrectly() {
+        IExperience exp = mock(IExperience.class);
+        IExperienceActivationObserver o1 =
+                mock(IExperienceActivationObserver.class);
+        IExperienceActivationObserver o2 =
+                mock(IExperienceActivationObserver.class);
+        IExperienceActivationObserver o3 =
+                mock(IExperienceActivationObserver.class);
+        ExperienceSelectionPresenter p = new ExperienceSelectionPresenter
+                (view, activity);
+
+        p.activateExperience(exp);
+
+        p.attachObserver(o1);
+        p.notifyObservers();
+        verify(o1).onExperienceActivated(exp);
+
+        p.attachObserver(o2);
+        p.notifyObservers();
+        verify(o1, times(2)).onExperienceActivated(exp);
+        verify(o2, times(1)).onExperienceActivated(exp);
+
+        p.attachObserver(o3);
+        p.notifyObservers();
+        verify(o1, times(3)).onExperienceActivated(exp);
+        verify(o2, times(2)).onExperienceActivated(exp);
+        verify(o3, times(1)).onExperienceActivated(exp);
+
+        p.detachObserver(o1);
+        p.detachObserver(o2);
+        p.detachObserver(o3);
+        p.notifyObservers();
+        verify(o1, times(3)).onExperienceActivated(exp);
+        verify(o2, times(2)).onExperienceActivated(exp);
+        verify(o3, times(1)).onExperienceActivated(exp);
+    }
+
+    @Test
+    public void presenterShouldPopulateViewCorrectly() {
+        new ExperienceSelectionPresenter(view, activity);
+        verify(view).setExperiences(exps);
     }
 
 }
