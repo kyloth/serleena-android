@@ -30,6 +30,8 @@
 
 package com.kyloth.serleena.common;
 
+import android.hardware.SensorManager;
+
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.robolectric.RobolectricTestRunner;
@@ -46,44 +48,34 @@ import static org.junit.Assert.*;
 public class AzimuthMagneticNorthTest {
 
     /**
-     * Verifica che i risultati restituiti dalla correzione da nord
-     * magnetico a nord reale siano esatti, confrontando i dati restituiti
-     * con valori noti a priori.
-     */
-    @Test
-    public void testCorrectResult() {
-        AzimuthMagneticNorth az = new AzimuthMagneticNorth(0);
-        GeoPoint loc = new GeoPoint(34, -118);
-        float result = az.toTrueNorth(loc);
-        assertEquals(-12, result, 0.5);
-    }
-
-    /**
      * Verifica che il passaggio di un parametro null al metodo toTrueNorth()
      * sollevi un'eccezione.
      */
     @Test(expected = IllegalArgumentException.class)
     public void testThatNullArgumentThrows() {
-        AzimuthMagneticNorth az = new AzimuthMagneticNorth(0);
+        float[] value = new float[] { 0, 0, 0 };
+        AzimuthMagneticNorth az = new AzimuthMagneticNorth(value, value);
         az.toTrueNorth(null);
     }
 
-    /**
-     * Verifica che un valore di azimuth fuori range (negativo) sollevi
-     * un'eccezione alla costruzione dell'istanza.
-     */
-    @Test(expected = IllegalArgumentException.class)
-    public void testThatAzimuthOutOfRangeThrows1() {
-        new AzimuthMagneticNorth(-10);
-    }
+    @Test
+    public void test() {
+        final float[] accelerometerValues = new float[] { 11, 22, 33 };
+        final float[] magneticFieldValues = new float[] { 32, 21, 10 };
+        float[] values = new float[3];
+        float[] R = new float[9];
+        SensorManager.getRotationMatrix(R, null, accelerometerValues,
+                magneticFieldValues);
+        SensorManager.getOrientation(R, values);
+        float expected = (float) Math.toDegrees(values[0]);
 
-    /**
-     * Verifica che un valore di azimuth fuori range (> 360) sollevi
-     * un'eccezione alla costruzione dell'istanza.
-     */
-    @Test(expected = IllegalArgumentException.class)
-    public void testThatAzimuthOutOfRangeThrows2() {
-        new AzimuthMagneticNorth(400);
+        AzimuthMagneticNorth az = new AzimuthMagneticNorth(
+                accelerometerValues, magneticFieldValues);
+        assertEquals(expected, az.orientation(), 0);
+
+        GeoPoint loc = new GeoPoint(34, -118);
+        float result = az.toTrueNorth(loc);
+        assertEquals(expected - 12, result, 0.5);
     }
 
 }
