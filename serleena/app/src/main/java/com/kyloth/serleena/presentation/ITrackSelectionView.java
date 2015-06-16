@@ -58,13 +58,6 @@ public interface ITrackSelectionView {
 	void setList(Iterable<String> names);
 
 	/**
-	 * Pulisce la lista dei percorsi.
-	 *
-	 * @since 1.0
-	 */
-	void clearList();
-
-	/**
 	 * Lega un Presenter alla vista.
 	 *
 	 * @since 1.0

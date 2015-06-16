@@ -93,7 +93,6 @@ public class TrackSelectionPresenter implements ITrackSelectionPresenter {
         this.view = view;
         this.tracks = new ArrayList<ITrack>();
         this.view.attachPresenter(this);
-        this.view.clearList();
     }
 
     /**
