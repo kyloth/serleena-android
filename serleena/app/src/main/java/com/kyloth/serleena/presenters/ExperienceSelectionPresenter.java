@@ -101,27 +101,6 @@ public class ExperienceSelectionPresenter
     }
 
     /**
-     * Implementa IExperienceSelectionPresenter.activateExperience().
-     *
-     * L'esperienza selezionata viene segnalata all'activity
-     * dell'applicazione, che si occupa di segnalare i restanti presenter e
-     * rendere l'attivazione effettiva.
-     *
-     * @param index Indice della lista di esperienze che rappresenta la
-     *              selezione dell'utente. Se minore di zero,
-     *              viene sollevata un'eccezione IllegalArgumentException.
-     * @throws java.lang.IllegalArgumentException
-     */
-    @Override
-    public void activateExperience(int index)
-            throws IllegalArgumentException {
-        if (index < 0 || index >= experiences.size())
-            throw new IllegalArgumentException("Index out of range");
-
-        activity.setActiveExperience(experiences.get(index));
-    }
-
-    /**
      * Implementa IPresenter.resume().
      *
      * Non effettua operazioni, in quanto i contenuti presentati non variano
@@ -143,6 +122,21 @@ public class ExperienceSelectionPresenter
     @Override
     public void pause() {
 
+    }
+
+    /**
+     * Implementa IExperienceSelectionPresenter.activateExperience().
+     *
+     * @param experience Esperienza selezionata dall'utente e che deve essere
+     *                   attivata. Se null, viene sollevata un'eccezione
+     *                   IllegalArgumentException
+     */
+    @Override
+    public void activateExperience(IExperience experience)
+            throws IllegalArgumentException {
+        if (experience == null)
+            throw new IllegalArgumentException("Illegal null experience");
+        activity.setActiveExperience(experience);
     }
 
 }
