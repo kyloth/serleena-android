@@ -41,9 +41,14 @@
 package com.kyloth.serleena.presenters;
 
 import com.kyloth.serleena.model.IExperience;
+import com.kyloth.serleena.presentation.IExperienceActivationObserver;
+import com.kyloth.serleena.presentation.IExperienceActivationSource;
 import com.kyloth.serleena.presentation.IExperienceSelectionPresenter;
 import com.kyloth.serleena.presentation.IExperienceSelectionView;
 import com.kyloth.serleena.presentation.ISerleenaActivity;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Concretizza IExperienceSelectionPresenter.
@@ -55,9 +60,11 @@ import com.kyloth.serleena.presentation.ISerleenaActivity;
  * @version 1.0.0
  */
 public class ExperienceSelectionPresenter
-        implements IExperienceSelectionPresenter {
+        implements IExperienceSelectionPresenter, IExperienceActivationSource {
 
+    private List<IExperienceActivationObserver> observers;
     private ISerleenaActivity activity;
+    private IExperience selectedExperience;
 
     /**
      * Crea un oggetto ExperienceSelectionPresenter.
@@ -83,6 +90,7 @@ public class ExperienceSelectionPresenter
             throw new IllegalArgumentException("Illegal null activity");
 
         this.activity = activity;
+        this.observers = new ArrayList<IExperienceActivationObserver>();
 
         view.setExperiences(activity.getDataSource().getExperiences());
         view.attachPresenter(this);
@@ -124,7 +132,37 @@ public class ExperienceSelectionPresenter
             throws IllegalArgumentException {
         if (experience == null)
             throw new IllegalArgumentException("Illegal null experience");
-        activity.setActiveExperience(experience);
+        selectedExperience = experience;
     }
 
+    /**
+     * Implementa IExperienceActivationSource.attachObserver().
+     *
+     * @param observer Observer da registrare.
+     */
+    @Override
+    public void attachObserver(IExperienceActivationObserver observer) {
+        observers.add(observer);
+    }
+
+    /**
+     * Implementa IExperienceActivationSource.detachObserver().
+     *
+     * @param observer Observer la cui registrazione deve essere cancellata.
+     */
+    @Override
+    public void detachObserver(IExperienceActivationObserver observer) {
+        observers.remove(observer);
+    }
+
+    /**
+     * Implementa IExperienceActivationSource.notifyObservers().
+     */
+    @Override
+    public void notifyObservers() {
+        if (selectedExperience == null)
+            throw new RuntimeException("Illegal null experience");
+        for (IExperienceActivationObserver o : observers)
+            o.onExperienceActivated(selectedExperience);
+    }
 }
