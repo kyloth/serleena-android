@@ -96,27 +96,21 @@ public class ExperienceSelectionPresenterTest {
     }
 
     /**
-     * Verifica che il costruttore lanci un'eccezione IllegalArgumentException con
-     * messaggio "Illegal null view" al tentativo di costruire un oggetto con view nulla.
+     * Verifica che il costruttore lanci un'eccezione IllegalArgumentException
+     * al tentativo di costruire un oggetto con view nulla.
      */
-
-    @Test
+    @Test(expected = IllegalArgumentException.class)
     public void constructorShouldThrowExceptionWhenNnullView() {
-        exception.expect(IllegalArgumentException.class);
-        exception.expectMessage("Illegal null view");
-        ExperienceSelectionPresenter null_view_esp = new ExperienceSelectionPresenter(null, activity);
+        new ExperienceSelectionPresenter(null, activity);
     }
 
     /**
-     * Verifica che il costruttore lanci un'eccezione IllegalArgumentException con
-     * messaggio "Illegal null activity" al tentativo di costruire un oggetto con activity nulla.
+     * Verifica che il costruttore lanci un'eccezione IllegalArgumentException
+     * al tentativo di costruire un oggetto con activity nulla.
      */
-
-    @Test
+    @Test(expected = IllegalArgumentException.class)
     public void constructorShouldThrowExceptionWhenNullActivity() {
-        exception.expect(IllegalArgumentException.class);
-        exception.expectMessage("Illegal null activity");
-        ExperienceSelectionPresenter null_activity_esp = new ExperienceSelectionPresenter(view, null);
+        new ExperienceSelectionPresenter(view, null);
     }
 
     /**
@@ -124,7 +118,6 @@ public class ExperienceSelectionPresenterTest {
      * con messaggio "Index out of range" quando si fornisca come parametro un indice inferiore
      * a zero o superiore alla dimensione della lista delle Esperienze.
      */
-
     @Test
     public void activateExperienceShouldThrowExceptionWhenIndexOutOfRange() {
         ExperienceSelectionPresenter esp = new ExperienceSelectionPresenter(view, activity);
