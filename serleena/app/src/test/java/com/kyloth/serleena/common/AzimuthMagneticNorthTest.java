@@ -52,14 +52,14 @@ public class AzimuthMagneticNorthTest {
      * sollevi un'eccezione.
      */
     @Test(expected = IllegalArgumentException.class)
-    public void testThatNullArgumentThrows() {
+    public void ctorWithNullArgumentsShouldThrow() {
         float[] value = new float[] { 0, 0, 0 };
         AzimuthMagneticNorth az = new AzimuthMagneticNorth(value, value);
         az.toTrueNorth(null);
     }
 
     @Test
-    public void test() {
+    public void objectShouldReturnCorrectValues() {
         final float[] accelerometerValues = new float[] { 11, 22, 33 };
         final float[] magneticFieldValues = new float[] { 32, 21, 10 };
         float[] values = new float[3];
