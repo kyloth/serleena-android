@@ -41,6 +41,8 @@
 
 package com.kyloth.serleena.sensors;
 
+import com.kyloth.serleena.common.AzimuthMagneticNorth;
+
 /**
  * Interfaccia che verrà implementata da un oggetto in grado
  * di osservare un oggetto di tipo IHeadingManager.
@@ -55,8 +57,8 @@ public interface IHeadingObserver {
      * osservato, il quale indica in questo caso la presenza
      * di dati aggiornati dai sensori.
      *
-     * @param heading Valore di tipo double che indica la direzione
-     *                dell'Escursionista rispetto ai punti cardinali.
+     * @param heading Oggetto indicante la direzione dell'Escursionista rispetto
+     *                ai punti cardinali.
      */
-    public void onHeadingUpdate(double heading);
+    public void onHeadingUpdate(AzimuthMagneticNorth heading);
 }

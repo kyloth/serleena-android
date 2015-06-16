@@ -95,7 +95,7 @@ public class TrackPresenter implements ITrackPresenter, ITrackCrossingObserver,
     private ITrackView view;
 
     private GeoPoint lastKnownLocation;
-    private double lastKnownHeading;
+    private AzimuthMagneticNorth lastKnownHeading;
 
     private final ILocationManager locMan;
     private final ITrackCrossing tc;
@@ -219,13 +219,12 @@ public class TrackPresenter implements ITrackPresenter, ITrackCrossingObserver,
      *
      * @param loc Posizione attuale dell'utente.
      */
-    public void updateDirection(GeoPoint loc, double heading)
+    public void updateDirection(GeoPoint loc, AzimuthMagneticNorth heading)
             throws NoTrackCrossingException {
         Checkpoint cp =
                 tc.getTrack().getCheckpoints().get(tc.getNextCheckpoint());
         float bearingTo = loc.bearingTo(cp);
-        float azimuthTrueNorth =
-                new AzimuthMagneticNorth((float)heading).toTrueNorth(loc);
+        float azimuthTrueNorth = heading.toTrueNorth(loc);
         view.setDirection(bearingTo - azimuthTrueNorth);
     }
 
@@ -259,7 +258,7 @@ public class TrackPresenter implements ITrackPresenter, ITrackCrossingObserver,
      *                rotazione attorno all'asse azimuth.
      */
     @Override
-    public void onHeadingUpdate(double heading) {
+    public void onHeadingUpdate(AzimuthMagneticNorth heading) {
         lastKnownHeading = heading;
 
         AsyncTask<Void, Void, Void> task = new AsyncTask<Void, Void, Void>() {
