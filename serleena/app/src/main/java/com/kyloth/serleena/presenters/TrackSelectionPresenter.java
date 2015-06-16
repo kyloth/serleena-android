@@ -89,7 +89,7 @@ public class TrackSelectionPresenter implements ITrackSelectionPresenter {
         if (activity == null)
             throw new IllegalArgumentException("Illegal null activity");
 
-        this.activity = activity = activity;
+        this.activity = activity;
         this.view = view;
         this.tracks = new ArrayList<ITrack>();
         this.view.attachPresenter(this);
