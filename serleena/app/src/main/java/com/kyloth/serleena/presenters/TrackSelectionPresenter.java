@@ -40,25 +40,18 @@
 
 package com.kyloth.serleena.presenters;
 
-import android.os.AsyncTask;
-
 import com.kyloth.serleena.model.IExperience;
 import com.kyloth.serleena.model.ITrack;
 import com.kyloth.serleena.presentation.ISerleenaActivity;
 import com.kyloth.serleena.presentation.ITrackSelectionPresenter;
 import com.kyloth.serleena.presentation.ITrackSelectionView;
-import com.kyloth.serleena.sensors.ITrackCrossing;
-
-import java.util.ArrayList;
-import java.util.List;
 
 /**
  * Concretizza ITrackSelectionPresenter.
  *
  * @use Viene utilizzata solamente dall'Activity, che ne mantiene un riferimento. Il Presenter, alla creazione, si registra alla sua Vista, passando se stesso come parametro dietro interfaccia.
- * @field view : IWeatherView Vista associata al presenter
+ * @field view : ITrackSelectionView Vista associata al presenter
  * @field activity : ISerleenaActivity Activity a cui il presenter appartiene
- * @field tracks : List<ITrack> Percorsi da visualizzare sulla vista
  * @author Filippo Sestini <sestini.filippo@gmail.com>
  * @version 1.0.0
  */
@@ -66,7 +59,6 @@ public class TrackSelectionPresenter implements ITrackSelectionPresenter {
 
     private ISerleenaActivity activity;
     private ITrackSelectionView view;
-    private List<ITrack> tracks;
 
     /**
      * Crea un oggetto TrackSelectionPresenter.
