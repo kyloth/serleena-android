@@ -113,4 +113,13 @@ public class ExperienceSelectionPresenterTest {
         new ExperienceSelectionPresenter(view, null);
     }
 
+    /**
+     * Verifica che il costruttore lanci un'eccezione IllegalArgumentException
+     * al tentativo di costruire un oggetto con entrambi i parametri null.
+     */
+    @Test(expected = IllegalArgumentException.class)
+    public void constructorShouldThrowExceptionWhenNullArguments() {
+        new ExperienceSelectionPresenter(null, null);
+    }
+
 }
