@@ -29,122 +29,73 @@
 
 
 /**
- * Name: ExperienceSelectionFragment
+ * Name: ExperienceSelectionFragment.java
  * Package: com.kyloth.serleena.view.fragments
- * Author: Sebastiano Valle
+ * Author: Filippo Sestini
  *
  * History:
  * Version   Programmer         Changes
- * 1.0.0     Sebastiano Valle   Creazione del file, scrittura del codice e di Javadoc
+ * 1.0.0     Filippo Sestini    Creazione file e scrittura javadoc
  */
+
 package com.kyloth.serleena.view.fragments;
 
-import android.app.Activity;
-import android.app.Fragment;
-import android.view.KeyEvent;
-import android.view.View;
-import android.widget.AbsListView;
-import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
-import android.widget.TextView;
+        import android.app.ListFragment;
+        import android.view.View;
+        import android.widget.ArrayAdapter;
+        import android.widget.ListView;
 
-import com.kyloth.serleena.presentation.IExperienceSelectionPresenter;
-import com.kyloth.serleena.presentation.IExperienceSelectionView;
+        import com.kyloth.serleena.model.IExperience;
+        import com.kyloth.serleena.presentation.IExperienceSelectionPresenter;
+        import com.kyloth.serleena.presentation.IExperienceSelectionView;
 
-import java.util.ArrayList;
+        import java.util.ArrayList;
 
 /**
- * Classe che implementa la visuale Selezione Esperienza della schermata Esperienza.
+ * Implementa IExperienceSelectionFragment offrendo una vista da cui è
+ * possibile selezionare l'Esperienza da attivare da una lista.
  *
- * In questa visuale è possibile selezionare un'esperienza da attivare tra quelle disponibili.
- *
- * @use Viene istanziata e utilizzata dall'Activity per la visualizzazione della schermata. Comunica con il Presenter associato attraverso l'interfaccia IExperienceSelectionPresenter.
- * @field presenter : IExperienceSelectionPresenter presenter collegato a un ExperienceSelectionFragment
- * @field expNames : ArrayList<String> lista dei nomi delle esperienze
- * @field mListView : AbsListView lista di elementi
- * @field mAdapter : ArrayAdapter adattatore che collega la lista all'ExperienceSelectionFragment
- * @author Sebastiano Valle <valle.sebastiano93@gmail.com>
+ * @author Filippo Sestini <sestini.filippo@gmail.com>
  * @version 1.0.0
- * @see android.app.Fragment
  */
-public class ExperienceSelectionFragment extends Fragment
-        implements AbsListView.OnItemClickListener,IExperienceSelectionView {
+public class ExperienceSelectionFragment extends ListFragment
+        implements IExperienceSelectionView {
 
-    /**
-     * Presenter collegato a questo ExperienceSelectionFragment
-     */
     private IExperienceSelectionPresenter presenter;
+    private IExperience[] experiences;
 
     /**
-     * Lista dei nomi delle esperienze
+     * Crea un oggetto ExperienceSelectionFragment.
      */
-    private ArrayList<String> expNames = new ArrayList<>();
+    public ExperienceSelectionFragment() {
+
+    }
 
     /**
-     * La ListView del ExperienceSelectionFragment.
-     */
-    private AbsListView mListView;
-
-    /**
-     * L'Adapter che verrà utilizzato per fornire un accesso agli elementi visualizzati sulla View
-     */
-    private ArrayAdapter<String> mAdapter;
-
-    /**
-     * Questo metodo viene invocato ogni volta che un ExperienceSelectionFragment viene collegato ad un'Activity.
+     * Implementa IExperienceSelectionView.setExperiences().
      *
-     * @param activity Activity che ha appena terminato una transazione in cui viene aggiunto il corrente Fragment
+     * @param experiences Esperienze da visualizzare sulla lista.
      */
     @Override
-    public void onAttach(Activity activity) {
-        super.onAttach(activity);
+    public void setExperiences(Iterable<IExperience> experiences) {
+        if (experiences == null)
+            throw new IllegalArgumentException("Illegal null experiences");
 
-        mAdapter = new ArrayAdapter<>(activity,android.R.layout.simple_list_item_1);
-        for(String e : expNames) mAdapter.add(e);
+        ArrayList<IExperience> list = new ArrayList<IExperience>();
+        for (IExperience t : experiences)
+            list.add(t);
+        this.experiences = (IExperience[]) list.toArray();
 
-        mListView = (AbsListView) activity.findViewById(android.R.id.list);
-        mListView.setAdapter(mAdapter);
-
-        mListView.setOnItemClickListener(this);
-        setEmptyText("Nessuna esperienza disponibile");
-    }
-
-
-    /**
-     * Questo metodo gestisce i click su una voce della lista.
-     */
-    @Override
-    public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-        if (getActivity() != null) {
-            presenter.activateExperience(position);
-        }
+        if (getActivity() != null)
+            setListAdapter(new ArrayAdapter<IExperience>(getActivity(),
+                    android.R.layout.simple_list_item_1, android.R.id.text1,
+                    this.experiences));
     }
 
     /**
-     * Questo metodo salva un testo visualizzato sul display in caso di lista
-     * vuota.
-     */
-    public void setEmptyText(CharSequence emptyText) {
-        View emptyView = mListView.getEmptyView();
-
-        if (emptyView instanceof TextView) {
-            ((TextView) emptyView).setText(emptyText);
-        }
-    }
-
-    /**
-     * Metodo che imposta la lista dei nomi di esperienze presenti sullo smartwatch.
-     */
-    @Override
-    public void setList(Iterable<String> names) {
-        if(mAdapter == null)
-            for (String name : names) expNames.add(name);
-        else
-            for (String name : names) mAdapter.add(name);
-    }
-
-    /**
-     * Metodo che collega un ExperienceSelectionFragment al proprio Presenter.
+     * Implementa IExperienceSelectionView.attachObserver().
+     *
+     * @param presenter Presenter da associare.
      */
     @Override
     public void attachPresenter(IExperienceSelectionPresenter presenter) {
@@ -152,31 +103,29 @@ public class ExperienceSelectionFragment extends Fragment
     }
 
     /**
-     * Metodo invocato alla pressione del pulsante centrale dello smartwatch.
+     * Ridefinisce ListFragment.onResume().
      *
-     * @param keyCode tasto premuto
-     * @param event KeyEvent avvenuto
-     */
-    public void keyDown(int keyCode, KeyEvent event) {
-    }
-
-    /**
-     * Metodo invocato quando il Fragment viene visualizzato.
-     *
+     * Reimposta la lista da visualizzare per accertare che vengano mostrati
+     * sempre i dati più aggiornati.
      */
     @Override
     public void onResume() {
         super.onResume();
-        presenter.resume();
+        setListAdapter(new ArrayAdapter<IExperience>(getActivity(),
+                android.R.layout.simple_list_item_1, android.R.id.text1,
+                this.experiences));
     }
 
     /**
-     * Metodo invocato quando il Fragment smette di essere visualizzato.
+     * Ridefinisce ListFragment.onListItemClick().
      *
+     * Segnala al presenter il Percorso selezionato dall'utente.
      */
     @Override
-    public void onPause() {
-        super.onPause();
-        presenter.pause();
+    public void onListItemClick(ListView l, View v, int position, long id) {
+        super.onListItemClick(l, v, position, id);
+        if (presenter != null)
+            presenter.activateExperience(this.experiences[position]);
     }
+
 }
