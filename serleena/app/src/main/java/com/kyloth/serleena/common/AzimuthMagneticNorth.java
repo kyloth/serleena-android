@@ -42,27 +42,44 @@
 package com.kyloth.serleena.common;
 
 import android.hardware.GeomagneticField;
+import android.hardware.SensorManager;
 
 /**
  * Rappresenta un valore di rotazione sull'asse azimuth, centrato sul nord
  * magnetico.
  */
 public class AzimuthMagneticNorth {
-    private final float azimuthMagneticNorth;
+    private Float azimuth;
+    private float[] accelerometerValues;
+    private float[] magnetometerValues;
 
     /**
      * Crea un nuovo oggetto AzimuthMagneticNorth. Un valore pari a 0 indica un
      * orientamento esatto verso il nord magnetico.
-     *
-     * @param azimuthMagneticNorth Rotazione, in gradi, attorno all'asse
-     *                             azimuth. Un valore < 0 o > 360 solleva
-     *                             un'eccezione IllegalArgumentException.
      */
-    public AzimuthMagneticNorth(float azimuthMagneticNorth) {
-        if (azimuthMagneticNorth < 0 || azimuthMagneticNorth > 360)
-            throw new IllegalArgumentException("azimuth out of range");
+    public AzimuthMagneticNorth(float[] accelerometerValues,
+                                float[] magnetometerValues) {
+        azimuth = null;
+        this.accelerometerValues = accelerometerValues;
+        this.magnetometerValues = magnetometerValues;
+    }
 
-        this.azimuthMagneticNorth = azimuthMagneticNorth;
+    /**
+     * Restituisce il valore di orientamento rappresentato dall'istanza.
+     *
+     * @return Gradi di rotazione attorno all'asse azimuth.
+     */
+    public float orientation() {
+        if (azimuth == null) {
+            float[] values = new float[3];
+            float[] R = new float[9];
+            SensorManager.getRotationMatrix(R, null, accelerometerValues,
+                    magnetometerValues);
+            SensorManager.getOrientation(R, values);
+
+            azimuth = (float) Math.toDegrees(values[0]); // Azimuth
+        }
+        return azimuth;
     }
 
     /**
@@ -85,6 +102,27 @@ public class AzimuthMagneticNorth {
                         0, System.currentTimeMillis());
 
         float declination = geoField.getDeclination();
-        return azimuthMagneticNorth - declination;
+        return orientation() - declination;
     }
+
+    /**
+     * Ridefinisce Object.equals().
+     */
+    @Override
+    public boolean equals(Object other) {
+        if (other != null && other instanceof AzimuthMagneticNorth) {
+            AzimuthMagneticNorth o = (AzimuthMagneticNorth) other;
+            return this.orientation() == o.orientation();
+        }
+        return false;
+    }
+
+    /**
+     * Ridefinisce Object.hashCode().
+     */
+    @Override
+    public int hashCode() {
+        return (int) this.orientation();
+    }
+
 }

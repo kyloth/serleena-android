@@ -51,6 +51,8 @@ import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
 import android.os.AsyncTask;
 
+import com.kyloth.serleena.common.AzimuthMagneticNorth;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -78,7 +80,7 @@ class HeadingManager implements IHeadingManager, SensorEventListener {
 
     private float[] accelerometerValues;
     private float[] magneticFieldValues;
-    private double latestOrientation;
+    private AzimuthMagneticNorth latestOrientation;
     private final List<IHeadingObserver> observers;
     private final Sensor magnetometer;
     private final Sensor accelerometer;
@@ -103,7 +105,6 @@ class HeadingManager implements IHeadingManager, SensorEventListener {
             throw new SensorNotAvailableException("magnetometer");
 
         observers = new ArrayList<IHeadingObserver>();
-        latestOrientation = 0;
         magneticFieldValues = accelerometerValues = null;
     }
 
@@ -118,26 +119,16 @@ class HeadingManager implements IHeadingManager, SensorEventListener {
      * @see android.hardware.SensorEventListener
      */
     @Override
-    public synchronized void onSensorChanged(SensorEvent sensorEvent) {
-        if (sensorEvent.sensor.getType() == Sensor.TYPE_ACCELEROMETER)
-            accelerometerValues = sensorEvent.values;
-        else if (sensorEvent.sensor.getType() == Sensor.TYPE_MAGNETIC_FIELD)
-            magneticFieldValues = sensorEvent.values;
-        else
-            return;
-
-        if (accelerometerValues != null && magneticFieldValues != null) {
-            AsyncTask<Void, Void, Double> t =
-                    new AsyncTask<Void, Void, Double>() {
-                @Override
-                protected Double doInBackground(Void... params) {
-                    onRawDataReceived(accelerometerValues, magneticFieldValues);
-                    return null;
-                }
-            };
-
-            t.execute();
-        }
+    public synchronized void onSensorChanged(final SensorEvent sensorEvent) {
+        AsyncTask<Void, Void, Void> task = new AsyncTask<Void, Void, Void>() {
+            @Override
+            protected Void doInBackground(Void... params) {
+                onRawDataReceived(sensorEvent.sensor.getType(),
+                        sensorEvent.values);
+                return null;
+            }
+        };
+        task.execute();
     }
 
     /**
@@ -189,34 +180,37 @@ class HeadingManager implements IHeadingManager, SensorEventListener {
      */
     @Override
     public synchronized void notifyObservers() {
+        if (latestOrientation == null)
+            throw new RuntimeException("Illegal null orientation");
         for (IHeadingObserver o : observers)
             o.onHeadingUpdate(latestOrientation);
     }
 
     /**
-     * Utilizza dati grezzi forniti da sensoristica o fonti esterne relativi
-     * al campo magnetico e l'accelerazione del dispositivo per calcolare
-     * l'orientamento del dispositivo, che viene comunicato agli observer
-     * registrati all'istanza.
+     * Utilizza dati grezzi forniti da sensoristica o fonti esterne per
+     * calcolare l'orientamento del dispositivo, che viene comunicato agli
+     * observer registrati all'istanza.
      *
-     * @param accelerometerValues Valori di accelerazione del dispositivo
-     *                            sugli assi x, y, z.
-     * @param magnetometerValues Valori di campo magnetico del dispositivo
-     *                           sugli assi x, y, z.
+     * @param sensorType Tipo di sensore a cui i valori appartengono.
+     * @param values Valori rilevati dal sensore. Se null, viene sollevata
+     *               un'eccezione IllegalArgumentException.
      */
-    public void onRawDataReceived(float[] accelerometerValues, float[]
-            magnetometerValues) {
-        if (accelerometerValues == null || magnetometerValues == null)
+    public void onRawDataReceived(int sensorType, float[] values) {
+        if (values == null)
             throw new IllegalArgumentException("Illegal null sensor values");
 
-        float[] values = new float[3];
-        float[] R = new float[9];
-        SensorManager.getRotationMatrix(R, null, accelerometerValues,
-                magnetometerValues);
-        SensorManager.getOrientation(R, values);
+        if (sensorType == Sensor.TYPE_ACCELEROMETER)
+            accelerometerValues = values;
+        else if (sensorType == Sensor.TYPE_MAGNETIC_FIELD)
+            magneticFieldValues = values;
+        else
+            return;
 
-        latestOrientation = (float) Math.toDegrees(values[0]); // Azimuth
-        notifyObservers();
+        if (accelerometerValues != null && magneticFieldValues != null) {
+            latestOrientation = new AzimuthMagneticNorth(
+                    accelerometerValues, magneticFieldValues);
+            notifyObservers();
+        }
     }
 
 }

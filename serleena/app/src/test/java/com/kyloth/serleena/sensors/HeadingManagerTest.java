@@ -46,12 +46,16 @@ import android.hardware.SensorEvent;
 import android.hardware.SensorManager;
 import android.os.AsyncTask;
 
+import com.kyloth.serleena.common.AzimuthMagneticNorth;
+
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.mockito.ArgumentCaptor;
 import org.robolectric.RobolectricTestRunner;
 
 import java.util.concurrent.ExecutionException;
 
+import static junit.framework.Assert.assertEquals;
 import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.*;
 
@@ -72,6 +76,19 @@ public class HeadingManagerTest {
         when(sm.getDefaultSensor(Sensor.TYPE_ACCELEROMETER)).thenReturn(mock
                 (Sensor.class));
         return new HeadingManager(sm);
+    }
+
+    private HeadingManager getStuffedManager()
+            throws SensorNotAvailableException {
+        SensorManager sm = mock(SensorManager.class);
+        when(sm.getDefaultSensor(Sensor.TYPE_MAGNETIC_FIELD)).thenReturn(mock
+                (Sensor.class));
+        when(sm.getDefaultSensor(Sensor.TYPE_ACCELEROMETER)).thenReturn(mock
+                (Sensor.class));
+        HeadingManager hm = new HeadingManager(sm);
+        hm.onRawDataReceived(Sensor.TYPE_ACCELEROMETER, new float[]{1, 2, 3});
+        hm.onRawDataReceived(Sensor.TYPE_MAGNETIC_FIELD, new float[]{1, 2, 3});
+        return hm;
     }
 
     /**
@@ -106,13 +123,7 @@ public class HeadingManagerTest {
     @Test
     public void testThatObserversGetNotifiedCorrectly()
             throws SensorNotAvailableException {
-        SensorManager sm = mock(SensorManager.class);
-        when(sm.getDefaultSensor(Sensor.TYPE_MAGNETIC_FIELD)).thenReturn(mock
-                (Sensor.class));
-        when(sm.getDefaultSensor(Sensor.TYPE_ACCELEROMETER)).thenReturn(mock
-                (Sensor.class));
-
-        HeadingManager hm = new HeadingManager(sm);
+        HeadingManager hm = getStuffedManager();
         IHeadingObserver o1 = mock(IHeadingObserver.class);
         IHeadingObserver o2 = mock(IHeadingObserver.class);
         IHeadingObserver o3 = mock(IHeadingObserver.class);
@@ -120,14 +131,14 @@ public class HeadingManagerTest {
         hm.attachObserver(o1);
         hm.attachObserver(o2);
         hm.notifyObservers();
-        verify(o1).onHeadingUpdate(any(Integer.class));
-        verify(o2).onHeadingUpdate(any(Integer.class));
+        verify(o1).onHeadingUpdate(any(AzimuthMagneticNorth.class));
+        verify(o2).onHeadingUpdate(any(AzimuthMagneticNorth.class));
 
         hm.detachObserver(o2);
         hm.attachObserver(o3);
         hm.notifyObservers();
-        verify(o1, times(2)).onHeadingUpdate(any(Integer.class));
-        verify(o3).onHeadingUpdate(any(Integer.class));
+        verify(o1, times(2)).onHeadingUpdate(any(AzimuthMagneticNorth.class));
+        verify(o3).onHeadingUpdate(any(AzimuthMagneticNorth.class));
         verifyNoMoreInteractions(o2);
     }
 
@@ -143,18 +154,16 @@ public class HeadingManagerTest {
         final float[] magneticFieldValues = new float[] { 32, 21, 10 };
         final HeadingManager hm = getManager();
 
-        float[] values = new float[3];
-        float[] R = new float[9];
-        SensorManager.getRotationMatrix(R, null, accelerometerValues,
-                magneticFieldValues);
-        SensorManager.getOrientation(R, values);
-        float expected = (float) Math.toDegrees(values[0]);
+        AzimuthMagneticNorth expected = new AzimuthMagneticNorth
+                (accelerometerValues, magneticFieldValues);
 
         IHeadingObserver o = mock(IHeadingObserver.class);
         hm.attachObserver(o);
 
-        hm.onRawDataReceived(accelerometerValues, magneticFieldValues);
-        verify(o).onHeadingUpdate(expected);
+        hm.onRawDataReceived(Sensor.TYPE_ACCELEROMETER, accelerometerValues);
+        verify(o, never()).onHeadingUpdate(any(AzimuthMagneticNorth.class));
+        hm.onRawDataReceived(Sensor.TYPE_MAGNETIC_FIELD, magneticFieldValues);
+        verify(o).onHeadingUpdate(eq(expected));
     }
 
     /**
@@ -222,34 +231,63 @@ public class HeadingManagerTest {
      * di parametri null.
      */
     @Test(expected = IllegalArgumentException.class)
-    public void testThatPassingNullToOnRawDataReceiverThrows1()
-            throws SensorNotAvailableException {
-        float[] values = new float[] { 1, 2, 3 };
-        HeadingManager hm = getManager();
-        hm.onRawDataReceived(null, values);
-    }
-
-    /**
-     * Verifica che il metodo onRawDataReceived() sollevi un eccezione in caso
-     * di parametri null.
-     */
-    @Test(expected = IllegalArgumentException.class)
     public void testThatPassingNullToOnRawDataReceiverThrows2()
             throws SensorNotAvailableException {
-        float[] values = new float[] { 1, 2, 3 };
-        HeadingManager hm = getManager();
-        hm.onRawDataReceived(values, null);
+        getManager().onRawDataReceived(0, null);
     }
 
     /**
-     * Verifica che il metodo onRawDataReceived() sollevi un eccezione in caso
-     * di parametri null.
+     * Verifica che gli observer non vengano segnalati quando non vi sono
+     * abbastanza dati per calcolare l'orientamento.
      */
-    @Test(expected = IllegalArgumentException.class)
-    public void testThatPassingNullToOnRawDataReceiverThrows3()
+    @Test
+    public void observersShouldNotBeNotifiedIfNotEnoughData()
             throws SensorNotAvailableException {
         HeadingManager hm = getManager();
-        hm.onRawDataReceived(null, null);
+        IHeadingObserver o = mock(IHeadingObserver.class);
+        hm.attachObserver(o);
+
+        hm.onRawDataReceived(Sensor.TYPE_GYROSCOPE, new float[]{0});
+        verify(o, never()).onHeadingUpdate(any(AzimuthMagneticNorth.class));
+        hm.onRawDataReceived(Sensor.TYPE_AMBIENT_TEMPERATURE, new float[] { 0 });
+        verify(o, never()).onHeadingUpdate(any(AzimuthMagneticNorth.class));
+        hm.onRawDataReceived(Sensor.TYPE_GRAVITY, new float[] { 0 });
+        verify(o, never()).onHeadingUpdate(any(AzimuthMagneticNorth.class));
+        hm.onRawDataReceived(Sensor.TYPE_ACCELEROMETER,
+                new float[] { 11, 22, 33 });
+        verify(o, never()).onHeadingUpdate(any(AzimuthMagneticNorth.class));
+        hm = getManager();
+        hm.attachObserver(o);
+        hm.onRawDataReceived(Sensor.TYPE_MAGNETIC_FIELD,
+                new float[] { 11, 22, 33 });
+        verify(o, never()).onHeadingUpdate(any(AzimuthMagneticNorth.class));
+    }
+
+    /**
+     * Verifica che gli observer vengano notificati ogni qualvolta sono
+     * disponibili dati aggiornati.
+     */
+    @Test
+    public void observersShouldBeNotified()
+            throws SensorNotAvailableException {
+        HeadingManager hm = getManager();
+        IHeadingObserver o = mock(IHeadingObserver.class);
+        hm.attachObserver(o);
+
+        hm.onRawDataReceived(Sensor.TYPE_ACCELEROMETER,
+                new float[]{11, 22, 33});
+        hm.onRawDataReceived(Sensor.TYPE_MAGNETIC_FIELD,
+                new float[]{11, 22, 33});
+        verify(o).onHeadingUpdate(any(AzimuthMagneticNorth.class));
+        hm.onRawDataReceived(Sensor.TYPE_ACCELEROMETER,
+                new float[]{11, 22, 33});
+        verify(o, times(2)).onHeadingUpdate(any(AzimuthMagneticNorth.class));
+        hm.onRawDataReceived(Sensor.TYPE_MAGNETIC_FIELD,
+                new float[]{11, 22, 33});
+        verify(o, times(3)).onHeadingUpdate(any(AzimuthMagneticNorth.class));
+        hm.onRawDataReceived(Sensor.TYPE_MAGNETIC_FIELD,
+                new float[]{11, 22, 33});
+        verify(o, times(4)).onHeadingUpdate(any(AzimuthMagneticNorth.class));
     }
 
 }

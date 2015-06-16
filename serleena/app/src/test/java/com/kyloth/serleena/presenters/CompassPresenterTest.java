@@ -55,6 +55,7 @@ import org.robolectric.annotation.Config;
 import static org.mockito.Mockito.*;
 
 import com.kyloth.serleena.BuildConfig;
+import com.kyloth.serleena.common.AzimuthMagneticNorth;
 import com.kyloth.serleena.presentation.ISerleenaActivity;
 import com.kyloth.serleena.presentation.ICompassView;
 import com.kyloth.serleena.sensors.IHeadingManager;
@@ -168,8 +169,10 @@ public class CompassPresenterTest {
     @Test
     public void testOnHeadingUpdate() {
         CompassPresenter cp = new CompassPresenter(view, activity);
-        cp.onHeadingUpdate(12.4);
-        verify(view).setHeading(12.4);
+        AzimuthMagneticNorth az = mock(AzimuthMagneticNorth.class);
+        when(az.orientation()).thenReturn(12.4f);
+        cp.onHeadingUpdate(az);
+        verify(view).setHeading(12.4f);
     }
 
 }

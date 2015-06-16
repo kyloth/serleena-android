@@ -41,6 +41,7 @@
 
 package com.kyloth.serleena.presenters;
 
+import com.kyloth.serleena.common.AzimuthMagneticNorth;
 import com.kyloth.serleena.presentation.ICompassPresenter;
 import com.kyloth.serleena.presentation.ICompassView;
 import com.kyloth.serleena.presentation.ISerleenaActivity;
@@ -123,8 +124,8 @@ public class CompassPresenter implements ICompassPresenter, IHeadingObserver {
      * @see com.kyloth.serleena.sensors.IHeadingObserver
      */
     @Override
-    public void onHeadingUpdate(double heading) {
-        view.setHeading(heading);
+    public void onHeadingUpdate(AzimuthMagneticNorth heading) {
+        view.setHeading(heading.orientation());
     }
 
 }
