@@ -140,6 +140,8 @@ public class ExperienceSelectionPresenter
      */
     @Override
     public void attachObserver(IExperienceActivationObserver observer) {
+        if (observer == null)
+            throw new IllegalArgumentException("Illegal null observer");
         observers.add(observer);
     }
 
@@ -150,6 +152,8 @@ public class ExperienceSelectionPresenter
      */
     @Override
     public void detachObserver(IExperienceActivationObserver observer) {
+        if (observer == null)
+            throw new IllegalArgumentException("Illegal null observer");
         observers.remove(observer);
     }
 
