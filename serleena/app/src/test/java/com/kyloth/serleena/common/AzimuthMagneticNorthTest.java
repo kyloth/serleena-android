@@ -78,4 +78,36 @@ public class AzimuthMagneticNorthTest {
         assertEquals(expected - 12, result, 0.5);
     }
 
+    @Test
+    public void twoEqualInstancesShouldBeEqual() {
+        final float[] accelerometerValues = new float[] { 11, 22, 33 };
+        final float[] magneticFieldValues = new float[] { 32, 21, 10 };
+
+        AzimuthMagneticNorth az1 = new AzimuthMagneticNorth
+                (accelerometerValues, magneticFieldValues);
+        AzimuthMagneticNorth az2 = new AzimuthMagneticNorth
+                (accelerometerValues, magneticFieldValues);
+        assertTrue(az1.equals(az2));
+
+        assertTrue(!az1.equals(null));
+        assertTrue(!az1.equals(new Object()));
+        assertTrue(!az1.equals(new AzimuthMagneticNorth(
+                new float[] { 33, 22, 11 },
+                new float[] {43, 5, 12 }
+        )));
+    }
+
+    @Test
+    public void equalsShouldHaveSameHashCode() {
+        final float[] accelerometerValues = new float[] { 11, 22, 33 };
+        final float[] magneticFieldValues = new float[] { 32, 21, 10 };
+
+        AzimuthMagneticNorth az1 = new AzimuthMagneticNorth
+                (accelerometerValues, magneticFieldValues);
+        AzimuthMagneticNorth az2 = new AzimuthMagneticNorth
+                (accelerometerValues, magneticFieldValues);
+
+        assertTrue(az1.hashCode() == az2.hashCode());
+    }
+
 }
