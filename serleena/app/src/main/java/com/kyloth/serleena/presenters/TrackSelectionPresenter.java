@@ -42,6 +42,8 @@ package com.kyloth.serleena.presenters;
 
 import com.kyloth.serleena.model.IExperience;
 import com.kyloth.serleena.model.ITrack;
+import com.kyloth.serleena.presentation.IExperienceActivationObserver;
+import com.kyloth.serleena.presentation.IExperienceActivationSource;
 import com.kyloth.serleena.presentation.ISerleenaActivity;
 import com.kyloth.serleena.presentation.ITrackSelectionPresenter;
 import com.kyloth.serleena.presentation.ITrackSelectionView;
@@ -55,7 +57,8 @@ import com.kyloth.serleena.presentation.ITrackSelectionView;
  * @author Filippo Sestini <sestini.filippo@gmail.com>
  * @version 1.0.0
  */
-public class TrackSelectionPresenter implements ITrackSelectionPresenter {
+public class TrackSelectionPresenter
+        implements ITrackSelectionPresenter, IExperienceActivationObserver {
 
     private ISerleenaActivity activity;
     private ITrackSelectionView view;
@@ -74,7 +77,8 @@ public class TrackSelectionPresenter implements ITrackSelectionPresenter {
      * @throws java.lang.IllegalArgumentException
      */
     public TrackSelectionPresenter(ITrackSelectionView view,
-                                   ISerleenaActivity activity)
+                                   ISerleenaActivity activity,
+                                   IExperienceActivationSource source)
             throws IllegalArgumentException {
         if (view == null)
             throw new IllegalArgumentException("Illegal null view");
@@ -84,6 +88,7 @@ public class TrackSelectionPresenter implements ITrackSelectionPresenter {
         this.activity = activity;
         this.view = view;
         this.view.attachPresenter(this);
+        source.attachObserver(this);
     }
 
     /**
@@ -113,6 +118,21 @@ public class TrackSelectionPresenter implements ITrackSelectionPresenter {
         if (track == null)
             throw new IllegalArgumentException("Illegal null track");
         activity.getSensorManager().getTrackCrossingManager().startTrack(track);
+    }
+
+    /**
+     * Implementa IExperienceActivationObserver.onExperienceActivated().
+     *
+     * La lista rappresentata dalla vista viene popolata con i Percorsi
+     * dell'Esperienza attivata.
+     *
+     * @param experience Esperienza attivata.
+     */
+    @Override
+    public void onExperienceActivated(IExperience experience) {
+        if (experience == null)
+            throw new IllegalArgumentException("Illegal null experience");
+        view.setTracks(experience.getTracks());
     }
 
 }
