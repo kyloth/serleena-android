@@ -29,7 +29,7 @@
 
 
 /**
- * Name: ExperienceSelectionFragment.java
+ * Name: ObjectListFragment.java
  * Package: com.kyloth.serleena.view.fragments
  * Author: Filippo Sestini
  *
@@ -40,66 +40,65 @@
 
 package com.kyloth.serleena.view.fragments;
 
-        import android.app.ListFragment;
-        import android.view.View;
-        import android.widget.ArrayAdapter;
-        import android.widget.ListView;
+import android.app.ListFragment;
+import android.view.View;
+import android.widget.ArrayAdapter;
+import android.widget.ListView;
 
-        import com.kyloth.serleena.model.IExperience;
-        import com.kyloth.serleena.presentation.IExperienceSelectionPresenter;
-        import com.kyloth.serleena.presentation.IExperienceSelectionView;
+import com.kyloth.serleena.presentation.IObjectListObserver;
+import com.kyloth.serleena.presentation.IObjectListView;
 
-        import java.util.ArrayList;
+import java.util.ArrayList;
 
 /**
- * Implementa IExperienceSelectionFragment offrendo una vista da cui è
- * possibile selezionare l'Esperienza da attivare da una lista.
+ * Implementa una generica vista che mostra una lista di oggetti, la cui
+ * selezione viene notificata a degli observer.
  *
  * @author Filippo Sestini <sestini.filippo@gmail.com>
  * @version 1.0.0
  */
-public class ExperienceSelectionFragment extends ListFragment
-        implements IExperienceSelectionView {
+public class ObjectListFragment extends ListFragment implements
+        IObjectListView {
 
-    private IExperienceSelectionPresenter presenter;
-    private IExperience[] experiences;
+    IObjectListObserver observer;
+    private Object[] items;
 
     /**
-     * Crea un oggetto ExperienceSelectionFragment.
+     * Crea un oggetto ObjectListFragment.
      */
-    public ExperienceSelectionFragment() {
-
+    public ObjectListFragment() {
     }
 
     /**
-     * Implementa IExperienceSelectionView.setExperiences().
+     * Implementa IObjectListView.setList().
      *
-     * @param experiences Esperienze da visualizzare sulla lista.
+     * @param objects Array di oggetti da visualizzare sulla lista. Se null,
+     *              viene sollevata un'eccezione IllegalNullException.
      */
     @Override
-    public void setExperiences(Iterable<IExperience> experiences) {
-        if (experiences == null)
-            throw new IllegalArgumentException("Illegal null experiences");
+    public void setList(Iterable<Object> objects) {
+        if (objects == null)
+            throw new IllegalArgumentException("Illegal null array");
 
-        ArrayList<IExperience> list = new ArrayList<IExperience>();
-        for (IExperience t : experiences)
-            list.add(t);
-        this.experiences = (IExperience[]) list.toArray();
+        ArrayList<Object> list = new ArrayList<Object>();
+        for (Object o : objects)
+            list.add(o);
+        items = list.toArray();
 
         if (getActivity() != null)
-            setListAdapter(new ArrayAdapter<IExperience>(getActivity(),
+            setListAdapter(new ArrayAdapter<Object>(getActivity(),
                     android.R.layout.simple_list_item_1, android.R.id.text1,
-                    this.experiences));
+                    items));
     }
 
     /**
-     * Implementa IExperienceSelectionView.attachObserver().
+     * Implementa IObjectListView.attachObserver().
      *
-     * @param presenter Presenter da associare.
+     * @param observer Observer da associare.
      */
     @Override
-    public void attachPresenter(IExperienceSelectionPresenter presenter) {
-        this.presenter = presenter;
+    public void attachObserver(IObjectListObserver observer) {
+        this.observer = observer;
     }
 
     /**
@@ -111,21 +110,21 @@ public class ExperienceSelectionFragment extends ListFragment
     @Override
     public void onResume() {
         super.onResume();
-        setListAdapter(new ArrayAdapter<IExperience>(getActivity(),
+        setListAdapter(new ArrayAdapter<Object>(getActivity(),
                 android.R.layout.simple_list_item_1, android.R.id.text1,
-                this.experiences));
+                items));
     }
 
     /**
      * Ridefinisce ListFragment.onListItemClick().
      *
-     * Segnala al presenter il Percorso selezionato dall'utente.
+     * Segnala agli observer l'oggetto della lista selezionato.
      */
     @Override
     public void onListItemClick(ListView l, View v, int position, long id) {
         super.onListItemClick(l, v, position, id);
-        if (presenter != null)
-            presenter.activateExperience(this.experiences[position]);
+        if (observer != null)
+            observer.onObjectSelected(items[position]);
     }
 
 }

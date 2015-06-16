@@ -29,45 +29,26 @@
 
 
 /**
- * Name: ISerleenaActivity.java
+ * Name: IObjectListObserver.java
  * Package: com.kyloth.serleena.presentation
  * Author: Filippo Sestini
  *
  * History:
- * Version  Programmer        Changes
- * 1.0.0    Filippo Sestini   Creazione file e scrittura
- *                                         codice e documentazione Javadoc
+ * Version   Programmer         Changes
+ * 1.0.0     Filippo Sestini    Creazione file e scrittura javadoc
  */
-
 package com.kyloth.serleena.presentation;
 
-import com.kyloth.serleena.model.IExperience;
-import com.kyloth.serleena.model.ISerleenaDataSource;
-import com.kyloth.serleena.model.ITrack;
-import com.kyloth.serleena.sensors.ISensorManager;
-
 /**
- * Interfaccia dell'Activity dell'applicazione serleena.
- *
- * @use Ogni Presenter dell'applicazione interagisce con l'Activity attraverso questa interfaccia.
- * @author Filippo Sestini <sestini.filippo@gmail.com>
- * @version 1.0.0
+ * Interfaccia di un oggetto in grado di ricevere eventi da una vista
+ * che visualizza una lista di oggetti.
  */
-public interface ISerleenaActivity {
+public interface IObjectListObserver {
 
     /**
-     * Restituisce il data source dell'applicazione.
+     * Segnala la selezione di un oggetto all'interno della lista.
      *
-     * @return Data source dell'applicazione.
+     * @param obj Oggetto selezionato.
      */
-    public ISerleenaDataSource getDataSource();
-
-    /**
-     * Restituisce il gestore dei sensori dell'applicazione,
-     * dietro interfaccia ISensorManager.
-     *
-     * @return Gestore dei sensori dell'applicazione.
-     */
-    public ISensorManager getSensorManager();
-
+    void onObjectSelected(Object obj);
 }

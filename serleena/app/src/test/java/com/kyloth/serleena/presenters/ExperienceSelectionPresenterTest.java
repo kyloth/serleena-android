@@ -51,9 +51,11 @@ import java.util.ArrayList;
 
 import com.kyloth.serleena.model.IExperience;
 import com.kyloth.serleena.model.ISerleenaDataSource;
+import com.kyloth.serleena.presentation.IExperienceActivationObserver;
 import com.kyloth.serleena.presentation.IExperienceSelectionPresenter;
 import com.kyloth.serleena.presentation.IExperienceSelectionView;
 import com.kyloth.serleena.presentation.ISerleenaActivity;
+import com.kyloth.serleena.sensors.ISensorManager;
 
 
 /**
@@ -67,89 +69,122 @@ public class ExperienceSelectionPresenterTest {
 
     private ISerleenaActivity activity;
     private IExperienceSelectionView view;
-    private ISerleenaDataSource source;
-    private IExperience exp_1;
-    private IExperience exp_2;
-    private IExperience exp_3;
-    private ArrayList<IExperience> exp_list;
-    @Rule
-    public ExpectedException exception = ExpectedException.none();
+    private Iterable<IExperience> exps;
 
     /**
      * Inizializza i campi dati necessari a condurre i test.
      */
-
     @Before
     public void initialize() {
         activity = mock(ISerleenaActivity.class);
         view = mock(IExperienceSelectionView.class);
-        source = mock(ISerleenaDataSource.class);
-        exp_1 = mock(IExperience.class);
-        exp_2 = mock(IExperience.class);
-        exp_3 = mock(IExperience.class);
-        exp_list = new ArrayList<IExperience>();
-        exp_list.add(exp_1);
-        exp_list.add(exp_2);
-        exp_list.add(exp_3);
-        when(activity.getDataSource()).thenReturn(source);
-        when(source.getExperiences()).thenReturn(exp_list);
+        exps = new ArrayList<IExperience>();
+        ISerleenaDataSource ds = mock(ISerleenaDataSource.class);
+        when(ds.getExperiences()).thenReturn(exps);
+        when(activity.getDataSource()).thenReturn(ds);
     }
 
     /**
-     * Verifica che il costruttore lanci un'eccezione IllegalArgumentException con
-     * messaggio "Illegal null view" al tentativo di costruire un oggetto con view nulla.
+     * Verifica che il costruttore lanci un'eccezione IllegalArgumentException
+     * al tentativo di costruire un oggetto con view nulla.
      */
-
-    @Test
-    public void constructorShouldThrowExceptionWhenNnullView() {
-        exception.expect(IllegalArgumentException.class);
-        exception.expectMessage("Illegal null view");
-        ExperienceSelectionPresenter null_view_esp = new ExperienceSelectionPresenter(null, activity);
+    @Test(expected = IllegalArgumentException.class)
+    public void constructorShouldThrowExceptionWhenNullView() {
+        new ExperienceSelectionPresenter(null, activity);
     }
 
     /**
-     * Verifica che il costruttore lanci un'eccezione IllegalArgumentException con
-     * messaggio "Illegal null activity" al tentativo di costruire un oggetto con activity nulla.
+     * Verifica che il costruttore lanci un'eccezione IllegalArgumentException
+     * al tentativo di costruire un oggetto con activity nulla.
      */
-
-    @Test
+    @Test(expected = IllegalArgumentException.class)
     public void constructorShouldThrowExceptionWhenNullActivity() {
-        exception.expect(IllegalArgumentException.class);
-        exception.expectMessage("Illegal null activity");
-        ExperienceSelectionPresenter null_activity_esp = new ExperienceSelectionPresenter(view, null);
+        new ExperienceSelectionPresenter(view, null);
     }
 
     /**
-     * Verifica che il metodo activateExperience lanci un'eccezione IllegalArgumentException
-     * con messaggio "Index out of range" quando si fornisca come parametro un indice inferiore
-     * a zero o superiore alla dimensione della lista delle Esperienze.
+     * Verifica che il costruttore lanci un'eccezione IllegalArgumentException
+     * al tentativo di costruire un oggetto con entrambi i parametri null.
      */
+    @Test(expected = IllegalArgumentException.class)
+    public void constructorShouldThrowExceptionWhenNullArguments() {
+        new ExperienceSelectionPresenter(null, null);
+    }
 
-    @Test
-    public void activateExperienceShouldThrowExceptionWhenIndexOutOfRange() {
-        ExperienceSelectionPresenter esp = new ExperienceSelectionPresenter(view, activity);
-        exception.expect(IllegalArgumentException.class);
-        exception.expectMessage("Index out of range");
-        esp.activateExperience(-1);
-        exception.expect(IllegalArgumentException.class);
-        exception.expectMessage("Index out of range");
-        esp.activateExperience(4);
+    @Test(expected = IllegalArgumentException.class)
+    public void activateExperienceShouldThrowWhenNullExperience() {
+        new ExperienceSelectionPresenter(view, activity)
+                .activateExperience(null);
     }
 
     /**
-     * Verifica che il metodo activateExperience chiami il metodo setActiveExperience su
-     * activity fornendo come parametro la corretta Esperienza.
+     * Verifica che il passaggio di null come parametro a attachObserver()
+     * sollevi un'eccezione.
      */
+    @Test(expected = IllegalArgumentException.class)
+    public void nullObserversShouldThrow1() {
+        new ExperienceSelectionPresenter(view, activity).attachObserver(null);
+    }
+
+    /**
+     * Verifica che il passaggio di null come parametro a detachObserver()
+     * sollevi un'eccezione.
+     */
+    @Test(expected = IllegalArgumentException.class)
+    public void nullObserversShouldThrow2() {
+        new ExperienceSelectionPresenter(view, activity).detachObserver(null);
+    }
+
+    @Test(expected = RuntimeException.class)
+    public void notifyObserversWithNoExperienceShouldThrow() {
+        new ExperienceSelectionPresenter(view, activity).notifyObservers();
+    }
+
+    /**
+     * Verifica che gli observer vengano notificati correttamente.
+     */
+    @Test
+    public void observersNotificationShouldWorkCorrectly() {
+        IExperience exp = mock(IExperience.class);
+        IExperienceActivationObserver o1 =
+                mock(IExperienceActivationObserver.class);
+        IExperienceActivationObserver o2 =
+                mock(IExperienceActivationObserver.class);
+        IExperienceActivationObserver o3 =
+                mock(IExperienceActivationObserver.class);
+        ExperienceSelectionPresenter p = new ExperienceSelectionPresenter
+                (view, activity);
+
+        p.activateExperience(exp);
+
+        p.attachObserver(o1);
+        p.notifyObservers();
+        verify(o1).onExperienceActivated(exp);
+
+        p.attachObserver(o2);
+        p.notifyObservers();
+        verify(o1, times(2)).onExperienceActivated(exp);
+        verify(o2, times(1)).onExperienceActivated(exp);
+
+        p.attachObserver(o3);
+        p.notifyObservers();
+        verify(o1, times(3)).onExperienceActivated(exp);
+        verify(o2, times(2)).onExperienceActivated(exp);
+        verify(o3, times(1)).onExperienceActivated(exp);
+
+        p.detachObserver(o1);
+        p.detachObserver(o2);
+        p.detachObserver(o3);
+        p.notifyObservers();
+        verify(o1, times(3)).onExperienceActivated(exp);
+        verify(o2, times(2)).onExperienceActivated(exp);
+        verify(o3, times(1)).onExperienceActivated(exp);
+    }
 
     @Test
-    public void activateExperienceShouldPassCorrectParameter() {
-        ExperienceSelectionPresenter esp = new ExperienceSelectionPresenter(view, activity);
-        esp.activateExperience(0);
-        verify(activity).setActiveExperience(exp_1);
-        esp.activateExperience(1);
-        verify(activity).setActiveExperience(exp_2);
-        esp.activateExperience(2);
-        verify(activity).setActiveExperience(exp_3);
+    public void presenterShouldPopulateViewCorrectly() {
+        new ExperienceSelectionPresenter(view, activity);
+        verify(view).setExperiences(exps);
     }
 
 }

@@ -41,6 +41,8 @@
 package com.kyloth.serleena.presenters;
 
 import com.kyloth.serleena.model.IExperience;
+import com.kyloth.serleena.presentation.IExperienceActivationObserver;
+import com.kyloth.serleena.presentation.IExperienceActivationSource;
 import com.kyloth.serleena.presentation.IExperienceSelectionPresenter;
 import com.kyloth.serleena.presentation.IExperienceSelectionView;
 import com.kyloth.serleena.presentation.ISerleenaActivity;
@@ -52,17 +54,16 @@ import java.util.List;
  * Concretizza IExperienceSelectionPresenter.
  *
  * @use Viene utilizzata solamente dall'Activity, che ne mantiene un riferimento. Il Presenter, alla creazione, si registra alla sua Vista, passando se stesso come parametro dietro interfaccia.
- * @field experiences : List<IExperience> Esperienze tra cui è possibile selezionare
  * @field activity : ISerleenaActivity Activity a cui il Presenter appartiene
- * @field view : IExperienceSelectionView Vista associata al Presenter
+ * @field view : IObjectListView Vista associata al Presenter
  * @author Filippo Sestini <sestini.filippo@gmail.com>
  * @version 1.0.0
  */
 public class ExperienceSelectionPresenter
-        implements IExperienceSelectionPresenter {
+        implements IExperienceSelectionPresenter, IExperienceActivationSource {
 
-    private List<IExperience> experiences;
-    private ISerleenaActivity activity;
+    private List<IExperienceActivationObserver> observers;
+    private IExperience selectedExperience;
 
     /**
      * Crea un oggetto ExperienceSelectionPresenter.
@@ -87,38 +88,10 @@ public class ExperienceSelectionPresenter
         if (activity == null)
             throw new IllegalArgumentException("Illegal null activity");
 
-        this.activity = activity;
-        this.experiences = new ArrayList<IExperience>();
-        List<String> names = new ArrayList<String>();
+        this.observers = new ArrayList<IExperienceActivationObserver>();
 
-        for (IExperience exp : activity.getDataSource().getExperiences()) {
-            experiences.add(exp);
-            names.add(exp.getName());
-        }
-
-        view.setList(names);
+        view.setExperiences(activity.getDataSource().getExperiences());
         view.attachPresenter(this);
-    }
-
-    /**
-     * Implementa IExperienceSelectionPresenter.activateExperience().
-     *
-     * L'esperienza selezionata viene segnalata all'activity
-     * dell'applicazione, che si occupa di segnalare i restanti presenter e
-     * rendere l'attivazione effettiva.
-     *
-     * @param index Indice della lista di esperienze che rappresenta la
-     *              selezione dell'utente. Se minore di zero,
-     *              viene sollevata un'eccezione IllegalArgumentException.
-     * @throws java.lang.IllegalArgumentException
-     */
-    @Override
-    public void activateExperience(int index)
-            throws IllegalArgumentException {
-        if (index < 0 || index >= experiences.size())
-            throw new IllegalArgumentException("Index out of range");
-
-        activity.setActiveExperience(experiences.get(index));
     }
 
     /**
@@ -145,4 +118,53 @@ public class ExperienceSelectionPresenter
 
     }
 
+    /**
+     * Implementa IExperienceSelectionPresenter.activateExperience().
+     *
+     * @param experience Esperienza selezionata dall'utente e che deve essere
+     *                   attivata. Se null, viene sollevata un'eccezione
+     *                   IllegalArgumentException
+     */
+    @Override
+    public void activateExperience(IExperience experience)
+            throws IllegalArgumentException {
+        if (experience == null)
+            throw new IllegalArgumentException("Illegal null experience");
+        selectedExperience = experience;
+    }
+
+    /**
+     * Implementa IExperienceActivationSource.attachObserver().
+     *
+     * @param observer Observer da registrare.
+     */
+    @Override
+    public void attachObserver(IExperienceActivationObserver observer) {
+        if (observer == null)
+            throw new IllegalArgumentException("Illegal null observer");
+        observers.add(observer);
+    }
+
+    /**
+     * Implementa IExperienceActivationSource.detachObserver().
+     *
+     * @param observer Observer la cui registrazione deve essere cancellata.
+     */
+    @Override
+    public void detachObserver(IExperienceActivationObserver observer) {
+        if (observer == null)
+            throw new IllegalArgumentException("Illegal null observer");
+        observers.remove(observer);
+    }
+
+    /**
+     * Implementa IExperienceActivationSource.notifyObservers().
+     */
+    @Override
+    public void notifyObservers() {
+        if (selectedExperience == null)
+            throw new RuntimeException("Illegal null experience");
+        for (IExperienceActivationObserver o : observers)
+            o.onExperienceActivated(selectedExperience);
+    }
 }

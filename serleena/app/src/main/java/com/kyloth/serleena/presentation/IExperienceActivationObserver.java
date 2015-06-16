@@ -29,45 +29,30 @@
 
 
 /**
- * Name: ISerleenaActivity.java
- * Package: com.kyloth.serleena.presentation
+ * Name: IExperienceActivationObserver.java
+ * Package: com.hitchikers.serleena.presentation
  * Author: Filippo Sestini
  *
  * History:
- * Version  Programmer        Changes
- * 1.0.0    Filippo Sestini   Creazione file e scrittura
- *                                         codice e documentazione Javadoc
+ * Version    Programmer        Changes
+ * 1.0        Filippo Sestini   Creazione del file
  */
 
 package com.kyloth.serleena.presentation;
 
 import com.kyloth.serleena.model.IExperience;
-import com.kyloth.serleena.model.ISerleenaDataSource;
-import com.kyloth.serleena.model.ITrack;
-import com.kyloth.serleena.sensors.ISensorManager;
 
 /**
- * Interfaccia dell'Activity dell'applicazione serleena.
- *
- * @use Ogni Presenter dell'applicazione interagisce con l'Activity attraverso questa interfaccia.
- * @author Filippo Sestini <sestini.filippo@gmail.com>
- * @version 1.0.0
+ * Rappresenta l'interfaccia di un oggetto in grado di ricevere notifiche
+ * riguardo l'attivazione di Esperienze.
  */
-public interface ISerleenaActivity {
+public interface IExperienceActivationObserver {
 
     /**
-     * Restituisce il data source dell'applicazione.
+     * Callback chiamato all'attivazione di un'Esperienza..
      *
-     * @return Data source dell'applicazione.
+     * @param experience Esperienza attivata.
      */
-    public ISerleenaDataSource getDataSource();
-
-    /**
-     * Restituisce il gestore dei sensori dell'applicazione,
-     * dietro interfaccia ISensorManager.
-     *
-     * @return Gestore dei sensori dell'applicazione.
-     */
-    public ISensorManager getSensorManager();
+    void onExperienceActivated(IExperience experience);
 
 }

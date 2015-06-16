@@ -40,6 +40,8 @@
 
 package com.kyloth.serleena.presentation;
 
+import com.kyloth.serleena.model.ITrack;
+
 /**
  * E' l'interfaccia realizzata dal Presenter della schermata di selezione
  * del percorso.
@@ -55,11 +57,8 @@ public interface ITrackSelectionPresenter extends IPresenter {
      * Attiva un percorso identificato per numero tra quelle mostrati dalla
      * vista di selezione.
      *
-     * @param index Indice della lista di percorsi che rappresenta la
-     *              selezione dell'utente. Se minore di zero o non
-     *              corrispondente ad un elemento della lista,
-     *              viene sollevata un'eccezione IllegalArgumentException.
+     * @param track Percorso selezionato dall'utente, che deve essere attivato.
      */
-	void activateTrack(int index) throws IllegalArgumentException;
+	void activateTrack(ITrack track) throws IllegalArgumentException;
 
 }

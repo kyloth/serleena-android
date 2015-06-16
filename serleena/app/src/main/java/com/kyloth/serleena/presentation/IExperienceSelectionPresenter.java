@@ -40,6 +40,8 @@
 
 package com.kyloth.serleena.presentation;
 
+import com.kyloth.serleena.model.IExperience;
+
 /**
  * E' l'interfaccia realizzata dal Presenter della schermata di selezione
  * dell'esperienza.
@@ -55,11 +57,11 @@ public interface IExperienceSelectionPresenter extends IPresenter {
 	 * Attiva un'esperienza identificata per numero tra quelle mostrati dalla
 	 * vista di selezione.
      *
-     * @param index Indice della lista di esperienze che rappresenta la
-     *              selezione dell'utente. Se minore di zero o non
-     *              corrispondente ad un elemento della lista,
-     *              viene sollevata un'eccezione IllegalArgumentException.
+     * @param experience Esperienza selezionata dall'utente e che deve essere
+     *                   attivata. Se null, viene sollevata un'eccezione
+     *                   IllegalArgumentException.
      */
-	public void activateExperience(int index) throws IllegalArgumentException;
+	public void activateExperience(IExperience experience)
+            throws IllegalArgumentException;
 
 }

@@ -29,45 +29,43 @@
 
 
 /**
- * Name: ISerleenaActivity.java
- * Package: com.kyloth.serleena.presentation
+ * Name: IExperienceActivationSource.java
+ * Package: com.hitchikers.serleena.presentation
  * Author: Filippo Sestini
  *
  * History:
- * Version  Programmer        Changes
- * 1.0.0    Filippo Sestini   Creazione file e scrittura
- *                                         codice e documentazione Javadoc
+ * Version    Programmer        Changes
+ * 1.0        Filippo Sestini   Creazione del file
  */
 
 package com.kyloth.serleena.presentation;
 
-import com.kyloth.serleena.model.IExperience;
-import com.kyloth.serleena.model.ISerleenaDataSource;
-import com.kyloth.serleena.model.ITrack;
-import com.kyloth.serleena.sensors.ISensorManager;
-
 /**
- * Interfaccia dell'Activity dell'applicazione serleena.
+ * Rappresenta l'interfaccia di un oggetto che solleva eventi riguardo
+ * l'attivazione di Esperienze, segnalati a degli eventuali observer.
  *
- * @use Ogni Presenter dell'applicazione interagisce con l'Activity attraverso questa interfaccia.
  * @author Filippo Sestini <sestini.filippo@gmail.com>
  * @version 1.0.0
  */
-public interface ISerleenaActivity {
+public interface IExperienceActivationSource {
 
     /**
-     * Restituisce il data source dell'applicazione.
+     * Aggancia un observer all'oggetto.
      *
-     * @return Data source dell'applicazione.
+     * @param observer Observer da registrare.
      */
-    public ISerleenaDataSource getDataSource();
+    void attachObserver(IExperienceActivationObserver observer);
 
     /**
-     * Restituisce il gestore dei sensori dell'applicazione,
-     * dietro interfaccia ISensorManager.
+     * Cancella la registrazione di un observer all'oggetto.
      *
-     * @return Gestore dei sensori dell'applicazione.
+     * @param observer Observer la cui registrazione deve essere cancellata.
      */
-    public ISensorManager getSensorManager();
+    void detachObserver(IExperienceActivationObserver observer);
+
+    /**
+     * Notifica gli observer registrati agli eventi dell'oggetto.
+     */
+    void notifyObservers();
 
 }

@@ -29,156 +29,103 @@
 
 
 /**
- * Name: TrackSelectionFragment
+ * Name: TrackSelectionFragment.java
  * Package: com.kyloth.serleena.view.fragments
- * Author: Sebastiano Valle
+ * Author: Filippo Sestini
  *
  * History:
  * Version   Programmer         Changes
- * 1.0.0     Sebastiano Valle   Creazione del file, scrittura del codice e di Javadoc
+ * 1.0.0     Filippo Sestini    Creazione file e scrittura javadoc
  */
+
 package com.kyloth.serleena.view.fragments;
 
-import android.app.Activity;
-import android.app.Fragment;
-import android.view.KeyEvent;
+import android.app.ListFragment;
 import android.view.View;
-import android.widget.AbsListView;
-import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
-import android.widget.TextView;
+import android.widget.ListView;
 
+import com.kyloth.serleena.model.ITrack;
 import com.kyloth.serleena.presentation.ITrackSelectionPresenter;
 import com.kyloth.serleena.presentation.ITrackSelectionView;
 
 import java.util.ArrayList;
 
 /**
- * Classe che implementa la visuale Selezione Percorso della schermata “Esperienza”.
+ * Implementa ITrackSelectionFragment offrendo una vista da cui è
+ * possibile selezionare il Percorso da attivare da una lista.
  *
- * In questa visuale è possibile selezionare un percorso da attivare tra quelli disponibili.
- *
- * @use Viene istanziata e utilizzata dall'Activity per la visualizzazione della schermata. Comunica con il Presenter associato attraverso l'interfaccia ITrackSelectionPresenter.
- * @field presenter : IExperienceSelectionPresenter Presenter collegato a un ExperienceSelectionFragment
- * @field mListView : AbsListView lista di elementi
- * @field mAdapter : ArrayAdapter adattatore che collega la lista all'ExperienceSelectionFragment
- * @author Sebastiano Valle <valle.sebastiano93@gmail.com>
+ * @author Filippo Sestini <sestini.filippo@gmail.com>
  * @version 1.0.0
- * @see android.app.Fragment
  */
-public class TrackSelectionFragment extends Fragment
-        implements AbsListView.OnItemClickListener, ITrackSelectionView {
+public class TrackSelectionFragment extends ListFragment
+        implements ITrackSelectionView {
+
+    ITrackSelectionPresenter presenter;
+    private ITrack[] tracks;
 
     /**
-     * Presenter collegato a questo ExperienceSelectionFragment
+     * Crea un oggetto ObjectListFragment.
      */
-    private ITrackSelectionPresenter presenter;
+    public TrackSelectionFragment() {
+
+    }
 
     /**
-     * Lista dei nomi dei percorsi
-     */
-    private ArrayList<String> trackNames = new ArrayList<>();
-
-    /**
-     * La ListView del ExperienceSelectionFragment.
-     */
-    private AbsListView mListView;
-
-    /**
-     * L'Adapter che verrà utilizzato per popolare la ListView con Views.
-     */
-    private ArrayAdapter<String> mAdapter;
-
-    /**
-     * Questo metodo viene invocato ogni volta che un TrackSelectionFragment viene collegato ad un'Activity.
+     * Implementa ITrackSelectionView.setTracks().
      *
-     * @param activity Activity che ha appena terminato una transazione in cui viene aggiunto il corrente Fragment
+     * @param tracks Percorsi da visualizzare sulla lista.
      */
     @Override
-    public void onAttach(Activity activity) {
-        super.onAttach(activity);
+    public void setTracks(Iterable<ITrack> tracks) {
+        if (tracks == null)
+            throw new IllegalArgumentException("Illegal null tracks");
 
-        mAdapter = new ArrayAdapter<>(activity,android.R.layout.simple_list_item_1);
-        for(String e : trackNames) mAdapter.add(e);
+        ArrayList<ITrack> list = new ArrayList<ITrack>();
+        for (ITrack t : tracks)
+            list.add(t);
+        this.tracks = (ITrack[]) list.toArray();
 
-        // Set the adapter
-        mListView = (AbsListView) activity.findViewById(android.R.id.list);
-        mListView.setAdapter(mAdapter);
-
-        // Set OnItemClickListener so we can be notified on item clicks
-        mListView.setOnItemClickListener(this);
-        setEmptyText("Nessun percorso disponibile");
-    }
-
-
-    /**
-     * Questo metodo gestisce i click su una voce della lista.
-     */
-    @Override
-    public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-        if (getActivity() != null) {
-            // Notify the active callbacks interface (the activity, if the
-            // fragment is attached to one) that an item has been selected.
-            presenter.activateTrack(position);
-        }
+        if (getActivity() != null)
+            setListAdapter(new ArrayAdapter<ITrack>(getActivity(),
+                    android.R.layout.simple_list_item_1, android.R.id.text1,
+                    this.tracks));
     }
 
     /**
-     * Questo metodo salva un testo visualizzato sul display in caso di lista
-     * vuota.
+     * Implementa ITrackSelectionView.attachObserver().
+     *
+     * @param presenter Presenter da associare.
      */
-    public void setEmptyText(CharSequence emptyText) {
-        View emptyView = mListView.getEmptyView();
-
-        if (emptyView instanceof TextView) {
-            ((TextView) emptyView).setText(emptyText);
-        }
-    }
-
-    @Override
-    public void setList(Iterable<String> names) {
-        if(mAdapter == null)
-            for (String name : names) trackNames.add(name);
-        else
-            for (String name : names) mAdapter.add(name);
-    }
-
-    @Override
-    public void clearList() {
-        if(mAdapter != null)
-            mAdapter.clear();
-    }
-
     @Override
     public void attachPresenter(ITrackSelectionPresenter presenter) {
         this.presenter = presenter;
     }
 
     /**
-     * Metodo invocato alla pressione del pulsante centrale dello smartwatch.
+     * Ridefinisce ListFragment.onResume().
      *
-     * @param keyCode tasto premuto
-     * @param event KeyEvent avvenuto
-     */
-    public void keyDown(int keyCode, KeyEvent event) {    }
-
-    /**
-     * Metodo invocato quando il Fragment viene visualizzato.
-     *
+     * Reimposta la lista da visualizzare per accertare che vengano mostrati
+     * sempre i dati più aggiornati.
      */
     @Override
     public void onResume() {
         super.onResume();
-        presenter.resume();
+        setListAdapter(new ArrayAdapter<ITrack>(getActivity(),
+                android.R.layout.simple_list_item_1, android.R.id.text1,
+                this.tracks));
     }
 
     /**
-     * Metodo invocato quando il Fragment smette di essere visualizzato.
+     * Ridefinisce ListFragment.onListItemClick().
      *
+     * Segnala al presenter il Percorso selezionato dall'utente.
      */
     @Override
-    public void onPause() {
-        super.onPause();
-        presenter.pause();
+    public void onListItemClick(ListView l, View v, int position, long id) {
+        super.onListItemClick(l, v, position, id);
+        if (presenter != null)
+            presenter.activateTrack(tracks[position]);
     }
+
 }

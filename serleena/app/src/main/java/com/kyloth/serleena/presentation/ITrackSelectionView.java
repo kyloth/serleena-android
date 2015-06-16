@@ -40,6 +40,8 @@
 
 package com.kyloth.serleena.presentation;
 
+import com.kyloth.serleena.model.ITrack;
+
 /**
  * E' l'interfaccia realizzata dalla Vista della schermata di selezione
  * del percorso.
@@ -55,14 +57,7 @@ public interface ITrackSelectionView {
 	 *
 	 * @since 1.0
 	 */
-	void setList(Iterable<String> names);
-
-	/**
-	 * Pulisce la lista dei percorsi.
-	 *
-	 * @since 1.0
-	 */
-	void clearList();
+	void setTracks(Iterable<ITrack> tracks);
 
 	/**
 	 * Lega un Presenter alla vista.

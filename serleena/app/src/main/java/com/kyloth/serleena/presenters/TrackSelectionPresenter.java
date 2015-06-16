@@ -40,33 +40,28 @@
 
 package com.kyloth.serleena.presenters;
 
-import android.os.AsyncTask;
-
 import com.kyloth.serleena.model.IExperience;
 import com.kyloth.serleena.model.ITrack;
+import com.kyloth.serleena.presentation.IExperienceActivationObserver;
+import com.kyloth.serleena.presentation.IExperienceActivationSource;
 import com.kyloth.serleena.presentation.ISerleenaActivity;
 import com.kyloth.serleena.presentation.ITrackSelectionPresenter;
 import com.kyloth.serleena.presentation.ITrackSelectionView;
-import com.kyloth.serleena.sensors.ITrackCrossing;
-
-import java.util.ArrayList;
-import java.util.List;
 
 /**
  * Concretizza ITrackSelectionPresenter.
  *
  * @use Viene utilizzata solamente dall'Activity, che ne mantiene un riferimento. Il Presenter, alla creazione, si registra alla sua Vista, passando se stesso come parametro dietro interfaccia.
- * @field view : IWeatherView Vista associata al presenter
+ * @field view : ITrackSelectionView Vista associata al presenter
  * @field activity : ISerleenaActivity Activity a cui il presenter appartiene
- * @field tracks : List<ITrack> Percorsi da visualizzare sulla vista
  * @author Filippo Sestini <sestini.filippo@gmail.com>
  * @version 1.0.0
  */
-public class TrackSelectionPresenter implements ITrackSelectionPresenter {
+public class TrackSelectionPresenter
+        implements ITrackSelectionPresenter, IExperienceActivationObserver {
 
     private ISerleenaActivity activity;
     private ITrackSelectionView view;
-    private List<ITrack> tracks;
 
     /**
      * Crea un oggetto TrackSelectionPresenter.
@@ -82,41 +77,21 @@ public class TrackSelectionPresenter implements ITrackSelectionPresenter {
      * @throws java.lang.IllegalArgumentException
      */
     public TrackSelectionPresenter(ITrackSelectionView view,
-                                   ISerleenaActivity activity)
+                                   ISerleenaActivity activity,
+                                   IExperienceActivationSource source)
             throws IllegalArgumentException {
         if (view == null)
             throw new IllegalArgumentException("Illegal null view");
         if (activity == null)
             throw new IllegalArgumentException("Illegal null activity");
+        if (source == null)
+            throw new IllegalArgumentException("Illegal null experience " +
+                    "activation source");
 
-        this.activity = activity = activity;
+        this.activity = activity;
         this.view = view;
-        this.tracks = new ArrayList<ITrack>();
         this.view.attachPresenter(this);
-        this.view.clearList();
-    }
-
-    /**
-     * Implementa ITrackSelectionPresenter.activateTrack().
-     *
-     * Il percorso selezionato viene segnalato all'activity, che si occupa di
-     * segnalare i restanti presenter e rendere l'attivazione effettiva.
-     *
-     * @param index Indice della lista di percorsi che rappresenta la
-     *              selezione dell'utente. Se minore di zero o non
-     *              corrispondente ad un elemento della lista,
-     *              viene sollevata un'eccezione IllegalArgumentException.
-     * @throws java.lang.IllegalArgumentException
-     */
-    @Override
-    public synchronized void activateTrack(int index)
-            throws IllegalArgumentException {
-        if (index < 0 || index >= tracks.size())
-            throw new IllegalArgumentException("Index out of range");
-
-        ITrackCrossing tc =
-            activity.getSensorManager().getTrackCrossingManager();
-        tc.startTrack(tracks.get(index));
+        source.attachObserver(this);
     }
 
     /**
@@ -141,44 +116,26 @@ public class TrackSelectionPresenter implements ITrackSelectionPresenter {
 
     }
 
+    @Override
+    public void activateTrack(ITrack track) throws IllegalArgumentException {
+        if (track == null)
+            throw new IllegalArgumentException("Illegal null track");
+        activity.getSensorManager().getTrackCrossingManager().startTrack(track);
+    }
+
     /**
-     * Segnala al presenter l'esperienza correntemente attiva.
+     * Implementa IExperienceActivationObserver.onExperienceActivated().
      *
-     * All'attivazione di una nuova esperienza, l'activity segnala al
-     * presenter in modo che esso possa aggiornare la vista con i Percorsi
-     * corretti.
-     * L'aggiornamento viene effettuato creando un flusso di controllo
-     * asincrono che enumera i Percorsi associati all'esperienza attivata e
-     * li utilizza per popolare la vista.
+     * La lista rappresentata dalla vista viene popolata con i Percorsi
+     * dell'Esperienza attivata.
      *
-     * @param experience Esperienza appena attivata. Se null,
-     *                   viene sollevata un'eccezione IllegalArgumentException.
-     * @throws IllegalArgumentException
+     * @param experience Esperienza attivata.
      */
-    public synchronized void setActiveExperience(final IExperience experience)
-            throws IllegalArgumentException {
+    @Override
+    public void onExperienceActivated(IExperience experience) {
         if (experience == null)
             throw new IllegalArgumentException("Illegal null experience");
-
-        view.clearList();
-        tracks.clear();
-
-        AsyncTask<Void, Void, Void> task = new AsyncTask<Void, Void, Void>() {
-            @Override
-            protected Void doInBackground(Void... voids) {
-                List<String> names = new ArrayList<String>();
-                int i = 0;
-
-                for (ITrack t : experience.getTracks()) {
-                    tracks.add(t);
-                    names.add("Tracciato " + Integer.toString(i));
-                    i++;
-                }
-
-                view.setList(names);
-                return null;
-            }
-        };
-        task.execute();
+        view.setTracks(experience.getTracks());
     }
+
 }
