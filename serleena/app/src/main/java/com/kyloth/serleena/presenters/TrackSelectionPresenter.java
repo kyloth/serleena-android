@@ -91,31 +91,7 @@ public class TrackSelectionPresenter implements ITrackSelectionPresenter {
 
         this.activity = activity;
         this.view = view;
-        this.tracks = new ArrayList<ITrack>();
         this.view.attachPresenter(this);
-    }
-
-    /**
-     * Implementa ITrackSelectionPresenter.activateTrack().
-     *
-     * Il percorso selezionato viene segnalato all'activity, che si occupa di
-     * segnalare i restanti presenter e rendere l'attivazione effettiva.
-     *
-     * @param index Indice della lista di percorsi che rappresenta la
-     *              selezione dell'utente. Se minore di zero o non
-     *              corrispondente ad un elemento della lista,
-     *              viene sollevata un'eccezione IllegalArgumentException.
-     * @throws java.lang.IllegalArgumentException
-     */
-    @Override
-    public synchronized void activateTrack(int index)
-            throws IllegalArgumentException {
-        if (index < 0 || index >= tracks.size())
-            throw new IllegalArgumentException("Index out of range");
-
-        ITrackCrossing tc =
-            activity.getSensorManager().getTrackCrossingManager();
-        tc.startTrack(tracks.get(index));
     }
 
     /**
@@ -160,4 +136,12 @@ public class TrackSelectionPresenter implements ITrackSelectionPresenter {
             throw new IllegalArgumentException("Illegal null experience");
         view.setTracks(experience.getTracks());
     }
+
+    @Override
+    public void activateTrack(ITrack track) throws IllegalArgumentException {
+        if (track == null)
+            throw new IllegalArgumentException("Illegal null track");
+        activity.getSensorManager().getTrackCrossingManager().startTrack(track);
+    }
+
 }
