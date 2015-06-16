@@ -154,30 +154,10 @@ public class TrackSelectionPresenter implements ITrackSelectionPresenter {
      *                   viene sollevata un'eccezione IllegalArgumentException.
      * @throws IllegalArgumentException
      */
-    public synchronized void setActiveExperience(final IExperience experience)
+    public synchronized void setActiveExperience(IExperience experience)
             throws IllegalArgumentException {
         if (experience == null)
             throw new IllegalArgumentException("Illegal null experience");
-
-        view.clearList();
-        tracks.clear();
-
-        AsyncTask<Void, Void, Void> task = new AsyncTask<Void, Void, Void>() {
-            @Override
-            protected Void doInBackground(Void... voids) {
-                List<String> names = new ArrayList<String>();
-                int i = 0;
-
-                for (ITrack t : experience.getTracks()) {
-                    tracks.add(t);
-                    names.add("Tracciato " + Integer.toString(i));
-                    i++;
-                }
-
-                view.setList(names);
-                return null;
-            }
-        };
-        task.execute();
+        view.setTracks(experience.getTracks());
     }
 }
