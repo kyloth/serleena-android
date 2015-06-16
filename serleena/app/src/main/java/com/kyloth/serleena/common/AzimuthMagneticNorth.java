@@ -104,4 +104,25 @@ public class AzimuthMagneticNorth {
         float declination = geoField.getDeclination();
         return orientation() - declination;
     }
+
+    /**
+     * Ridefinisce Object.equals().
+     */
+    @Override
+    public boolean equals(Object other) {
+        if (other != null && other instanceof AzimuthMagneticNorth) {
+            AzimuthMagneticNorth o = (AzimuthMagneticNorth) other;
+            return this.orientation() == o.orientation();
+        }
+        return false;
+    }
+
+    /**
+     * Ridefinisce Object.hashCode().
+     */
+    @Override
+    public int hashCode() {
+        return (int) this.orientation();
+    }
+
 }
