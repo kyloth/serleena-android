@@ -63,7 +63,6 @@ public class ExperienceSelectionPresenter
         implements IExperienceSelectionPresenter, IExperienceActivationSource {
 
     private List<IExperienceActivationObserver> observers;
-    private ISerleenaActivity activity;
     private IExperience selectedExperience;
 
     /**
@@ -89,7 +88,6 @@ public class ExperienceSelectionPresenter
         if (activity == null)
             throw new IllegalArgumentException("Illegal null activity");
 
-        this.activity = activity;
         this.observers = new ArrayList<IExperienceActivationObserver>();
 
         view.setExperiences(activity.getDataSource().getExperiences());
