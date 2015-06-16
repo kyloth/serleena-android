@@ -100,7 +100,7 @@ public class ExperienceSelectionPresenterTest {
      * al tentativo di costruire un oggetto con view nulla.
      */
     @Test(expected = IllegalArgumentException.class)
-    public void constructorShouldThrowExceptionWhenNnullView() {
+    public void constructorShouldThrowExceptionWhenNullView() {
         new ExperienceSelectionPresenter(null, activity);
     }
 
