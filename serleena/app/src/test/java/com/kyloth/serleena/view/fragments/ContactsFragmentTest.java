@@ -42,30 +42,16 @@
 package com.kyloth.serleena.view.fragments;
 
 import android.app.Activity;
-import android.app.Fragment;
 import android.app.FragmentManager;
-import android.content.Context;
-import android.content.Intent;
-import android.test.ActivityInstrumentationTestCase2;
-import android.test.ActivityUnitTestCase;
-import android.test.ServiceTestCase;
-import android.view.KeyEvent;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.TextView;
 
-import com.kyloth.serleena.R;
 import com.kyloth.serleena.BuildConfig;
-import com.kyloth.serleena.model.ITrack;
-import com.kyloth.serleena.presentation.ICompassPresenter;
+import com.kyloth.serleena.R;
 import com.kyloth.serleena.presentation.IContactsPresenter;
 import com.kyloth.serleena.presentation.ISerleenaActivity;
-import com.kyloth.serleena.presenters.SerleenaActivity;
-import com.kyloth.serleena.view.fragments.CompassFragment;
-import com.kyloth.serleena.view.fragments.ContactsFragment;
-import com.kyloth.serleena.view.widgets.CompassWidget;
-import com.kyloth.serleena.model.IExperience;
 import com.kyloth.serleena.model.ISerleenaDataSource;
-import com.kyloth.serleena.model.ITrack;
 import com.kyloth.serleena.sensors.ISensorManager;
 
 import junit.framework.Assert;
@@ -73,43 +59,28 @@ import junit.framework.Assert;
 import org.robolectric.Robolectric;
 import org.robolectric.RobolectricGradleTestRunner;
 import org.robolectric.annotation.Config;
-import org.robolectric.shadows.*;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.Before;
-import org.junit.After;
 import org.junit.Rule;
 import org.junit.rules.ExpectedException;
-import org.w3c.dom.Text;
-
-import java.lang.Exception;
-import java.lang.Override;
-import java.lang.Throwable;
-import java.lang.reflect.Method;
-
-import dalvik.annotation.TestTarget;
 
 import static org.mockito.Mockito.*;
-import static org.junit.Assert.*;
 
 /**
- * Contiene i test di unità per la classe CompassFragment.
+ * Contiene i test di unità per la classe ContactsFragment.
  *
  * @author Sebastiano Valle <valle.sebastiano93@gmail.com>
  * @version 1.0.0
- * @see com.kyloth.serleena.view.fragments.CompassFragment
  */
 @RunWith(RobolectricGradleTestRunner.class)
-@Config(constants = BuildConfig.class, emulateSdk = 19, manifest = "src/main/AndroidManifest.xml")
+@Config(constants = BuildConfig.class, emulateSdk = 19,
+        manifest = "src/main/AndroidManifest.xml")
 public class ContactsFragmentTest {
 
     private static class TestActivity
             extends Activity implements ISerleenaActivity {
-        public void setActiveExperience(IExperience experience) { }
-        public void setActiveTrack(ITrack track) { }
-        public void enableTelemetry() {}
-        public void disableTelemetry() {}
         public ISerleenaDataSource getDataSource() {
             return null;
         }
@@ -136,14 +107,13 @@ public class ContactsFragmentTest {
         Assert.assertNotNull("initialization failed", activity);
         fragment = new ContactsFragment();
         FragmentManager fm = activity.getFragmentManager();
-        fm.beginTransaction().add(fragment,"TEST").commit();
-        Assert.assertEquals("fragment not attached",fragment.getActivity(),activity);
+        fm.beginTransaction().add(fragment, "TEST").commit();
+        Assert.assertEquals("fragment not attached", fragment.getActivity(), activity);
     }
 
     /**
      * Verifica che sia possibile collegare un IContactsPresenter ad un
      * ContactsFragment.
-     *
      */
     @Test
     public void testAttachContactsPresenter() {
@@ -156,40 +126,46 @@ public class ContactsFragmentTest {
     }
 
     /**
-     * Verifica che sia possibile visualizzare un contatto.
-     *
+     * Verifica che il metodo displayContact() sollevi un'eccezione al
+     * passaggio di parametri null.
      */
-    @Test
-    public void testContactsGetDisplayed() {
-        //TextView txtName = (TextView) act.findViewById(R.id.contact_name);
-        //Assert.assertNotNull("name null", txtName);
-        //TextView txtValue = (TextView) act.findViewById(R.id.contact_value);
-        //Assert.assertNotNull("value null", txtValue);
-        //String name = "Ford";
-        //String contact = "Prefect";
-        //fragment.displayContact(name, contact);
+    @Test(expected = IllegalArgumentException.class)
+    public void displayContactsShouldThrowWhenNullArguments1() {
+        fragment.displayContact(null, "");
     }
 
     /**
-     * Verifica che sia possibile smettere di visualizzare i contatti.
-     *
+     * Verifica che il metodo displayContact() sollevi un'eccezione al
+     * passaggio di parametri null.
      */
-    @Test
-    public void testClearView() {
-        //fragment.clearView();
-        //verify(widget).setVisibility(View.INVISIBLE);
+    @Test(expected = IllegalArgumentException.class)
+    public void displayContactsShouldThrowWhenNullArguments2() {
+        fragment.displayContact("", null);
+    }
+
+    /**
+     * Verifica che il metodo displayContact() sollevi un'eccezione al
+     * passaggio di parametri null.
+     */
+    @Test(expected = IllegalArgumentException.class)
+    public void displayContactsShouldThrowWhenNullArguments3() {
+        fragment.displayContact(null, null);
     }
 
     /**
      * Verifica che alla pressione del pulsante centrale venga
      * richiesto il prossimo contatto.
-     *
      */
     @Test
-    public void testShouldRequestNextContactOnKeyDown() {
+    public void clickShouldAskForTheNextContact() {
         presenter = mock(IContactsPresenter.class);
         fragment.attachPresenter(presenter);
-        fragment.keyDown(0, new KeyEvent(1, KeyEvent.KEYCODE_ENTER));
-        verify(presenter).nextContact();
+
+        ViewGroup vg = (ViewGroup) fragment.getView();
+        for (int i = 0; i < vg.getChildCount(); i++) {
+            vg.getChildAt(i).callOnClick();
+            verify(presenter, times(i+1)).nextContact();
+        }
     }
+
 }
