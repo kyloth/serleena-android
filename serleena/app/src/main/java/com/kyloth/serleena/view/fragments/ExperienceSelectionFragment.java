@@ -41,6 +41,7 @@
 package com.kyloth.serleena.view.fragments;
 
         import android.app.ListFragment;
+        import android.os.Bundle;
         import android.view.View;
         import android.widget.ArrayAdapter;
         import android.widget.ListView;
@@ -68,13 +69,32 @@ public class ExperienceSelectionFragment extends ListFragment
      * Crea un oggetto ExperienceSelectionFragment.
      */
     public ExperienceSelectionFragment() {
+        /* Null object pattern */
+        presenter = new IExperienceSelectionPresenter() {
+            @Override
+            public void activateExperience(IExperience experience)
+                    throws IllegalArgumentException { }
+            @Override
+            public void resume() { }
+            @Override
+            public void pause() { }
+        };
+    }
 
+    /**
+     * Ridefinisce ListFragment.onCreate().
+     */
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        this.experiences = new IExperience[] { };
     }
 
     /**
      * Implementa IExperienceSelectionView.setExperiences().
      *
-     * @param experiences Esperienze da visualizzare sulla lista.
+     * @param experiences Esperienze da visualizzare sulla lista. Se null,
+     *                    viene sollevata un'eccezione IllegalArgumentException.
      */
     @Override
     public void setExperiences(Iterable<IExperience> experiences) {
@@ -95,10 +115,13 @@ public class ExperienceSelectionFragment extends ListFragment
     /**
      * Implementa IExperienceSelectionView.attachObserver().
      *
-     * @param presenter Presenter da associare.
+     * @param presenter Presenter da associare. Se null, viene sollevata
+     *                  un'eccezione IllegalArgumentException.
      */
     @Override
     public void attachPresenter(IExperienceSelectionPresenter presenter) {
+        if (presenter == null)
+            throw new IllegalArgumentException("Illegal null presenter");
         this.presenter = presenter;
     }
 
@@ -114,6 +137,16 @@ public class ExperienceSelectionFragment extends ListFragment
         setListAdapter(new ArrayAdapter<IExperience>(getActivity(),
                 android.R.layout.simple_list_item_1, android.R.id.text1,
                 this.experiences));
+        presenter.resume();
+    }
+
+    /**
+     * Ridefinisce ListFragment.onPause().
+     */
+    @Override
+    public void onPause() {
+        super.onPause();
+        presenter.pause();
     }
 
     /**
@@ -124,8 +157,15 @@ public class ExperienceSelectionFragment extends ListFragment
     @Override
     public void onListItemClick(ListView l, View v, int position, long id) {
         super.onListItemClick(l, v, position, id);
-        if (presenter != null)
-            presenter.activateExperience(this.experiences[position]);
+        presenter.activateExperience(this.experiences[position]);
+    }
+
+    /**
+     * Ridefinisce Object.toString().
+     */
+    @Override
+    public String toString() {
+        return "Imposta Esperienza";
     }
 
 }
