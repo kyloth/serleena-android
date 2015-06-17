@@ -41,6 +41,7 @@
 package com.kyloth.serleena.view.fragments;
 
 import android.app.ListFragment;
+import android.os.Bundle;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
@@ -68,7 +69,25 @@ public class TrackSelectionFragment extends ListFragment
      * Crea un oggetto ObjectListFragment.
      */
     public TrackSelectionFragment() {
+        /* Null object pattern */
+        presenter = new ITrackSelectionPresenter() {
+            @Override
+            public void activateTrack(ITrack track)
+                    throws IllegalArgumentException { }
+            @Override
+            public void resume() { }
+            @Override
+            public void pause() { }
+        };
+    }
 
+    /**
+     * Ridefinisce ListFragment.onCreate().
+     */
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        tracks = new ITrack[] { };
     }
 
     /**
@@ -99,6 +118,8 @@ public class TrackSelectionFragment extends ListFragment
      */
     @Override
     public void attachPresenter(ITrackSelectionPresenter presenter) {
+        if (presenter == null)
+            throw new IllegalArgumentException("Illegal null presenter");
         this.presenter = presenter;
     }
 
@@ -114,6 +135,16 @@ public class TrackSelectionFragment extends ListFragment
         setListAdapter(new ArrayAdapter<ITrack>(getActivity(),
                 android.R.layout.simple_list_item_1, android.R.id.text1,
                 this.tracks));
+        presenter.resume();
+    }
+
+    /**
+     * Ridefinisce ListFragment.onPause().
+     */
+    @Override
+    public void onPause() {
+        super.onPause();
+        presenter.pause();
     }
 
     /**
@@ -124,8 +155,15 @@ public class TrackSelectionFragment extends ListFragment
     @Override
     public void onListItemClick(ListView l, View v, int position, long id) {
         super.onListItemClick(l, v, position, id);
-        if (presenter != null)
-            presenter.activateTrack(tracks[position]);
+        presenter.activateTrack(tracks[position]);
+    }
+
+    /**
+     * Ridefinisce Object.toString().
+     */
+    @Override
+    public String toString() {
+        return "Imposta Percorso";
     }
 
 }
