@@ -41,9 +41,15 @@ package com.kyloth.serleena.view.fragments;
 
 import android.app.Activity;
 import android.app.Fragment;
+import android.media.Image;
+import android.os.Bundle;
+import android.support.annotation.Nullable;
 import android.view.KeyEvent;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.kyloth.serleena.R;
@@ -62,36 +68,39 @@ import com.kyloth.serleena.presentation.ITelemetryView;
  * @version 1.0.0
  * @see android.app.Fragment
  */
-public class TelemetryFragment extends Fragment implements ITelemetryView {
+public class TelemetryFragment extends Fragment
+        implements ITelemetryView, View.OnClickListener {
 
     /**
      * Presenter collegato a un TelemetryFragment
      */
     private ITelemetryPresenter presenter;
 
+    public TelemetryFragment() {
+        /* Null object pattern */
+        presenter = new ITelemetryPresenter() {
+            @Override
+            public void enableTelemetry() { }
+            @Override
+            public void disableTelemetry() { }
+            @Override
+            public void resume() { }
+            @Override
+            public void pause() { }
+        };
+    }
+
     /**
-     * Questo metodo viene invocato ogni volta che un TelemetryFragment viene collegato ad un'Activity.
-     *
-     * @param activity Activity che ha appena terminato una transazione in cui viene aggiunto il corrente Fragment
+     * Ridefinisce Fragment.onCreateView().
      */
     @Override
-    public void onAttach(final Activity activity) {
-        super.onAttach(activity);
-        ImageButton button = (ImageButton) activity.findViewById(R.id.telemetry_image);
-        button.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                TextView status = (TextView) activity.findViewById(R.id.telemetry_status);
-                if(status.getText().equals("ON")) {
-                    presenter.disableTelemetry();
-                    status.setText("OFF");
-                }
-                else {
-                    presenter.enableTelemetry();
-                    status.setText("ON");
-                }
-            }
-        });
+    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+                             Bundle savedInstanceState) {
+        View v = inflater.inflate(R.layout.fragment_telemetry, container,
+                false);
+        ImageView iv = (ImageView) v.findViewById(R.id.telemetry_image);
+        iv.setOnClickListener(this);
+        return v;
     }
 
     /**
@@ -113,13 +122,30 @@ public class TelemetryFragment extends Fragment implements ITelemetryView {
     }
 
     /**
-     * Metodo che richiede la abilitazione o la disabilitazione del tracciamento.
-     *
-     * @param keyCode tasto premuto
-     * @param event KeyEvent avvenuto
+     * Ridefinisce Fragment.onResume().
      */
-    public void keyDown(int keyCode, KeyEvent event) {
-        TextView status = (TextView) getActivity().findViewById(R.id.telemetry_status);
+    @Override
+    public void onResume() {
+        super.onResume();
+        presenter.resume();
+    }
+
+    /**
+     * Ridefinisce Fragment.onPause().
+     */
+    @Override
+    public void onPause() {
+        super.onPause();
+        presenter.pause();
+    }
+
+    /**
+     * Implementa OnClickListener.onClick().
+     */
+    @Override
+    public void onClick(View v) {
+        TextView status =
+                (TextView) getActivity().findViewById(R.id.telemetry_status);
         if(status.getText().equals("ON")) {
             presenter.disableTelemetry();
             status.setText("OFF");
@@ -131,22 +157,11 @@ public class TelemetryFragment extends Fragment implements ITelemetryView {
     }
 
     /**
-     * Metodo invocato quando il Fragment viene visualizzato.
-     *
+     * Ridefinisce Object.toString().
      */
     @Override
-    public void onResume() {
-        super.onResume();
-        presenter.resume();
+    public String toString() {
+        return "Tracciamento";
     }
 
-    /**
-     * Metodo invocato quando il Fragment smette di essere visualizzato.
-     *
-     */
-    @Override
-    public void onPause() {
-        super.onPause();
-        presenter.pause();
-    }
 }
