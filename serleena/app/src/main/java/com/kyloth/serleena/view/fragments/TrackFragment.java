@@ -41,12 +41,19 @@ package com.kyloth.serleena.view.fragments;
 
 import android.app.Activity;
 import android.app.Fragment;
+import android.os.Bundle;
+import android.support.annotation.Nullable;
 import android.view.KeyEvent;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.kyloth.serleena.R;
 import com.kyloth.serleena.presentation.ITrackPresenter;
 import com.kyloth.serleena.presentation.ITrackView;
+import com.kyloth.serleena.sensors.NoTrackCrossingException;
+import com.kyloth.serleena.view.widgets.CompassWidget;
 
 
 /**
@@ -77,123 +84,60 @@ public class TrackFragment extends Fragment implements ITrackView {
      */
     private ITrackPresenter presenter;
 
-    private Float direction;
-    private Integer totalCheckpoints = 0;
-    private Integer currentCheckpoint = 0;
-    private Integer distance;
-    private Integer gainVsGhost;
-    private Integer elapsedTime = 0;
-
-    private TextView partialTW;
-    private TextView nextTW;
-    private TextView elapsedTimeTW;
-    private TextView ghostTimeTW;
-
     /**
-     * Questo metodo viene invocato ogni volta che un TrackFragment viene collegato ad un'Activity.
-     *
-     * @param activity Activity che ha appena terminato una transazione in cui viene aggiunto il corrente Fragment
+     * Crea un nuovo oggetto TrackFragment.
      */
-    @Override
-    public void onAttach(Activity activity) {
-        super.onAttach(activity);
-        partialTW = (TextView) activity.findViewById(R.id.track_checkpoint_partial);
-        nextTW = (TextView) activity.findViewById(R.id.track_checkpoint_next);
-        elapsedTimeTW = (TextView) activity.findViewById(R.id.track_time_elapsed);
-        ghostTimeTW = (TextView) activity.findViewById(R.id.track_ghost_time);
+    public TrackFragment() {
+        /* Null object pattern */
+        presenter = new ITrackPresenter() {
+            @Override
+            public void advanceCheckpoint() throws NoTrackCrossingException { }
+            @Override
+            public void resume() { }
+            @Override
+            public void pause() { }
+        };
     }
 
     /**
-     * Metodo per eseguire un'operazione di subscribe relativa ad un ITrackPresenter.
+     * Ridefinisce Fragment.onCreateView().
+     */
+    @Override
+    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+                             Bundle savedInstanceState) {
+        return inflater.inflate(R.layout.fragment_track, container, false);
+    }
+
+    /**
+     * Aggancia un presenter alla vista.
      *
-     * @param presenter oggetto collegato che verrà notificato da questo Fragment
+     * @param presenter Presenter da agganciare. Se null, viene sollevata
+     *                  un'eccezione IllegalArgumentException.
      */
     @Override
     public void attachPresenter(ITrackPresenter presenter) {
+        if (presenter == null)
+            throw new IllegalArgumentException("Illegal null presenter");
         this.presenter = presenter;
     }
 
     /**
-     * Metodo che rimuove le informazioni sullo schermo.
+     * Pulisce la vista.
      */
     @Override
     public void clearView() {
-        partialTW.setText("");
-        nextTW.setText("NESSUN DATO");
-        elapsedTimeTW.setText("DA VISUALIZZARE");
-        ghostTimeTW.setText("");
-        direction = null;
-        gainVsGhost = null;
+
     }
 
     /**
-     * Metodo che visualizza sullo schermo dello smartwatch le informazioni disponibili sul percorso.
-     */
-    private void displayInfo() {
-        String text = currentCheckpoint + "/" + totalCheckpoints ;
-        partialTW.setText(text);
-        text = getDirection();
-        nextTW.setText(text);
-        text = getTime(elapsedTime);
-        elapsedTimeTW.setText(text);
-        text = "";
-        if(gainVsGhost != null) {
-            if(gainVsGhost < 0) {
-                text = "-";
-                gainVsGhost = gainVsGhost * (-1);
-            }
-            text = text + getTime(gainVsGhost);
-        }
-        ghostTimeTW.setText(text);
-    }
-
-    /**
-     * Metodo che restituisce l'ora scritta in un formato convenzionale.
+     * Imposta l'orientamento necessario all'utente a raggiungere il prossimo
+     * checkpoint.
      *
-     * @param time tempo (in secondi) da convertire in HH:MM:SS
-     */
-    private String getTime(Integer time) {
-        Integer hoursI = (time / 3600);
-        String hours = hoursI.toString();
-        if(hoursI < 10) hours = "0" + hours;
-        Integer minutesI = ((time % 3600) / 60);
-        String minutes = minutesI.toString();
-        if(minutesI < 10) minutes = "0" + minutes;
-        Integer secondsI = (elapsedTime % 60);
-        String seconds = secondsI.toString();
-        if(secondsI < 10) seconds = "0" + seconds;
-        return (hours + ":" + minutes + ":" + seconds);
-    }
-
-    /**
-     * Metodo che restituisce una stringa contenente le informazioni sul prossimo checkpoint.
-     */
-    private String getDirection() {
-        if(distance == null && direction == null) return "";
-        if(direction == null) return (distance + "m");
-        String s = "DRITTO";
-        if(direction > 45)
-            s = "SX";
-        if(direction > 135)
-            s = "GIRATI";
-        if(direction > 225)
-            s = "DX";
-        if(direction > 315)
-            s = "DRITTO";
-        if (distance != null)
-            s = s + " - " + distance + "m";
-        return s;
-    }
-
-    /**
-     * Metodo per impostare la direzione del prossimo checkpoint
-     *
-     * @param heading Direzione del prossimo checkpoint
+     * @param heading Direzione del prossimo checkpoint in gradi.
      */
     @Override
     public void setDirection(float heading) {
-        direction = heading;
-        displayInfo();
+
     }
 
     /**
@@ -203,8 +147,7 @@ public class TrackFragment extends Fragment implements ITrackView {
      */
     @Override
     public void setDistance(int distance) {
-        this.distance = distance;
-        displayInfo();
+
     }
 
     /**
@@ -214,8 +157,7 @@ public class TrackFragment extends Fragment implements ITrackView {
      */
     @Override
     public void setLastPartial(int seconds) {
-        elapsedTime = seconds;
-        displayInfo();
+
     }
 
     /**
@@ -225,8 +167,7 @@ public class TrackFragment extends Fragment implements ITrackView {
      */
     @Override
     public void setDelta(int seconds) {
-        gainVsGhost = seconds;
-        displayInfo();
+
     }
 
     /**
@@ -236,8 +177,7 @@ public class TrackFragment extends Fragment implements ITrackView {
      */
     @Override
     public void setCheckpointNo(int n) {
-        currentCheckpoint = n;
-        displayInfo();
+
     }
 
     /**
@@ -247,52 +187,60 @@ public class TrackFragment extends Fragment implements ITrackView {
      */
     @Override
     public void setTotalCheckpoints(int n) {
-        totalCheckpoints = n;
-        displayInfo();
+
     }
 
     /**
-     * Metodo per impostare il tracciamento attivo.
-     *
-     * @param b Booleano vero sse il tracciamento è attivo.
+     * ITrackView.telemetryEnabled().
      */
     @Override
     public void telemetryEnabled(boolean b) {
-        displayInfo();
+
     }
 
+    /**
+     * ITrackView.displayTrackEnded().
+     */
     @Override
     public void displayTrackEnded() {
         throw new UnsupportedOperationException();
     }
 
+    /**
+     * Implementa ITrackView.clearDelta().
+     */
     @Override
     public void clearDelta() {
 
     }
 
     /**
-     * Metodo invocato alla pressione del pulsante centrale dello smartwatch.
-     */
-    public void keyDown(int keyCode, KeyEvent event) {    }
-
-    /**
      * Metodo invocato quando il Fragment viene visualizzato.
-     *
      */
     @Override
     public void onResume() {
         super.onResume();
         presenter.resume();
+        CompassWidget w = (CompassWidget) getView().findViewById(R.id
+                .compass_widget_track);
+        w.setDirection(90);
     }
 
     /**
      * Metodo invocato quando il Fragment smette di essere visualizzato.
-     *
      */
     @Override
     public void onPause() {
         super.onPause();
         presenter.pause();
     }
+
+    /**
+     * Ridefinisce Object.toString().
+     */
+    @Override
+    public String toString() {
+        return "Percorso";
+    }
+
 }

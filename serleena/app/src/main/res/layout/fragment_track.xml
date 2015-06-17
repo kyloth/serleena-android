@@ -1,45 +1,56 @@
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools" android:layout_width="match_parent"
-    android:layout_height="match_parent" tools:context="com.kyloth.serleena.view.fragments.TrackFragment"
-    android:id="@+id/track_layout">
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+             xmlns:tools="http://schemas.android.com/tools"
+             android:layout_width="match_parent"
+             android:layout_height="match_parent"
+             tools:context="com.kyloth.serleena.view.fragments.TrackFragment"
+             android:id="@+id/track_layout"
+             android:orientation="vertical">
 
-    <TextView
+    <LinearLayout
         android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:text="@string/track_checkpoint_partial"
-        android:id="@+id/track_checkpoint_partial"
-        android:layout_gravity="center_horizontal|top"
-        android:textSize="25sp"
-        android:layout_marginTop="10dp"
-        android:gravity="center_horizontal" />
+        android:layout_height="40px">
 
-    <TextView
-        android:layout_width="fill_parent"
-        android:layout_height="98dp"
-        android:text="@string/track_checkpoint_next"
-        android:id="@+id/track_checkpoint_next"
-        android:layout_gravity="center_horizontal|top"
-        android:gravity="center|center_horizontal"
-        android:textSize="25sp"
-        android:layout_marginTop="15dp" />
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:text="3/12"
+            android:id="@+id/textView"/>
 
-    <TextView
-        android:layout_width="fill_parent"
-        android:layout_height="85dp"
-        android:text="@string/track_time_elapsed"
-        android:id="@+id/track_time_elapsed"
-        android:layout_gravity="center_horizontal|top"
-        android:textSize="25sp"
-        android:layout_marginTop="60dp"
-        android:gravity="center" />
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:text="in 200 m"
+            android:id="@+id/textView2"
+            android:layout_marginLeft="20dp"/>
+    </LinearLayout>
 
-    <TextView
+    <com.kyloth.serleena.view.widgets.CompassWidget
+        android:layout_width="90px"
+        android:layout_height="90px"
+        android:id="@+id/compass_widget_track"
+        android:layout_gravity="center_horizontal"
+        android:src="@drawable/compass"/>
+
+    <LinearLayout
         android:layout_width="fill_parent"
-        android:layout_height="58dp"
-        android:text="@string/track_ghost_time"
-        android:id="@+id/track_ghost_time"
-        android:layout_gravity="center_horizontal|top"
-        android:textSize="25sp"
-        android:layout_marginTop="115dp"
-        android:gravity="center" />
-</FrameLayout>
+        android:layout_height="40px">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="00:20:00"
+            android:id="@+id/elapsed_text"
+            android:layout_gravity="center_horizontal"/>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="-00:04:00"
+            android:id="@+id/delta_text"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginLeft="20px"/>
+    </LinearLayout>
+
+</LinearLayout>
