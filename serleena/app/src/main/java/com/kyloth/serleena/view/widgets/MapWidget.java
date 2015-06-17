@@ -31,20 +31,23 @@
 /**
  * Name: MapWidget
  * Package: com.kyloth.serleena.view.widgets
- * Author: Sebastiano Valle
+ * Author: Filippo Sestini
  *
  * History:
  * Version   Programmer         Changes
- * 1.0.0     Sebastiano Valle   Creazione del file, scrittura del codice e di Javadoc
+ * 1.0.0     Filippo Sestini    Creazione del file, scrittura del codice e di
+ *                              Javadoc
  */
 
 package com.kyloth.serleena.view.widgets;
 
 import android.content.Context;
+import android.content.res.Resources;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
-import android.graphics.drawable.BitmapDrawable;
-import android.support.annotation.NonNull;
+import android.graphics.Color;
+import android.graphics.Paint;
 import android.util.AttributeSet;
 import android.widget.ImageView;
 
@@ -54,7 +57,6 @@ import com.kyloth.serleena.common.IQuadrant;
 import com.kyloth.serleena.common.UserPoint;
 
 import java.util.ArrayList;
-import java.util.Iterator;
 
 /**
  * Classe che implementa il widget presente nella visuale Mappa della schermata Esperienza
@@ -74,126 +76,145 @@ public class MapWidget extends ImageView {
     private Iterable<UserPoint> upList = new ArrayList<>();
 
     /**
-     * Costruttore di MapWidget a un parametro.
-     *
-     * @param context Activity in cui è presente il widget
+     * Crea un nuovo oggetto MapWidget.
      */
     public MapWidget(Context context) {
         super(context);
+        init(context);
     }
 
     /**
-     * Costruttore di MapWidget a due parametri.
-     *
-     * @param context Activity in cui è presente il widget
-     * @param attrs attributi come altezza, larghezza definiti nell'XML corrispondente a MapWidget
+     * Crea un nuovo oggetto MapWidget.
      */
     public MapWidget(Context context,AttributeSet attrs) {
-        super(context,attrs);
+        super(context, attrs);
+        init(context);
     }
 
     /**
-     * Costruttore di MapWidget a tre parametri.
-     *
-     * @param context Activity in cui è presente il widget
-     * @param attrs attributi come altezza, larghezza definiti nell'XML corrispondente a MapWidget
-     * @param defStyle stile da applicare a questa vista, può corrispondere a 0 o a un'id di una risorsa
+     * Crea un nuovo oggetto MapWidget.
      */
-    public MapWidget(Context context,AttributeSet attrs,int defStyle) {
-        super(context,attrs,defStyle);
+    public MapWidget(Context context, AttributeSet attrs, int defStyle) {
+        super(context, attrs, defStyle);
+        init(context);
     }
 
     /**
-     * Metodo che imposta l'immagine da visualizzare relativa alla mappa.
+     * TODO: Inizializzazione a dei valori dimostrativi. Eliminare!
+     */
+    public void init(Context context) {
+        this.setQuadrant(new IQuadrant() {
+            @Override
+            public Bitmap getRaster() {
+                Resources res = getResources();
+                Bitmap bitmap = BitmapFactory.decodeResource(res, R.drawable
+                        .roadmap_240);
+                return bitmap;
+            }
+
+            @Override
+            public GeoPoint getNorthEastPoint() {
+                return new GeoPoint(30, 30);
+            }
+
+            @Override
+            public GeoPoint getSouthWestPoint() {
+                return new GeoPoint(10, 10);
+            }
+
+            @Override
+            public boolean contains(GeoPoint p) throws IllegalArgumentException {
+                return true;
+            }
+        });
+        ArrayList<UserPoint> ups = new ArrayList<>();
+        ups.add(new UserPoint(11, 20));
+        ups.add(new UserPoint(21, 14));
+        ups.add(new UserPoint(10, 10));
+        ups.add(new UserPoint(30, 30));
+        this.setUserPosition(new GeoPoint(20, 20));
+        this.setUserPoints(ups);
+    }
+
+    /**
+     * Imposta il quadrante da visualizzare.
      *
-     * @param q Quadrante da visualizzare
+     * @param q Quadrante da visualizzare.
      */
     public void setQuadrant(IQuadrant q) {
         quadrant = q;
     }
 
     /**
-     * Metodo che imposta la posizione dell'utente da visualizzare.
+     * Imposta la posizione dell'utente da visualizzare.
      *
-     * @param userPosition Posizione dell'utente
+     * @param userPosition Posizione dell'utente da visualizzare.
      */
     public void setUserPosition(GeoPoint userPosition) {
         this.userPosition = userPosition;
     }
 
     /**
-     * Metodo che imposta la lista dei punti utente da visualizzare
+     * Imposta la lista di punti utente da visualizzare.
      *
-     * @param ups Punti utente
+     * @param ups Punti utente da visualizzare.
      */
     public void setUserPoints(Iterable<UserPoint> ups) {
-        upList= ups;
+        upList = ups;
     }
 
     /**
-     * Metodo che viene invocato quando si richiede l'operazione draw() di un'ImageView.
-     *
-     * @param canvas Oggetto su cui disegnare
+     * Ridefinisce ImageView.onDraw().
      */
     @Override
-    public void onDraw(@NonNull Canvas canvas) {
-        if(quadrant == null) return;
-        Bitmap mapRaster = quadrant.getRaster();
-        canvas.drawBitmap(mapRaster,0,0,null);
-        if(userPosition != null)
-            draw(canvas, null);
-        Iterator<UserPoint> it = upList.iterator();
-        while (it.hasNext()) {
-            draw(canvas, it.next());
-        }
+    public void onDraw(Canvas canvas) {
         super.onDraw(canvas);
-    }
 
-    /**
-     * Metodo che disegna un punto sul canvas.
-     *
-     * @param canvas Oggetto su cui disegnare
-     * @param point Punto geografico (posizione o punto utente) da visualizzare
-     */
-    private void draw(Canvas canvas, GeoPoint point) {
-        ImageView img = new ImageView(getContext());
-        img.setImageResource(R.drawable.user_point);
-        if(point == null) { // il punto da visualizzare e' la posizione dell'utente
-            point = userPosition;
-            img.setImageResource(R.drawable.mirino);
+        if(quadrant != null) {
+            if (quadrant.getRaster() != null)
+                canvas.drawBitmap(quadrant.getRaster(), 0, 0, null);
+
+            for (UserPoint up : upList)
+                if (quadrant.contains(up))
+                    drawUserPoint(up, canvas);
+
+            drawUserPosition(userPosition, canvas);
         }
-        Float top = getTop(point);
-        Float left = getLeft(point);
-        img.setMaxHeight(100);
-        img.setMaxWidth(100);
-        Bitmap bmp = ((BitmapDrawable) img.getDrawable()).getBitmap().copy(Bitmap.Config.ARGB_8888, true);
-        bmp = Bitmap.createScaledBitmap(bmp,100,100,false);
-        canvas.drawBitmap(bmp, left, top, null);
     }
 
-    /**
-     * Metodo che disegna un punto sul canvas.
-     *
-     * @param point Punto geografico rispetto al quale prendere il margine superiore
-     */
-    private Float getTop(GeoPoint point) {
-        double topLatQ = quadrant.getNorthEastPoint().latitude();
-        double bottomLatQ = quadrant.getSouthWestPoint().latitude();
+    private void drawUserPoint(UserPoint up, Canvas canvas) {
+        Paint red = new Paint();
+        red.setColor(Color.RED);
+        Paint black = new Paint();
+        black.setColor(Color.BLACK);
+        canvas.drawCircle(getLeft(up), getTop(up), 6, black);
+        canvas.drawCircle(getLeft(up), getTop(up), 5, red);
+    }
+
+    private void drawUserPosition(GeoPoint gp, Canvas canvas) {
+        Paint white = new Paint();
+        white.setColor(Color.WHITE);
+        Paint blue = new Paint();
+        blue.setColor(Color.BLUE);
+        Paint black = new Paint();
+        black.setColor(Color.BLACK);
+        canvas.drawCircle(getLeft(gp), getTop(gp), 10, black);
+        canvas.drawCircle(getLeft(gp), getTop(gp), 9, white);
+        canvas.drawCircle(getLeft(gp), getTop(gp), 6, blue);
+    }
+
+    private float getTop(GeoPoint point) {
+        double topLat = quadrant.getNorthEastPoint().latitude();
+        double botLat = quadrant.getSouthWestPoint().latitude();
         double height = getMeasuredHeight();
-        double h = height * (topLatQ-point.latitude()) / (topLatQ - bottomLatQ);
-        return (float) (h);
+        return (float)(height*(topLat - point.latitude()) / (topLat - botLat));
     }
 
-    /**
-     * Metodo che disegna un punto sul canvas.
-     *
-     * @param point Punto geografico rispetto al quale prendere il margine sinistro
-     */
-    private Float getLeft(GeoPoint point) {
-        double topLonQ = quadrant.getNorthEastPoint().longitude();
-        double bottomLonQ = quadrant.getSouthWestPoint().longitude();
+    private float getLeft(GeoPoint point) {
+        double topLon = quadrant.getNorthEastPoint().longitude();
+        double botLon = quadrant.getSouthWestPoint().longitude();
         double width = getMeasuredWidth();
-        double w = width * (topLonQ-point.longitude()) / (topLonQ - bottomLonQ);
-        return (float) (w);
+        return (float)(width * (topLon-point.longitude()) / (topLon - botLon));
     }
+
 }
