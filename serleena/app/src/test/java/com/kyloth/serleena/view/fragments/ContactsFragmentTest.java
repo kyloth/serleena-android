@@ -153,7 +153,7 @@ public class ContactsFragmentTest {
     }
 
     /**
-     * Verifica che alla pressione del pulsante centrale venga
+     * Verifica che al click su uno qualsiasi dei widget della visuale, venga
      * richiesto il prossimo contatto.
      */
     @Test
