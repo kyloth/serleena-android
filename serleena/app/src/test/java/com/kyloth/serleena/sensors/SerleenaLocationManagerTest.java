@@ -42,7 +42,9 @@
 package com.kyloth.serleena.sensors;
 
 import android.location.Location;
+import android.location.LocationListener;
 import android.location.LocationManager;
+import android.os.Looper;
 
 import com.kyloth.serleena.BuildConfig;
 import com.kyloth.serleena.common.GeoPoint;
@@ -50,15 +52,20 @@ import com.kyloth.serleena.common.GeoPoint;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.mockito.ArgumentCaptor;
+import org.mockito.Matchers;
 import org.robolectric.RobolectricGradleTestRunner;
-import org.robolectric.RuntimeEnvironment;
 import org.robolectric.annotation.Config;
 import org.robolectric.shadows.ShadowLocationManager;
 
 import static android.location.LocationManager.*;
-import static org.junit.Assert.assertTrue;
+import static junit.framework.Assert.assertTrue;
+import static org.mockito.Matchers.eq;
 import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.any;
+import static org.mockito.Mockito.when;
 import static org.robolectric.Shadows.shadowOf;
 
 /**
