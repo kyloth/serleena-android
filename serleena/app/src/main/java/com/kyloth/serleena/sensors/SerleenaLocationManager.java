@@ -182,7 +182,6 @@ class SerleenaLocationManager implements ILocationManager,
 
         if (observers.size() > 0 && ((System.currentTimeMillis() / 1000L) -
                 lastUpdate) < MAX_WINDOW_SECONDS)
-
             notifyObserver(observer);
 
         else {
