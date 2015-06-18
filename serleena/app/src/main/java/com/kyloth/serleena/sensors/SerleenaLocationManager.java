@@ -86,22 +86,14 @@ class SerleenaLocationManager implements ILocationManager,
     /**
      * Crea un oggetto NormalLocationManager.
      *
-     * @param context Contesto dell'applicazione.
+     * @param locationManager LocationManager da utilizzare per ottenere la
+     *                        posizione dell'utente.
      */
-    public SerleenaLocationManager(Context context, LocationManager locationManager) {
+    public SerleenaLocationManager(LocationManager locationManager) {
         this.observers = new HashMap<ILocationObserver, Integer>();
         this.singleUpdates = new HashSet<ILocationObserver>();
         this.currentInterval = Integer.MAX_VALUE;
-        if (locationManager == null) {
-            this.locationManager = (android.location.LocationManager)
-                    context.getSystemService(Context.LOCATION_SERVICE);
-        } else {
-            this.locationManager = locationManager;
-        }
-    }
-
-    public SerleenaLocationManager(Context context) {
-        this(context, null);
+        this.locationManager = locationManager;
     }
 
     /**
