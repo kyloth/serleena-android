@@ -40,27 +40,24 @@
 
 package com.kyloth.serleena.sensors;
 
-import android.app.Application;
 import android.location.Location;
 import android.location.LocationManager;
 
 import com.kyloth.serleena.BuildConfig;
 import com.kyloth.serleena.common.GeoPoint;
-import com.kyloth.serleena.sensors.ILocationObserver;
-import com.kyloth.serleena.sensors.SerleenaLocationManager;
 
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.robolectric.Robolectric;
 import org.robolectric.RobolectricGradleTestRunner;
-import org.robolectric.RobolectricTestRunner;
 import org.robolectric.RuntimeEnvironment;
 import org.robolectric.annotation.Config;
 import org.robolectric.shadows.ShadowLocationManager;
 
 import static android.location.LocationManager.*;
 import static org.junit.Assert.assertTrue;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.verify;
 import static org.robolectric.Shadows.shadowOf;
 
 /**
@@ -72,8 +69,8 @@ import static org.robolectric.Shadows.shadowOf;
 @RunWith(RobolectricGradleTestRunner.class)
 @Config(constants = BuildConfig.class, emulateSdk = 19)
 public class SerleenaLocationManagerTest {
-    StubbyLocationObserver obs;
-    StubbyLocationObserver otherObs;
+    ILocationObserver obs;
+    ILocationObserver otherObs;
     LocationManager locationManager;
     ShadowLocationManager shadowLocationManager;
     SerleenaLocationManager instance;
@@ -88,23 +85,6 @@ public class SerleenaLocationManagerTest {
         return location;
     }
 
-    class StubbyLocationObserver implements ILocationObserver {
-        GeoPoint latestLocation;
-
-        StubbyLocationObserver() {
-            latestLocation = null;
-        }
-
-        @Override
-        public void onLocationUpdate(GeoPoint loc) {
-            latestLocation = loc;
-        }
-
-        public GeoPoint getLatestLocation() {
-            return latestLocation;
-        }
-    };
-
     /**
      * Verifica che quando SerleenaLocationManager riceve onLocationChanged
      * aggiorni correttamente gli osservatori.
@@ -115,8 +95,8 @@ public class SerleenaLocationManagerTest {
         instance.attachObserver(obs, 1000);
         instance.attachObserver(otherObs, 1000);
         instance.onLocationChanged(location);
-        assertTrue(obs.getLatestLocation().equals(point));
-        assertTrue(otherObs.getLatestLocation().equals(point));
+        verify(obs).onLocationUpdate(point);
+        verify(otherObs).onLocationUpdate(point);
     }
 
     /**
@@ -166,18 +146,18 @@ public class SerleenaLocationManagerTest {
         instance.attachObserver(obs, 1000);
         instance.attachObserver(otherObs, 1000);
         instance.onLocationChanged(location);
-        assertTrue(obs.getLatestLocation().equals(point));
-        assertTrue(otherObs.getLatestLocation().equals(point));
+        verify(obs).onLocationUpdate(point);
+        verify(otherObs).onLocationUpdate(point);
         instance.detachObserver(obs);
         instance.onLocationChanged(otherLocation);
-        assertTrue(obs.getLatestLocation().equals(point));
-        assertTrue(otherObs.getLatestLocation().equals(otherPoint));
+        verify(obs).onLocationUpdate(point);
+        verify(otherObs).onLocationUpdate(otherPoint);
     }
 
     @Before
     public void setUp() {
-        obs = new StubbyLocationObserver();
-        otherObs = new StubbyLocationObserver();
+        obs = mock(ILocationObserver.class);
+        otherObs = mock(ILocationObserver.class);
         locationManager = (LocationManager)
                           RuntimeEnvironment.application.getSystemService(RuntimeEnvironment.application.LOCATION_SERVICE);
         shadowLocationManager = shadowOf(locationManager);
