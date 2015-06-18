@@ -268,12 +268,13 @@ class SerleenaLocationManager implements ILocationManager,
                 if (interval < minInterval)
                     minInterval = interval;
 
-            locationManager.removeUpdates(this);
-            locationManager.requestLocationUpdates(LocationManager
-                    .GPS_PROVIDER, minInterval * 1000, MINIMUM_UPDATE_DISTANCE,
-                    this);
-            currentInterval = minInterval;
-
+            if (minInterval != currentInterval) {
+                locationManager.removeUpdates(this);
+                locationManager.requestLocationUpdates(LocationManager
+                                .GPS_PROVIDER, minInterval * 1000, MINIMUM_UPDATE_DISTANCE,
+                        this);
+                currentInterval = minInterval;
+            }
         }
     }
 
