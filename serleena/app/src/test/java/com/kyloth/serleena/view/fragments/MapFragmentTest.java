@@ -42,30 +42,12 @@
 package com.kyloth.serleena.view.fragments;
 
 import android.app.Activity;
-import android.app.Fragment;
 import android.app.FragmentManager;
-import android.content.Intent;
-import android.test.ActivityInstrumentationTestCase2;
-import android.test.ActivityUnitTestCase;
-import android.view.KeyEvent;
-import android.view.View;
-import android.graphics.Canvas;
 
 import com.kyloth.serleena.BuildConfig;
-import com.kyloth.serleena.common.GeoPoint;
-import com.kyloth.serleena.common.IQuadrant;
-import com.kyloth.serleena.common.NoActiveExperienceException;
-import com.kyloth.serleena.common.Quadrant;
-import com.kyloth.serleena.common.UserPoint;
-import com.kyloth.serleena.model.ITrack;
 import com.kyloth.serleena.presentation.IMapPresenter;
 import com.kyloth.serleena.presentation.ISerleenaActivity;
-import com.kyloth.serleena.presenters.SerleenaActivity;
-import com.kyloth.serleena.view.fragments.MapFragment;
-import com.kyloth.serleena.view.widgets.MapWidget;
-import com.kyloth.serleena.model.IExperience;
 import com.kyloth.serleena.model.ISerleenaDataSource;
-import com.kyloth.serleena.model.ITrack;
 import com.kyloth.serleena.sensors.ISensorManager;
 
 import junit.framework.Assert;
@@ -77,19 +59,8 @@ import org.robolectric.annotation.Config;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.Before;
-import org.junit.Rule;
-import org.junit.rules.ExpectedException;
-
-import java.lang.Exception;
-import java.lang.Override;
-import java.lang.Throwable;
-import java.util.ArrayList;
-import java.util.Map;
-
-import dalvik.annotation.TestTarget;
 
 import static org.mockito.Mockito.*;
-import static org.junit.Assert.*;
 
 /**
  * Contiene i test di unità per la classe MapFragment.
@@ -104,10 +75,6 @@ public class MapFragmentTest {
 
     private static class TestActivity
             extends Activity implements ISerleenaActivity {
-        public void setActiveExperience(IExperience experience) { }
-        public void setActiveTrack(ITrack track) { }
-        public void enableTelemetry() {}
-        public void disableTelemetry() {}
         public ISerleenaDataSource getDataSource() {
             return null;
         }
@@ -120,19 +87,15 @@ public class MapFragmentTest {
     private MapFragment fragment;
     private IMapPresenter presenter;
 
-    @Rule
-    public ExpectedException exception = ExpectedException.none();
-
     @Before
     public void initialize() {
         activity = Robolectric.buildActivity(TestActivity.class).
                 create().get();
         Assert.assertNotNull("initialization failed", activity);
         fragment = new MapFragment();
-        //FragmentManager fm = activity.getFragmentManager();
-        //fm.beginTransaction().add(fragment, "TEST").commit();
-        //Assert.assertEquals("fragment not attached", fragment.getActivity(), activity);
-
+        FragmentManager fm = activity.getFragmentManager();
+        fm.beginTransaction().add(fragment, "TEST").commit();
+        Assert.assertEquals("fragment not attached", fragment.getActivity(), activity);
     }
 
     /**
@@ -151,31 +114,30 @@ public class MapFragmentTest {
     }
 
     /**
-     * Verifica che alla pressione del pulsante centrale venga richiesta
-     * la creazione di un Punto Utente.
-     *
+     * Verifica che attachPresenter() sollevi un'eccezione quando gli vengono
+     * passati parametri null.
      */
-    @Test
-    public void testShouldRequestNewUserPointOnKeyDown() {
-        presenter = mock(IMapPresenter.class);
-        fragment.attachPresenter(presenter);
-        fragment.keyDown(0, new KeyEvent(1, KeyEvent.KEYCODE_ENTER));
-        try {verify(presenter).newUserPoint();}
-        catch (NoActiveExperienceException e) {}
+    @Test(expected = IllegalArgumentException.class)
+    public void attachPresenterShouldThrowWhenNullArgument() {
+        fragment.attachPresenter(null);
     }
 
     /**
-     * Verifica che un'eccezione venga presa dal Fragment, se lanciata
-     * dal IMapPresenter.
-     *
+     * Verifica che displayQuadrant() sollevi un'eccezione quando gli vengono
+     * passati parametri null.
      */
-    @Test
-    public void testShouldCauseExceptionOnKeyDown() {
-        presenter = mock(IMapPresenter.class);
-        try { doThrow(new NoActiveExperienceException()).
-                when(presenter).newUserPoint(); }
-        catch (NoActiveExperienceException e) {}
-        fragment.attachPresenter(presenter);
-        fragment.keyDown(0, new KeyEvent(1, KeyEvent.KEYCODE_ENTER));
+    @Test(expected = IllegalArgumentException.class)
+    public void displayQuadrantShouldThrowWhenNullArgument() {
+        fragment.displayQuadrant(null);
     }
+
+    /**
+     * Verifica che displayUP() sollevi un'eccezione quando gli vengono passati
+     * parametri null.
+     */
+    @Test(expected = IllegalArgumentException.class)
+    public void displayUPShouldThrowWhenNullArgument() {
+        fragment.displayUP(null);
+    }
+
 }
