@@ -158,8 +158,7 @@ public class SerleenaLocationManagerTest {
     public void setUp() {
         obs = mock(ILocationObserver.class);
         otherObs = mock(ILocationObserver.class);
-        locationManager = (LocationManager)
-                          RuntimeEnvironment.application.getSystemService(RuntimeEnvironment.application.LOCATION_SERVICE);
+        locationManager = mock(LocationManager.class);
         shadowLocationManager = shadowOf(locationManager);
         instance = new SerleenaLocationManager(locationManager);
         point = new GeoPoint(12.0, 34.0);
