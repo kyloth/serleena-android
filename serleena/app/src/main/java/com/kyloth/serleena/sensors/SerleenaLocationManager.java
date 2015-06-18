@@ -165,7 +165,8 @@ class SerleenaLocationManager implements ILocationManager,
      * @param observer Oggetto ILocationObserver a cui comunicare i dati. Se
      *                 null, viene sollevata un'eccezione
      *                 IllegalArgumentException.
-     * @param timeout  Timeout in secondi.
+     * @param timeout  Timeout in secondi. Se <= 0, viene sollevata
+     *                 un'eccezione IllegalArgumentException.
      */
     @Override
     public synchronized void getSingleUpdate(final ILocationObserver observer,
