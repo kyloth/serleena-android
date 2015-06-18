@@ -41,7 +41,6 @@
 package com.kyloth.serleena.sensors;
 
 import android.app.Application;
-import android.content.Context;
 import android.location.Location;
 import android.location.LocationManager;
 
@@ -182,7 +181,7 @@ public class SerleenaLocationManagerTest {
         locationManager = (LocationManager)
                           RuntimeEnvironment.application.getSystemService(RuntimeEnvironment.application.LOCATION_SERVICE);
         shadowLocationManager = shadowOf(locationManager);
-        instance = new SerleenaLocationManager(RuntimeEnvironment.application, locationManager);
+        instance = new SerleenaLocationManager(locationManager);
         point = new GeoPoint(12.0, 34.0);
         otherPoint = new GeoPoint(56.0, 78.0);
     }
