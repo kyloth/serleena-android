@@ -36,6 +36,7 @@
  * History:
  * Version  Programmer       Changes
  * 1.0.0    Tobia Tesan      Creazione iniziale file
+ * 1.1.0    Filippo Sestini  Aggiunta di test case e aumento copertura
  */
 
 package com.kyloth.serleena.sensors;
@@ -64,13 +65,14 @@ import static org.robolectric.Shadows.shadowOf;
  * Testa le funzionalita' di base di SerleenaLocationManager
  *
  * @author Tobia Tesan <tobia.tesan@gmail.com>
- * @version 1.0.0
+ * @version 1.1.0
  */
 @RunWith(RobolectricGradleTestRunner.class)
 @Config(constants = BuildConfig.class, emulateSdk = 19)
 public class SerleenaLocationManagerTest {
     ILocationObserver obs;
     ILocationObserver otherObs;
+    ILocationObserver obs3;
     LocationManager locationManager;
     ShadowLocationManager shadowLocationManager;
     SerleenaLocationManager instance;
@@ -154,10 +156,138 @@ public class SerleenaLocationManagerTest {
         verify(otherObs).onLocationUpdate(otherPoint);
     }
 
+    /**
+     * Verifica che una chiamata a singleUpdate() inoltri la richiesta la
+     * LocationManager di Android.
+     */
+    @Test
+    public void singleUpdateShouldForwardRequestToAndroidManager() {
+        instance.getSingleUpdate(obs, 100);
+        String provider = android.location.LocationManager.GPS_PROVIDER;
+        verify(locationManager).requestSingleUpdate(eq(provider),
+                any(LocationListener.class), Matchers.<Looper>isNull(Looper
+                        .class));
+    }
+
+    /**
+     * Verifica che getSingleUpdate() notifichi correttamente l'observer
+     * registrato all'arrivo di dati aggiornati sulla posizione.
+     */
+    @Test
+    public void singleUpdateShouldNotifyObserverCorrectly() {
+        instance.getSingleUpdate(obs, 100);
+        String provider = android.location.LocationManager.GPS_PROVIDER;
+        ArgumentCaptor<LocationListener> captor =
+                ArgumentCaptor.forClass(LocationListener.class);
+        verify(locationManager).requestSingleUpdate(eq(provider),
+                captor.capture(), Matchers.<Looper>isNull(Looper
+                        .class));
+
+        LocationListener listener = captor.getValue();
+        ArgumentCaptor<GeoPoint> pointCaptor = ArgumentCaptor.forClass
+                (GeoPoint.class);
+        Location l = mock(Location.class);
+        when(l.getLatitude()).thenReturn(30d);
+        when(l.getLongitude()).thenReturn(20d);
+        listener.onLocationChanged(l);
+        verify(obs).onLocationUpdate(pointCaptor.capture());
+        assertTrue(pointCaptor.getValue().latitude() == 30 &&
+                pointCaptor.getValue().longitude() == 20);
+    }
+
+    /**
+     * Verifica che i dati sulla posizione non scaduti vengano utilizzati per
+     * aggiornamenti singoli con getSingleUpdate().
+     */
+    @Test
+    public void locationNotExpiredShouldBeUsedInSingleUpdates() {
+        Location l = mock(Location.class);
+        when(l.getLatitude()).thenReturn(30d);
+        when(l.getLongitude()).thenReturn(20d);
+        instance.onLocationChanged(l);
+        instance.getSingleUpdate(obs, 100);
+        ArgumentCaptor<GeoPoint> pointCaptor = ArgumentCaptor.forClass
+                (GeoPoint.class);
+        verify(obs).onLocationUpdate(pointCaptor.capture());
+        assertTrue(pointCaptor.getValue().latitude() == 30 &&
+                pointCaptor.getValue().longitude() == 20);
+    }
+
+    /**
+     * Verifica che getSingleUpdate() sollevi un'eccezione al passaggio di
+     * parametri null.
+     */
+    @Test(expected = IllegalArgumentException.class)
+    public void getSingleUpdateShouldThrowWhenNullObserver() {
+        instance.getSingleUpdate(null, 100);
+    }
+
+    /**
+     * Verifica che getSingleUpdate() sollevi un'eccezione al passaggio di
+     * parametri fuori range.
+     */
+    @Test(expected = IllegalArgumentException.class)
+    public void getSingleUpdateShouldThrowWhenZeroTimeout() {
+        instance.getSingleUpdate(obs, 0);
+    }
+
+    /**
+     * Verifica che getSingleUpdate() sollevi un'eccezione al passaggio di
+     * parametri fuori range.
+     */
+    @Test(expected = IllegalArgumentException.class)
+    public void getSingleUpdateShouldThrowWhenTimeoutBelowZero() {
+        instance.getSingleUpdate(obs, -10);
+    }
+
+    /**
+     * Verifica che l'intervallo di aggiornamento sulla posizione richiesto
+     * al LocationManager di Android venga aggiornato correttamente in base
+     * agli intervalli dei diversi observer registrati.
+     */
+    @Test
+    public void updateIntervalShouldBeAdjustedAccordingToObservers() {
+        instance.attachObserver(obs, 50);
+        verify(locationManager).requestLocationUpdates(
+                LocationManager.GPS_PROVIDER, 50000,
+                SerleenaLocationManager.MINIMUM_UPDATE_DISTANCE, instance);
+        instance.attachObserver(otherObs, 30);
+        verify(locationManager).requestLocationUpdates(
+                LocationManager.GPS_PROVIDER, 30000,
+                SerleenaLocationManager.MINIMUM_UPDATE_DISTANCE, instance);
+        instance.attachObserver(obs3, 40);
+        verify(locationManager, times(2)).requestLocationUpdates(any(String
+                .class), any(Integer.class), any(Integer.class), any
+                (SerleenaLocationManager.class));
+        instance.detachObserver(otherObs);
+        verify(locationManager).requestLocationUpdates(
+                LocationManager.GPS_PROVIDER, 40000,
+                SerleenaLocationManager.MINIMUM_UPDATE_DISTANCE, instance);
+    }
+
+    /**
+     * Verifica che notifyObserver() sollevi un'eccezione al passaggio di
+     * parametri null.
+     */
+    @Test(expected = IllegalArgumentException.class)
+    public void notifyObserverShouldThrowWhenNullArgument() {
+        instance.notifyObserver(null);
+    }
+
+    /**
+     * Verifica che il costruttore sollevi un'eccezione al passaggio di
+     * parametri null.
+     */
+    @Test(expected = IllegalArgumentException.class)
+    public void ctorShouldThrowWhenNullArgument() {
+        new SerleenaLocationManager(null);
+    }
+
     @Before
     public void setUp() {
         obs = mock(ILocationObserver.class);
         otherObs = mock(ILocationObserver.class);
+        obs3 = mock(ILocationObserver.class);
         locationManager = mock(LocationManager.class);
         shadowLocationManager = shadowOf(locationManager);
         instance = new SerleenaLocationManager(locationManager);
