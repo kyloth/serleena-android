@@ -42,23 +42,12 @@
 package com.kyloth.serleena.view.fragments;
 
 import android.app.Activity;
-import android.app.Fragment;
 import android.app.FragmentManager;
-import android.content.Intent;
-import android.test.ActivityInstrumentationTestCase2;
-import android.test.ActivityUnitTestCase;
-import android.view.KeyEvent;
-import android.view.View;
 
 import com.kyloth.serleena.BuildConfig;
-import com.kyloth.serleena.model.ITrack;
 import com.kyloth.serleena.presentation.ITrackPresenter;
 import com.kyloth.serleena.presentation.ISerleenaActivity;
-import com.kyloth.serleena.presenters.SerleenaActivity;
-import com.kyloth.serleena.view.fragments.TrackFragment;
-import com.kyloth.serleena.model.IExperience;
 import com.kyloth.serleena.model.ISerleenaDataSource;
-import com.kyloth.serleena.model.ITrack;
 import com.kyloth.serleena.sensors.ISensorManager;
 
 import junit.framework.Assert;
@@ -73,14 +62,7 @@ import org.junit.Before;
 import org.junit.Rule;
 import org.junit.rules.ExpectedException;
 
-import java.lang.Exception;
-import java.lang.Override;
-import java.lang.Throwable;
-
-import dalvik.annotation.TestTarget;
-
 import static org.mockito.Mockito.*;
-import static org.junit.Assert.*;
 
 /**
  * Contiene i test di unità per la classe CompassFragment.
@@ -95,10 +77,6 @@ public class TrackFragmentTest {
 
     private static class TestActivity
             extends Activity implements ISerleenaActivity {
-        public void setActiveExperience(IExperience experience) { }
-        public void setActiveTrack(ITrack track) { }
-        public void enableTelemetry() {}
-        public void disableTelemetry() {}
         public ISerleenaDataSource getDataSource() {
             return null;
         }
@@ -121,14 +99,13 @@ public class TrackFragmentTest {
         Assert.assertNotNull("initialization failed", activity);
         fragment = new TrackFragment();
         FragmentManager fm = activity.getFragmentManager();
-        fm.beginTransaction().add(fragment,"TEST").commit();
-        Assert.assertEquals("fragment not attached",fragment.getActivity(),activity);
+        fm.beginTransaction().add(fragment, "TEST").commit();
+        Assert.assertEquals("fragment not attached", fragment.getActivity(), activity);
     }
 
     /**
      * Verifica che sia possibile collegare un ITrackPresenter ad un
      * TrackFragment.
-     *
      */
     @Test
     public void testAttachCompassPresenter() {
@@ -141,12 +118,12 @@ public class TrackFragmentTest {
     }
 
     /**
-     * Verifica che alla pressione del pulsante centrale non avvenga
-     * nulla.
-     *
+     * Verifica che venga sollevata un'eccezione alla chiamata di
+     * attachPresenter() con parametri null.
      */
-    @Test
-    public void testShouldDoNothingOnKeyDown() {
-        fragment.keyDown(0, new KeyEvent(1,KeyEvent.KEYCODE_ENTER));
+    @Test(expected = IllegalArgumentException.class)
+    public void attachPresenterShouldThrowWhenNullArgument() {
+        fragment.attachPresenter(null);
     }
+
 }
