@@ -87,9 +87,13 @@ class SerleenaLocationManager implements ILocationManager,
      * Crea un oggetto NormalLocationManager.
      *
      * @param locationManager LocationManager da utilizzare per ottenere la
-     *                        posizione dell'utente.
+     *                        posizione dell'utente. Se null, viene sollevata
+     *                        un'eccezione IllegalArgumentException.
      */
     public SerleenaLocationManager(LocationManager locationManager) {
+        if (locationManager == null)
+            throw new IllegalArgumentException("Illegal null location manager");
+
         this.observers = new HashMap<ILocationObserver, Integer>();
         this.singleUpdates = new HashSet<ILocationObserver>();
         this.currentInterval = Integer.MAX_VALUE;
