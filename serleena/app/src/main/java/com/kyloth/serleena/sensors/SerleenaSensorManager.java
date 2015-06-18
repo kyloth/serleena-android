@@ -43,6 +43,7 @@ package com.kyloth.serleena.sensors;
 
 import android.content.Context;
 import android.hardware.SensorManager;
+import android.location.LocationManager;
 
 import java.util.HashMap;
 
@@ -102,7 +103,10 @@ public class SerleenaSensorManager implements ISensorManager {
      * @see Context
      */
     private SerleenaSensorManager(Context context) {
-        locMan = new SerleenaLocationManager(context);
+        LocationManager androidLocMan =
+                (LocationManager)
+                        context.getSystemService(Context.LOCATION_SERVICE);
+        locMan = new SerleenaLocationManager(androidLocMan);
         hrMan = new HeartRateManager(context);
         wMan = new WakeupManager(context);
         tc = new TrackCrossing(new LocationReachedManager(wMan, locMan));

@@ -41,7 +41,6 @@
 
 package com.kyloth.serleena.sensors;
 
-import android.content.Context;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
@@ -66,7 +65,6 @@ import java.util.Set;
  * @field lastUpdate : long Istante di tempo, in UNIX time, a cui corrisponde l'ultimo dato di posizione noto
  * @field observer : Map<ILocationObserver, Integer> Mappa gli Observer agli intervalli di notifica
  * @field locationManager : LocationManager Gestore della posizione di Android
- * @field singleUpdates : Set<ILocationObserver> Insieme degli Observer la cui notifica deve avvenire solamente una volta
  * @field currentInterval : int Intervallo con cui al momento viene richiesto l'aggiornamento sulla posizione alle API Android
  * @author Filippo Sestini <sestini.filippo@gmail.com>
  * @version 1.0.0
@@ -74,34 +72,29 @@ import java.util.Set;
 class SerleenaLocationManager implements ILocationManager,
         LocationListener {
 
-    private static final long MAX_WINDOW_SECONDS = 30;
+    public static final long LOCATION_EXPIRATION_TIME = 30;
+    public static final int MINIMUM_UPDATE_DISTANCE = 10;
 
     private GeoPoint lastKnownLocation;
     private long lastUpdate;
     private Map<ILocationObserver, Integer> observers;
     private android.location.LocationManager locationManager;
-    private Set<ILocationObserver> singleUpdates;
     private int currentInterval;
 
     /**
      * Crea un oggetto NormalLocationManager.
      *
-     * @param context Contesto dell'applicazione.
+     * @param locationManager LocationManager da utilizzare per ottenere la
+     *                        posizione dell'utente. Se null, viene sollevata
+     *                        un'eccezione IllegalArgumentException.
      */
-    public SerleenaLocationManager(Context context, LocationManager locationManager) {
-        this.observers = new HashMap<ILocationObserver, Integer>();
-        this.singleUpdates = new HashSet<ILocationObserver>();
-        this.currentInterval = Integer.MAX_VALUE;
-        if (locationManager == null) {
-            this.locationManager = (android.location.LocationManager)
-                    context.getSystemService(Context.LOCATION_SERVICE);
-        } else {
-            this.locationManager = locationManager;
-        }
-    }
+    public SerleenaLocationManager(LocationManager locationManager) {
+        if (locationManager == null)
+            throw new IllegalArgumentException("Illegal null location manager");
 
-    public SerleenaLocationManager(Context context) {
-        this(context, null);
+        this.observers = new HashMap<ILocationObserver, Integer>();
+        this.currentInterval = Integer.MAX_VALUE;
+        this.locationManager = locationManager;
     }
 
     /**
@@ -172,7 +165,8 @@ class SerleenaLocationManager implements ILocationManager,
      * @param observer Oggetto ILocationObserver a cui comunicare i dati. Se
      *                 null, viene sollevata un'eccezione
      *                 IllegalArgumentException.
-     * @param timeout  Timeout in secondi.
+     * @param timeout  Timeout in secondi. Se <= 0, viene sollevata
+     *                 un'eccezione IllegalArgumentException.
      */
     @Override
     public synchronized void getSingleUpdate(final ILocationObserver observer,
@@ -184,9 +178,8 @@ class SerleenaLocationManager implements ILocationManager,
         if (timeout <= 0)
             throw new IllegalArgumentException("Illegal timeout");
 
-        if (observers.size() > 0 && ((System.currentTimeMillis() / 1000L) -
-                lastUpdate) < MAX_WINDOW_SECONDS)
-
+        if (((System.currentTimeMillis() / 1000L) - lastUpdate) <
+                LOCATION_EXPIRATION_TIME)
             notifyObserver(observer);
 
         else {
@@ -194,7 +187,6 @@ class SerleenaLocationManager implements ILocationManager,
             final LocationListener listener = new LocationListener() {
                 @Override
                 public void onLocationChanged(Location location) {
-                    singleUpdates.remove(observer);
                     lastKnownLocation = new GeoPoint(location.getLatitude(),
                             location.getLongitude());
                     lastUpdate = System.currentTimeMillis() / 1000L;
@@ -208,19 +200,14 @@ class SerleenaLocationManager implements ILocationManager,
                 public void onProviderDisabled(String s) { }
             };
 
-            singleUpdates.add(observer);
-
             String provider = android.location.LocationManager.GPS_PROVIDER;
             locationManager.requestSingleUpdate(provider, listener, null);
 
             final Handler timeoutHandler = new Handler();
             final Runnable runnable = new Runnable() {
                 public void run() {
-                    if (singleUpdates.contains(observer)) {
-                        locationManager.removeUpdates(listener);
-                        notifyObserver(observer);
-                        singleUpdates.remove(observer);
-                    }
+                    locationManager.removeUpdates(listener);
+                    notifyObserver(observer);
                 }
             };
 
@@ -281,11 +268,13 @@ class SerleenaLocationManager implements ILocationManager,
                 if (interval < minInterval)
                     minInterval = interval;
 
-            locationManager.removeUpdates(this);
-            locationManager.requestLocationUpdates(LocationManager
-                    .GPS_PROVIDER, minInterval * 1000, 10, this);
-            currentInterval = minInterval;
-
+            if (minInterval != currentInterval) {
+                locationManager.removeUpdates(this);
+                locationManager.requestLocationUpdates(LocationManager
+                                .GPS_PROVIDER, minInterval * 1000, MINIMUM_UPDATE_DISTANCE,
+                        this);
+                currentInterval = minInterval;
+            }
         }
     }
 
