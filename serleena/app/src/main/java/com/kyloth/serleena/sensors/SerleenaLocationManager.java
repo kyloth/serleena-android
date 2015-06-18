@@ -180,8 +180,8 @@ class SerleenaLocationManager implements ILocationManager,
         if (timeout <= 0)
             throw new IllegalArgumentException("Illegal timeout");
 
-        if (observers.size() > 0 && ((System.currentTimeMillis() / 1000L) -
-                lastUpdate) < LOCATION_EXPIRATION_TIME)
+        if (((System.currentTimeMillis() / 1000L) - lastUpdate) <
+                LOCATION_EXPIRATION_TIME)
             notifyObserver(observer);
 
         else {
