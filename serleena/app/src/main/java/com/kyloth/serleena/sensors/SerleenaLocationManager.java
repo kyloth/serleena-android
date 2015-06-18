@@ -74,7 +74,7 @@ import java.util.Set;
 class SerleenaLocationManager implements ILocationManager,
         LocationListener {
 
-    private static final long MAX_WINDOW_SECONDS = 30;
+    public static final long LOCATION_EXPIRATION_TIME = 30;
 
     private GeoPoint lastKnownLocation;
     private long lastUpdate;
@@ -181,7 +181,7 @@ class SerleenaLocationManager implements ILocationManager,
             throw new IllegalArgumentException("Illegal timeout");
 
         if (observers.size() > 0 && ((System.currentTimeMillis() / 1000L) -
-                lastUpdate) < MAX_WINDOW_SECONDS)
+                lastUpdate) < LOCATION_EXPIRATION_TIME)
             notifyObserver(observer);
 
         else {
