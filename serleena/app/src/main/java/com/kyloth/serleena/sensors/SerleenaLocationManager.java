@@ -73,6 +73,7 @@ class SerleenaLocationManager implements ILocationManager,
         LocationListener {
 
     public static final long LOCATION_EXPIRATION_TIME = 30;
+    public static final int MINIMUM_UPDATE_DISTANCE = 10;
 
     private GeoPoint lastKnownLocation;
     private long lastUpdate;
@@ -268,7 +269,8 @@ class SerleenaLocationManager implements ILocationManager,
 
             locationManager.removeUpdates(this);
             locationManager.requestLocationUpdates(LocationManager
-                    .GPS_PROVIDER, minInterval * 1000, 10, this);
+                    .GPS_PROVIDER, minInterval * 1000, MINIMUM_UPDATE_DISTANCE,
+                    this);
             currentInterval = minInterval;
 
         }
