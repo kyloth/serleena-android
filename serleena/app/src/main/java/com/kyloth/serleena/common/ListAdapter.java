@@ -84,7 +84,8 @@ public class ListAdapter<T> implements DirectAccessList<T> {
 
     /**
      * Implementa Iterable.iterator().
-     * @return
+     *
+     * @return Iteratore.
      */
     @Override
     public Iterator<T> iterator() {
