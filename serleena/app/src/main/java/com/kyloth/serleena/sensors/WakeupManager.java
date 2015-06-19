@@ -168,7 +168,7 @@ class WakeupManager extends BroadcastReceiver implements IWakeupManager {
     public synchronized void onReceive(Context context, Intent intent) {
         String uuid = intent.getStringExtra(ALARM_UUID);
         if (uuid == null)
-            throw new IllegalArgumentException("Intent not recognized");
+            throw new RuntimeException("Intent not recognized");
 
         notifyObserver(schedule.getObserver(uuid));
     }
