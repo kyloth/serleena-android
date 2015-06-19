@@ -55,7 +55,7 @@ import java.util.List;
  */
 public class ListAdapter<T> implements DirectAccessList<T> {
 
-    private List<T> list;
+    private final List<T> list;
 
     /**
      * Crea un adapter.
