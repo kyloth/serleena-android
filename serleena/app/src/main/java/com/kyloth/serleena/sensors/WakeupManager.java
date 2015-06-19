@@ -107,9 +107,7 @@ class WakeupManager extends BroadcastReceiver implements IWakeupManager {
             throw new IllegalArgumentException("Illegal interval");
 
         int alarmType = AlarmManager.RTC_WAKEUP;
-        int millis = interval * 1000;
-        if (millis == 0)
-            millis = 1;
+        int millis = interval > 0 ? interval * 1000 : 1;
         String uuid = observer.getUUID();
 
         Intent intentToFire = new Intent(ACTION_SERLEENA_ALARM);
