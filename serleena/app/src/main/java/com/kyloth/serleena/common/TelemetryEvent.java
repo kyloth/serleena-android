@@ -53,7 +53,7 @@ import java.util.Date;
  */
 public abstract class TelemetryEvent {
 
-    private int timestamp;
+    private final int timestamp;
 
     /**
      * Crea un nuovo oggetto TelemetryEvent.
