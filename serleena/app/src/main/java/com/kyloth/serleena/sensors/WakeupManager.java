@@ -76,26 +76,13 @@ class WakeupManager extends BroadcastReceiver implements IWakeupManager {
      * Crea un oggetto WakeupManager.
      *
      * @param context Contesto dell'applicazione.
-     * @param alarmManager Un alarmManager diverso da quello di default; 
+     * @param alarmManager Un alarmManager diverso da quello di default;
      *        utile per testing.
      */
     public WakeupManager(Context context, AlarmManager alarmManager) {
-        if (alarmManager == null) {
-            this.alarmManager = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
-        } else {
-            this.alarmManager = alarmManager;
-        }
+        this.alarmManager = alarmManager;
         this.context = context;
         this.schedule = new WakeupSchedule();
-    }
-
-    /**
-     * Crea un oggetto WakeupManager.
-     *
-     * @param context Contesto dell'applicazione.
-     */
-    public WakeupManager(Context context) {
-        this(context, null);
     }
 
     /**

@@ -41,6 +41,7 @@
 
 package com.kyloth.serleena.sensors;
 
+import android.app.AlarmManager;
 import android.content.Context;
 import android.hardware.SensorManager;
 import android.location.LocationManager;
@@ -107,8 +108,10 @@ public class SerleenaSensorManager implements ISensorManager {
                 (LocationManager)
                         context.getSystemService(Context.LOCATION_SERVICE);
         locMan = new SerleenaLocationManager(androidLocMan);
+        AlarmManager androidAlarmManager =
+                (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
+        wMan = new WakeupManager(context, androidAlarmManager);
         hrMan = new HeartRateManager(context);
-        wMan = new WakeupManager(context);
         tc = new TrackCrossing(new LocationReachedManager(wMan, locMan));
         telMan = new TelemetryManager(locMan, hrMan, wMan, SerleenaPowerManager
                 .getInstance(context), tc);

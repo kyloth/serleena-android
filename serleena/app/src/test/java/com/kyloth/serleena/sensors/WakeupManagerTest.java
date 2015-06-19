@@ -216,7 +216,7 @@ public class WakeupManagerTest {
 	public void setUp() {
 		am = (AlarmManager)RuntimeEnvironment.application.getSystemService(Context.ALARM_SERVICE);
 		sam = shadowOf(am);
-		wm = new WakeupManager(RuntimeEnvironment.application);
+		wm = new WakeupManager(RuntimeEnvironment.application, am);
 		obs = new StubbyWakeupObserver();
 		otherObs = new StubbyWakeupObserver();
 	}
