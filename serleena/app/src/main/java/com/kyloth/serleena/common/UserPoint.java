@@ -60,31 +60,4 @@ public class UserPoint extends GeoPoint {
         super(latitude, longitude);
     }
 
-    /**
-     * Overriding del metodo equals() della superclasse Object.
-     *
-     * @param o Oggetto da comparare.
-     * @return  True se l'oggetto da comparare è non null, entrambi gli oggetti
-     *          hanno tipo UserPoint e si riferiscono al medesimo punto
-     *          geografico, quindi con uguali valori di latitudine e
-     *          longitudine. False altrimenti.
-     */
-    public boolean equals(Object o) {
-        if (o != null && o instanceof UserPoint) {
-            UserPoint other = (UserPoint) o;
-            return this.latitude() == other.latitude() &&
-                    this.longitude() == other.longitude();
-        }
-        return false;
-    }
-
-    /**
-     * Overriding di Object.hashCode().
-     *
-     * @return Hash dell'oggetto.
-     */
-    public int hashCode() {
-        return (int)(latitude() + longitude());
-    }
-
 }
