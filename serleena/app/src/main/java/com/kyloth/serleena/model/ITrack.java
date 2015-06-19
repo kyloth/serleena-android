@@ -41,7 +41,7 @@
 package com.kyloth.serleena.model;
 
 import com.kyloth.serleena.common.Checkpoint;
-import com.kyloth.serleena.common.ImmutableList;
+import com.kyloth.serleena.common.DirectAccessList;
 import com.kyloth.serleena.common.TelemetryEvent;
 
 /**
@@ -76,7 +76,7 @@ public interface ITrack {
      *
      * @return Insieme di Checkpoint.
      */
-    public ImmutableList<Checkpoint> getCheckpoints();
+    public DirectAccessList<Checkpoint> getCheckpoints();
 
     /**
      * Restituisce il Tracciamento con migliore tempo totale per il Percorso.

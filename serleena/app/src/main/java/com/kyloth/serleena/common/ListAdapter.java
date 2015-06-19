@@ -45,15 +45,15 @@ import java.util.Iterator;
 import java.util.List;
 
 /**
- * Adatta l'interfaccia ImmutableList all'interfaccia List di Java.
+ * Adatta l'interfaccia DirectAccessList all'interfaccia List di Java.
  *
- * @use Viene istanziato passando l'oggetto List da adattare come parametro al costruttore. Viene utilizzato in SerleenaSQLiteDataSource per la creazione di strutture ImmutableList a partire da oggetti ArrayList.
+ * @use Viene istanziato passando l'oggetto List da adattare come parametro al costruttore. Viene utilizzato in SerleenaSQLiteDataSource per la creazione di strutture DirectAccessList a partire da oggetti ArrayList.
  * @field list : List<T> Oggetto List<T> da adattare
  * @author Filippo Sestini <sestini.filippo@gmail.com>
  * @version 1.0.0
- * @see com.kyloth.serleena.common.ImmutableList
+ * @see DirectAccessList
  */
-public class ListAdapter<T> implements ImmutableList<T> {
+public class ListAdapter<T> implements DirectAccessList<T> {
 
     private List<T> list;
 
@@ -67,7 +67,7 @@ public class ListAdapter<T> implements ImmutableList<T> {
     }
 
     /**
-     * Implementa ImmutableList.size().
+     * Implementa DirectAccessList.size().
      */
     @Override
     public int size() {
@@ -75,7 +75,7 @@ public class ListAdapter<T> implements ImmutableList<T> {
     }
 
     /**
-     * Implementa ImmutableList.get().
+     * Implementa DirectAccessList.get().
      */
     @Override
     public T get(int index) {

@@ -42,9 +42,9 @@ package com.kyloth.serleena.presenters;
 
 import android.os.AsyncTask;
 
+import com.kyloth.serleena.common.DirectAccessList;
 import com.kyloth.serleena.common.EmergencyContact;
 import com.kyloth.serleena.common.GeoPoint;
-import com.kyloth.serleena.common.ImmutableList;
 import com.kyloth.serleena.common.ListAdapter;
 import com.kyloth.serleena.model.ISerleenaDataSource;
 import com.kyloth.serleena.presentation.IContactsPresenter;
@@ -62,7 +62,7 @@ import java.util.ArrayList;
  * @field view : IContactsView Vista associata al Presenter
  * @field activity : ISerleenaActivity Activity a cui il Presenter appartiene
  * @field locMan : ILocationManager Gestore del sensore di posizione
- * @field contacts : ImmutableList<EmergencyContact> Contatti da visualizzare sulla vista
+ * @field contacts : DirectAccessList<EmergencyContact> Contatti da visualizzare sulla vista
  * @author Filippo Sestini <sestini.filippo@gmail.com>
  * @version 1.0.0
  */
@@ -74,7 +74,7 @@ public class ContactsPresenter implements IContactsPresenter,
     private IContactsView view;
     private ISerleenaActivity activity;
     private ILocationManager locMan;
-    private ImmutableList<EmergencyContact> contacts;
+    private DirectAccessList<EmergencyContact> contacts;
     private int index;
 
     /**
@@ -168,7 +168,7 @@ public class ContactsPresenter implements IContactsPresenter,
     /**
      * Reimposta la vista alla condizione iniziale.
      */
-    private synchronized void resetView(ImmutableList<EmergencyContact>
+    private synchronized void resetView(DirectAccessList<EmergencyContact>
                                                 contacts) {
         this.contacts = contacts;
         index = 0;

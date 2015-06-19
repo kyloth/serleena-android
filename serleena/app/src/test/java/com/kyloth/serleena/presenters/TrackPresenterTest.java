@@ -58,7 +58,7 @@ import java.util.List;
 
 import com.android.internal.util.Predicate;
 import com.kyloth.serleena.common.CheckpointReachedTelemetryEvent;
-import com.kyloth.serleena.common.ImmutableList;
+import com.kyloth.serleena.common.DirectAccessList;
 import com.kyloth.serleena.common.TelemetryEvent;
 import com.kyloth.serleena.model.ITelemetry;
 import com.kyloth.serleena.model.NoSuchTelemetryEventException;
@@ -85,8 +85,8 @@ import com.kyloth.serleena.sensors.SensorNotAvailableException;
 public class TrackPresenterTest {
 
     private ITrack getTrack() throws NoSuchTelemetryException {
-        ImmutableList<Checkpoint> checkpoints =
-                new ImmutableList<Checkpoint>() {
+        DirectAccessList<Checkpoint> checkpoints =
+                new DirectAccessList<Checkpoint>() {
             @Override
             public int size() {
                 return Integer.MAX_VALUE;
@@ -112,8 +112,8 @@ public class TrackPresenterTest {
 
     private ITrack getOneCheckpointTrack(final Checkpoint cp)
             throws NoSuchTelemetryException {
-        ImmutableList<Checkpoint> checkpoints =
-                new ImmutableList<Checkpoint>() {
+        DirectAccessList<Checkpoint> checkpoints =
+                new DirectAccessList<Checkpoint>() {
                     @Override public int size() { return 1; }
                     @Override public Checkpoint get(int index) {
                         return cp;

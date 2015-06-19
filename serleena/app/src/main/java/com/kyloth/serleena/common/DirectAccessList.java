@@ -29,7 +29,7 @@
 
 
 /**
- * Name: ImmutableList.java
+ * Name: DirectAccessList.java
  * Package: com.kyloth.serleena.common
  * Author: Filippo Sestini
  *
@@ -51,7 +51,7 @@ package com.kyloth.serleena.common;
  * @author Filippo Sestini <sestini.filippo@gmail.com>
  * @version 1.0.0
  */
-public interface ImmutableList<T> extends Iterable<T> {
+public interface DirectAccessList<T> extends Iterable<T> {
 
     /**
      * Restituisce il numero di elementi della lista.

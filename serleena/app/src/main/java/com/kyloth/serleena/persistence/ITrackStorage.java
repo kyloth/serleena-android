@@ -42,7 +42,7 @@
 package com.kyloth.serleena.persistence;
 
 import com.kyloth.serleena.common.Checkpoint;
-import com.kyloth.serleena.common.ImmutableList;
+import com.kyloth.serleena.common.DirectAccessList;
 import com.kyloth.serleena.common.TelemetryEvent;
 
 /**
@@ -75,6 +75,6 @@ public interface ITrackStorage {
      *
      * @return Insieme di Checkpoint.
      */
-    public ImmutableList<Checkpoint> getCheckpoints();
+    public DirectAccessList<Checkpoint> getCheckpoints();
 
 }

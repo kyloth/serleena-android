@@ -42,13 +42,12 @@
 package com.kyloth.serleena.persistence.sqlite;
 
 import com.kyloth.serleena.common.Checkpoint;
-import com.kyloth.serleena.common.ImmutableList;
+import com.kyloth.serleena.common.DirectAccessList;
 import com.kyloth.serleena.common.TelemetryEvent;
 import com.kyloth.serleena.persistence.ITelemetryStorage;
 import com.kyloth.serleena.persistence.ITrackStorage;
 
 import java.util.ArrayList;
-import java.util.zip.CheckedOutputStream;
 
 /**
  * Implementazione di persistence.ITrackStorage per la persistenza su
@@ -57,7 +56,7 @@ import java.util.zip.CheckedOutputStream;
  * @use Istanze di SQLiteDAOTrack vengono create e utilizzate dal DAO SerleenaSQLiteDataSource, che le restituisce all'esterno dietro interfaccia ITrackStorage. Mantiene un riferimento al database di appartenenza attraverso ISerleenaSQLiteDataSource.
  * @field id : int ID della riga di database associata all'oggetto
  * @field dataSource : ISerleenaSQLiteDataSource Database a cui fa riferimento l'oggetto
- * @field checkpoints : ImmutableList<Checkpoint> Lista dei checkpoints associati al Percorso rappresentato dall'oggetto
+ * @field checkpoints : DirectAccessList<Checkpoint> Lista dei checkpoints associati al Percorso rappresentato dall'oggetto
  * @author Filippo Sestini <sestini.filippo@gmail.com>
  * @version 1.0.0
  * @see com.kyloth.serleena.persistence.ITrackStorage
@@ -66,9 +65,9 @@ class SQLiteDAOTrack implements ITrackStorage {
 
     private int id;
     private ISerleenaSQLiteDataSource dataSource;
-    private ImmutableList<Checkpoint> checkpoints;
+    private DirectAccessList<Checkpoint> checkpoints;
 
-    public SQLiteDAOTrack(ImmutableList<Checkpoint> checkpoints, int id,
+    public SQLiteDAOTrack(DirectAccessList<Checkpoint> checkpoints, int id,
                           ISerleenaSQLiteDataSource dataSource) {
         this.id = id;
         this.dataSource = dataSource;
@@ -99,7 +98,7 @@ class SQLiteDAOTrack implements ITrackStorage {
     }
 
     @Override
-    public ImmutableList<Checkpoint> getCheckpoints() {
+    public DirectAccessList<Checkpoint> getCheckpoints() {
         return checkpoints;
     }
 

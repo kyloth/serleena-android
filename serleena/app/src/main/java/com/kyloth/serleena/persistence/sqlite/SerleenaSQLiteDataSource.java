@@ -50,15 +50,14 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.media.Image;
 
 import com.kyloth.serleena.common.Checkpoint;
 import com.kyloth.serleena.common.CheckpointReachedTelemetryEvent;
+import com.kyloth.serleena.common.DirectAccessList;
 import com.kyloth.serleena.common.EmergencyContact;
 import com.kyloth.serleena.common.GeoPoint;
 import com.kyloth.serleena.common.HeartRateTelemetryEvent;
 import com.kyloth.serleena.common.IQuadrant;
-import com.kyloth.serleena.common.ImmutableList;
 import com.kyloth.serleena.common.ListAdapter;
 import com.kyloth.serleena.common.LocationTelemetryEvent;
 import com.kyloth.serleena.common.Quadrant;
@@ -66,15 +65,10 @@ import com.kyloth.serleena.common.TelemetryEvent;
 import com.kyloth.serleena.common.UserPoint;
 import com.kyloth.serleena.common.NoSuchWeatherForecastException;
 import com.kyloth.serleena.persistence.IExperienceStorage;
-import com.kyloth.serleena.persistence.ITelemetryStorage;
-import com.kyloth.serleena.persistence.ITrackStorage;
 import com.kyloth.serleena.persistence.IWeatherStorage;
 import com.kyloth.serleena.persistence.WeatherForecastEnum;
 
 import java.io.File;
-import java.text.DateFormat;
-import java.text.ParsePosition;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
@@ -175,7 +169,7 @@ public class SerleenaSQLiteDataSource implements ISerleenaSQLiteDataSource {
      * @param trackId ID del percorso di cui si vogliono ottenere i Checkpoint.
      * @return Elenco di checkpoint del Percorso specificato.
      */
-    private ImmutableList<Checkpoint> getCheckpoints(int trackId) {
+    private DirectAccessList<Checkpoint> getCheckpoints(int trackId) {
         SQLiteDatabase db = dbHelper.getReadableDatabase();
         String where = "checkpoint_track = " + trackId;
         String orderBy = "checkpoint_num ASC";

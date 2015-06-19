@@ -42,7 +42,7 @@
 package com.kyloth.serleena.model;
 
 import com.kyloth.serleena.common.Checkpoint;
-import com.kyloth.serleena.common.ImmutableList;
+import com.kyloth.serleena.common.DirectAccessList;
 import com.kyloth.serleena.common.TelemetryEvent;
 import com.kyloth.serleena.persistence.ITelemetryStorage;
 import com.kyloth.serleena.persistence.ITrackStorage;
@@ -106,7 +106,7 @@ class Track implements ITrack {
      * @return Lista di Checkpoint che rappresentano il Percorso.
      */
     @Override
-    public ImmutableList<Checkpoint> getCheckpoints() {
+    public DirectAccessList<Checkpoint> getCheckpoints() {
         return storage.getCheckpoints();
     }
 

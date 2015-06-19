@@ -43,9 +43,9 @@ package com.kyloth.serleena.sensors;
 
 import com.kyloth.serleena.common.Checkpoint;
 import com.kyloth.serleena.common.CheckpointReachedTelemetryEvent;
+import com.kyloth.serleena.common.DirectAccessList;
 import com.kyloth.serleena.common.GeoPoint;
 import com.kyloth.serleena.common.HeartRateTelemetryEvent;
-import com.kyloth.serleena.common.ImmutableList;
 import com.kyloth.serleena.common.LocationTelemetryEvent;
 import com.kyloth.serleena.common.TelemetryEvent;
 import com.kyloth.serleena.model.ITrack;
@@ -71,8 +71,8 @@ import static org.mockito.Mockito.when;
 public class TelemetryManagerTest {
 
     private ITrack getTrack() {
-        ImmutableList<Checkpoint> checkpoints =
-                new ImmutableList<Checkpoint>() {
+        DirectAccessList<Checkpoint> checkpoints =
+                new DirectAccessList<Checkpoint>() {
                     @Override public int size() { return Integer.MAX_VALUE; }
                     @Override public Checkpoint get(int index) {
                         return new Checkpoint(0, 0);
@@ -87,8 +87,8 @@ public class TelemetryManagerTest {
     }
 
     private ITrack getOneCheckpointTrack() {
-        ImmutableList<Checkpoint> checkpoints =
-                new ImmutableList<Checkpoint>() {
+        DirectAccessList<Checkpoint> checkpoints =
+                new DirectAccessList<Checkpoint>() {
                     @Override public int size() { return 1; }
                     @Override public Checkpoint get(int index) {
                         return new Checkpoint(0,0);

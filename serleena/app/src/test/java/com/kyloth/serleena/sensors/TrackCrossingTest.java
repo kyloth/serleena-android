@@ -42,7 +42,7 @@
 package com.kyloth.serleena.sensors;
 
 import com.kyloth.serleena.common.Checkpoint;
-import com.kyloth.serleena.common.ImmutableList;
+import com.kyloth.serleena.common.DirectAccessList;
 import com.kyloth.serleena.model.ITrack;
 
 import static org.mockito.Mockito.*;
@@ -61,8 +61,8 @@ import java.util.Iterator;
 public class TrackCrossingTest {
 
     private ITrack getTrack() {
-        ImmutableList<Checkpoint> checkpoints =
-                new ImmutableList<Checkpoint>() {
+        DirectAccessList<Checkpoint> checkpoints =
+                new DirectAccessList<Checkpoint>() {
                     @Override public int size() { return Integer.MAX_VALUE; }
                     @Override public Checkpoint get(int index) {
                         return new Checkpoint(0, 0);
@@ -77,8 +77,8 @@ public class TrackCrossingTest {
     }
 
     private ITrack getOneCheckpointTrack() {
-        ImmutableList<Checkpoint> checkpoints =
-                new ImmutableList<Checkpoint>() {
+        DirectAccessList<Checkpoint> checkpoints =
+                new DirectAccessList<Checkpoint>() {
                     @Override public int size() { return 1; }
                     @Override public Checkpoint get(int index) {
                         return new Checkpoint(0,0);

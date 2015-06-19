@@ -50,9 +50,7 @@ import java.util.Arrays;
 import java.util.Iterator;
 import java.util.List;
 
-import android.database.sqlite.SQLiteDatabase;
-
-import com.kyloth.serleena.common.ImmutableList;
+import com.kyloth.serleena.common.DirectAccessList;
 import com.kyloth.serleena.common.ListAdapter;
 import com.kyloth.serleena.common.Checkpoint;
 import com.kyloth.serleena.common.TelemetryEvent;
@@ -99,10 +97,10 @@ public class SQLiteDAOTrackTest {
         Checkpoint cp2 = new Checkpoint(2, 2);
         Checkpoint cp3 = new Checkpoint(3, 3);
         List<Checkpoint> list = Arrays.asList(cp1, cp2, cp3);
-        ImmutableList<Checkpoint> cpList = new ListAdapter(list);
+        DirectAccessList<Checkpoint> cpList = new ListAdapter(list);
 
         SQLiteDAOTrack daoTrack = new SQLiteDAOTrack(cpList, 123, serleenaSQLDS);
-        ImmutableList<Checkpoint> returnList = daoTrack.getCheckpoints();
+        DirectAccessList<Checkpoint> returnList = daoTrack.getCheckpoints();
         assertTrue(cp1.equals(returnList.get(0)));
         assertTrue(cp2.equals(returnList.get(1)));
         assertTrue(cp3.equals(returnList.get(2)));

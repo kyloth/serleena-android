@@ -41,12 +41,7 @@
 
 package com.kyloth.serleena.sensors;
 
-import com.kyloth.serleena.common.Checkpoint;
-import com.kyloth.serleena.common.ImmutableList;
-import com.kyloth.serleena.model.ITelemetry;
 import com.kyloth.serleena.model.ITrack;
-import com.kyloth.serleena.model.NoSuchTelemetryEventException;
-import com.kyloth.serleena.model.NoSuchTelemetryException;
 
 /**
  * Interfaccia di un oggetto che offre servizi per l'attraversamento di
