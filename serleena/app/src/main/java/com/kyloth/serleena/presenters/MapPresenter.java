@@ -163,6 +163,7 @@ public class MapPresenter implements IMapPresenter, ILocationObserver {
      */
     @Override
     public synchronized void onLocationUpdate(final GeoPoint loc) {
+        /*
         AsyncTask<Void, Void, Void> task = new AsyncTask<Void, Void, Void>() {
             @Override
             protected Void doInBackground(Void... params) {
@@ -173,6 +174,9 @@ public class MapPresenter implements IMapPresenter, ILocationObserver {
         };
 
         task.execute();
+        */
+        currentPosition = loc;
+        updateView(currentPosition);
     }
 
     /**
@@ -208,8 +212,8 @@ public class MapPresenter implements IMapPresenter, ILocationObserver {
             throw new IllegalArgumentException("Illegal null location");
 
         ISerleenaDataSource ds = activity.getDataSource();
-        IQuadrant quadrant = ds.getQuadrant(location);
-        view.displayQuadrant(quadrant);
+        //IQuadrant quadrant = ds.getQuadrant(location);
+        //view.displayQuadrant(quadrant);
         view.setUserLocation(location);
         if (activeExperience != null) {
             Iterable<UserPoint> ups = activeExperience.getUserPoints();
@@ -219,4 +223,3 @@ public class MapPresenter implements IMapPresenter, ILocationObserver {
 
 
 }
-

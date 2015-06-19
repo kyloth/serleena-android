@@ -4,9 +4,17 @@
              android:layout_height="match_parent"
              tools:context="com.kyloth.serleena.view.fragments.CompassFragment">
 
+    <!--
     <ImageView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:src="@drawable/compass"/>
+        android:src="@drawable/compass"
+        android:id="@+id/compass_image"/>
+        -->
+    <TextView
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:id="@+id/compass_text"
+        android:text="Compass"/>
 
 </FrameLayout>

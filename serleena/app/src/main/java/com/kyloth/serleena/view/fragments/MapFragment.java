@@ -40,6 +40,7 @@ import android.support.annotation.Nullable;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 
 import com.kyloth.serleena.R;
 import com.kyloth.serleena.common.GeoPoint;
@@ -94,7 +95,9 @@ public class MapFragment extends Fragment implements IMapView,
 
     @Override
     public void setUserLocation(GeoPoint point) {
-        map.setUserPosition(point);
+        //map.setUserPosition(point);
+        TextView tv = (TextView) getView().findViewById(R.id.map_text);
+        tv.setText("Lat: " + point.latitude() + "    Lon: " + point.longitude());
     }
 
     @Override

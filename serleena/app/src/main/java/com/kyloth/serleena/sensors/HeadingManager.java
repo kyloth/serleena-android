@@ -120,15 +120,7 @@ class HeadingManager implements IHeadingManager, SensorEventListener {
      */
     @Override
     public synchronized void onSensorChanged(final SensorEvent sensorEvent) {
-        AsyncTask<Void, Void, Void> task = new AsyncTask<Void, Void, Void>() {
-            @Override
-            protected Void doInBackground(Void... params) {
-                onRawDataReceived(sensorEvent.sensor.getType(),
-                        sensorEvent.values);
-                return null;
-            }
-        };
-        task.execute();
+        onRawDataReceived(sensorEvent.sensor.getType(), sensorEvent.values);
     }
 
     /**

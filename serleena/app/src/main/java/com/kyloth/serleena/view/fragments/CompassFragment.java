@@ -36,6 +36,7 @@ import android.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 
 import com.kyloth.serleena.R;
 import com.kyloth.serleena.presentation.ICompassPresenter;
@@ -46,11 +47,18 @@ import com.kyloth.serleena.presentation.ICompassView;
  */
 public class CompassFragment extends Fragment implements ICompassView {
 
+    ICompassPresenter presenter;
+
     /**
      * Crea un nuovo oggetto CompassFragment.
      */
     public CompassFragment() {
-
+        presenter = new ICompassPresenter() {
+            @Override
+            public void resume() { }
+            @Override
+            public void pause() { }
+        };
     }
 
     /**
@@ -72,12 +80,13 @@ public class CompassFragment extends Fragment implements ICompassView {
 
     @Override
     public void setHeading(double heading) {
-
+        TextView tv = (TextView) getView().findViewById(R.id.compass_text);
+        tv.setText(String.valueOf(heading));
     }
 
     @Override
     public void attachPresenter(ICompassPresenter presenter) {
-
+        this.presenter = presenter;
     }
 
     @Override
@@ -85,4 +94,15 @@ public class CompassFragment extends Fragment implements ICompassView {
 
     }
 
+    @Override
+    public void onResume() {
+        super.onResume();
+        presenter.resume();
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        presenter.pause();
+    }
 }

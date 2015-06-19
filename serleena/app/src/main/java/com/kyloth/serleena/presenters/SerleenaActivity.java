@@ -41,6 +41,8 @@
 package com.kyloth.serleena.presenters;
 
 import android.app.Fragment;
+import android.content.BroadcastReceiver;
+import android.content.IntentFilter;
 import android.os.Bundle;
 import android.app.Activity;
 import android.view.KeyEvent;
@@ -52,6 +54,7 @@ import com.kyloth.serleena.persistence.sqlite.SQLiteDataSourceFactory;
 import com.kyloth.serleena.presentation.IObjectListObserver;
 import com.kyloth.serleena.presentation.ISerleenaActivity;
 import com.kyloth.serleena.sensors.ISensorManager;
+import com.kyloth.serleena.sensors.IWakeupObserver;
 import com.kyloth.serleena.sensors.SerleenaSensorManager;
 import com.kyloth.serleena.view.fragments.CompassFragment;
 import com.kyloth.serleena.view.fragments.ContactsFragment;
@@ -64,6 +67,7 @@ import com.kyloth.serleena.view.fragments.TrackSelectionFragment;
 import com.kyloth.serleena.view.fragments.WeatherFragment;
 
 import java.util.ArrayList;
+import java.util.UUID;
 
 /**
  * Classe che implementa ISerleenaActivity.
@@ -101,6 +105,10 @@ public class SerleenaActivity extends Activity
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_serleena);
+
+        SQLiteDataSourceFactory factory = SQLiteDataSourceFactory.getInstance();
+        dataSource = new SerleenaDataSource(factory.createDataSource(this));
+        sensorManager = SerleenaSensorManager.getInstance(this);
 
         if (findViewById(R.id.main_container) != null) {
             if (savedInstanceState != null)
@@ -141,13 +149,13 @@ public class SerleenaActivity extends Activity
             menuFragment.setList(menuList);
             menuFragment.attachObserver(this);
 
+            new CompassPresenter(compassFragment, this);
+            new MapPresenter(mapFragment, this);
+
             getFragmentManager().beginTransaction()
                     .add(R.id.main_container, menuFragment).commit();
-        }
 
-        SQLiteDataSourceFactory factory = SQLiteDataSourceFactory.getInstance();
-        dataSource = new SerleenaDataSource(factory.createDataSource(this));
-        sensorManager = SerleenaSensorManager.getInstance(this);
+        }
     }
 
     /**
@@ -191,4 +199,26 @@ public class SerleenaActivity extends Activity
                 .replace(R.id.main_container, f).commit();
     }
 
+    @Override
+    protected void onResume() {
+        super.onResume();
+        registerReceiver((BroadcastReceiver)getSensorManager()
+                .getWakeupSource(), new IntentFilter("com.kyloth.serleena" +
+                ".sensors.ACTION_SERLEENA_ALARM"));
+        this.getSensorManager().getWakeupSource().attachObserver(new IWakeupObserver() {
+            @Override
+            public void onWakeup() {
+                String s = new String("asd");
+            }
+            public String getUUID() {
+                return "DIOCANE";
+            }
+        }, 10, false);
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        //unregisterReceiver((BroadcastReceiver)getSensorManager().getWakeupSource());
+    }
 }
