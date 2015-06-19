@@ -54,7 +54,7 @@ import java.util.Date;
  */
 public class HeartRateTelemetryEvent extends TelemetryEvent {
 
-    private int heartRate;
+    private final int heartRate;
 
     /**
      * Crea un nuovo evento di tracciamento del battito cardiaco.
