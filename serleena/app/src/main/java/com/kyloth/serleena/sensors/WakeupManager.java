@@ -65,6 +65,8 @@ import java.util.UUID;
 class WakeupManager extends BroadcastReceiver implements IWakeupManager {
 
     private static final String ALARM_UUID = "ALARM_UUID";
+    private static final String ACTION_SERLEENA_ALARM =
+            "com.kyloth.serleena.sensors.ACTION_SERLEENA_ALARM";
 
     private Context context;
     private WakeupSchedule schedule;
@@ -123,7 +125,7 @@ class WakeupManager extends BroadcastReceiver implements IWakeupManager {
             millis = 1;
         String uuid = observer.getUUID();
 
-        Intent intentToFire = new Intent(context, WakeupManager.class);
+        Intent intentToFire = new Intent(ACTION_SERLEENA_ALARM);
         intentToFire.putExtra(ALARM_UUID, uuid);
 
         PendingIntent alarmIntent =
