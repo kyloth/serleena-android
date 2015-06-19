@@ -54,8 +54,8 @@ import android.location.Location;
  */
 public class GeoPoint
 {
-    private double latitude;
-    private double longitude;
+    private final double latitude;
+    private final double longitude;
     public static double MIN_LATITUDE = -90.0;
     public static double MAX_LATITUDE = 90.0;
     public static double MIN_LONGITUDE = -180.0;
