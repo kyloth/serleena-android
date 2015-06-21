@@ -62,6 +62,19 @@ public class GeoPoint
     public static double MAX_LONGITUDE = 180.0;
 
     /**
+     * Crea un oggetto GeoPoint a partire da un oggetto Location.
+     *
+     * @param location Oggetto Location da cui creare l'istanza. Se null,
+     *                 viene sollevata un'eccezione IllegalArgumentException.
+     */
+    public GeoPoint(Location location) {
+        if (location == null)
+            throw new IllegalArgumentException("Illegal null location");
+        this.latitude = location.getLatitude();
+        this.longitude = location.getLongitude();
+    }
+
+    /**
      * Crea una nuova istanza di GeoPoint da una coppia di coordinate.
      *
      * @param latitude     Latitudine del punto geografico, -90 < x < 90.
