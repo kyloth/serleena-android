@@ -72,10 +72,10 @@ public class SerleenaSensorManager implements ISensorManager {
             new HashMap<Context, SerleenaSensorManager>();
 
     private ILocationManager locMan;
+    private IBackgroundLocationManager bkgrLocMan;
     private IHeadingManager hMan;
     private IHeartRateManager hrMan;
     private ITrackCrossing tc;
-    private IWakeupManager wMan;
     private ITelemetryManager telMan;
 
     /**
@@ -107,14 +107,14 @@ public class SerleenaSensorManager implements ISensorManager {
         LocationManager androidLocMan =
                 (LocationManager)
                         context.getSystemService(Context.LOCATION_SERVICE);
-        locMan = new SerleenaLocationManager(androidLocMan);
         AlarmManager androidAlarmManager =
                 (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
-        wMan = new WakeupManager(context, androidAlarmManager);
+        this.locMan = new SerleenaLocationManager(androidLocMan);
+        bkgrLocMan = new BackgroundLocationManager(
+                context, androidAlarmManager);
         hrMan = new HeartRateManager(context);
-        tc = new TrackCrossing(new LocationReachedManager(wMan, locMan));
-        telMan = new TelemetryManager(locMan, hrMan, wMan, SerleenaPowerManager
-                .getInstance(context), tc);
+        tc = new TrackCrossing(new LocationReachedManager(bkgrLocMan));
+        telMan = new TelemetryManager(bkgrLocMan, hrMan, tc);
         try {
             SensorManager sm = (SensorManager) context.getSystemService
                     (Context.SENSOR_SERVICE);
