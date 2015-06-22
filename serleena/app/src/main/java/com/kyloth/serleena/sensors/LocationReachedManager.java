@@ -61,9 +61,7 @@ class LocationReachedManager
     public static final int LOCATION_UPDATE_INTERVAL = 60;
 
     private final Map<ILocationReachedObserver, GeoPoint> observers;
-    private final Map<ILocationReachedObserver, IWakeupObserver> alarms;
-    private final IWakeupManager wm;
-    private final ILocationManager locMan;
+    private final IBackgroundLocationManager bkgrLocMan;
 
     /**
      * Crea un oggetto LocationReachedManager.
