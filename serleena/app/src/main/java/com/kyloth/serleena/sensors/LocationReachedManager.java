@@ -58,6 +58,7 @@ class LocationReachedManager
         implements ILocationReachedManager, ILocationObserver {
 
     public static final int LOCATION_RADIUS = 100;
+    public static final int LOCATION_UPDATE_INTERVAL = 60;
 
     private final Map<ILocationReachedObserver, GeoPoint> observers;
     private final Map<ILocationReachedObserver, IWakeupObserver> alarms;
