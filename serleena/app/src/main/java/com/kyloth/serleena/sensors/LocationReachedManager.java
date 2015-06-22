@@ -119,7 +119,9 @@ class LocationReachedManager implements ILocationReachedManager {
             throw new IllegalArgumentException("Illegal null observer");
         if (observers.containsKey(observer)) {
             observers.remove(observer);
-            wm.detachObserver(alarms.remove(observer));
+
+            if (observers.size() == 0)
+                bkgrLocMan.detachObserver(this);
         }
     }
 
