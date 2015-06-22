@@ -159,16 +159,6 @@ public class SerleenaSensorManager implements ISensorManager {
     }
 
     /**
-     * Implementa ISensorManager.getWakeupSource().
-     *
-     * @return Oggetto IWakeupManager.
-     */
-    @Override
-    public IWakeupManager getWakeupSource() {
-        return wMan;
-    }
-
-    /**
      * Implementa ISensorManager.getTelemetryManager().
      *
      * @return Oggetto ITelemetryManager.

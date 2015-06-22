@@ -76,14 +76,6 @@ public interface ISensorManager {
     public IHeartRateManager getHeartRateSource();
 
     /**
-     * Restituisce un Manager per ottenere notifiche di wakeup del
-     * processore utilizzando RTC.
-     *
-     * @return Oggetto di tipo IWakeupManager.
-     */
-    public IWakeupManager getWakeupSource();
-
-    /**
      * Restituisce un Manager per offire servizi di registrazione del
      * Tracciamento dell'Escursionista.
      *
