@@ -57,7 +57,7 @@ import java.util.Map;
 class LocationReachedManager
         implements ILocationReachedManager, ILocationObserver {
 
-    public static final int LOCATION_RADIUS = 15;
+    public static final int LOCATION_RADIUS = 100;
 
     private final Map<ILocationReachedObserver, GeoPoint> observers;
     private final Map<ILocationReachedObserver, IWakeupObserver> alarms;
