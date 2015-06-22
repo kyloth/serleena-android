@@ -41,6 +41,7 @@
 
 package com.kyloth.serleena.model;
 
+import com.kyloth.serleena.common.DirectAccessList;
 import com.kyloth.serleena.common.EmergencyContact;
 import com.kyloth.serleena.common.GeoPoint;
 import com.kyloth.serleena.common.IQuadrant;
@@ -123,7 +124,7 @@ public class SerleenaDataSource implements ISerleenaDataSource {
      * @return Insieme enumerabile di contatti di emergenza.
      */
     @Override
-    public Iterable<EmergencyContact> getContacts(GeoPoint loc) {
+    public DirectAccessList<EmergencyContact> getContacts(GeoPoint loc) {
         return dataSource.getContacts(loc);
     }
 
