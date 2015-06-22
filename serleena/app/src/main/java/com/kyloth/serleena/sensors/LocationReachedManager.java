@@ -71,14 +71,14 @@ class LocationReachedManager implements ILocationReachedManager {
      * L'oggetto utilizza altre risorse di sensoristica del dispositivo,
      * fornitegli tramite parametri al costruttore.
      *
-     * @param locMan Gestore della posizione.
-     * @param wm Gestore dei wakeup del processore.
+     * @param bkgrLocMan Gestore di notifiche sulla posizione utente.
      */
-    public LocationReachedManager(IWakeupManager wm, ILocationManager locMan) {
-        this.wm = wm;
-        this.locMan = locMan;
-        observers = new HashMap<ILocationReachedObserver, GeoPoint>();
-        alarms = new HashMap<ILocationReachedObserver, IWakeupObserver>();
+    public LocationReachedManager(IBackgroundLocationManager bkgrLocMan) {
+        if (bkgrLocMan == null)
+            throw new IllegalArgumentException("Illegal location manager");
+
+        this.bkgrLocMan = bkgrLocMan;
+        this.observers = new HashMap<>();
     }
 
     /**
