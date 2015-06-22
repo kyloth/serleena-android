@@ -99,14 +99,4 @@ public interface ILocationManager {
     public void getSingleUpdate(ILocationObserver observer)
         throws IllegalArgumentException;
 
-    /**
-     * Metodo "notify" basato sull'omonimo metodo della classe "Subject" del
-     * Design Pattern "Observer".
-     *
-     * @param observer Oggetto ILocationObserver a cui comunicare i dati.
-     *                 Se null, viene lanciata un'eccezione
-     *                 IllegalArgumentException.
-     */
-    public void notifyObserver(ILocationObserver observer)
-            throws IllegalArgumentException;
 }
