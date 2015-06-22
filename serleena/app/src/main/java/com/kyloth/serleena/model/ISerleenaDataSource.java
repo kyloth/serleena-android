@@ -40,6 +40,7 @@
 
 package com.kyloth.serleena.model;
 
+import com.kyloth.serleena.common.DirectAccessList;
 import com.kyloth.serleena.common.EmergencyContact;
 import com.kyloth.serleena.common.GeoPoint;
 import com.kyloth.serleena.common.IQuadrant;
@@ -92,6 +93,6 @@ public interface ISerleenaDataSource {
      *
      * @version 1.0
      */
-    public Iterable<EmergencyContact> getContacts(GeoPoint loc);
+    public DirectAccessList<EmergencyContact> getContacts(GeoPoint loc);
 
 }
