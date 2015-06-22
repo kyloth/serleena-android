@@ -56,7 +56,8 @@ import java.util.UUID;
  * @author Filippo Sestini <sestini.filippo@gmail,com>
  * @version 1.0.0
  */
-class LocationReachedManager implements ILocationReachedManager {
+class LocationReachedManager
+        implements ILocationReachedManager, ILocationObserver {
 
     private static final int LOCATION_RADIUS = 15;
 
@@ -123,6 +124,32 @@ class LocationReachedManager implements ILocationReachedManager {
             if (observers.size() == 0)
                 bkgrLocMan.detachObserver(this);
         }
+    }
+
+    /**
+     * Implementa ILocationObserver.onLocationUpdate().
+     *
+     * Viene notificato ogni observer il cui punto geografico obiettivo è
+     * stato raggiunto.
+     *
+     * @param loc Valore di tipo GeoPoint che indica la posizione
+     */
+    @Override
+    public void onLocationUpdate(GeoPoint loc) {
+        List<ILocationReachedObserver> toRemove = new ArrayList<>();
+
+        for (Map.Entry<ILocationReachedObserver, GeoPoint> e
+                : observers.entrySet())
+            if (loc.distanceTo(e.getValue()) < LOCATION_RADIUS)
+                toRemove.add(e.getKey());
+
+        for (ILocationReachedObserver o : toRemove) {
+            o.onLocationReached();
+            observers.remove(o);
+        }
+
+        if (observers.size() == 0)
+            bkgrLocMan.detachObserver(this);
     }
 
 }
