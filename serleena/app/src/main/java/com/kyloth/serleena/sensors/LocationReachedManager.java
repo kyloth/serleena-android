@@ -101,9 +101,8 @@ class LocationReachedManager implements ILocationReachedManager {
             throw new IllegalArgumentException("Illegal null location");
 
         observers.put(observer, location);
-        IWakeupObserver alarm = new CheckDistanceAlarm(observer, locMan);
-        alarms.put(observer, alarm);
-        wm.attachObserver(alarm, 0, true);
+        if (observers.size() == 1)
+            bkgrLocMan.attachObserver(this, LOCATION_UPDATE_INTERVAL);
     }
 
     /**
