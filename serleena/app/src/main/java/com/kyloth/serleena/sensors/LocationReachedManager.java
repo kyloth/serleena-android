@@ -160,35 +160,4 @@ class LocationReachedManager implements ILocationReachedManager {
         }
     }
 
-    private class CheckDistanceAlarm implements IWakeupObserver,
-            ILocationObserver {
-
-        private final ILocationReachedObserver observer;
-        private final ILocationManager locMan;
-
-        private final String uuid;
-        public CheckDistanceAlarm(ILocationReachedObserver observer,
-                       ILocationManager locMan) {
-            this.observer = observer;
-            this.locMan = locMan;
-            uuid = UUID.randomUUID().toString();
-        }
-
-        @Override
-        public void onLocationUpdate(GeoPoint loc) {
-            checkObserverStatus(observer, loc);
-        }
-
-        @Override
-        public void onWakeup() {
-            locMan.getSingleUpdate(this,
-                    30);
-        }
-
-        @Override
-        public String getUUID() {
-            return uuid;
-        }
-    }
-
 }
