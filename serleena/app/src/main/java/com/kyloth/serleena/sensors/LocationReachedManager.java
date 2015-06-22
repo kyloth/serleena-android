@@ -41,14 +41,12 @@
 
 package com.kyloth.serleena.sensors;
 
-import android.content.Context;
-import android.location.Location;
-
 import com.kyloth.serleena.common.GeoPoint;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
-import java.util.UUID;
 
 /**
  * Concretizza ILocationReachedManager
