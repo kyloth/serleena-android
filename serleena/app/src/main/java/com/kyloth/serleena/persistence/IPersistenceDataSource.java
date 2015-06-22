@@ -41,6 +41,7 @@
 
 package com.kyloth.serleena.persistence;
 
+import com.kyloth.serleena.common.DirectAccessList;
 import com.kyloth.serleena.common.EmergencyContact;
 import com.kyloth.serleena.common.GeoPoint;
 import com.kyloth.serleena.common.IQuadrant;
@@ -96,6 +97,6 @@ public interface IPersistenceDataSource {
      *                 i contatti di autorità locali.
      * @return Insieme enumerabile di contatti.
      */
-    public Iterable<EmergencyContact> getContacts(GeoPoint location);
+    public DirectAccessList<EmergencyContact> getContacts(GeoPoint location);
 
 }

@@ -40,6 +40,7 @@
 
 package com.kyloth.serleena.persistence.sqlite;
 
+import com.kyloth.serleena.common.DirectAccessList;
 import com.kyloth.serleena.common.EmergencyContact;
 import com.kyloth.serleena.common.GeoPoint;
 import com.kyloth.serleena.common.IQuadrant;
@@ -68,7 +69,7 @@ final class CachedSQLiteDataSource implements ISerleenaSQLiteDataSource {
     private GeoPoint lastEmergencyLocation;
     private GeoPoint lastWeatherLocation;
     private Date lastWeatherDate;
-    private Iterable<EmergencyContact> contacts;
+    private DirectAccessList<EmergencyContact> contacts;
     private IWeatherStorage forecast;
     private Iterable<IExperienceStorage> experiences;
     private Map<IExperienceStorage, Iterable<UserPoint>> upCache;
@@ -232,7 +233,7 @@ final class CachedSQLiteDataSource implements ISerleenaSQLiteDataSource {
      * @return Dati cachati dall'oggetto ISerleenaSQLiteDataSource sottostante.
      */
     @Override
-    public Iterable<EmergencyContact> getContacts(GeoPoint location) {
+    public DirectAccessList<EmergencyContact> getContacts(GeoPoint location) {
         if (contacts == null || lastEmergencyLocation == null ||
                 !location.equals(lastEmergencyLocation)) {
             contacts = dataSource.getContacts(location);

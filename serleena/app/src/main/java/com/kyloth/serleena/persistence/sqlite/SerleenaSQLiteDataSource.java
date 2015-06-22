@@ -468,7 +468,7 @@ public class SerleenaSQLiteDataSource implements ISerleenaSQLiteDataSource {
      * @return Insieme enumerabile di contatti di emergenza.
      */
     @Override
-    public Iterable<EmergencyContact> getContacts(GeoPoint location) {
+    public DirectAccessList<EmergencyContact> getContacts(GeoPoint location) {
         SQLiteDatabase db = dbHelper.getReadableDatabase();
         ArrayList<EmergencyContact> list = new ArrayList<EmergencyContact>();
 
@@ -494,7 +494,7 @@ public class SerleenaSQLiteDataSource implements ISerleenaSQLiteDataSource {
         }
 
         result.close();
-        return list;
+        return new ListAdapter<EmergencyContact>(list);
     }
 
     /**
