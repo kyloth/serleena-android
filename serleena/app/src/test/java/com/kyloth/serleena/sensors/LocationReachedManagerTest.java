@@ -54,6 +54,7 @@ import android.content.Context;
 import android.app.AlarmManager;
 
 import org.robolectric.RobolectricGradleTestRunner;
+import org.robolectric.RobolectricTestRunner;
 import org.robolectric.RuntimeEnvironment;
 import org.robolectric.annotation.Config;
 
@@ -67,93 +68,115 @@ import com.kyloth.serleena.common.GeoPoint;
  * @version 1.0.0
  */
 
-@RunWith(RobolectricGradleTestRunner.class)
-@Config(constants = BuildConfig.class, emulateSdk = 19)
+@RunWith(RobolectricTestRunner.class)
 public class LocationReachedManagerTest {
 
     AlarmManager alMan;
-    WakeupManager wm;
-    ILocationManager locMan;
     ILocationReachedObserver observer;
-    Context context = RuntimeEnvironment.application;
-
-    @Rule
-    public ExpectedException exception = ExpectedException.none();
+    LocationReachedManager manager;
+    IBackgroundLocationManager bkgrLocMan;
 
     @Before
     public void initialize() {
-        alMan = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
-        wm = new WakeupManager(context, alMan);
-        locMan = mock(ILocationManager.class);
+        alMan = mock(AlarmManager.class);
+        bkgrLocMan = mock(IBackgroundLocationManager.class);
         observer = mock(ILocationReachedObserver.class);
+        manager = new LocationReachedManager(bkgrLocMan);
     }
 
     /**
      * Verifica che il metodo attachObserver lanci un'eccezione di tipo
-     * IllegalArgumentException con messaggio "Illegal null observer"
-     * se invocato con observer nullo.
+     * IllegalArgumentException se invocato con observer null.
      */
-
-    @Test
+    @Test(expected = IllegalArgumentException.class)
     public void attachObserverExceptionWhenNullObserver() {
-        LocationReachedManager lrm = new LocationReachedManager(wm, locMan);
-        GeoPoint location = new GeoPoint(12, 12);
-        exception.expect(IllegalArgumentException.class);
-        exception.expectMessage("Illegal null observer");
-        lrm.attachObserver(null, location);
+        manager.attachObserver(null, mock(GeoPoint.class));
+    }
+
+    /**
+     * Verifica che il costruttore sollevi un'eccezione se gli vengono
+     * passati parametri null.
+     */
+    @Test(expected = IllegalArgumentException.class)
+    public void ctorShouldThrowWhenNullLocation() {
+        new LocationReachedManager(null);
     }
 
     /**
      * Verifica che il metodo attachObserver lanci un'eccezione di tipo
-     * IllegalArgumentException con messaggio "Illegal null location"
-     * se invocato con ILocationManager nullo.
+     * IllegalArgumentException se invocato con observer null.
      */
-
-    @Test
-    public void attachObserverExceptionWhenNullLocation() {
-        LocationReachedManager lrm = new LocationReachedManager(wm, locMan);
-        exception.expect(IllegalArgumentException.class);
-        exception.expectMessage("Illegal null location");
-        lrm.attachObserver(observer, null);
-    }
-
-    /**
-     * Verifica che il metodo detachObserver lanci un'eccezione di tipo
-     * IllegalArgumentException con messaggio "Illegal null observer"
-     * se invocato con observer nullo.
-     */
-
-    @Test
+    @Test(expected = IllegalArgumentException.class)
     public void detachObserverExceptionWhenNullObserver() {
-        LocationReachedManager lrm = new LocationReachedManager(wm, locMan);
-        exception.expect(IllegalArgumentException.class);
-        exception.expectMessage("Illegal null observer");
-        lrm.detachObserver(null);
+        manager.detachObserver(null);
     }
 
     /**
-     * Verifica che il metodo attachObserver non sollevi eccezioni e in
-     * generale non causi errori.
+     * Verifica che la chiamata a detachObserver() non sollevi eccezioni al
+     * passaggio di un observer non precedentemente registrato.
      */
-
     @Test
-    public void testAttachObserverHit() {
-        LocationReachedManager lrm = new LocationReachedManager(wm, locMan);
-        GeoPoint location = new GeoPoint(12, 12);
-        lrm.attachObserver(observer, location);
+    public void detachObserverShouldNotThrownWhenObserverNotRegistered() {
+        manager.detachObserver(mock(ILocationReachedObserver.class));
     }
 
     /**
-     * Verifica che il metodo detachObserver non sollevi eccezioni e in
-     * generale non causi errori.
+     * Verifica che gli observer non vengano notificati se la posizione
+     * obiettivo non è stata raggiunta.
      */
+    @Test
+    public void observerShouldNotBeNotifiedIfLocationNotReached() {
+        manager.attachObserver(observer, new GeoPoint(40, 50));
+        manager.onLocationUpdate(new GeoPoint(60, 70));
+        verify(observer, never()).onLocationReached();
+    }
+
+    /**
+     * Verifica che gli observer vengano correttamente notificati quando
+     * l'utente raggiunge una posizione sufficientemente vicina alla
+     * posizione obiettivo.
+     */
+    @Test
+    public void observerShouldBeNotifiedCorrectly() {
+        GeoPoint p1 = new GeoPoint(40.7485, -73.9864);
+        double offset = 0.001;
+        while (p1.distanceTo(new GeoPoint(p1.latitude() + offset,
+                p1.longitude())) >= LocationReachedManager.LOCATION_RADIUS)
+            offset = offset / 10;
+        GeoPoint p2 = new GeoPoint(p1.latitude() + offset, p1.longitude());
+        manager.attachObserver(observer, p1);
+        manager.onLocationUpdate(p2);
+        verify(observer).onLocationReached();
+    }
 
     @Test
-    public void testDetachObserverHit() {
-        LocationReachedManager lrm = new LocationReachedManager(wm, locMan);
-        GeoPoint location = new GeoPoint(12, 12);
-        lrm.attachObserver(observer, location);
-        lrm.detachObserver(observer);
+    public void backgroungLocationManagerShouldBeRegisteredToCorrectly() {
+        ILocationReachedObserver o1 = mock(ILocationReachedObserver.class);
+        ILocationReachedObserver o2 = mock(ILocationReachedObserver.class);
+        ILocationReachedObserver o3 = mock(ILocationReachedObserver.class);
+
+        manager.attachObserver(o1, mock(GeoPoint.class));
+        verify(bkgrLocMan, times(1)).attachObserver(manager,
+                LocationReachedManager.LOCATION_UPDATE_INTERVAL);
+        manager.attachObserver(o2, mock(GeoPoint.class));
+        verify(bkgrLocMan, times(1)).attachObserver(manager,
+                LocationReachedManager.LOCATION_UPDATE_INTERVAL);
+        manager.attachObserver(o3, mock(GeoPoint.class));
+        verify(bkgrLocMan, times(1)).attachObserver(manager,
+                LocationReachedManager.LOCATION_UPDATE_INTERVAL);
+        manager.detachObserver(o3);
+        verify(bkgrLocMan, times(1)).attachObserver(manager,
+                LocationReachedManager.LOCATION_UPDATE_INTERVAL);
+        manager.detachObserver(o2);
+        verify(bkgrLocMan, times(1)).attachObserver(manager,
+                LocationReachedManager.LOCATION_UPDATE_INTERVAL);
+        manager.detachObserver(o1);
+        verify(bkgrLocMan, times(1)).attachObserver(manager,
+                LocationReachedManager.LOCATION_UPDATE_INTERVAL);
+        verify(bkgrLocMan, times(1)).detachObserver(manager);
+        manager.attachObserver(o1, mock(GeoPoint.class));
+        verify(bkgrLocMan, times(2)).attachObserver(manager,
+                LocationReachedManager.LOCATION_UPDATE_INTERVAL);
     }
+
 }
-
