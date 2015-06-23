@@ -76,9 +76,14 @@ public class LocationService extends Service implements LocationListener {
     public void onCreate() {
         super.onCreate();
         pm = (PowerManager) this.getSystemService(POWER_SERVICE);
-        lm = (LocationManager) this.getSystemService
-                (LOCATION_SERVICE);
+        lm = (LocationManager) this.getSystemService(LOCATION_SERVICE);
         intents = new Stack<Intent>();
+        wl = pm.newWakeLock(
+                PowerManager.PARTIAL_WAKE_LOCK,
+                "LocationServiceWakeLock"
+        );
+        wl.acquire();
+        lm.requestSingleUpdate(LocationManager.GPS_PROVIDER, this, null);
     }
 
     /**
@@ -91,14 +96,6 @@ public class LocationService extends Service implements LocationListener {
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
         intents.add(intent);
-        if (wl == null) {
-            wl = pm.newWakeLock(
-                    PowerManager.PARTIAL_WAKE_LOCK,
-                    "LocationServiceWakeLock"
-            );
-            wl.acquire();
-            lm.requestSingleUpdate(LocationManager.GPS_PROVIDER, this, null);
-        }
         return super.onStartCommand(intent, flags, startId);
     }
 
