@@ -167,20 +167,6 @@ public class MapPresenterTest {
     }
 
     /**
-     * Verifica che il metodo updateView lanci un'eccezione
-     * di tipo IllegalArgumentException con messaggio "Illegal null
-     * location" quando chiamato con GeoPoint nullo.
-     */
-
-    @Test
-    public void updateViewShouldThrowExceptionWhenNullGeoPoint() {
-        MapPresenter mp = new MapPresenter(view, activity);
-        exception.expect(IllegalArgumentException.class);
-        exception.expectMessage("Illegal null location");
-        mp.updateView(null);
-    }
-    
-    /**
      * Verifica che il metodo resume non sollevi eccezioni e in
      * generale non causi errori.
      */
@@ -201,24 +187,6 @@ public class MapPresenterTest {
 	MapPresenter mp = new MapPresenter(view, activity);
 	mp.resume();
 	mp.pause();
-    }
-    
-    /**
-     * Verifica che il metodo updateView, chiamato da onLocationUpdate,
-     * chiami a sua volta i metodi corretti sull'oggetto view.
-     */
-    
-    @Test
-    public void testUpdateView() {
-	MapPresenter mp = new MapPresenter(view, activity);
-	Iterable<IExperience> experiences = dataSource.getExperiences();
-	GeoPoint location = new GeoPoint(5, 4);
-	mp.onLocationUpdate(location);	
-	mp.setActiveExperience(experiences.iterator().next());
-	mp.onLocationUpdate(location);
-	verify(view, timeout(200).times(2)).displayQuadrant(any(IQuadrant.class));
-	verify(view, timeout(200).times(2)).setUserLocation(any(GeoPoint.class));
-	verify(view, timeout(200).times(1)).displayUP(any(Iterable.class));
     }
     
     /**
