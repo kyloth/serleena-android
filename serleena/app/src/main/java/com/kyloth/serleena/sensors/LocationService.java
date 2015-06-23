@@ -118,8 +118,14 @@ public class LocationService extends Service implements LocationListener {
             rec.send(0, b);
             BackgroundLocationManager.completeWakefulIntent(intent);
         }
-        wl.release();
         this.stopSelf();
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        wl.release();
+        lm.removeUpdates(this);
     }
 
     /**
