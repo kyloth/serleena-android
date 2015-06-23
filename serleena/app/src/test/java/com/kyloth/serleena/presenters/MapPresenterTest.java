@@ -92,7 +92,7 @@ public class MapPresenterTest {
     IMapView view;
     ISerleenaActivity activity;
     SerleenaSensorManager sm;
-    
+
     @Rule
     public ExpectedException exception = ExpectedException.none();
 
@@ -105,25 +105,26 @@ public class MapPresenterTest {
         view = mock(IMapView.class);
         activity = mock(ISerleenaActivity.class);
         sm = SerleenaSensorManager.getInstance(RuntimeEnvironment.application);
-	when(activity.getSensorManager()).thenReturn(sm);
+        when(activity.getSensorManager()).thenReturn(sm);
 
-	serleenaDB = new SerleenaDatabase(RuntimeEnvironment.application, "sample.db", null, 1);
+        serleenaDB = new SerleenaDatabase(
+                RuntimeEnvironment.application, "sample.db", null, 1);
         db = serleenaDB.getWritableDatabase();
         serleenaDB.onConfigure(db);
         serleenaDB.onUpgrade(db, 1, 2);
 
         serleenaSQLDS = new SerleenaSQLiteDataSource(RuntimeEnvironment.application, serleenaDB);
         dataSource = new SerleenaDataSource(serleenaSQLDS);
-	when(activity.getDataSource()).thenReturn(dataSource);
-	
-	String insert_experience = "INSERT INTO experiences " +
-	    "(experience_id, experience_name) " +
-	    "VALUES (1, 'Experience')";
-	String insert_ups = "INSERT INTO user_points " +
-	    "(userpoint_id, userpoint_x, userpoint_y, userpoint_experience) " +
-	    "VALUES (1, 5, 5, 1)";
-	db.execSQL(insert_experience);
-	db.execSQL(insert_ups);
+        when(activity.getDataSource()).thenReturn(dataSource);
+
+        String insert_experience = "INSERT INTO experiences " +
+            "(experience_id, experience_name) " +
+            "VALUES (1, 'Experience')";
+        String insert_ups = "INSERT INTO user_points " +
+            "(userpoint_id, userpoint_x, userpoint_y, userpoint_experience) " +
+            "VALUES (1, 5, 5, 1)";
+        db.execSQL(insert_experience);
+        db.execSQL(insert_ups);
     }
 
     /**
@@ -160,7 +161,7 @@ public class MapPresenterTest {
 
     @Test
     public void newUserPointShouldThrowExceptionWhenNoActiveExperience()
-    throws NoActiveExperienceException {
+            throws NoActiveExperienceException {
         MapPresenter mp = new MapPresenter(view, activity);
         exception.expect(NoActiveExperienceException.class);
         mp.newUserPoint();
@@ -170,38 +171,38 @@ public class MapPresenterTest {
      * Verifica che il metodo resume non sollevi eccezioni e in
      * generale non causi errori.
      */
-   
+
     @Test
     public void testResume() {
-	MapPresenter mp = new MapPresenter(view, activity);
-	mp.resume();
+        MapPresenter mp = new MapPresenter(view, activity);
+        mp.resume();
     }
-    
+
     /**
      * Verifica che il metodo pause non sollevi eccezioni e in generale
      * non causi errori.
      */
-    
+
     @Test
     public void testPause() {
-	MapPresenter mp = new MapPresenter(view, activity);
-	mp.resume();
-	mp.pause();
+        MapPresenter mp = new MapPresenter(view, activity);
+        mp.resume();
+        mp.pause();
     }
-    
+
     /**
      * Verifica che il metodo newUserPoint non causi errori o sollevi
      * eccezioni.
      */
-    
+
     @Test
     public void testNewUserPoint() throws NoActiveExperienceException {
-	MapPresenter mp = new MapPresenter(view, activity);	
-	Iterable<IExperience> experiences = dataSource.getExperiences();
-	mp.setActiveExperience(experiences.iterator().next());
-	mp.newUserPoint();
-	mp.onLocationUpdate(new GeoPoint(5, 4));
-	mp.newUserPoint();	
+        MapPresenter mp = new MapPresenter(view, activity);
+        Iterable<IExperience> experiences = dataSource.getExperiences();
+        mp.setActiveExperience(experiences.iterator().next());
+        mp.newUserPoint();
+        mp.onLocationUpdate(new GeoPoint(5, 4));
+        mp.newUserPoint();
     }
 
 }
