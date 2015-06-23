@@ -168,8 +168,8 @@ public class ContactsPresenter implements IContactsPresenter,
     /**
      * Reimposta la vista alla condizione iniziale.
      */
-    private synchronized void resetView(DirectAccessList<EmergencyContact>
-                                                contacts) {
+    private synchronized void resetView(
+            DirectAccessList<EmergencyContact> contacts) {
         this.contacts = contacts;
         index = 0;
 
