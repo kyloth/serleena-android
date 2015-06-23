@@ -45,15 +45,12 @@ import android.os.AsyncTask;
 import com.kyloth.serleena.common.DirectAccessList;
 import com.kyloth.serleena.common.EmergencyContact;
 import com.kyloth.serleena.common.GeoPoint;
-import com.kyloth.serleena.common.ListAdapter;
 import com.kyloth.serleena.model.ISerleenaDataSource;
 import com.kyloth.serleena.presentation.IContactsPresenter;
 import com.kyloth.serleena.presentation.IContactsView;
 import com.kyloth.serleena.presentation.ISerleenaActivity;
 import com.kyloth.serleena.sensors.ILocationManager;
 import com.kyloth.serleena.sensors.ILocationObserver;
-
-import java.util.ArrayList;
 
 /**
  * Concretizza IContactsPresenter
@@ -149,16 +146,18 @@ public class ContactsPresenter implements IContactsPresenter,
             throw new IllegalArgumentException("Illegal null location");
 
         final ISerleenaDataSource ds = activity.getDataSource();
-        AsyncTask<Void, Void, Void> task = new AsyncTask<Void, Void, Void>() {
-            @Override
-            protected Void doInBackground(Void... voids) {
-                ArrayList<EmergencyContact> list =
-                        new ArrayList<EmergencyContact>();
-                for (EmergencyContact c : ds.getContacts(loc))
-                    list.add(c);
 
-                resetView(new ListAdapter<EmergencyContact>(list));
-                return null;
+        AsyncTask<Void, Void, DirectAccessList<EmergencyContact>> task =
+                new AsyncTask<Void, Void, DirectAccessList<EmergencyContact>>(){
+            @Override
+            protected DirectAccessList<EmergencyContact> doInBackground(
+                    Void... voids) {
+                return ds.getContacts(loc);
+            }
+            @Override
+            protected void onPostExecute(
+                    DirectAccessList<EmergencyContact> result) {
+                resetView(result);
             }
         };
 
