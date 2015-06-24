@@ -30,19 +30,24 @@
 
 package com.kyloth.serleena.persistence.sqlite;
 
+import com.kyloth.serleena.common.DirectAccessList;
 import com.kyloth.serleena.common.EmergencyContact;
 import com.kyloth.serleena.common.GeoPoint;
 import com.kyloth.serleena.common.IQuadrant;
+import com.kyloth.serleena.common.ListAdapter;
 import com.kyloth.serleena.common.NoSuchWeatherForecastException;
 import com.kyloth.serleena.common.TelemetryEvent;
 import com.kyloth.serleena.common.UserPoint;
+import com.kyloth.serleena.model.ISerleenaDataSource;
 import com.kyloth.serleena.persistence.IExperienceStorage;
 import com.kyloth.serleena.persistence.IWeatherStorage;
 
+import org.junit.Before;
 import org.junit.Test;
 
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.Iterator;
 
 import static org.mockito.Mockito.*;
 import static org.junit.Assert.*;
@@ -55,19 +60,50 @@ import static org.junit.Assert.*;
  */
 public class CachedSQLiteDataSourceTest {
 
-    /**
-     * Crea un oggetto Iterable di oggetti mock appartenenti alla classe
-     * indicata.
-     *
-     * @param c Classe di elementi da mockare.
-     * @return Oggetto Iterable di oggetti mock.
-     */
-    private Iterable mockIterable(Class c) {
-        ArrayList list = new ArrayList();
-        list.add(mock(c));
-        list.add(mock(c));
-        list.add(mock(c));
-        return list;
+    ISerleenaSQLiteDataSource ds;
+    SQLiteDAOTrack track;
+    SQLiteDAOExperience experience;
+    CachedSQLiteDataSource cachedDS;
+    Iterable<TelemetryEvent> events;
+    Iterable<IExperienceStorage> experiences1;
+    Iterable<IExperienceStorage> experiences2;
+    DirectAccessList<EmergencyContact> contacts1;
+    DirectAccessList<EmergencyContact> contacts2;
+
+    @Before
+    public void initialize() {
+        ds = mock(ISerleenaSQLiteDataSource.class);
+        track = mock(SQLiteDAOTrack.class);
+        experience = mock(SQLiteDAOExperience.class);
+        cachedDS = new CachedSQLiteDataSource(ds);
+
+        ArrayList<TelemetryEvent> list = new ArrayList<>();
+        list.add(mock(TelemetryEvent.class));
+        list.add(mock(TelemetryEvent.class));
+        list.add(mock(TelemetryEvent.class));
+        events = list;
+
+        ArrayList<IExperienceStorage> eList = new ArrayList<>();
+        eList.add(mock(IExperienceStorage.class));
+        eList.add(mock(IExperienceStorage.class));
+        eList.add(mock(IExperienceStorage.class));
+        experiences1 = eList;
+        eList = new ArrayList<>();
+        eList.add(mock(IExperienceStorage.class));
+        eList.add(mock(IExperienceStorage.class));
+        eList.add(mock(IExperienceStorage.class));
+        experiences2 = eList;
+
+        ArrayList<EmergencyContact> cList = new ArrayList<>();
+        cList.add(mock(EmergencyContact.class));
+        cList.add(mock(EmergencyContact.class));
+        cList.add(mock(EmergencyContact.class));
+        contacts1 = new ListAdapter<>(cList);
+        cList = new ArrayList<>();
+        cList.add(mock(EmergencyContact.class));
+        cList.add(mock(EmergencyContact.class));
+        cList.add(mock(EmergencyContact.class));
+        contacts2 = new ListAdapter<>(cList);
     }
 
     /**
@@ -76,9 +112,6 @@ public class CachedSQLiteDataSourceTest {
      */
     @Test
     public void testNormalRedirectionOfGetTelemetries() {
-        ISerleenaSQLiteDataSource ds = mock(ISerleenaSQLiteDataSource.class);
-        SQLiteDAOTrack track = mock(SQLiteDAOTrack.class);
-        CachedSQLiteDataSource cachedDS = new CachedSQLiteDataSource(ds);
         cachedDS.getTelemetries(track);
         verify(ds).getTelemetries(track);
     }
@@ -89,9 +122,6 @@ public class CachedSQLiteDataSourceTest {
      */
     @Test
     public void testNormalRedirectionOfGetTracks() {
-        ISerleenaSQLiteDataSource ds = mock(ISerleenaSQLiteDataSource.class);
-        SQLiteDAOExperience experience = mock(SQLiteDAOExperience.class);
-        CachedSQLiteDataSource cachedDS = new CachedSQLiteDataSource(ds);
         cachedDS.getTracks(experience);
         verify(ds).getTracks(experience);
     }
@@ -102,10 +132,7 @@ public class CachedSQLiteDataSourceTest {
      */
     @Test
     public void testNormalRedirectionOfAddUserPoint() {
-        ISerleenaSQLiteDataSource ds = mock(ISerleenaSQLiteDataSource.class);
-        SQLiteDAOExperience experience = mock(SQLiteDAOExperience.class);
         UserPoint up = new UserPoint(4, 4);
-        CachedSQLiteDataSource cachedDS = new CachedSQLiteDataSource(ds);
         cachedDS.addUserPoint(experience, up);
         verify(ds).addUserPoint(experience, up);
     }
@@ -116,12 +143,8 @@ public class CachedSQLiteDataSourceTest {
      */
     @Test
     public void testNormalRedirectionOfCreateTelemetry() {
-        ISerleenaSQLiteDataSource ds = mock(ISerleenaSQLiteDataSource.class);
-        SQLiteDAOTrack track = mock(SQLiteDAOTrack.class);
-        Iterable<TelemetryEvent> list = mockIterable(TelemetryEvent.class);
-        CachedSQLiteDataSource cachedDS = new CachedSQLiteDataSource(ds);
-        cachedDS.createTelemetry(list, track);
-        verify(ds).createTelemetry(list, track);
+        cachedDS.createTelemetry(events, track);
+        verify(ds).createTelemetry(events, track);
     }
 
     /**
@@ -131,21 +154,13 @@ public class CachedSQLiteDataSourceTest {
      */
     @Test
     public void testThatExperiencesGetCached() {
-        Iterable<IExperienceStorage> list1 =
-                mockIterable(IExperienceStorage.class);
-        Iterable<IExperienceStorage> list2 =
-                mockIterable(IExperienceStorage.class);
-
-        ISerleenaSQLiteDataSource ds = mock(ISerleenaSQLiteDataSource.class);
-        CachedSQLiteDataSource cachedDS = new CachedSQLiteDataSource(ds);
-
-        when(ds.getExperiences()).thenReturn(list1);
+        when(ds.getExperiences()).thenReturn(experiences1);
         Iterable<IExperienceStorage> exps1 = cachedDS.getExperiences();
-        assertTrue(exps1 == list1);
+        assertTrue(exps1 == experiences1);
 
-        when(ds.getExperiences()).thenReturn(list2);
+        when(ds.getExperiences()).thenReturn(experiences2);
         Iterable<IExperienceStorage> exps2 = cachedDS.getExperiences();
-        assertTrue(exps2 == list1);
+        assertTrue(exps2 == experiences1);
     }
 
     /**
@@ -156,8 +171,6 @@ public class CachedSQLiteDataSourceTest {
      */
     @Test
     public void testThatQuadrantGetsCachedForSameArea() {
-        ISerleenaSQLiteDataSource ds = mock(ISerleenaSQLiteDataSource.class);
-        CachedSQLiteDataSource cachedDS = new CachedSQLiteDataSource(ds);
         IQuadrant q1 = mock(IQuadrant.class);
         IQuadrant q2 = mock(IQuadrant.class);
         GeoPoint gp = mock(GeoPoint.class);
@@ -179,8 +192,6 @@ public class CachedSQLiteDataSourceTest {
      */
     @Test
     public void testThatDifferentAreasGetDifferentQuadrants() {
-        ISerleenaSQLiteDataSource ds = mock(ISerleenaSQLiteDataSource.class);
-        CachedSQLiteDataSource cachedDS = new CachedSQLiteDataSource(ds);
         IQuadrant q1 = mock(IQuadrant.class);
         IQuadrant q2 = mock(IQuadrant.class);
         GeoPoint gp1 = mock(GeoPoint.class);
@@ -203,14 +214,7 @@ public class CachedSQLiteDataSourceTest {
      */
     @Test
     public void testThatEmergencyGetsCachedForSameLocation() {
-        Iterable<EmergencyContact> contacts1 =
-                mockIterable(EmergencyContact.class);
-        Iterable<EmergencyContact> contacts2 =
-                mockIterable(EmergencyContact.class);
-
         GeoPoint location = mock(GeoPoint.class);
-        ISerleenaSQLiteDataSource ds = mock(ISerleenaSQLiteDataSource.class);
-        CachedSQLiteDataSource cachedDS = new CachedSQLiteDataSource(ds);
 
         when(ds.getContacts(location)).thenReturn(contacts1);
         cachedDS.getContacts(location);
@@ -225,16 +229,8 @@ public class CachedSQLiteDataSourceTest {
      */
     @Test
     public void testThatDifferentLocationsGetDifferentContacts() {
-        Iterable<EmergencyContact> contacts1 =
-                mockIterable(EmergencyContact.class);
-        Iterable<EmergencyContact> contacts2 =
-                mockIterable(EmergencyContact.class);
-
         GeoPoint location1 = new GeoPoint(4, 4);
         GeoPoint location2 = new GeoPoint(5, 5);
-
-        ISerleenaSQLiteDataSource ds = mock(ISerleenaSQLiteDataSource.class);
-        CachedSQLiteDataSource cachedDS = new CachedSQLiteDataSource(ds);
 
         when(ds.getContacts(location1)).thenReturn(contacts1);
         assertTrue(cachedDS.getContacts(location1) == contacts1);
@@ -256,9 +252,6 @@ public class CachedSQLiteDataSourceTest {
         GeoPoint location = mock(GeoPoint.class);
         Date date = mock(Date.class);
 
-        ISerleenaSQLiteDataSource ds = mock(ISerleenaSQLiteDataSource.class);
-        CachedSQLiteDataSource cachedDS = new CachedSQLiteDataSource(ds);
-
         when(ds.getWeatherInfo(location, date)).thenReturn(weather1);
         cachedDS.getWeatherInfo(location, date);
         when(ds.getWeatherInfo(location, date)).thenReturn(weather2);
@@ -279,9 +272,6 @@ public class CachedSQLiteDataSourceTest {
         GeoPoint location2 = new GeoPoint(5, 5);
         Date date1 = new Date(System.currentTimeMillis());
         Date date2 = new Date(System.currentTimeMillis() - 10000);
-
-        ISerleenaSQLiteDataSource ds = mock(ISerleenaSQLiteDataSource.class);
-        CachedSQLiteDataSource cachedDS = new CachedSQLiteDataSource(ds);
 
         when(ds.getWeatherInfo(location1, date1)).thenReturn(weather1);
         cachedDS.getWeatherInfo(location1, date1);
@@ -307,13 +297,10 @@ public class CachedSQLiteDataSourceTest {
      */
     @Test
     public void testThatUserPointsGetCachedAndReturnedCorrectly() {
-        Iterable<UserPoint> ups1 = mockIterable(UserPoint.class);
-        Iterable<UserPoint> ups2 = mockIterable(UserPoint.class);
-        Iterable<UserPoint> ups3 = mockIterable(UserPoint.class);
+        Iterable<UserPoint> ups1 = new ArrayList<>();
+        Iterable<UserPoint> ups2 = new ArrayList<>();
+        Iterable<UserPoint> ups3 = new ArrayList<>();
         SQLiteDAOExperience exp = mock(SQLiteDAOExperience.class);
-
-        ISerleenaSQLiteDataSource ds = mock(ISerleenaSQLiteDataSource.class);
-        CachedSQLiteDataSource cachedDS = new CachedSQLiteDataSource(ds);
 
         when(ds.getUserPoints(exp)).thenReturn(ups1);
         assertTrue(cachedDS.getUserPoints(exp) == ups1);
