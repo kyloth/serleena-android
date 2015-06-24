@@ -41,22 +41,14 @@
 
 package com.kyloth.serleena.presenters;
 
-import android.app.Activity;
-
 import org.junit.Test;
-import org.junit.Before;
-import org.junit.Rule;
-import org.junit.rules.ExpectedException;
 import org.mockito.Mockito;
 
 import static org.mockito.Mockito.*;
-import static org.junit.Assert.*;
-import com.kyloth.serleena.presentation.ICompassPresenter;
+
 import com.kyloth.serleena.presentation.ITelemetryView;
-import com.kyloth.serleena.presentation.ISerleenaActivity;
 import com.kyloth.serleena.sensors.ISensorManager;
 import com.kyloth.serleena.sensors.ITelemetryManager;
-import com.kyloth.serleena.sensors.ITrackCrossing;
 import com.kyloth.serleena.sensors.TrackAlreadyStartedException;
 
 /**
