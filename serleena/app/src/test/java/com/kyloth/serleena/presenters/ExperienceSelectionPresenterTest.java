@@ -43,18 +43,15 @@ package com.kyloth.serleena.presenters;
 
 import org.junit.Test;
 import org.junit.Before;
-import org.junit.Rule;
-import org.junit.rules.ExpectedException;
+
 import static org.mockito.Mockito.*;
-import static org.junit.Assert.*;
+
 import java.util.ArrayList;
 
 import com.kyloth.serleena.model.IExperience;
 import com.kyloth.serleena.model.ISerleenaDataSource;
 import com.kyloth.serleena.presentation.IExperienceActivationObserver;
-import com.kyloth.serleena.presentation.IExperienceSelectionPresenter;
 import com.kyloth.serleena.presentation.IExperienceSelectionView;
-import com.kyloth.serleena.sensors.ISensorManager;
 
 
 /**
