@@ -134,6 +134,7 @@ public class BackgroundLocationManager extends WakefulBroadcastReceiver
         if (observers.size() == 1 && this.observers.containsKey(observer)) {
             am.cancel(pendingIntent);
             pendingIntent = null;
+            context.stopService(new Intent(context, LocationService.class));
             context.unregisterReceiver(this);
         }
 
