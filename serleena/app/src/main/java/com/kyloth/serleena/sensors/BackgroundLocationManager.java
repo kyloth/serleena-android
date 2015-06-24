@@ -70,8 +70,8 @@ public class BackgroundLocationManager extends WakefulBroadcastReceiver
     private Context context;
     private Map<ILocationObserver, Integer> observers;
 
-    PendingIntent pendingIntent;
-    GeoPoint location;
+    private PendingIntent pendingIntent;
+    private GeoPoint location;
 
     /**
      * Crea un nuovo oggetto BackgroundLocationManager.
