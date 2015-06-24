@@ -47,6 +47,8 @@ import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.HandlerThread;
 import android.os.IBinder;
 import android.os.PowerManager;
 import android.os.ResultReceiver;
@@ -68,6 +70,8 @@ public class LocationService extends Service implements LocationListener {
     private LocationManager lm;
     private Stack<Intent> intents;
     private PowerManager.WakeLock wl;
+    private Handler timeout;
+    private Runnable runnable;
 
     /**
      * Ridefinisce Service.onCreate().
@@ -84,6 +88,15 @@ public class LocationService extends Service implements LocationListener {
         );
         wl.acquire();
         lm.requestSingleUpdate(LocationManager.GPS_PROVIDER, this, null);
+
+        timeout = new Handler();
+        runnable = new Runnable() {
+            @Override
+            public void run() {
+                stopSelf();
+            }
+        };
+        timeout.postDelayed(runnable, 60000);
     }
 
     /**
@@ -116,14 +129,16 @@ public class LocationService extends Service implements LocationListener {
             b.putDouble("latitude", location.getLatitude());
             b.putDouble("longitude", location.getLongitude());
             rec.send(0, b);
-            BackgroundLocationManager.completeWakefulIntent(intent);
         }
+        timeout.removeCallbacks(runnable);
         this.stopSelf();
     }
 
     @Override
     public void onDestroy() {
         super.onDestroy();
+        for (Intent intent : intents)
+            BackgroundLocationManager.completeWakefulIntent(intent);
         wl.release();
         lm.removeUpdates(this);
     }
