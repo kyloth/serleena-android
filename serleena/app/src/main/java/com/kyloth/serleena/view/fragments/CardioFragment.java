@@ -65,8 +65,8 @@ import com.kyloth.serleena.presentation.ICardioView;
  */
 public class CardioFragment extends Fragment implements ICardioView {
 
-    ICardioPresenter presenter;
-    TextView hr;
+    private ICardioPresenter presenter;
+    private TextView hr;
 
     public CardioFragment() {
         /* Null object pattern */
