@@ -50,7 +50,7 @@ import android.widget.TextView;
 import com.kyloth.serleena.BuildConfig;
 import com.kyloth.serleena.R;
 import com.kyloth.serleena.presentation.IContactsPresenter;
-import com.kyloth.serleena.presentation.ISerleenaActivity;
+import com.kyloth.serleena.presenters.ISerleenaActivity;
 import com.kyloth.serleena.model.ISerleenaDataSource;
 import com.kyloth.serleena.sensors.ISensorManager;
 

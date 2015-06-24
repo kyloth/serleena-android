@@ -62,7 +62,6 @@ import com.kyloth.serleena.common.DirectAccessList;
 import com.kyloth.serleena.common.TelemetryEvent;
 import com.kyloth.serleena.model.ITelemetry;
 import com.kyloth.serleena.model.NoSuchTelemetryEventException;
-import com.kyloth.serleena.presentation.ISerleenaActivity;
 import com.kyloth.serleena.presentation.ITrackView;
 import com.kyloth.serleena.sensors.IHeadingManager;
 import com.kyloth.serleena.sensors.ILocationManager;

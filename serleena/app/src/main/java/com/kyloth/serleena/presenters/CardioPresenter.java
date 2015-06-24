@@ -43,7 +43,6 @@ package com.kyloth.serleena.presenters;
 
 import com.kyloth.serleena.presentation.ICardioPresenter;
 import com.kyloth.serleena.presentation.ICardioView;
-import com.kyloth.serleena.presentation.ISerleenaActivity;
 import com.kyloth.serleena.sensors.IHeartRateManager;
 import com.kyloth.serleena.sensors.IHeartRateObserver;
 

@@ -40,7 +40,6 @@
 
 package com.kyloth.serleena.presenters;
 
-import com.kyloth.serleena.presentation.ISerleenaActivity;
 import com.kyloth.serleena.presentation.ITelemetryPresenter;
 import com.kyloth.serleena.presentation.ITelemetryView;
 import com.kyloth.serleena.sensors.ITelemetryManager;

@@ -63,7 +63,6 @@ import com.kyloth.serleena.BuildConfig;
 import com.kyloth.serleena.model.SerleenaDataSource;
 import com.kyloth.serleena.model.IExperience;
 import com.kyloth.serleena.presentation.IMapView;
-import com.kyloth.serleena.presentation.ISerleenaActivity;
 import com.kyloth.serleena.common.IQuadrant;
 import com.kyloth.serleena.common.NoActiveExperienceException;
 import com.kyloth.serleena.common.GeoPoint;

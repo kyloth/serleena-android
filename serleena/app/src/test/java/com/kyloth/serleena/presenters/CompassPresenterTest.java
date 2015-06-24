@@ -56,7 +56,6 @@ import static org.mockito.Mockito.*;
 
 import com.kyloth.serleena.BuildConfig;
 import com.kyloth.serleena.common.AzimuthMagneticNorth;
-import com.kyloth.serleena.presentation.ISerleenaActivity;
 import com.kyloth.serleena.presentation.ICompassView;
 import com.kyloth.serleena.sensors.IHeadingManager;
 import com.kyloth.serleena.sensors.ISensorManager;

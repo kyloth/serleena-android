@@ -55,7 +55,6 @@ import com.kyloth.serleena.model.ITelemetry;
 import com.kyloth.serleena.model.NoSuchTelemetryEventException;
 import com.kyloth.serleena.model.NoSuchTelemetryException;
 import com.kyloth.serleena.sensors.NoSuchCheckpointException;
-import com.kyloth.serleena.presentation.ISerleenaActivity;
 import com.kyloth.serleena.presentation.ITrackPresenter;
 import com.kyloth.serleena.presentation.ITrackView;
 import com.kyloth.serleena.sensors.IHeadingManager;

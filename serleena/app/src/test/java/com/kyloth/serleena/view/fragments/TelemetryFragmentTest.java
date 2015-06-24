@@ -53,7 +53,7 @@ import android.view.View;
 import com.kyloth.serleena.BuildConfig;
 import com.kyloth.serleena.model.ITrack;
 import com.kyloth.serleena.presentation.ITelemetryPresenter;
-import com.kyloth.serleena.presentation.ISerleenaActivity;
+import com.kyloth.serleena.presenters.ISerleenaActivity;
 import com.kyloth.serleena.presenters.SerleenaActivity;
 import com.kyloth.serleena.view.fragments.TelemetryFragment;
 import com.kyloth.serleena.model.IExperience;

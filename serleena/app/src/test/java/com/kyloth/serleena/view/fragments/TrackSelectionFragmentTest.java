@@ -58,7 +58,7 @@ import com.kyloth.serleena.BuildConfig;
 import com.kyloth.serleena.model.ITrack;
 import com.kyloth.serleena.presentation.ITrackSelectionPresenter;
 import com.kyloth.serleena.presentation.ITrackView;
-import com.kyloth.serleena.presentation.ISerleenaActivity;
+import com.kyloth.serleena.presenters.ISerleenaActivity;
 import com.kyloth.serleena.presenters.SerleenaActivity;
 import com.kyloth.serleena.view.fragments.TrackSelectionFragment;
 import com.kyloth.serleena.model.IExperience;

@@ -61,7 +61,6 @@ import java.util.Date;
 
 import com.kyloth.serleena.BuildConfig;
 import com.kyloth.serleena.presentation.IWeatherView;
-import com.kyloth.serleena.presentation.ISerleenaActivity;
 import com.kyloth.serleena.sensors.ISensorManager;
 import com.kyloth.serleena.sensors.SerleenaSensorManager;
 import com.kyloth.serleena.sensors.ILocationManager;

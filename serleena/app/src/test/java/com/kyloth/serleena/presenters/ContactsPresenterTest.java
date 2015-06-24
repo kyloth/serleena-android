@@ -62,7 +62,6 @@ import android.database.sqlite.SQLiteDatabase;
 
 import com.kyloth.serleena.BuildConfig;
 import com.kyloth.serleena.presentation.IContactsView;
-import com.kyloth.serleena.presentation.ISerleenaActivity;
 import com.kyloth.serleena.sensors.SerleenaSensorManager;
 import com.kyloth.serleena.model.SerleenaDataSource;
 import com.kyloth.serleena.common.ListAdapter;

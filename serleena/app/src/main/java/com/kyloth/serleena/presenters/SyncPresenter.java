@@ -40,7 +40,6 @@
 
 package com.kyloth.serleena.presenters;
 
-import com.kyloth.serleena.presentation.ISerleenaActivity;
 import com.kyloth.serleena.presentation.ISyncPresenter;
 import com.kyloth.serleena.presentation.ISyncView;
 

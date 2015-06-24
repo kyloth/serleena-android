@@ -39,7 +39,7 @@
  *                                         codice e documentazione Javadoc
  */
 
-package com.kyloth.serleena.presentation;
+package com.kyloth.serleena.presenters;
 
 import com.kyloth.serleena.model.IExperience;
 import com.kyloth.serleena.model.ISerleenaDataSource;

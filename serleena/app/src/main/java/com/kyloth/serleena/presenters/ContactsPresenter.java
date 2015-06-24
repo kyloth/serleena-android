@@ -48,7 +48,6 @@ import com.kyloth.serleena.common.GeoPoint;
 import com.kyloth.serleena.model.ISerleenaDataSource;
 import com.kyloth.serleena.presentation.IContactsPresenter;
 import com.kyloth.serleena.presentation.IContactsView;
-import com.kyloth.serleena.presentation.ISerleenaActivity;
 import com.kyloth.serleena.sensors.ILocationManager;
 import com.kyloth.serleena.sensors.ILocationObserver;
 

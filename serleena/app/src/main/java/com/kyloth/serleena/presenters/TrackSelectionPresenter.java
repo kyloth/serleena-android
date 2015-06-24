@@ -44,7 +44,6 @@ import com.kyloth.serleena.model.IExperience;
 import com.kyloth.serleena.model.ITrack;
 import com.kyloth.serleena.presentation.IExperienceActivationObserver;
 import com.kyloth.serleena.presentation.IExperienceActivationSource;
-import com.kyloth.serleena.presentation.ISerleenaActivity;
 import com.kyloth.serleena.presentation.ITrackSelectionPresenter;
 import com.kyloth.serleena.presentation.ITrackSelectionView;
 

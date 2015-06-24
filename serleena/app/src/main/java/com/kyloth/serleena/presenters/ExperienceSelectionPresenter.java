@@ -45,7 +45,6 @@ import com.kyloth.serleena.presentation.IExperienceActivationObserver;
 import com.kyloth.serleena.presentation.IExperienceActivationSource;
 import com.kyloth.serleena.presentation.IExperienceSelectionPresenter;
 import com.kyloth.serleena.presentation.IExperienceSelectionView;
-import com.kyloth.serleena.presentation.ISerleenaActivity;
 
 import java.util.ArrayList;
 import java.util.List;

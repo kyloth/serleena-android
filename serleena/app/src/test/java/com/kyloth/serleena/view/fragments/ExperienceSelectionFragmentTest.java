@@ -60,7 +60,7 @@ import com.kyloth.serleena.BuildConfig;
 import com.kyloth.serleena.model.ITrack;
 import com.kyloth.serleena.presentation.IExperienceSelectionPresenter;
 import com.kyloth.serleena.presentation.IExperienceSelectionView;
-import com.kyloth.serleena.presentation.ISerleenaActivity;
+import com.kyloth.serleena.presenters.ISerleenaActivity;
 import com.kyloth.serleena.presenters.SerleenaActivity;
 import com.kyloth.serleena.view.fragments.ExperienceSelectionFragment;
 import com.kyloth.serleena.model.IExperience;

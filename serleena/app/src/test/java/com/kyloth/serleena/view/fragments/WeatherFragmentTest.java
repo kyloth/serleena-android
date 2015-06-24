@@ -49,7 +49,7 @@ import android.view.ViewGroup;
 import com.kyloth.serleena.BuildConfig;
 import com.kyloth.serleena.model.ITrack;
 import com.kyloth.serleena.presentation.IWeatherPresenter;
-import com.kyloth.serleena.presentation.ISerleenaActivity;
+import com.kyloth.serleena.presenters.ISerleenaActivity;
 import com.kyloth.serleena.view.fragments.WeatherFragment;
 import com.kyloth.serleena.model.IExperience;
 import com.kyloth.serleena.model.ISerleenaDataSource;

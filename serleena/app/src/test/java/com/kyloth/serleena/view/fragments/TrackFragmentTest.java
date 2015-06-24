@@ -46,7 +46,7 @@ import android.app.FragmentManager;
 
 import com.kyloth.serleena.BuildConfig;
 import com.kyloth.serleena.presentation.ITrackPresenter;
-import com.kyloth.serleena.presentation.ISerleenaActivity;
+import com.kyloth.serleena.presenters.ISerleenaActivity;
 import com.kyloth.serleena.model.ISerleenaDataSource;
 import com.kyloth.serleena.sensors.ISensorManager;
 

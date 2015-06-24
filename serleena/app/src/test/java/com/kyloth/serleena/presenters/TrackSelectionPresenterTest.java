@@ -53,7 +53,6 @@ import java.util.List;
 import com.kyloth.serleena.model.IExperience;
 import com.kyloth.serleena.model.ITrack;
 import com.kyloth.serleena.presentation.IExperienceActivationSource;
-import com.kyloth.serleena.presentation.ISerleenaActivity;
 import com.kyloth.serleena.presentation.ITrackSelectionView;
 import com.kyloth.serleena.sensors.ISensorManager;
 import com.kyloth.serleena.sensors.ITrackCrossing;

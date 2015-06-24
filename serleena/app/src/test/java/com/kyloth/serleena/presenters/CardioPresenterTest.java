@@ -55,7 +55,6 @@ import org.robolectric.annotation.Config;
 import static org.mockito.Mockito.*;
 
 import com.kyloth.serleena.BuildConfig;
-import com.kyloth.serleena.presentation.ISerleenaActivity;
 import com.kyloth.serleena.presentation.ICardioView;
 import com.kyloth.serleena.sensors.IHeartRateManager;
 import com.kyloth.serleena.sensors.ISensorManager;
