@@ -42,23 +42,13 @@
 package com.kyloth.serleena.view.fragments;
 
 import android.app.Activity;
-import android.app.Fragment;
-import android.app.FragmentManager;
-import android.content.Intent;
-import android.test.ActivityInstrumentationTestCase2;
-import android.test.ActivityUnitTestCase;
-import android.view.KeyEvent;
-import android.view.View;
 
 import com.kyloth.serleena.BuildConfig;
 import com.kyloth.serleena.model.ITrack;
 import com.kyloth.serleena.presentation.ITelemetryPresenter;
 import com.kyloth.serleena.presenters.ISerleenaActivity;
-import com.kyloth.serleena.presenters.SerleenaActivity;
-import com.kyloth.serleena.view.fragments.TelemetryFragment;
 import com.kyloth.serleena.model.IExperience;
 import com.kyloth.serleena.model.ISerleenaDataSource;
-import com.kyloth.serleena.model.ITrack;
 import com.kyloth.serleena.sensors.ISensorManager;
 
 import junit.framework.Assert;
@@ -73,14 +63,7 @@ import org.junit.Before;
 import org.junit.Rule;
 import org.junit.rules.ExpectedException;
 
-import java.lang.Exception;
-import java.lang.Override;
-import java.lang.Throwable;
-
-import dalvik.annotation.TestTarget;
-
 import static org.mockito.Mockito.*;
-import static org.junit.Assert.*;
 
 /**
  * Contiene i test di unità per la classe CompassFragment.
