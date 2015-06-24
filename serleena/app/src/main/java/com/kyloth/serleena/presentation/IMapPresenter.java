@@ -40,6 +40,7 @@
 
 package com.kyloth.serleena.presentation;
 
+import com.kyloth.serleena.common.LocationNotAvailableException;
 import com.kyloth.serleena.common.NoActiveExperienceException;
 
 /**
@@ -55,11 +56,15 @@ public interface IMapPresenter extends IPresenter {
     /**
 	 * Richiede l'aggiunta di un nuovo punto utente corrispondente alla
 	 * posizione corrente.
+     *
 	 * Se non è vi sono esperienze attive, viene sollevata un'eccezione
      * NoActiveExperienceException.
      *
-	 * @throws com.kyloth.serleena.common.NoActiveExperienceException
+     * Se non è disponibile la posizione dell'utente, necessaria alla creazione
+     * del punto utente, viene sollevata un'eccezione
+     * LocationNotAvailableException.
 	 */
-	public void newUserPoint() throws NoActiveExperienceException;
+	public void newUserPoint()
+        throws NoActiveExperienceException, LocationNotAvailableException;
 
 }
