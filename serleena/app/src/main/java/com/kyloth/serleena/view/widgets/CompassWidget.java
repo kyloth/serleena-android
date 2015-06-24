@@ -42,7 +42,7 @@ import com.kyloth.serleena.R;
 
 public class CompassWidget extends ImageView {
 
-    float direction = 0;
+    private float direction = 0;
 
     /**
      * Crea un nuovo oggetto CompassWidget.
