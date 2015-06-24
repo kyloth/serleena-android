@@ -38,36 +38,26 @@
  * 1.0.0     Filippo Sestini    Creazione del file, scrittura del codice e di
  *                              Javadoc
  */
-package com.kyloth.serleena.presenters;
+package com.kyloth.serleena.activity;
 
+import android.app.AlarmManager;
 import android.app.Fragment;
-import android.content.BroadcastReceiver;
-import android.content.IntentFilter;
 import android.os.Bundle;
 import android.app.Activity;
 import android.view.KeyEvent;
 
 import com.kyloth.serleena.R;
-import com.kyloth.serleena.model.ISerleenaDataSource;
-import com.kyloth.serleena.model.SerleenaDataSource;
+import com.kyloth.serleena.common.GeoPoint;
+import com.kyloth.serleena.model.*;
 import com.kyloth.serleena.persistence.sqlite.SQLiteDataSourceFactory;
-import com.kyloth.serleena.presentation.IObjectListObserver;
-import com.kyloth.serleena.presentation.ISerleenaActivity;
-import com.kyloth.serleena.sensors.ISensorManager;
-import com.kyloth.serleena.sensors.IWakeupObserver;
-import com.kyloth.serleena.sensors.SerleenaSensorManager;
-import com.kyloth.serleena.view.fragments.CompassFragment;
-import com.kyloth.serleena.view.fragments.ContactsFragment;
-import com.kyloth.serleena.view.fragments.ExperienceSelectionFragment;
-import com.kyloth.serleena.view.fragments.MapFragment;
-import com.kyloth.serleena.view.fragments.ObjectListFragment;
-import com.kyloth.serleena.view.fragments.TelemetryFragment;
-import com.kyloth.serleena.view.fragments.TrackFragment;
-import com.kyloth.serleena.view.fragments.TrackSelectionFragment;
-import com.kyloth.serleena.view.fragments.WeatherFragment;
+import com.kyloth.serleena.presentation.*;
+import com.kyloth.serleena.presenters.*;
+import com.kyloth.serleena.sensors.*;
+import com.kyloth.serleena.view.fragments.*;
 
 import java.util.ArrayList;
-import java.util.UUID;
+import java.util.Date;
+import java.util.List;
 
 /**
  * Classe che implementa ISerleenaActivity.
@@ -82,7 +72,7 @@ import java.util.UUID;
  * @see android.support.v7.app.AppCompatActivity
  */
 public class SerleenaActivity extends Activity
-        implements ISerleenaActivity, IObjectListObserver {
+        implements ISerleenaActivity, IObjectListObserver, ILocationObserver {
 
     private ISerleenaDataSource dataSource;
     private ISensorManager sensorManager;
@@ -97,6 +87,10 @@ public class SerleenaActivity extends Activity
     private TrackSelectionFragment trackSelectionFragment;
     private ObjectListFragment menuFragment;
     private ObjectListFragment experienceFragment;
+
+    private BackgroundLocationManager blm;
+    private ObjectListFragment testListFragment;
+    private List<Object> testList;
 
     /**
      * Ridefinisce Activity.onCreate().
@@ -152,9 +146,20 @@ public class SerleenaActivity extends Activity
             new CompassPresenter(compassFragment, this);
             new MapPresenter(mapFragment, this);
 
+            testList = new ArrayList<>();
+            testListFragment = new ObjectListFragment();
+            testListFragment.setList(testList);
+
+            /*
             getFragmentManager().beginTransaction()
                     .add(R.id.main_container, menuFragment).commit();
+            */
+            getFragmentManager().beginTransaction()
+                    .add(R.id.main_container, testListFragment).commit();
 
+            blm = new BackgroundLocationManager(this,
+                    (AlarmManager) getSystemService(ALARM_SERVICE));
+            blm.attachObserver(this, 60);
         }
     }
 
@@ -200,25 +205,15 @@ public class SerleenaActivity extends Activity
     }
 
     @Override
-    protected void onResume() {
-        super.onResume();
-        registerReceiver((BroadcastReceiver)getSensorManager()
-                .getWakeupSource(), new IntentFilter("com.kyloth.serleena" +
-                ".sensors.ACTION_SERLEENA_ALARM"));
-        this.getSensorManager().getWakeupSource().attachObserver(new IWakeupObserver() {
-            @Override
-            public void onWakeup() {
-                String s = new String("asd");
-            }
-            public String getUUID() {
-                return "DIOCANE";
-            }
-        }, 10, false);
+    protected void onDestroy() {
+        super.onDestroy();
+        blm.detachObserver(this);
     }
 
     @Override
-    protected void onPause() {
-        super.onPause();
-        //unregisterReceiver((BroadcastReceiver)getSensorManager().getWakeupSource());
+    public void onLocationUpdate(GeoPoint loc) {
+        testList.add(loc.latitude() + " " + loc.longitude() + " at " + new
+                Date().toString());
+        testListFragment.setList(testList);
     }
 }

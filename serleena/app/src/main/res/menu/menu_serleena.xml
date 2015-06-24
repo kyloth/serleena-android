@@ -1,7 +1,7 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    tools:context="com.kyloth.serleena.presenters.SerleenaActivity">
+    tools:context="com.kyloth.serleena.activity.SerleenaActivity">
     <item android:id="@+id/screen_menu_exp" android:title="@string/screen_menu_exp_text"
         android:orderInCategory="100" app:showAsAction="never"/>
     <item android:id="@+id/screen_menu_contact" android:title="@string/screen_menu_contact_text"

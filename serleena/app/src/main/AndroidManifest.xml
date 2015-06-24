@@ -13,7 +13,7 @@
         android:label="@string/app_name"
         android:theme="@style/AppTheme" >
         <activity
-            android:name=".presenters.SerleenaActivity"
+            android:name=".activity.SerleenaActivity"
             android:exported="true"
             android:label="@string/title_activity_serleena" >
             <intent-filter>
