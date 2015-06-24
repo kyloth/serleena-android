@@ -40,6 +40,8 @@
 
 package com.kyloth.serleena.presenters;
 
+import android.os.AsyncTask;
+
 import com.kyloth.serleena.model.IExperience;
 import com.kyloth.serleena.model.ITrack;
 import com.kyloth.serleena.presentation.IExperienceActivationObserver;
@@ -131,10 +133,23 @@ public class TrackSelectionPresenter
      * @param experience Esperienza attivata.
      */
     @Override
-    public void onExperienceActivated(IExperience experience) {
+    public void onExperienceActivated(final IExperience experience) {
         if (experience == null)
             throw new IllegalArgumentException("Illegal null experience");
-        view.setTracks(experience.getTracks());
+
+        AsyncTask<Void, Void, Iterable<ITrack>> task =
+                new AsyncTask<Void, Void, Iterable<ITrack>>() {
+            @Override
+            protected Iterable<ITrack> doInBackground(Void... params) {
+                return experience.getTracks();
+            }
+            @Override
+            protected void onPostExecute(Iterable<ITrack> iTracks) {
+                super.onPostExecute(iTracks);
+                view.setTracks(iTracks);
+            }
+        };
+        task.execute();
     }
 
 }
