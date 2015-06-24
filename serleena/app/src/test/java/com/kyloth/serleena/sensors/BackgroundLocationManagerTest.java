@@ -44,6 +44,7 @@ package com.kyloth.serleena.sensors;
 import android.app.AlarmManager;
 import android.app.PendingIntent;
 import android.content.Context;
+import android.content.Intent;
 import android.content.IntentFilter;
 import android.os.Bundle;
 
@@ -191,6 +192,7 @@ public class BackgroundLocationManagerTest {
         verify(contextMock, times(1)).registerReceiver(
                 eq(managerWithContextMock), any(IntentFilter.class));
         verify(contextMock, times(1)).unregisterReceiver(managerWithContextMock);
+        verify(contextMock).stopService(any(Intent.class));
     }
 
     /**
