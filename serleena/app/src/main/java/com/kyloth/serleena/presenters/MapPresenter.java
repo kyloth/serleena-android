@@ -44,6 +44,7 @@ import android.os.AsyncTask;
 
 import com.kyloth.serleena.common.GeoPoint;
 import com.kyloth.serleena.common.IQuadrant;
+import com.kyloth.serleena.common.LocationNotAvailableException;
 import com.kyloth.serleena.common.NoActiveExperienceException;
 import com.kyloth.serleena.common.UserPoint;
 import com.kyloth.serleena.model.IExperience;
@@ -110,22 +111,29 @@ public class MapPresenter implements IMapPresenter, ILocationObserver {
      * @throws NoActiveExperienceException
      */
     @Override
-    public synchronized void newUserPoint() throws NoActiveExperienceException {
+    public synchronized void newUserPoint()
+            throws NoActiveExperienceException, LocationNotAvailableException {
         if (activeExperience == null)
             throw new NoActiveExperienceException();
+        if (currentPosition == null)
+            throw new LocationNotAvailableException();
 
-        if (currentPosition != null) {
-            AsyncTask<Void, Void, Void> task = new AsyncTask<Void,Void,Void>() {
-                @Override
-                protected Void doInBackground(Void... params) {
-                    activeExperience.addUserPoints(
-                            new UserPoint(currentPosition.latitude(),
-                                    currentPosition.longitude()));
-                    return null;
-                }
-            };
-            task.execute();
-        }
+        AsyncTask<Void, Void, Iterable<UserPoint>> task =
+                new AsyncTask<Void,Void,Iterable<UserPoint>>() {
+            @Override
+            protected Iterable<UserPoint> doInBackground(Void... params) {
+                activeExperience.addUserPoints(new UserPoint(
+                        currentPosition.latitude(),
+                        currentPosition.longitude()));
+                return activeExperience.getUserPoints();
+            }
+            @Override
+            protected void onPostExecute(Iterable<UserPoint> userPoints) {
+                super.onPostExecute(userPoints);
+                view.displayUP(userPoints);
+            }
+        };
+        task.execute();
     }
 
     /**
@@ -162,20 +170,27 @@ public class MapPresenter implements IMapPresenter, ILocationObserver {
      */
     @Override
     public synchronized void onLocationUpdate(final GeoPoint loc) {
-        /*
-        AsyncTask<Void, Void, Void> task = new AsyncTask<Void, Void, Void>() {
+        if (loc == null)
+            throw new IllegalArgumentException("Illegal null location");
+
+        currentPosition = loc;
+        view.setUserLocation(loc);
+        final ISerleenaDataSource ds = activity.getDataSource();
+
+        AsyncTask<Void, Void, IQuadrant> quadrantAsyncTask =
+                new AsyncTask<Void, Void, IQuadrant>() {
             @Override
-            protected Void doInBackground(Void... params) {
-                currentPosition = loc;
-                updateView(currentPosition);
-                return null;
+            protected IQuadrant doInBackground(Void... params) {
+                return ds.getQuadrant(loc);
+            }
+            @Override
+            protected void onPostExecute(IQuadrant quadrant) {
+                super.onPostExecute(quadrant);
+                view.displayQuadrant(quadrant);
             }
         };
 
-        task.execute();
-        */
-        currentPosition = loc;
-        updateView(currentPosition);
+        quadrantAsyncTask.execute();
     }
 
     /**
@@ -195,30 +210,5 @@ public class MapPresenter implements IMapPresenter, ILocationObserver {
         this.activeExperience = experience;
         view.clear();
     }
-
-    /*
-     * Aggiorna la vista in base alla posizione e all'esperienza correnti.
-     *
-     * Crea un flusso di controllo asincrono che si occupa di ottenere e
-     * comunicare alla vista gli elementi della mappa senza bloccare il
-     * thread dela UI.
-     *
-     * @param location Posizione in base a cui aggiornare la vista. Se null,
-     * viene sollevata un'eccezione InvalidArgumentException.
-     */
-    public void updateView(GeoPoint location) {
-        if (location == null)
-            throw new IllegalArgumentException("Illegal null location");
-
-        ISerleenaDataSource ds = activity.getDataSource();
-        //IQuadrant quadrant = ds.getQuadrant(location);
-        //view.displayQuadrant(quadrant);
-        view.setUserLocation(location);
-        if (activeExperience != null) {
-            Iterable<UserPoint> ups = activeExperience.getUserPoints();
-            view.displayUP(ups);
-        }
-    }
-
 
 }
