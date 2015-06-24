@@ -43,15 +43,11 @@ package com.kyloth.serleena.view.fragments;
 
 import android.app.Activity;
 import android.app.FragmentManager;
-import android.view.KeyEvent;
 import android.view.ViewGroup;
 
 import com.kyloth.serleena.BuildConfig;
-import com.kyloth.serleena.model.ITrack;
 import com.kyloth.serleena.presentation.IWeatherPresenter;
 import com.kyloth.serleena.presenters.ISerleenaActivity;
-import com.kyloth.serleena.view.fragments.WeatherFragment;
-import com.kyloth.serleena.model.IExperience;
 import com.kyloth.serleena.model.ISerleenaDataSource;
 import com.kyloth.serleena.sensors.ISensorManager;
 
@@ -60,19 +56,14 @@ import junit.framework.Assert;
 import org.robolectric.Robolectric;
 import org.robolectric.RobolectricGradleTestRunner;
 import org.robolectric.annotation.Config;
-import org.robolectric.shadows.*;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.Before;
-import org.junit.After;
 import org.junit.Rule;
 import org.junit.rules.ExpectedException;
 
-import java.util.Date;
-
 import static org.mockito.Mockito.*;
-import static org.junit.Assert.*;
 
 /**
  * Contiene i test di unità per la classe CompassFragment.
