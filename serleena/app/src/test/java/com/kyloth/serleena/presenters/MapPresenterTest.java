@@ -50,6 +50,7 @@ import static org.mockito.Mockito.*;
 
 import org.robolectric.RobolectricTestRunner;
 
+import com.kyloth.serleena.common.LocationNotAvailableException;
 import com.kyloth.serleena.model.ISerleenaDataSource;
 import com.kyloth.serleena.model.IExperience;
 import com.kyloth.serleena.presentation.IMapView;
@@ -119,7 +120,7 @@ public class MapPresenterTest {
      */
     @Test(expected = NoActiveExperienceException.class)
     public void newUserPointShouldThrowExceptionWhenNoActiveExperience()
-            throws NoActiveExperienceException {
+            throws NoActiveExperienceException, LocationNotAvailableException {
         new MapPresenter(view, activity).newUserPoint();
     }
 
@@ -181,7 +182,7 @@ public class MapPresenterTest {
 
     @Test(expected = NoActiveExperienceException.class)
     public void newUserPointShouldThrowWhenNoActiveExperience()
-            throws NoActiveExperienceException {
+            throws NoActiveExperienceException, LocationNotAvailableException {
         mp.newUserPoint();
     }
 
