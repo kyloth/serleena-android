@@ -147,15 +147,14 @@ public class GeoPoint
         return (int)(latitude + longitude);
     }
 
-    public Location toLocation() {
-        Location newLocation = new Location("");
-        newLocation.setLatitude(latitude);
-        newLocation.setLongitude(longitude);
-        return newLocation;
-    }
-
     public float bearingTo(GeoPoint other) {
-        return this.toLocation().bearingTo(other.toLocation());
+        Location location = new Location("");
+        location.setLatitude(latitude);
+        location.setLongitude(longitude);
+        Location otherLocation = new Location("");
+        otherLocation.setLatitude(other.latitude());
+        otherLocation.setLongitude(other.longitude());
+        return location.bearingTo(otherLocation);
     }
 
 }

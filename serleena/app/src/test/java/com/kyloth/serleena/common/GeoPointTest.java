@@ -183,12 +183,4 @@ public class GeoPointTest {
         assertEquals(realDistance, gp1.distanceTo(gp2), 0);
     }
 
-    @Test
-    public void testToLocation() {
-        GeoPoint gp = new GeoPoint(30, 40);
-        Location l = gp.toLocation();
-        assertEquals(l.getLatitude(), 30, 0);
-        assertEquals(l.getLongitude(), 40, 0);
-    }
-
 }
