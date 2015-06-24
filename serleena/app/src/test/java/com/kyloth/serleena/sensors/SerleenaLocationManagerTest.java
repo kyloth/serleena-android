@@ -46,7 +46,6 @@ import android.location.LocationListener;
 import android.location.LocationManager;
 import android.os.Looper;
 
-import com.kyloth.serleena.BuildConfig;
 import com.kyloth.serleena.common.GeoPoint;
 
 import org.junit.Before;
@@ -54,8 +53,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.ArgumentCaptor;
 import org.mockito.Matchers;
-import org.robolectric.RobolectricGradleTestRunner;
-import org.robolectric.annotation.Config;
+import org.robolectric.RobolectricTestRunner;
 import org.robolectric.shadows.ShadowLocationManager;
 
 import static android.location.LocationManager.*;
@@ -65,6 +63,7 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.any;
+import static org.mockito.Mockito.verifyNoMoreInteractions;
 import static org.mockito.Mockito.when;
 import static org.robolectric.Shadows.shadowOf;
 
@@ -74,15 +73,14 @@ import static org.robolectric.Shadows.shadowOf;
  * @author Tobia Tesan <tobia.tesan@gmail.com>
  * @version 1.1.0
  */
-@RunWith(RobolectricGradleTestRunner.class)
-@Config(constants = BuildConfig.class, emulateSdk = 19)
+@RunWith(RobolectricTestRunner.class)
 public class SerleenaLocationManagerTest {
     ILocationObserver obs;
     ILocationObserver otherObs;
     ILocationObserver obs3;
     LocationManager locationManager;
     ShadowLocationManager shadowLocationManager;
-    SerleenaLocationManager instance;
+    SerleenaLocationManager manager;
     GeoPoint point;
     GeoPoint otherPoint;
 
@@ -94,73 +92,82 @@ public class SerleenaLocationManagerTest {
         return location;
     }
 
+    @Before
+    public void initialize() {
+        obs = mock(ILocationObserver.class);
+        otherObs = mock(ILocationObserver.class);
+        obs3 = mock(ILocationObserver.class);
+        locationManager = mock(LocationManager.class);
+        manager = new SerleenaLocationManager(locationManager);
+        point = new GeoPoint(12.0, 34.0);
+        otherPoint = new GeoPoint(56.0, 78.0);
+    }
+
+
     /**
      * Verifica che quando SerleenaLocationManager riceve onLocationChanged
      * aggiorni correttamente gli osservatori.
      */
     @Test
     public void testObserverGetsUpdated() {
-        Location location = getLocation(GPS_PROVIDER, point.latitude(), point.longitude());
-        instance.attachObserver(obs, 1000);
-        instance.attachObserver(otherObs, 1000);
-        instance.onLocationChanged(location);
-        verify(obs).onLocationUpdate(point);
-        verify(otherObs).onLocationUpdate(point);
+        ArgumentCaptor<SerleenaLocationManager.SerleenaLocationListener> captor =
+                ArgumentCaptor.forClass(SerleenaLocationManager.SerleenaLocationListener.class);
+        ArgumentCaptor<GeoPoint> geoCaptor = ArgumentCaptor.forClass(GeoPoint
+                .class);
+
+        manager.attachObserver(obs, 40);
+        verify(locationManager).requestLocationUpdates(
+                eq(LocationManager.GPS_PROVIDER),
+                eq(40L),
+                any(Float.class),
+                any(SerleenaLocationManager.SerleenaLocationListener.class));
     }
 
     /**
-     * Verifica che quando attach viene chiamato con un observer == null
-     * sollevi una IllegalArgumentException
+     * Verifica che attachObserver() sollevi un'eccezione quando gli viene
+     * passato un parametro null.
      */
     @Test(expected = IllegalArgumentException.class)
-    public void testNoNullObservers() {
-        instance.attachObserver(null, 1000);
+    public void attachObserverShouldThrowWhenNullArgument() {
+        manager.attachObserver(null, 1000);
     }
 
     /**
-     * Verifica che quando attach viene chiamato con intervallo == 0
-     * sollevi una IllegalArgumentException
+     * Verifica che attachObserver() sollevi un'eccezione quando gli viene
+     * passato un parametro null.
      */
     @Test(expected = IllegalArgumentException.class)
-    public void testNoZeroInterval() {
-        instance.attachObserver(obs, 0);
+    public void detachObserverShouldThrowWhenNullArgument() {
+        manager.detachObserver(null);
     }
 
     /**
-     * Verifica che quando attach viene chiamato con intervallo < 0
-     * sollevi una IllegalArgumentException
+     * Verifica che attachObserver() sollevi un'eccezione quando gli viene
+     * passato un intervallo < 0.
      */
     @Test(expected = IllegalArgumentException.class)
-    public void testNoLTZeroInterval() {
-        instance.attachObserver(obs, -1234);
+    public void attachObserverShouldThrowWhenNegativeInterval() {
+        manager.attachObserver(obs, -1234);
     }
 
     /**
-     * Verifica che quando detach viene chiamato con argomento null
-     * sollevi una IllegalArgumentException
+     * Verifica che attachObserver() sollevi un'eccezione quando gli viene
+     * passato un intervallo nullo.
      */
     @Test(expected = IllegalArgumentException.class)
-    public void testDetachNoNullObserver() {
-        instance.detachObserver(null);
+    public void attachObserverShouldThrowWithNullInterval() {
+        manager.attachObserver(obs, 0);
     }
 
     /**
-     * Verifica che quando dopo il detach un osservatore non venga
-     * ulteriormente aggiornato sulla posizione.
+     * Verifica che detachObserver() inoltri la cancellazione
+     * dell'aggiornamento al gestore di posizione di Android.
      */
     @Test
-    public void testDetachedObserverGetsNoUpdates() {
-        Location location = getLocation(GPS_PROVIDER, point.latitude(), point.longitude());
-        Location otherLocation = getLocation(GPS_PROVIDER, otherPoint.latitude(), otherPoint.longitude());
-        instance.attachObserver(obs, 1000);
-        instance.attachObserver(otherObs, 1000);
-        instance.onLocationChanged(location);
-        verify(obs).onLocationUpdate(point);
-        verify(otherObs).onLocationUpdate(point);
-        instance.detachObserver(obs);
-        instance.onLocationChanged(otherLocation);
-        verify(obs).onLocationUpdate(point);
-        verify(otherObs).onLocationUpdate(otherPoint);
+    public void detachObserverShouldRemoveFromLocationManager() {
+        manager.attachObserver(obs, 100);
+        manager.detachObserver(obs);
+        verify(locationManager).removeUpdates(any(LocationListener.class));
     }
 
     /**
@@ -169,11 +176,11 @@ public class SerleenaLocationManagerTest {
      */
     @Test
     public void singleUpdateShouldForwardRequestToAndroidManager() {
-        instance.getSingleUpdate(obs, 100);
-        String provider = android.location.LocationManager.GPS_PROVIDER;
-        verify(locationManager).requestSingleUpdate(eq(provider),
-                any(LocationListener.class), Matchers.<Looper>isNull(Looper
-                        .class));
+        manager.getSingleUpdate(obs);
+        verify(locationManager).requestSingleUpdate(
+                eq(LocationManager.GPS_PROVIDER),
+                any(LocationListener.class),
+                Matchers.<Looper>isNull(Looper.class));
     }
 
     /**
@@ -182,7 +189,7 @@ public class SerleenaLocationManagerTest {
      */
     @Test
     public void singleUpdateShouldNotifyObserverCorrectly() {
-        instance.getSingleUpdate(obs, 100);
+        manager.getSingleUpdate(obs);
         String provider = android.location.LocationManager.GPS_PROVIDER;
         ArgumentCaptor<LocationListener> captor =
                 ArgumentCaptor.forClass(LocationListener.class);
@@ -203,82 +210,12 @@ public class SerleenaLocationManagerTest {
     }
 
     /**
-     * Verifica che i dati sulla posizione non scaduti vengano utilizzati per
-     * aggiornamenti singoli con getSingleUpdate().
-     */
-    @Test
-    public void locationNotExpiredShouldBeUsedInSingleUpdates() {
-        Location l = mock(Location.class);
-        when(l.getLatitude()).thenReturn(30d);
-        when(l.getLongitude()).thenReturn(20d);
-        instance.onLocationChanged(l);
-        instance.getSingleUpdate(obs, 100);
-        ArgumentCaptor<GeoPoint> pointCaptor = ArgumentCaptor.forClass
-                (GeoPoint.class);
-        verify(obs).onLocationUpdate(pointCaptor.capture());
-        assertTrue(pointCaptor.getValue().latitude() == 30 &&
-                pointCaptor.getValue().longitude() == 20);
-    }
-
-    /**
      * Verifica che getSingleUpdate() sollevi un'eccezione al passaggio di
      * parametri null.
      */
     @Test(expected = IllegalArgumentException.class)
     public void getSingleUpdateShouldThrowWhenNullObserver() {
-        instance.getSingleUpdate(null, 100);
-    }
-
-    /**
-     * Verifica che getSingleUpdate() sollevi un'eccezione al passaggio di
-     * parametri fuori range.
-     */
-    @Test(expected = IllegalArgumentException.class)
-    public void getSingleUpdateShouldThrowWhenZeroTimeout() {
-        instance.getSingleUpdate(obs, 0);
-    }
-
-    /**
-     * Verifica che getSingleUpdate() sollevi un'eccezione al passaggio di
-     * parametri fuori range.
-     */
-    @Test(expected = IllegalArgumentException.class)
-    public void getSingleUpdateShouldThrowWhenTimeoutBelowZero() {
-        instance.getSingleUpdate(obs, -10);
-    }
-
-    /**
-     * Verifica che l'intervallo di aggiornamento sulla posizione richiesto
-     * al LocationManager di Android venga aggiornato correttamente in base
-     * agli intervalli dei diversi observer registrati.
-     */
-    @Test
-    public void updateIntervalShouldBeAdjustedAccordingToObservers() {
-        instance.attachObserver(obs, 50);
-        verify(locationManager).requestLocationUpdates(
-                LocationManager.GPS_PROVIDER, 50000,
-                SerleenaLocationManager.MINIMUM_UPDATE_DISTANCE, instance);
-        instance.attachObserver(otherObs, 30);
-        verify(locationManager).requestLocationUpdates(
-                LocationManager.GPS_PROVIDER, 30000,
-                SerleenaLocationManager.MINIMUM_UPDATE_DISTANCE, instance);
-        instance.attachObserver(obs3, 40);
-        verify(locationManager, times(2)).requestLocationUpdates(any(String
-                .class), any(Integer.class), any(Integer.class), any
-                (SerleenaLocationManager.class));
-        instance.detachObserver(otherObs);
-        verify(locationManager).requestLocationUpdates(
-                LocationManager.GPS_PROVIDER, 40000,
-                SerleenaLocationManager.MINIMUM_UPDATE_DISTANCE, instance);
-    }
-
-    /**
-     * Verifica che notifyObserver() sollevi un'eccezione al passaggio di
-     * parametri null.
-     */
-    @Test(expected = IllegalArgumentException.class)
-    public void notifyObserverShouldThrowWhenNullArgument() {
-        instance.notifyObserver(null);
+        manager.getSingleUpdate(null);
     }
 
     /**
@@ -290,16 +227,17 @@ public class SerleenaLocationManagerTest {
         new SerleenaLocationManager(null);
     }
 
-    @Before
-    public void setUp() {
-        obs = mock(ILocationObserver.class);
-        otherObs = mock(ILocationObserver.class);
-        obs3 = mock(ILocationObserver.class);
-        locationManager = mock(LocationManager.class);
-        shadowLocationManager = shadowOf(locationManager);
-        instance = new SerleenaLocationManager(locationManager);
-        point = new GeoPoint(12.0, 34.0);
-        otherPoint = new GeoPoint(56.0, 78.0);
+    /**
+     * Verifica che gli oggetti SerleenaLocationListener segnalino correttamente
+     * l'observer.
+     */
+    @Test
+    public void locationListenerShouldNotifyObserver() {
+        SerleenaLocationManager.SerleenaLocationListener listener =
+                new SerleenaLocationManager.SerleenaLocationListener(obs);
+        Location l = getLocation(LocationManager.GPS_PROVIDER, 22, 33);
+        listener.onLocationChanged(l);
+        verify(obs).onLocationUpdate(eq(new GeoPoint(22, 33)));
     }
 
 }
