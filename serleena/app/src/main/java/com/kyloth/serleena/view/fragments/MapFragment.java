@@ -45,6 +45,7 @@ import android.widget.TextView;
 import com.kyloth.serleena.R;
 import com.kyloth.serleena.common.GeoPoint;
 import com.kyloth.serleena.common.IQuadrant;
+import com.kyloth.serleena.common.LocationNotAvailableException;
 import com.kyloth.serleena.common.NoActiveExperienceException;
 import com.kyloth.serleena.common.UserPoint;
 import com.kyloth.serleena.presentation.IMapPresenter;
@@ -90,7 +91,9 @@ public class MapFragment extends Fragment implements IMapView,
     public void onClick(View v) {
         try {
             presenter.newUserPoint();
-        } catch (NoActiveExperienceException e) {}
+        } catch (NoActiveExperienceException|LocationNotAvailableException e) {
+            throw new UnsupportedOperationException();
+        }
     }
 
     @Override
