@@ -130,6 +130,7 @@ public class ExperienceSelectionPresenter
         if (experience == null)
             throw new IllegalArgumentException("Illegal null experience");
         selectedExperience = experience;
+        notifyObservers();
     }
 
     /**
