@@ -45,10 +45,10 @@ import com.kyloth.serleena.common.CheckpointReachedTelemetryEvent;
 import com.kyloth.serleena.common.GeoPoint;
 import com.kyloth.serleena.common.HeartRateTelemetryEvent;
 import com.kyloth.serleena.common.LocationTelemetryEvent;
+import com.kyloth.serleena.common.NoTrackCrossingException;
 import com.kyloth.serleena.common.TelemetryEvent;
 
 import java.util.ArrayList;
-import java.util.UUID;
 
 /**
  * Concretizza ITelemetryManager
@@ -64,43 +64,34 @@ import java.util.UUID;
  * @field uuid : String UUID dell'oggetto in quanto IWakeupObserver
  * @author Filippo Sestini <sestini.filippo@gmail.com>
  */
-class TelemetryManager implements ITelemetryManager,
-        ILocationObserver, IHeartRateObserver, IWakeupObserver,
-        ITrackCrossingObserver {
+class TelemetryManager
+        implements ITelemetryManager, IHeartRateObserver,
+        ITrackCrossingObserver, ILocationObserver {
 
     public static int SAMPLING_RATE_SECONDS = 60;
-    public static int SENSOR_TIMEOUT_SECONDS = 20;
 
-    private ILocationManager locMan;
+    private IBackgroundLocationManager bkgrLocMan;
     private IHeartRateManager hrMan;
-    private IWakeupManager wkMan;
     private ITrackCrossing tc;
     private ArrayList<TelemetryEvent> events;
-    private IPowerManager pm;
     private boolean enabled;
     private long startTimestamp;
-    private String uuid;
     /**
      * Crea un oggetto TelemetryManager.
      *
      * Il Manager utilizza altre risorse del dispositivo, passate come
      * parametri al costruttore.
      */
-    public TelemetryManager(ILocationManager locMan,
+    public TelemetryManager(IBackgroundLocationManager bkgrLocMan,
                             IHeartRateManager hrMan,
-                            IWakeupManager wm,
-                            IPowerManager pm,
                             ITrackCrossing trackCrossing) {
-        this.locMan = locMan;
+        this.bkgrLocMan = bkgrLocMan;
         this.hrMan = hrMan;
-        this.wkMan = wm;
-        this.pm = pm;
         this.tc = trackCrossing;
 
         this.tc.attachObserver(this);
         this.events = new ArrayList<TelemetryEvent>();
         this.enabled = false;
-        uuid = UUID.randomUUID().toString();
     }
 
     /**
@@ -153,13 +144,14 @@ class TelemetryManager implements ITelemetryManager,
     }
 
     private void start() {
-        wkMan.attachObserver(this, SAMPLING_RATE_SECONDS, false);
+        bkgrLocMan.attachObserver(this, SAMPLING_RATE_SECONDS);
+        hrMan.attachObserver(this, SAMPLING_RATE_SECONDS);
         events.clear();
         startTimestamp = System.currentTimeMillis() / 1000L;
     }
 
     private void stop() {
-        wkMan.detachObserver(this);
+        bkgrLocMan.detachObserver(this);
     }
 
     /**
@@ -177,14 +169,10 @@ class TelemetryManager implements ITelemetryManager,
         long now = System.currentTimeMillis() / 1000L;
         int partial = (int)(now - startTimestamp);
         events.add(new HeartRateTelemetryEvent(partial, rate));
-        pm.unlock("HeartRateTelemetryLock");
     }
 
     /**
      * Implementa ILocationObserver.onLocationUpdate().
-     *
-     * Rilascia il lock del processore acquisito in onWaleup() per il sensore
-     * di posizione. Vedi onWakeup().
      *
      * @param loc Posizione geografica dell'utente.
      */
@@ -193,30 +181,6 @@ class TelemetryManager implements ITelemetryManager,
         long now = System.currentTimeMillis() / 1000L;
         int partial = (int)(now - startTimestamp);
         events.add(new LocationTelemetryEvent(partial, loc));
-        pm.unlock("LocationTelemetryLock");
-    }
-
-    /**
-     * Implementa IWakeupObserver.onWakeup().
-     *
-     * Il metodo viene invocato periodicamente da un IWakeupManager,
-     * per permettere all'applicazione di registrare eventi di Tracciamento
-     * anche in periodi di sleep del processore.
-     * In attesa della risposta dei sensori, il metodo acquisisce un lock sul
-     * processore per ogni sensore, evitando che esso torni in modalità sleep
-     * prima del corretto campionamento dell'evento.
-     */
-    @Override
-    public void onWakeup() {
-        pm.lock("LocationTelemetryLock");
-        pm.lock("HeartRateTelemetryLock");
-        locMan.getSingleUpdate(this, SENSOR_TIMEOUT_SECONDS);
-        hrMan.getSingleUpdate(this, SENSOR_TIMEOUT_SECONDS);
-    }
-
-    @Override
-    public String getUUID() {
-        return uuid;
     }
 
     /**
