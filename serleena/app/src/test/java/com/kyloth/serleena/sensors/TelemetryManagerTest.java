@@ -47,9 +47,11 @@ import com.kyloth.serleena.common.DirectAccessList;
 import com.kyloth.serleena.common.GeoPoint;
 import com.kyloth.serleena.common.HeartRateTelemetryEvent;
 import com.kyloth.serleena.common.LocationTelemetryEvent;
+import com.kyloth.serleena.common.NoTrackCrossingException;
 import com.kyloth.serleena.common.TelemetryEvent;
 import com.kyloth.serleena.model.ITrack;
 
+import org.junit.Before;
 import org.junit.Test;
 
 import java.util.Iterator;
@@ -113,6 +115,19 @@ public class TelemetryManagerTest {
         assertTrue(found);
     }
 
+    IBackgroundLocationManager bkgrLocMan;
+    IHeartRateManager hrMan;
+    ITrackCrossing tc;
+    TelemetryManager manager;
+
+    @Before
+    public void initialize() {
+        bkgrLocMan = mock(IBackgroundLocationManager.class);
+        hrMan = mock(IHeartRateManager.class);
+        tc = mock(ITrackCrossing.class);
+        manager = new TelemetryManager(bkgrLocMan, hrMan, tc);
+    }
+
     /**
      * Verifica che sia possibile abilitare il Tracciamento quando non vi
      * sono Percorsi in corso, o quando il Percorso non ha ancora raggiunto
@@ -122,25 +137,18 @@ public class TelemetryManagerTest {
     public void enablingTelemetryWithNoTrackShouldWork() throws
             TrackAlreadyStartedException,
             NoTrackCrossingException {
-        IWakeupManager wm = mock(IWakeupManager.class);
-        ILocationManager lm = mock(ILocationManager.class);
-        IPowerManager pm = mock(IPowerManager.class);
-        IHeartRateManager hm = mock(IHeartRateManager.class);
-        ITrackCrossing tc = mock(ITrackCrossing.class);
-
-        TelemetryManager tm = new TelemetryManager(lm, hm, wm, pm, tc);
-        assertTrue(!tm.isEnabled());
+        assertTrue(!manager.isEnabled());
 
         when(tc.getNextCheckpoint()).thenReturn(0);
-        tm.enable();
-        assertTrue(tm.isEnabled());
+        manager.enable();
+        assertTrue(manager.isEnabled());
 
-        tm.disable();
-        assertTrue(!tm.isEnabled());
+        manager.disable();
+        assertTrue(!manager.isEnabled());
 
         when(tc.getNextCheckpoint()).thenThrow(NoTrackCrossingException.class);
-        tm.enable();
-        assertTrue(tm.isEnabled());
+        manager.enable();
+        assertTrue(manager.isEnabled());
     }
 
     /**
@@ -148,18 +156,10 @@ public class TelemetryManagerTest {
      * avviare il Tracciamento per un Percorso già in corso.
      */
     @Test(expected = TrackAlreadyStartedException.class)
-    public void enablingTelemetryWithTrackStartedShouldThrow() throws
-            NoTrackCrossingException,
-            TrackAlreadyStartedException {
-        IWakeupManager wm = mock(IWakeupManager.class);
-        ILocationManager lm = mock(ILocationManager.class);
-        IPowerManager pm = mock(IPowerManager.class);
-        IHeartRateManager hm = mock(IHeartRateManager.class);
-        ITrackCrossing tc = mock(ITrackCrossing.class);
+    public void enablingTelemetryWithTrackStartedShouldThrow()
+            throws NoTrackCrossingException, TrackAlreadyStartedException {
         when(tc.getNextCheckpoint()).thenReturn(2);
-
-        TelemetryManager tm = new TelemetryManager(lm, hm, wm, pm, tc);
-        tm.enable();
+        manager.enable();
     }
 
     /**
@@ -168,16 +168,8 @@ public class TelemetryManagerTest {
      */
     @Test
     public void disablingTelemetryShouldUnregisterSensors() {
-        IWakeupManager wm = mock(IWakeupManager.class);
-        ILocationManager lm = mock(ILocationManager.class);
-        IPowerManager pm = mock(IPowerManager.class);
-        IHeartRateManager hm = mock(IHeartRateManager.class);
-        ITrackCrossing tc = mock(ITrackCrossing.class);
-
-        TelemetryManager tm = new TelemetryManager(lm, hm, wm, pm, tc);
-
-        tm.disable();
-        verify(wm).detachObserver(tm);
+        manager.disable();
+        verify(bkgrLocMan).detachObserver(manager);
     }
 
     /**
@@ -187,24 +179,20 @@ public class TelemetryManagerTest {
     @Test
     public void telemetryShouldStartAtFirstCheckpointOfTrack()
             throws TrackAlreadyStartedException, NoTrackCrossingException {
-        IWakeupManager wm = mock(IWakeupManager.class);
-        ILocationManager lm = mock(ILocationManager.class);
-        IPowerManager pm = mock(IPowerManager.class);
-        IHeartRateManager hm = mock(IHeartRateManager.class);
-        ITrackCrossing tc = mock(ITrackCrossing.class);
         ITrack track = getTrack();
         when(tc.getTrack()).thenReturn(track);
 
-        TelemetryManager tm = new TelemetryManager(lm, hm, wm, pm, tc);
-        tm.enable();
-        tm.onCheckpointCrossed(0);
+        manager.enable();
+        manager.onCheckpointCrossed(0);
 
-        verify(wm).attachObserver(
-                tm, TelemetryManager.SAMPLING_RATE_SECONDS, false);
+        verify(bkgrLocMan).attachObserver(manager,
+                TelemetryManager.SAMPLING_RATE_SECONDS);
+        verify(hrMan).attachObserver(manager,
+                TelemetryManager.SAMPLING_RATE_SECONDS);
 
         CheckpointReachedTelemetryEvent crte =
                 (CheckpointReachedTelemetryEvent)
-                        tm.getEvents().iterator().next();
+                        manager.getEvents().iterator().next();
         assertTrue(crte.checkpointNumber() == 0);
         assertTrue(crte.timestamp() >= 0);
     }
@@ -216,23 +204,17 @@ public class TelemetryManagerTest {
     @Test
     public void checkpointEventsShouldBeAddedCorrectly()
             throws NoTrackCrossingException, TrackAlreadyStartedException {
-        IWakeupManager wm = mock(IWakeupManager.class);
-        ILocationManager lm = mock(ILocationManager.class);
-        IPowerManager pm = mock(IPowerManager.class);
-        IHeartRateManager hm = mock(IHeartRateManager.class);
-        ITrackCrossing tc = mock(ITrackCrossing.class);
         ITrack track = getTrack();
         when(tc.getTrack()).thenReturn(track);
 
-        TelemetryManager tm = new TelemetryManager(lm, hm, wm, pm, tc);
-        tm.enable();
+        manager.enable();
 
-        tm.onCheckpointCrossed(0);
-        assertPresenceOfEvent(tm, 0);
-        tm.onCheckpointCrossed(1);
-        assertPresenceOfEvent(tm, 1);
-        tm.onCheckpointCrossed(2);
-        assertPresenceOfEvent(tm, 2);
+        manager.onCheckpointCrossed(0);
+        assertPresenceOfEvent(manager, 0);
+        manager.onCheckpointCrossed(1);
+        assertPresenceOfEvent(manager, 1);
+        manager.onCheckpointCrossed(2);
+        assertPresenceOfEvent(manager, 2);
     }
 
     /**
@@ -242,20 +224,14 @@ public class TelemetryManagerTest {
     @Test
     public void trackEndingShouldStopAndDisableTelemetry()
             throws NoTrackCrossingException, TrackAlreadyStartedException {
-        IWakeupManager wm = mock(IWakeupManager.class);
-        ILocationManager lm = mock(ILocationManager.class);
-        IPowerManager pm = mock(IPowerManager.class);
-        IHeartRateManager hm = mock(IHeartRateManager.class);
-        ITrackCrossing tc = mock(ITrackCrossing.class);
         ITrack track = getOneCheckpointTrack();
         when(tc.getTrack()).thenReturn(track);
 
-        TelemetryManager tm = new TelemetryManager(lm, hm, wm, pm, tc);
-        tm.enable();
+        manager.enable();
 
-        tm.onCheckpointCrossed(0);
-        verify(wm).detachObserver(tm);
-        assertTrue(!tm.isEnabled());
+        manager.onCheckpointCrossed(0);
+        verify(bkgrLocMan).detachObserver(manager);
+        assertTrue(!manager.isEnabled());
     }
 
     /**
@@ -265,19 +241,13 @@ public class TelemetryManagerTest {
     @Test
     public void trackEndingShouldCreateNewTelemetry()
             throws NoTrackCrossingException, TrackAlreadyStartedException {
-        IWakeupManager wm = mock(IWakeupManager.class);
-        ILocationManager lm = mock(ILocationManager.class);
-        IPowerManager pm = mock(IPowerManager.class);
-        IHeartRateManager hm = mock(IHeartRateManager.class);
-        ITrackCrossing tc = mock(ITrackCrossing.class);
         ITrack track = getOneCheckpointTrack();
         when(tc.getTrack()).thenReturn(track);
 
-        TelemetryManager tm = new TelemetryManager(lm, hm, wm, pm, tc);
-        tm.enable();
+        manager.enable();
 
-        tm.onCheckpointCrossed(0);
-        Iterable<TelemetryEvent> events = tm.getEvents();
+        manager.onCheckpointCrossed(0);
+        Iterable<TelemetryEvent> events = manager.getEvents();
         verify(track).createTelemetry(events);
     }
 
@@ -286,44 +256,17 @@ public class TelemetryManagerTest {
      * sensori e acquisito un lock del processore per evitare che questo
      * entri in sleep mode prima della ricezione dei dati.
      */
+    /*
     @Test
     public void wakeupShouldAcquireLocksAndSheduleSensors() throws
             NoTrackCrossingException {
-        IWakeupManager wm = mock(IWakeupManager.class);
-        ILocationManager lm = mock(ILocationManager.class);
-        IPowerManager pm = mock(IPowerManager.class);
-        IHeartRateManager hm = mock(IHeartRateManager.class);
-        ITrackCrossing tc = mock(ITrackCrossing.class);
-
-        TelemetryManager tm = new TelemetryManager(lm, hm, wm, pm, tc);
-
-        tm.onWakeup();
+        manager.onWakeup();
         verify(pm).lock("LocationTelemetryLock");
         verify(pm).lock("HeartRateTelemetryLock");
         verify(lm).getSingleUpdate(tm, TelemetryManager.SENSOR_TIMEOUT_SECONDS);
         verify(hm).getSingleUpdate(tm, TelemetryManager.SENSOR_TIMEOUT_SECONDS);
     }
-
-    /**
-     * Verifica che la ricezione di dati dai sensori rilasci il lock
-     * acquisito al momento della richiesta di tali dati.
-     */
-    @Test
-    public void sensorUpdateShouldReleaseLock() {
-        IWakeupManager wm = mock(IWakeupManager.class);
-        ILocationManager lm = mock(ILocationManager.class);
-        IPowerManager pm = mock(IPowerManager.class);
-        IHeartRateManager hm = mock(IHeartRateManager.class);
-        ITrackCrossing tc = mock(ITrackCrossing.class);
-
-        TelemetryManager tm = new TelemetryManager(lm, hm, wm, pm, tc);
-
-        tm.onLocationUpdate(mock(GeoPoint.class));
-        verify(pm).unlock("LocationTelemetryLock");
-
-        tm.onHeartRateUpdate(23);
-        verify(pm).unlock("HeartRateTelemetryLock");
-    }
+    */
 
     /**
      * Verifica che i dati ricevuti dai sensori vengano inseriti come eventi
@@ -331,27 +274,19 @@ public class TelemetryManagerTest {
      */
     @Test
     public void sensorUpdateShouldCreateEvent() {
-        IWakeupManager wm = mock(IWakeupManager.class);
-        ILocationManager lm = mock(ILocationManager.class);
-        IPowerManager pm = mock(IPowerManager.class);
-        IHeartRateManager hm = mock(IHeartRateManager.class);
-        ITrackCrossing tc = mock(ITrackCrossing.class);
-
-        TelemetryManager tm = new TelemetryManager(lm, hm, wm, pm, tc);
-
         GeoPoint gp = new GeoPoint(12, 21);
-        tm.onLocationUpdate(gp);
+        manager.onLocationUpdate(gp);
 
         boolean found = false;
-        for (TelemetryEvent e : tm.getEvents())
+        for (TelemetryEvent e : manager.getEvents())
             if (e instanceof LocationTelemetryEvent)
                 found = found ||
                         ((LocationTelemetryEvent)e).location().equals(gp);
         assertTrue(found);
 
         found = false;
-        tm.onHeartRateUpdate(22);
-        for (TelemetryEvent e : tm.getEvents())
+        manager.onHeartRateUpdate(22);
+        for (TelemetryEvent e : manager.getEvents())
             if (e instanceof HeartRateTelemetryEvent)
                 found = found ||
                         ((HeartRateTelemetryEvent)e).heartRate() == 22;
@@ -364,18 +299,10 @@ public class TelemetryManagerTest {
      */
     @Test
     public void eventsShouldBeReturnedAsAClone() {
-        IWakeupManager wm = mock(IWakeupManager.class);
-        ILocationManager lm = mock(ILocationManager.class);
-        IPowerManager pm = mock(IPowerManager.class);
-        IHeartRateManager hm = mock(IHeartRateManager.class);
-        ITrackCrossing tc = mock(ITrackCrossing.class);
-
-        TelemetryManager tm = new TelemetryManager(lm, hm, wm, pm, tc);
-
-        tm.onHeartRateUpdate(22);
-        Iterable<TelemetryEvent> events1 = tm.getEvents();
-        tm.onHeartRateUpdate(22);
-        Iterable<TelemetryEvent> events2 = tm.getEvents();
+        manager.onHeartRateUpdate(22);
+        Iterable<TelemetryEvent> events1 = manager.getEvents();
+        manager.onHeartRateUpdate(22);
+        Iterable<TelemetryEvent> events2 = manager.getEvents();
         assertTrue(events1 != events2);
 
         int count1 = 0, count2 = 0;
@@ -392,21 +319,14 @@ public class TelemetryManagerTest {
     @Test
     public void telemetryShouldNotStartIfNotEnabled() throws
             NoTrackCrossingException, TrackAlreadyStartedException {
-        IWakeupManager wm = mock(IWakeupManager.class);
-        ILocationManager lm = mock(ILocationManager.class);
-        IPowerManager pm = mock(IPowerManager.class);
-        IHeartRateManager hm = mock(IHeartRateManager.class);
-        ITrackCrossing tc = mock(ITrackCrossing.class);
         ITrack track = getOneCheckpointTrack();
         when(tc.getTrack()).thenReturn(track);
 
-        TelemetryManager tm = new TelemetryManager(lm, hm, wm, pm, tc);
-
-        tm.onCheckpointCrossed(0);
-        verify(wm, never()).attachObserver(eq(tm), any(Integer.class), any
-                (Boolean.class));
+        manager.onCheckpointCrossed(0);
+        verify(bkgrLocMan, never()).attachObserver(manager,
+                TelemetryManager.SAMPLING_RATE_SECONDS);
         verify(tc, never()).getTrack();
-        assertTrue(!tm.getEvents().iterator().hasNext());
+        assertTrue(!manager.getEvents().iterator().hasNext());
     }
 
 }
