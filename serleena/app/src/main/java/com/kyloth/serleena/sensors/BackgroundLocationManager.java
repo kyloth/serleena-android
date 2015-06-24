@@ -189,50 +189,25 @@ public class BackgroundLocationManager extends WakefulBroadcastReceiver
         notifyObservers();
     }
 
-    /**
-     * Restituisce l'intervallo di aggiornamento degli observer, pari
-     * all'intervallo minimo tra gli observer registrati.
-     *
-     * Se non vi sono observer registrati, viene sollevata un'eccezione
-     * NoObserversException.
-     *
-     * @return Intervallo in secondi.
-     * @throws NoObserversException
-     */
-    public synchronized int interval() throws NoObserversException {
-        if (observers.size() == 0)
-            throw new NoObserversException();
-
+    private void restart() {
         int minInterval = Integer.MAX_VALUE;
         for (int interval : observers.values())
             if (interval < minInterval)
                 minInterval = interval;
+        int alarmType = AlarmManager.RTC_WAKEUP;
+        Intent intentToFire = new Intent("SERLEENA_ALARM");
 
-        return minInterval;
-    }
+        if (pendingIntent != null)
+            am.cancel(pendingIntent);
 
-    private void restart() {
-        try {
-            int interval = this.interval();
-            int alarmType = AlarmManager.RTC_WAKEUP;
-            Intent intentToFire = new Intent("SERLEENA_ALARM");
+        pendingIntent = PendingIntent.getBroadcast(
+                context,
+                new Random().nextInt(),
+                intentToFire,
+                PendingIntent.FLAG_CANCEL_CURRENT);
 
-            if (pendingIntent != null)
-                am.cancel(pendingIntent);
-
-            pendingIntent = PendingIntent.getBroadcast(
-                    context,
-                    new Random().nextInt(),
-                    intentToFire,
-                    PendingIntent.FLAG_CANCEL_CURRENT);
-
-            am.setInexactRepeating(
-                    alarmType, 10, interval * 1000, pendingIntent);
-        } catch (NoObserversException e) { }
-    }
-
-    public static class NoObserversException extends Exception {
-
+        am.setInexactRepeating(
+                alarmType, 10, minInterval * 1000, pendingIntent);
     }
 
 }

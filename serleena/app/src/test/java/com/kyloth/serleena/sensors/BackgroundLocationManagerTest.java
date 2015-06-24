@@ -114,25 +114,6 @@ public class BackgroundLocationManagerTest {
     }
 
     /**
-     * Verifica che l'intervallo di aggiornamento venga calcolato in base
-     * agli intervalli del vari observer registrati all'oggetto. In
-     * particolare, l'intervallo deve essere pari a quello dell'observer di
-     * intervallo minimo.
-     */
-    @Test
-    public void intervalShouldBeSetAccordingToObservers()
-            throws BackgroundLocationManager.NoObserversException {
-        manager.attachObserver(o2, 40);
-        assertTrue(manager.interval() == 40);
-        manager.attachObserver(o3, 20);
-        assertTrue(manager.interval() == 20);
-        manager.attachObserver(o1, 60);
-        assertTrue(manager.interval() == 20);
-        manager.detachObserver(o3);
-        assertTrue(manager.interval() == 40);
-    }
-
-    /**
      * Verifica che attachObserver() comporti la registrazione di un'allarme
      * con l'intervallo minimo tra tutti gli observer.
      */
@@ -291,16 +272,6 @@ public class BackgroundLocationManagerTest {
         verify(o1, never()).onLocationUpdate(any(GeoPoint.class));
         verify(o2, never()).onLocationUpdate(any(GeoPoint.class));
         verify(o3, never()).onLocationUpdate(any(GeoPoint.class));
-    }
-
-    /**
-     * Verifica che il metodo interval() sollevi un'eccezione quando non vi
-     * sono observer registrati all'oggetto.
-     */
-    @Test(expected = BackgroundLocationManager.NoObserversException.class)
-    public void intervalShouldThrowWhenNoObservers()
-            throws BackgroundLocationManager.NoObserversException {
-        manager.interval();
     }
 
 }
