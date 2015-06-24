@@ -46,7 +46,6 @@ import com.kyloth.serleena.persistence.IExperienceStorage;
 import com.kyloth.serleena.persistence.ITrackStorage;
 
 import java.util.ArrayList;
-import java.util.Iterator;
 
 /**
  * Concretizza IExperience.

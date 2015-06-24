@@ -41,9 +41,7 @@
 
 package com.kyloth.serleena.presenters;
 
-import com.kyloth.serleena.model.IExperience;
 import com.kyloth.serleena.model.ISerleenaDataSource;
-import com.kyloth.serleena.model.ITrack;
 import com.kyloth.serleena.sensors.ISensorManager;
 
 /**

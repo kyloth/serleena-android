@@ -41,8 +41,6 @@
 
 package com.kyloth.serleena.common;
 
-import java.util.Date;
-
 /**
  * Rappresenta un generico evento di tracciamento, individuato dall'istante di campionamento.
  *

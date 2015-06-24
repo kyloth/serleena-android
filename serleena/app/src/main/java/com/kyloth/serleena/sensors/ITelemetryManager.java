@@ -42,7 +42,6 @@
 package com.kyloth.serleena.sensors;
 
 import com.kyloth.serleena.common.TelemetryEvent;
-import com.kyloth.serleena.common.TelemetryEventType;
 
 /**
  * Interfaccia di un oggetto che offrirà al codice client servizi

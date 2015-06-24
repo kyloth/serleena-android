@@ -41,8 +41,6 @@
 
 package com.kyloth.serleena.sensors;
 
-import com.kyloth.serleena.common.GeoPoint;
-
 /**
  * Interfaccia che verrà implementata da un oggetto in grado di fornire
  * informazioni sulla posizione dell'Escursionista.

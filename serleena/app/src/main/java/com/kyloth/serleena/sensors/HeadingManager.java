@@ -44,22 +44,15 @@
 package com.kyloth.serleena.sensors;
 
 import android.annotation.TargetApi;
-import android.content.Context;
 import android.hardware.Sensor;
 import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
-import android.os.AsyncTask;
 
 import com.kyloth.serleena.common.AzimuthMagneticNorth;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
-import java.util.HashMap;
-import java.util.concurrent.ScheduledFuture;
-import java.util.concurrent.ScheduledThreadPoolExecutor;
-import java.util.concurrent.TimeUnit;
 
 /**
  * Concretizza IHeadingManager utilizzando le API di gestione della

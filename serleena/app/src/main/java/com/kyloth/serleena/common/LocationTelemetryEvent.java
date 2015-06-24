@@ -41,8 +41,6 @@
 
 package com.kyloth.serleena.common;
 
-import java.util.Date;
-
 /**
  * Rappresenta un evento di tracciamento che registra la posizione geografica dell'utente,
  * individuato dall'istante di campionamento e un oggetto GeoPoint.

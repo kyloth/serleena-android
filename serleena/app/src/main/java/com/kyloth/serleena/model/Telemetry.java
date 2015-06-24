@@ -42,10 +42,7 @@
 package com.kyloth.serleena.model;
 
 import com.android.internal.util.Predicate;
-import com.kyloth.serleena.common.GeoPoint;
-import com.kyloth.serleena.common.LocationTelemetryEvent;
 import com.kyloth.serleena.common.TelemetryEvent;
-import com.kyloth.serleena.common.TelemetryEventType;
 import com.kyloth.serleena.persistence.ITelemetryStorage;
 
 import java.util.ArrayList;

@@ -48,12 +48,9 @@ import android.location.LocationListener;
 import android.location.LocationManager;
 import android.os.Bundle;
 import android.os.Handler;
-import android.os.HandlerThread;
 import android.os.IBinder;
 import android.os.PowerManager;
 import android.os.ResultReceiver;
-import android.os.SystemClock;
-import android.util.Log;
 
 import java.util.Stack;
 

@@ -41,8 +41,6 @@
 
 package com.kyloth.serleena.common;
 
-import java.util.Date;
-
 /**
  * Rappresenta un evento di tracciamento che registra il raggiungimento di un
  * checkpoint durante lo svolgimento di un persorso da parte dell'utente.

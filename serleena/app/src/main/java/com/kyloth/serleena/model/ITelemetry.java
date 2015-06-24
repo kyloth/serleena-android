@@ -41,10 +41,7 @@
 package com.kyloth.serleena.model;
 
 import com.android.internal.util.Predicate;
-import com.kyloth.serleena.common.GeoPoint;
-import com.kyloth.serleena.common.LocationTelemetryEvent;
 import com.kyloth.serleena.common.TelemetryEvent;
-import com.kyloth.serleena.common.TelemetryEventType;
 
 /**
  * Interfaccia realizzata da oggetti che rappresentano un

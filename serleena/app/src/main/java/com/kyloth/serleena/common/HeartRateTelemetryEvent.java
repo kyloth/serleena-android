@@ -41,8 +41,6 @@
 
 package com.kyloth.serleena.common;
 
-import java.util.Date;
-
 /**
  * Rappresenta un evento di tracciamento che registra il battito cardiaco dell'utente, individuato
  * dall'istante di campionamento e il valore campionato dall'heart rate monitor.

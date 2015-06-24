@@ -51,8 +51,6 @@ import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteDatabase.CursorFactory;
 import android.database.sqlite.SQLiteOpenHelper;
 
-import java.text.SimpleDateFormat;
-
 /**
  * Supporta la creazione e l'apertura del database SQLite utilizzato
  * dall'applicazione serleena, secondo quando prescritto dal framework Android.

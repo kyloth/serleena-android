@@ -44,8 +44,6 @@ import com.kyloth.serleena.common.DirectAccessList;
 import com.kyloth.serleena.common.EmergencyContact;
 import com.kyloth.serleena.common.GeoPoint;
 import com.kyloth.serleena.common.IQuadrant;
-import com.kyloth.serleena.common.IRegion;
-import com.kyloth.serleena.common.UserPoint;
 import com.kyloth.serleena.common.NoSuchWeatherForecastException;
 
 import java.util.Date;

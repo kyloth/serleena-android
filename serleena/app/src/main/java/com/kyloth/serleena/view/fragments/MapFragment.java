@@ -31,12 +31,8 @@
 package com.kyloth.serleena.view.fragments;
 
 
-import android.content.res.Resources;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.app.Fragment;
-import android.support.annotation.Nullable;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -51,8 +47,6 @@ import com.kyloth.serleena.common.UserPoint;
 import com.kyloth.serleena.presentation.IMapPresenter;
 import com.kyloth.serleena.presentation.IMapView;
 import com.kyloth.serleena.view.widgets.MapWidget;
-
-import java.util.ArrayList;
 
 /**
  * A simple {@link Fragment} subclass.
