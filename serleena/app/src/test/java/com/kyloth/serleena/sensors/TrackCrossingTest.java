@@ -43,6 +43,7 @@ package com.kyloth.serleena.sensors;
 
 import com.kyloth.serleena.common.Checkpoint;
 import com.kyloth.serleena.common.DirectAccessList;
+import com.kyloth.serleena.common.NoTrackCrossingException;
 import com.kyloth.serleena.model.ITrack;
 
 import static org.mockito.Mockito.*;
