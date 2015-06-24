@@ -43,12 +43,9 @@ package com.kyloth.serleena.view.fragments;
 
 import android.app.Activity;
 import android.app.FragmentManager;
-import android.view.View;
 import android.view.ViewGroup;
-import android.widget.TextView;
 
 import com.kyloth.serleena.BuildConfig;
-import com.kyloth.serleena.R;
 import com.kyloth.serleena.presentation.IContactsPresenter;
 import com.kyloth.serleena.presenters.ISerleenaActivity;
 import com.kyloth.serleena.model.ISerleenaDataSource;
