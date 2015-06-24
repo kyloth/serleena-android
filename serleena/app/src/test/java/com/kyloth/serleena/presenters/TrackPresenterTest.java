@@ -45,8 +45,6 @@ import org.junit.Test;
 import org.junit.Before;
 import org.junit.runner.RunWith;
 import org.mockito.ArgumentCaptor;
-import org.mockito.ArgumentMatcher;
-import org.robolectric.RobolectricGradleTestRunner;
 import org.robolectric.RobolectricTestRunner;
 
 import static org.junit.Assert.*;
