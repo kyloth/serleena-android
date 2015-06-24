@@ -40,7 +40,7 @@
 
 package com.kyloth.serleena.presentation;
 
-import com.kyloth.serleena.sensors.NoTrackCrossingException;
+import com.kyloth.serleena.common.NoTrackCrossingException;
 
 /**
  * E' l'interfaccia del Presenter della schermata Bussola.

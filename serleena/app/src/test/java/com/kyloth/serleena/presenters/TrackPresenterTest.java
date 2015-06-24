@@ -69,7 +69,7 @@ import com.kyloth.serleena.model.NoSuchTelemetryException;
 import com.kyloth.serleena.common.Checkpoint;
 import com.kyloth.serleena.sensors.ITrackCrossing;
 import com.kyloth.serleena.sensors.NoSuchCheckpointException;
-import com.kyloth.serleena.sensors.NoTrackCrossingException;
+import com.kyloth.serleena.common.NoTrackCrossingException;
 import com.kyloth.serleena.sensors.SensorNotAvailableException;
 
 /**

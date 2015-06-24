@@ -52,7 +52,7 @@ import android.widget.TextView;
 import com.kyloth.serleena.R;
 import com.kyloth.serleena.presentation.ITrackPresenter;
 import com.kyloth.serleena.presentation.ITrackView;
-import com.kyloth.serleena.sensors.NoTrackCrossingException;
+import com.kyloth.serleena.common.NoTrackCrossingException;
 import com.kyloth.serleena.view.widgets.CompassWidget;
 
 

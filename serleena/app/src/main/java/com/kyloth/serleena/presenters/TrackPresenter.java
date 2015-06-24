@@ -63,7 +63,7 @@ import com.kyloth.serleena.sensors.ILocationManager;
 import com.kyloth.serleena.sensors.ILocationObserver;
 import com.kyloth.serleena.sensors.ITrackCrossing;
 import com.kyloth.serleena.sensors.ITrackCrossingObserver;
-import com.kyloth.serleena.sensors.NoTrackCrossingException;
+import com.kyloth.serleena.common.NoTrackCrossingException;
 import com.kyloth.serleena.sensors.SensorNotAvailableException;
 import com.kyloth.serleena.sensors.TrackEndedException;
 

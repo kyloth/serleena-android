@@ -41,6 +41,7 @@
 
 package com.kyloth.serleena.sensors;
 
+import com.kyloth.serleena.common.NoTrackCrossingException;
 import com.kyloth.serleena.model.ITrack;
 
 /**

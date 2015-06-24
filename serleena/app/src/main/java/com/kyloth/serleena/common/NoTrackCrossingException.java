@@ -28,7 +28,7 @@
 ///////////////////////////////////////////////////////////////////////////////
 
 
-package com.kyloth.serleena.sensors;
+package com.kyloth.serleena.common;
 
 /**
  * Created by fsestini on 6/9/15.
