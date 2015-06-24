@@ -58,5 +58,5 @@ public interface ITelemetryStorage {
      *
      * @return Insieme enumerabile di eventi di tracciamento.
      */
-    public Iterable<TelemetryEvent> getEvents();
+    Iterable<TelemetryEvent> getEvents();
 }

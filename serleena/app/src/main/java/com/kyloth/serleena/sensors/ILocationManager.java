@@ -69,7 +69,7 @@ public interface ILocationManager {
      *                 viene lanciata un'eccezione IllegalArgumentException.
      * @throws java.lang.IllegalArgumentException
      */
-    public void attachObserver(ILocationObserver observer, int interval)
+    void attachObserver(ILocationObserver observer, int interval)
         throws IllegalArgumentException;
 
     /**
@@ -82,7 +82,7 @@ public interface ILocationManager {
      *                 un'eccezione IllegalArgumentException.
      * @throws java.lang.IllegalArgumentException
      */
-    public void detachObserver(ILocationObserver observer)
+    void detachObserver(ILocationObserver observer)
             throws IllegalArgumentException;
 
     /**
@@ -96,7 +96,7 @@ public interface ILocationManager {
      *                 IllegalArgumentException.
      * @throws java.lang.IllegalArgumentException
      */
-    public void getSingleUpdate(ILocationObserver observer)
+    void getSingleUpdate(ILocationObserver observer)
         throws IllegalArgumentException;
 
 }

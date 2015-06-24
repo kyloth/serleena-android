@@ -61,14 +61,14 @@ public interface IHeartRateManager {
      * @param observer IHeartRateObserver da registrare.
      * @param interval Intervallo di tempo per la notifica all'oggetto "observer".
      */
-    public void attachObserver(IHeartRateObserver observer, int interval);
+    void attachObserver(IHeartRateObserver observer, int interval);
     /**
      * Cancella la registrazione di un IHeartRateObserver.
      *
      * @param observer IHeartRateObserver la cui registrazione come "observer" di
      *                 questo oggetto sarà cancellata.
      */
-    public void detachObserver(IHeartRateObserver observer);
+    void detachObserver(IHeartRateObserver observer);
 
     /**
      * Permette di ottenere un aggiornamento dei dati sul battico cardiaco su
@@ -90,7 +90,7 @@ public interface IHeartRateManager {
      * @param timeout Timeout in secondi oltre il quale il sensore invoca in
      *                ogni caso, il metodo onHeartRateUpdate() dell'osservatore,
      */
-    public void getSingleUpdate(IHeartRateObserver observer, int timeout);
+    void getSingleUpdate(IHeartRateObserver observer, int timeout);
 
     /**
      * Metodo "notify" basato sull'omonimo metodo della classe "Subject" del
@@ -98,5 +98,5 @@ public interface IHeartRateManager {
      *
      * @param observer Oggetto observer da segnalare.
      */
-    public void notifyObserver(IHeartRateObserver observer);
+    void notifyObserver(IHeartRateObserver observer);
 }

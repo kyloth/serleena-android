@@ -62,21 +62,21 @@ public interface ITrack {
      *          per il Percorso rappresentato dall'oggetto.
      * @version 1.0
      */
-    public Iterable<ITelemetry> getTelemetries();
+    Iterable<ITelemetry> getTelemetries();
 
     /**
      * Crea e aggiunge un Tracciamento al Percorso.
      *
      * @version 1.0
      */
-    public void createTelemetry(Iterable<TelemetryEvent> events);
+    void createTelemetry(Iterable<TelemetryEvent> events);
 
     /**
      * Restituisce i Checkpoint che compongono il percorso.
      *
      * @return Insieme di Checkpoint.
      */
-    public DirectAccessList<Checkpoint> getCheckpoints();
+    DirectAccessList<Checkpoint> getCheckpoints();
 
     /**
      * Restituisce il Tracciamento con migliore tempo totale per il Percorso.
@@ -87,6 +87,6 @@ public interface ITrack {
      * @return Tracciamento.
      * @throws NoSuchTelemetryException
      */
-    public ITelemetry getBestTelemetry() throws NoSuchTelemetryException;
+    ITelemetry getBestTelemetry() throws NoSuchTelemetryException;
 
 }

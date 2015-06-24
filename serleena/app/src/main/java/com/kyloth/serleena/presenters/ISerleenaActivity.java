@@ -60,7 +60,7 @@ public interface ISerleenaActivity {
      *
      * @return Data source dell'applicazione.
      */
-    public ISerleenaDataSource getDataSource();
+    ISerleenaDataSource getDataSource();
 
     /**
      * Restituisce il gestore dei sensori dell'applicazione,
@@ -68,6 +68,6 @@ public interface ISerleenaActivity {
      *
      * @return Gestore dei sensori dell'applicazione.
      */
-    public ISensorManager getSensorManager();
+    ISensorManager getSensorManager();
 
 }

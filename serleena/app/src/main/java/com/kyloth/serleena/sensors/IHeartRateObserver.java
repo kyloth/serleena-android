@@ -58,5 +58,5 @@ public interface IHeartRateObserver {
      * @param rate Valore di tipo intero che indica l'heart
      *             rate dell'Escursionista.
      */
-    public void onHeartRateUpdate(int rate);
+    void onHeartRateUpdate(int rate);
 }

@@ -65,7 +65,7 @@ public interface ISerleenaDataSource {
      *
      * @version 1.0
      */
-    public Iterable<IExperience> getExperiences();
+    Iterable<IExperience> getExperiences();
 
     /**
      * Restituisce le previsioni meteo per un dato punto geografico e data
@@ -77,7 +77,7 @@ public interface ISerleenaDataSource {
      * @param date La data per cui interessano le previsioni
      * @version 1.0
      */
-    public IWeatherForecast getWeatherInfo(GeoPoint p, Date date)
+    IWeatherForecast getWeatherInfo(GeoPoint p, Date date)
             throws NoSuchWeatherForecastException;
 
     /**
@@ -85,7 +85,7 @@ public interface ISerleenaDataSource {
      *
      * @version 1.0
      */
-    public IQuadrant getQuadrant(GeoPoint point);
+    IQuadrant getQuadrant(GeoPoint point);
 
     /**
      * Restituisce i contatti di emergenza che hanno giurisdizione su un dato
@@ -93,6 +93,6 @@ public interface ISerleenaDataSource {
      *
      * @version 1.0
      */
-    public DirectAccessList<EmergencyContact> getContacts(GeoPoint loc);
+    DirectAccessList<EmergencyContact> getContacts(GeoPoint loc);
 
 }

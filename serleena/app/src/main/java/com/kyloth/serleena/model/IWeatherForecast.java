@@ -60,48 +60,48 @@ public interface IWeatherForecast {
      *
      * @return Condizioni metereologiche previste.
      */
-    public WeatherForecastEnum getMorningForecast();
+    WeatherForecastEnum getMorningForecast();
 
     /**
      * Restituisce le condizioni metereologiche previste per il pomeriggio.
      *
      * @return Condizioni metereologiche previste.
      */
-    public WeatherForecastEnum getAfternoonForecast();
+    WeatherForecastEnum getAfternoonForecast();
 
     /**
      * Restituisce le condizioni metereologiche previste per la sera.
      *
      * @return Condizioni metereologiche previste.
      */
-    public WeatherForecastEnum getNightForecast();
+    WeatherForecastEnum getNightForecast();
 
     /**
      * Restituisce la temperatura prevista per la mattina.
      *
      * @return Temperatura in gradi centigradi.
      */
-    public int getMorningTemperature();
+    int getMorningTemperature();
 
     /**
      * Restituisce la temperatura prevista per il pomeriggio.
      *
      * @return Temperatura in gradi centigradi.
      */
-    public int getAfternoonTemperature();
+    int getAfternoonTemperature();
 
     /**
      * Restituisce la temperatura prevista per la sera.
      *
      * @return Temperatura in gradi centigradi.
      */
-    public int getNightTemperature();
+    int getNightTemperature();
 
     /**
      * Data a cui si riferiscono le previsioni.
      *
      * @return Data.
      */
-    public Date date();
+    Date date();
 
 }

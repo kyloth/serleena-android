@@ -64,7 +64,7 @@ public interface IPersistenceDataSource {
      *
      * @return Insieme enumerabile di Esperienze.
      */
-    public Iterable<IExperienceStorage> getExperiences();
+    Iterable<IExperienceStorage> getExperiences();
 
     /**
      * Restituisce le previsioni metereologiche relative a una
@@ -78,7 +78,7 @@ public interface IPersistenceDataSource {
      * @param date Data di cui si vogliono ottenere le previsioni.
      * @return Insieme enumerabile di oggetti IWeatherStorage.
      */
-    public IWeatherStorage getWeatherInfo(GeoPoint location, Date date)
+    IWeatherStorage getWeatherInfo(GeoPoint location, Date date)
             throws NoSuchWeatherForecastException;
 
     /**
@@ -87,7 +87,7 @@ public interface IPersistenceDataSource {
      * @param location Posizione geografica che ricade nei limiti del quadrante.
      * @return Oggetto IQuadrant relativo alla posizione specificata.
      */
-    public IQuadrant getQuadrant(GeoPoint location);
+    IQuadrant getQuadrant(GeoPoint location);
 
     /**
      * Restituisce i contatti di emergenza di autorità locali al punto
@@ -97,6 +97,6 @@ public interface IPersistenceDataSource {
      *                 i contatti di autorità locali.
      * @return Insieme enumerabile di contatti.
      */
-    public DirectAccessList<EmergencyContact> getContacts(GeoPoint location);
+    DirectAccessList<EmergencyContact> getContacts(GeoPoint location);
 
 }

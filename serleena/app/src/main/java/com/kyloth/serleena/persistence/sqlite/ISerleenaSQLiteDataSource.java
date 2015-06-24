@@ -62,7 +62,7 @@ interface ISerleenaSQLiteDataSource extends IPersistenceDataSource {
      * @param experience Esperienza di cui si vogliono ottenere i Percorsi.
      * @return Insieme enumerabile di Percorsi.
      */
-    public Iterable<SQLiteDAOTrack> getTracks(SQLiteDAOExperience experience);
+    Iterable<SQLiteDAOTrack> getTracks(SQLiteDAOExperience experience);
 
     /**
      * Restituisce i Tracciamenti associati a uno specifico Percorso.
@@ -70,7 +70,7 @@ interface ISerleenaSQLiteDataSource extends IPersistenceDataSource {
      * @param track Percorso di cui si vogliono ottenere i Tracciamenti.
      * @return Insieme enumerabile di Tracciamenti.
      */
-    public Iterable<SQLiteDAOTelemetry> getTelemetries(SQLiteDAOTrack track);
+    Iterable<SQLiteDAOTelemetry> getTelemetries(SQLiteDAOTrack track);
 
     /**
      * Restituisce i Punti Utente associati a una specifica Esperienza.
@@ -78,7 +78,7 @@ interface ISerleenaSQLiteDataSource extends IPersistenceDataSource {
      * @param experience Esperienza di cui si vogliono ottenere i Punti Utente.
      * @return Insieme enumerabile di Punti Utente.
      */
-    public Iterable<UserPoint> getUserPoints(SQLiteDAOExperience experience);
+    Iterable<UserPoint> getUserPoints(SQLiteDAOExperience experience);
 
     /**
      * Aggiunge un nuovo punto utente al database, associato all'Esperienza
@@ -87,7 +87,7 @@ interface ISerleenaSQLiteDataSource extends IPersistenceDataSource {
      * @param experience Esperienza a cui aggiungere il punto utente.
      * @param point Punto utente da aggiungere.
      */
-    public void addUserPoint(SQLiteDAOExperience experience, UserPoint point);
+    void addUserPoint(SQLiteDAOExperience experience, UserPoint point);
 
     /**
      * Aggiunge al database un nuovo Tracciamento associato al Percorso
@@ -96,7 +96,7 @@ interface ISerleenaSQLiteDataSource extends IPersistenceDataSource {
      * @param events Eventi di tracciamento da cui costruire il Tracciamento.
      * @param track Percorso a cui associare il Tracciamento.
      */
-    public void createTelemetry(Iterable<TelemetryEvent> events,
-                                SQLiteDAOTrack track);
+    void createTelemetry(Iterable<TelemetryEvent> events,
+                         SQLiteDAOTrack track);
 
 }

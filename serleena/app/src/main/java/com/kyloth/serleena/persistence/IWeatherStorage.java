@@ -58,48 +58,48 @@ public interface IWeatherStorage {
      *
      * @return Previsione metereologica.
      */
-    public WeatherForecastEnum getMorningForecast();
+    WeatherForecastEnum getMorningForecast();
 
     /**
      * Restituisce la previsione metereologica prevista per il pomeriggio.
      *
      * @return Previsione metereologica.
      */
-    public WeatherForecastEnum getAfternoonForecast();
+    WeatherForecastEnum getAfternoonForecast();
 
     /**
      * Restituisce la previsione metereologica prevista per la sera.
      *
      * @return Previsione metereologica.
      */
-    public WeatherForecastEnum getNightForecast();
+    WeatherForecastEnum getNightForecast();
 
     /**
      * Restituisce la temperatura prevista per la mattina.
      *
      * @return Valore della temperatura in gradi centigradi.
      */
-    public int getMorningTemperature();
+    int getMorningTemperature();
 
     /**
      * Restituisce la temperatura prevista per il pomeriggio.
      *
      * @return Valore della temperatura in gradi centigradi.
      */
-    public int getAfternoonTemperature();
+    int getAfternoonTemperature();
 
     /**
      * Restituisce la temperatura prevista per la sera.
      *
      * @return Valore della temperatura in gradi centigradi.
      */
-    public int getNightTemperature();
+    int getNightTemperature();
 
     /**
      * Restituisce la data a cui si riferiscono le previsioni.
      *
      * @return Data delle previsioni.
      */
-    public Date date();
+    Date date();
 
 }

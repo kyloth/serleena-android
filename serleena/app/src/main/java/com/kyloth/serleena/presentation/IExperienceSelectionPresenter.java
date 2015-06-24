@@ -61,7 +61,7 @@ public interface IExperienceSelectionPresenter extends IPresenter {
      *                   attivata. Se null, viene sollevata un'eccezione
      *                   IllegalArgumentException.
      */
-	public void activateExperience(IExperience experience)
+    void activateExperience(IExperience experience)
             throws IllegalArgumentException;
 
 }

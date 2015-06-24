@@ -59,7 +59,7 @@ public class KylothCloudSynchronizer {
     public static KylothCloudSynchronizer getInstance() {
         //TODO
         return instance;
-    };
+    }
 
     /**
      * Imposta l'URL del servizio remoto con cui eseguire la sincronizzazione

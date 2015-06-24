@@ -58,7 +58,7 @@ public interface DirectAccessList<T> extends Iterable<T> {
      *
      * @return Numero di elementi della lista.
      */
-    public int size();
+    int size();
 
     /**
      * Restituisce l'elemento della lista alla posizione specificata.
@@ -66,6 +66,6 @@ public interface DirectAccessList<T> extends Iterable<T> {
      * @param index Indice dell'elemento.
      * @return Elemento all'indica specificato.
      */
-    public T get(int index);
+    T get(int index);
 
 }

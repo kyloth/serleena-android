@@ -58,7 +58,7 @@ public interface IContactsView {
      *                  viene sollevata un'eccezione IllegalArgumentException.
      * @throws IllegalArgumentException
      */
-    public void attachPresenter(IContactsPresenter presenter)
+    void attachPresenter(IContactsPresenter presenter)
             throws IllegalArgumentException;
 
 	/**
@@ -74,6 +74,6 @@ public interface IContactsView {
     /**
      * Pulisce la vista.
      */
-    public void clearView();
+    void clearView();
 
 }

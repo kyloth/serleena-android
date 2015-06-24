@@ -58,26 +58,26 @@ public interface IExperienceStorage {
      *
      * @return Insieme enumerabile di Percorsi.
      */
-    public Iterable<ITrackStorage> getTracks();
+    Iterable<ITrackStorage> getTracks();
 
     /**
      * Restituisce i Punti Utente associati all'Esperienza.
      *
      * @return Insieme enumerabile di Punti Utente.
      */
-    public Iterable<UserPoint> getUserPoints();
+    Iterable<UserPoint> getUserPoints();
 
     /**
      * Aggiunge un punto utente all'esperienza.
      * @param p     Punto utente.
      */
-    public void addUserPoint(UserPoint p);
+    void addUserPoint(UserPoint p);
 
     /**
      * Restituisce il nome dell'esperienza.
      *
      * @return Nome dell'esperienza.
      */
-    public String getName();
+    String getName();
 
 }

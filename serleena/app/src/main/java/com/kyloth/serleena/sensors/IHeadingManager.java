@@ -62,7 +62,7 @@ public interface IHeadingManager {
      *
      * @param observer IHeadingObserver da registrare.
      */
-    public void attachObserver(IHeadingObserver observer);
+    void attachObserver(IHeadingObserver observer);
 
     /**
      * Cancella la registrazione di un IHeadingObserver.
@@ -70,12 +70,12 @@ public interface IHeadingManager {
      * @param observer IHeadingObserver la cui registrazione come "observer" di
      *                 questo oggetto sarà cancellata.
      */
-    public void detachObserver(IHeadingObserver observer)
+    void detachObserver(IHeadingObserver observer)
             throws IllegalArgumentException;
 
     /**
      * Metodo "notify" basato sull'omonimo metodo della classe "Subject" del
      * Design Pattern "Observer".
      */
-    public void notifyObservers();
+    void notifyObservers();
 }

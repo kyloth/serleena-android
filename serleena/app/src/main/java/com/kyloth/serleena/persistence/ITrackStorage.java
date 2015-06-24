@@ -61,20 +61,20 @@ public interface ITrackStorage {
      *
      * @param events Elenco di eventi di Tracciamento.
      */
-    public void createTelemetry(Iterable<TelemetryEvent> events);
+    void createTelemetry(Iterable<TelemetryEvent> events);
 
     /**
      * Restituisce i Tracciamenti che compongono il Percorso.
      *
      * @return Insieme enumerabile di Tracciamenti.
      */
-    public Iterable<ITelemetryStorage> getTelemetries();
+    Iterable<ITelemetryStorage> getTelemetries();
 
     /**
      * Restituisce i Checkpoint che compongono il percorso.
      *
      * @return Insieme di Checkpoint.
      */
-    public DirectAccessList<Checkpoint> getCheckpoints();
+    DirectAccessList<Checkpoint> getCheckpoints();
 
 }

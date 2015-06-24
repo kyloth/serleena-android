@@ -63,7 +63,7 @@ public interface ITelemetryManager {
      *
      * @return  Insieme enumerabile di eventi di Tracciamento.
      */
-    public Iterable<TelemetryEvent> getEvents();
+    Iterable<TelemetryEvent> getEvents();
 
     /**
      * Abilita il Tracciamento.
@@ -72,12 +72,12 @@ public interface ITelemetryManager {
      * il Tracciamento, viene sollevata un'eccezione
      * TrackAlreadyStartedException.
      */
-    public void enable() throws TrackAlreadyStartedException;
+    void enable() throws TrackAlreadyStartedException;
 
     /**
      * Disabilita il Tracciamento.
      */
-    public void disable();
+    void disable();
 
     /**
      * Indica lo stato di abilitazione/disabilitazione del Tracciamento.

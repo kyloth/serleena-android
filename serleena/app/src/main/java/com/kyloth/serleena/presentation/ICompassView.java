@@ -59,14 +59,14 @@ public interface ICompassView {
 	 *                modulo 360.0.
 	 * @since 1.0
 	 */
-	public void setHeading(double heading);
+	void setHeading(double heading);
 
 	/**
 	 * Lega un presenter alla vista.
 	 *
 	 * @since 1.0
 	 */
-	public void attachPresenter(ICompassPresenter presenter);
+	void attachPresenter(ICompassPresenter presenter);
 
 	/**
 	 * Pulisce la vista.
@@ -75,6 +75,6 @@ public interface ICompassView {
 	 * tali dati non siano reperibili o non sia possibile comunicare con il
 	 * sensore di orientamento.
 	 */
-	public void clearView();
+	void clearView();
 
 }

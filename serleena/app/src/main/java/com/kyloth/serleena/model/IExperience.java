@@ -60,7 +60,7 @@ public interface IExperience {
      * @version 1.0
      * @since   1.0
      */
-    public Iterable<ITrack> getTracks();
+    Iterable<ITrack> getTracks();
 
     /**
      * Restituisce i punti utente dell'Esperienza.
@@ -70,7 +70,7 @@ public interface IExperience {
      * @version 1.0
      * @since   1.0
      */
-    public Iterable<UserPoint> getUserPoints();
+    Iterable<UserPoint> getUserPoints();
 
     /**
      * Aggiunge un punto utente dato all'Esperienza.
@@ -78,13 +78,13 @@ public interface IExperience {
      * @version 1.0
      * @since   1.0
      */
-    public void addUserPoints(UserPoint point);
+    void addUserPoints(UserPoint point);
 
     /**
      * Restituisce il nome dell'esperienza.
      *
      * @return Nome dell'esperienza.
      */
-    public String getName();
+    String getName();
 
 }

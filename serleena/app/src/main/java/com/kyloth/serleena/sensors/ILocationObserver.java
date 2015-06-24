@@ -60,5 +60,5 @@ public interface ILocationObserver {
      * @param loc Valore di tipo GeoPoint che indica la posizione
      *            dell'Escursionista.
      */
-    public void onLocationUpdate(GeoPoint loc);
+    void onLocationUpdate(GeoPoint loc);
 }

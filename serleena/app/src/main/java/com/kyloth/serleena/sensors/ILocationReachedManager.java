@@ -64,8 +64,8 @@ public interface ILocationReachedManager {
      *                 IllegalArgumentException.
      * @throws IllegalArgumentException
      */
-    public void attachObserver(ILocationReachedObserver observer,
-                               GeoPoint location)
+    void attachObserver(ILocationReachedObserver observer,
+                        GeoPoint location)
             throws IllegalArgumentException;
 
     /**
@@ -75,6 +75,6 @@ public interface ILocationReachedManager {
      * @param observer Oggetto da deregistrare ILocationReachedManager. Se null,
      *                 viene sollevata un'eccezione IllegalArgumentException.
      */
-    public void detachObserver(ILocationReachedObserver observer)
+    void detachObserver(ILocationReachedObserver observer)
             throws IllegalArgumentException;
 }

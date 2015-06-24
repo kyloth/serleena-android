@@ -60,5 +60,5 @@ public interface IHeadingObserver {
      * @param heading Oggetto indicante la direzione dell'Escursionista rispetto
      *                ai punti cardinali.
      */
-    public void onHeadingUpdate(AzimuthMagneticNorth heading);
+    void onHeadingUpdate(AzimuthMagneticNorth heading);
 }

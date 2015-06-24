@@ -55,14 +55,14 @@ public interface IRegion {
      *
      * @return Primo punto geografico.
      */
-    public GeoPoint getNorthEastPoint();
+    GeoPoint getNorthEastPoint();
 
     /**
      * Restituisce il punto a sud-ovest dell'area geografica.
      *
      * @return Secondo punto geografico
      */
-    public GeoPoint getSouthWestPoint();
+    GeoPoint getSouthWestPoint();
 
     /**
      * Restituisce true se il punto geografico specificato è contenuto
@@ -73,6 +73,6 @@ public interface IRegion {
      * @return True se il punto è contenuto nell'area. False altrimenti.
      * @throws IllegalArgumentException
      */
-    public boolean contains(GeoPoint p) throws IllegalArgumentException;
+    boolean contains(GeoPoint p) throws IllegalArgumentException;
 
 }

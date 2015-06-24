@@ -57,14 +57,14 @@ public interface ISensorManager {
      *
      * @return Oggetto di tipo ILocationManager.
      */
-    public ILocationManager getLocationSource();
+    ILocationManager getLocationSource();
     /**
      * Restituisce un Manager per ottenere dati sull'orientamento
      * dell'Escursionista rispetto ai punti cardinali.
      *
      * @return Oggetto di tipo IHeadingManager.
      */
-    public IHeadingManager getHeadingSource()
+    IHeadingManager getHeadingSource()
             throws SensorNotAvailableException;
 
     /**
@@ -73,7 +73,7 @@ public interface ISensorManager {
      *
      * @return Oggetto di tipo IHeartRateManager.
      */
-    public IHeartRateManager getHeartRateSource();
+    IHeartRateManager getHeartRateSource();
 
     /**
      * Restituisce un Manager per offire servizi di registrazione del
@@ -81,7 +81,7 @@ public interface ISensorManager {
      *
      * @return Oggetto di tipo ITelemetryManager.
      */
-    public ITelemetryManager getTelemetryManager();
+    ITelemetryManager getTelemetryManager();
 
     /**
      * Restituisce un Manager che offre servizi per l'attraversamento di

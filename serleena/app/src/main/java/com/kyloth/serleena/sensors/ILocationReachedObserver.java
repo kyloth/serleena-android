@@ -55,5 +55,5 @@ public interface ILocationReachedObserver {
      * osservato, il quale indica in questo caso il raggiungimento
      * di un particolare punto geografico.
      */
-    public void onLocationReached();
+    void onLocationReached();
 }

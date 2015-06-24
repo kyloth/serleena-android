@@ -187,10 +187,8 @@ public final class TrackCrossing implements ITrackCrossing,
      */
     @Override
     public boolean isTrackCrossing() {
-        if (track == null ||
-                nextCheckpointIndex == track.getCheckpoints().size())
-            return false;
-        return true;
+        return !(track == null ||
+                nextCheckpointIndex == track.getCheckpoints().size());
     }
 
     /**

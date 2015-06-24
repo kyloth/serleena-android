@@ -64,7 +64,7 @@ public interface IMapPresenter extends IPresenter {
      * del punto utente, viene sollevata un'eccezione
      * LocationNotAvailableException.
 	 */
-	public void newUserPoint()
+    void newUserPoint()
         throws NoActiveExperienceException, LocationNotAvailableException;
 
 }

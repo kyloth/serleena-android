@@ -59,6 +59,6 @@ public interface IQuadrant extends IRegion {
      *
      * @return Immagine raster della mappa.
      */
-    public Bitmap getRaster();
+    Bitmap getRaster();
 
 }
