@@ -61,25 +61,16 @@ import java.util.Set;
  * GPS del dispositivo con il supporto delle API Android.
  *
  * @use Viene istanziato da SerleenaSensorManager e restituito al codice client dietro interfaccia.
- * @field lastKnownLocation : GeoPoint Ultima posizione geografica nota dell'utente
- * @field lastUpdate : long Istante di tempo, in UNIX time, a cui corrisponde l'ultimo dato di posizione noto
- * @field observer : Map<ILocationObserver, Integer> Mappa gli Observer agli intervalli di notifica
+ * @field observers : Map<ILocationObserver, LocationListener> Mappa gli Observer ai relativi LocationListener
  * @field locationManager : LocationManager Gestore della posizione di Android
  * @field currentInterval : int Intervallo con cui al momento viene richiesto l'aggiornamento sulla posizione alle API Android
  * @author Filippo Sestini <sestini.filippo@gmail.com>
  * @version 1.0.0
  */
-class SerleenaLocationManager implements ILocationManager,
-        LocationListener {
+class SerleenaLocationManager implements ILocationManager {
 
-    public static final long LOCATION_EXPIRATION_TIME = 30;
-    public static final int MINIMUM_UPDATE_DISTANCE = 10;
-
-    private GeoPoint lastKnownLocation;
-    private long lastUpdate;
-    private Map<ILocationObserver, Integer> observers;
-    private android.location.LocationManager locationManager;
-    private int currentInterval;
+    private LocationManager locationManager;
+    private Map<ILocationObserver, LocationListener> observers;
 
     /**
      * Crea un oggetto NormalLocationManager.
@@ -91,191 +82,84 @@ class SerleenaLocationManager implements ILocationManager,
     public SerleenaLocationManager(LocationManager locationManager) {
         if (locationManager == null)
             throw new IllegalArgumentException("Illegal null location manager");
-
-        this.observers = new HashMap<ILocationObserver, Integer>();
-        this.currentInterval = Integer.MAX_VALUE;
         this.locationManager = locationManager;
+        this.observers = new HashMap<>();
     }
 
     /**
      * Implementa ILocationManager.attachObserver().
      *
-     * L'observer viene notificato ad intervalli regolari indicati dal
-     * parametro interval, a meno che il processore non sia in sleep mode.
-     * L'intervallo di tempo è indicativo della frequenza di notifica
-     * desiderata dall'oggetto "observer".
-     *
-     * La posizione utente è ottenuta utilizzando le API di Android per il
-     * modulo GPS, con frequenza pari a quella dell'observer di frequenza
-     * maggiore. L'intervallo di effettivo aggiornamento può pertanto non
-     * essere quello indicato, ma, in condizioni di disponibilità del
-     * segnale, almeno tale.
-     *
-     * @param observer ILocationObserver da registrare. Se null,
-     *                 viene lanciata un'eccezione IllegalArgumentException.
-     * @param interval Intervallo di tempo in secondi.
-     *                 Se minore o uguale a zero,
-     *                 viene lanciata un'eccezione IllegalArgumentException.
-     *
-     * @throws IllegalArgumentException
+     * @param observer Observer da registrare agli eventi dell'istanza.
+     * @param interval Intervalli minimo ogni quanto l'Observer deve essere
+     *                 notificato.
      */
     @Override
-    public synchronized void attachObserver(final ILocationObserver observer,
-                                            int interval)
-            throws IllegalArgumentException {
-
+    public void attachObserver(ILocationObserver observer, int interval) {
         if (observer == null)
             throw new IllegalArgumentException("Illegal null observer");
         if (interval <= 0)
             throw new IllegalArgumentException("Illegal interval");
 
-        observers.put(observer, interval);
-        adjustGpsUpdateRate();
+        SerleenaLocationListener listener = new SerleenaLocationListener(observer);
+        this.observers.put(observer, listener);
+        locationManager.requestLocationUpdates(
+                LocationManager.GPS_PROVIDER,
+                interval, 0, listener);
     }
 
     /**
      * Implementa ILocationManager.detachObserver().
      *
-     * @param observer ILocationObserver la cui registrazione come "observer" di
-     *                 questo oggetto sarà cancellata. Se null, viene lanciata
-     *                 un'eccezione IllegalArgumentException.
-     * @throws IllegalArgumentException
+     * @param observer Observer la cui registrazione deve essere cancellata.
      */
     @Override
-    public synchronized void detachObserver(ILocationObserver observer)
-            throws IllegalArgumentException {
+    public void detachObserver(ILocationObserver observer) {
         if (observer == null)
             throw new IllegalArgumentException("Illegal null observer");
-        if (observers.containsKey(observer)) {
-            observers.remove(observer);
-            adjustGpsUpdateRate();
-        }
+
+        if (observers.containsKey(observer))
+            locationManager.removeUpdates(observers.get(observer));
     }
 
     /**
      * Implementa ILocationManager.getSingleUpdate().
      *
-     * Il metodo garantisce che il processore non entri in sleep mode
-     * finchè non vengono ottenuti i dati dal modulo GPS,
-     * o comunque fino allo scadere di un timeout.
-     * L'observer riceve in ogni caso una callback. Nel caso non sia stato
-     * possibile ottenere dati aggiornati dal GPS, vengono comunicati gli
-     * ultimi disponibili.
-     *
-     * @param observer Oggetto ILocationObserver a cui comunicare i dati. Se
-     *                 null, viene sollevata un'eccezione
-     *                 IllegalArgumentException.
-     * @param timeout  Timeout in secondi. Se <= 0, viene sollevata
-     *                 un'eccezione IllegalArgumentException.
+     * @param observer Observer che deve essere notificato.
      */
     @Override
-    public synchronized void getSingleUpdate(final ILocationObserver observer,
-                                             int timeout)
-            throws IllegalArgumentException {
-
-        if (observer == null)
-            throw new IllegalArgumentException("Illegal null observer");
-        if (timeout <= 0)
-            throw new IllegalArgumentException("Illegal timeout");
-
-        if (((System.currentTimeMillis() / 1000L) - lastUpdate) <
-                LOCATION_EXPIRATION_TIME)
-            notifyObserver(observer);
-
-        else {
-
-            final LocationListener listener = new LocationListener() {
-                @Override
-                public void onLocationChanged(Location location) {
-                    lastKnownLocation = new GeoPoint(location.getLatitude(),
-                            location.getLongitude());
-                    lastUpdate = System.currentTimeMillis() / 1000L;
-                    notifyObserver(observer);
-                }
-                @Override
-                public void onStatusChanged(String s, int i, Bundle bundle) { }
-                @Override
-                public void onProviderEnabled(String s) { }
-                @Override
-                public void onProviderDisabled(String s) { }
-            };
-
-            String provider = android.location.LocationManager.GPS_PROVIDER;
-            locationManager.requestSingleUpdate(provider, listener, null);
-
-            final Handler timeoutHandler = new Handler();
-            final Runnable runnable = new Runnable() {
-                public void run() {
-                    locationManager.removeUpdates(listener);
-                    notifyObserver(observer);
-                }
-            };
-
-            timeoutHandler.postDelayed(runnable, timeout * 1000);
-
-        }
-    }
-
-    /**
-     * Implementa ILocationManager.notifyObserver().
-     *
-     * @param observer Oggetto ILocationObserver a cui comunicare i dati.
-     *                 Se null, viene lanciata un'eccezione
-     *                 IllegalArgumentException.
-     */
-    @Override
-    public synchronized void notifyObserver(ILocationObserver observer)
-            throws IllegalArgumentException {
-
+    public void getSingleUpdate(ILocationObserver observer) {
         if (observer == null)
             throw new IllegalArgumentException("Illegal null observer");
 
-        observer.onLocationUpdate(lastKnownLocation);
+        SerleenaLocationListener listener = new SerleenaLocationListener(observer);
+
+        locationManager.requestSingleUpdate(
+                LocationManager.GPS_PROVIDER,
+                listener,
+                null);
     }
 
-    @Override
-    public synchronized void onLocationChanged(Location location) {
-        lastKnownLocation = new GeoPoint(location.getLatitude(),
-                location.getLongitude());
-        lastUpdate = System.currentTimeMillis() / 1000L;
+    public static class SerleenaLocationListener implements LocationListener {
 
-        for (ILocationObserver observer : observers.keySet())
-            notifyObserver(observer);
-    }
+        private ILocationObserver observer;
 
-    @Override
-    public void onStatusChanged(String s, int i, Bundle bundle) { }
-
-    @Override
-    public void onProviderEnabled(String s) { }
-
-    @Override
-    public void onProviderDisabled(String s) { }
-
-    /**
-     * Regola la frequenza delle richieste di aggiornamento sulla posizione
-     * utente in base agli observer correntemente registrati e le loro
-     * esigenze in termini di tempo.
-     */
-    private synchronized void adjustGpsUpdateRate() {
-        if (observers.size() == 0) {
-            currentInterval = Integer.MAX_VALUE;
-            locationManager.removeUpdates(this);
-        } else {
-
-            int minInterval = Integer.MAX_VALUE;
-            for (int interval : observers.values())
-                if (interval < minInterval)
-                    minInterval = interval;
-
-            if (minInterval != currentInterval) {
-                locationManager.removeUpdates(this);
-                locationManager.requestLocationUpdates(LocationManager
-                                .GPS_PROVIDER, minInterval * 1000, MINIMUM_UPDATE_DISTANCE,
-                        this);
-                currentInterval = minInterval;
-            }
+        public SerleenaLocationListener(ILocationObserver observer) {
+            this.observer = observer;
         }
+
+        @Override
+        public void onLocationChanged(Location location) {
+            observer.onLocationUpdate(new GeoPoint(location));
+        }
+
+        @Override
+        public void onStatusChanged(String provider, int status, Bundle extras)
+        { }
+        @Override
+        public void onProviderEnabled(String provider) { }
+        @Override
+        public void onProviderDisabled(String provider) { }
+
     }
 
 }
