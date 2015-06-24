@@ -37,8 +37,6 @@
  * Version  Programmer       Changes
  * 1.0.0    Gabriele Pozzan  Creazione file scrittura
  *                                       codice e documentazione Javadoc
- * 2.0.0    Gabriele Pozzan  Aggiunta integrazione con gli altri package,
- *                                       incrementata copertura
  */
 
 package com.kyloth.serleena.presenters;
@@ -49,26 +47,16 @@ import org.junit.Rule;
 import org.junit.runner.RunWith;
 import org.junit.rules.ExpectedException;
 import static org.mockito.Mockito.*;
-import static org.junit.Assert.*;
 
-import java.util.Iterator;
+import org.robolectric.RobolectricTestRunner;
 
-import org.robolectric.RobolectricGradleTestRunner;
-import org.robolectric.RuntimeEnvironment;
-import org.robolectric.annotation.Config;
-
-import android.database.sqlite.SQLiteDatabase;
-
-import com.kyloth.serleena.BuildConfig;
-import com.kyloth.serleena.model.SerleenaDataSource;
+import com.kyloth.serleena.model.ISerleenaDataSource;
 import com.kyloth.serleena.model.IExperience;
 import com.kyloth.serleena.presentation.IMapView;
-import com.kyloth.serleena.common.IQuadrant;
 import com.kyloth.serleena.common.NoActiveExperienceException;
 import com.kyloth.serleena.common.GeoPoint;
-import com.kyloth.serleena.sensors.SerleenaSensorManager;
-import com.kyloth.serleena.persistence.sqlite.SerleenaSQLiteDataSource;
-import com.kyloth.serleena.persistence.sqlite.SerleenaDatabase;
+import com.kyloth.serleena.sensors.ILocationManager;
+import com.kyloth.serleena.sensors.ISensorManager;
 
 
 /**
@@ -78,19 +66,14 @@ import com.kyloth.serleena.persistence.sqlite.SerleenaDatabase;
  * @version 1.0.0
  */
 
-@RunWith(RobolectricGradleTestRunner.class)
-@Config(constants = BuildConfig.class, emulateSdk = 19)
+@RunWith(RobolectricTestRunner.class)
 public class MapPresenterTest {
 
-    SQLiteDatabase db;
-    SerleenaDatabase serleenaDB;
-    SerleenaSQLiteDataSource serleenaSQLDS;
-    SerleenaDataSource dataSource;
-
-    int UPDATE_INTERVAL_SECONDS = 30;
+    MapPresenter mp;
     IMapView view;
     ISerleenaActivity activity;
-    SerleenaSensorManager sm;
+    ISensorManager sm;
+    ILocationManager locMan;
 
     @Rule
     public ExpectedException exception = ExpectedException.none();
@@ -98,109 +81,107 @@ public class MapPresenterTest {
     /**
      * Inizializza i campi dati necessari alla conduzione dei test.
      */
-
     @Before
     public void initialize() {
+        locMan = mock(ILocationManager.class);
+        sm = mock(ISensorManager.class);
+        when(sm.getLocationSource()).thenReturn(locMan);
+
         view = mock(IMapView.class);
         activity = mock(ISerleenaActivity.class);
-        sm = SerleenaSensorManager.getInstance(RuntimeEnvironment.application);
         when(activity.getSensorManager()).thenReturn(sm);
+        when(activity.getDataSource()).thenReturn(mock(ISerleenaDataSource.class));
 
-        serleenaDB = new SerleenaDatabase(
-                RuntimeEnvironment.application, "sample.db", null, 1);
-        db = serleenaDB.getWritableDatabase();
-        serleenaDB.onConfigure(db);
-        serleenaDB.onUpgrade(db, 1, 2);
-
-        serleenaSQLDS = new SerleenaSQLiteDataSource(RuntimeEnvironment.application, serleenaDB);
-        dataSource = new SerleenaDataSource(serleenaSQLDS);
-        when(activity.getDataSource()).thenReturn(dataSource);
-
-        String insert_experience = "INSERT INTO experiences " +
-            "(experience_id, experience_name) " +
-            "VALUES (1, 'Experience')";
-        String insert_ups = "INSERT INTO user_points " +
-            "(userpoint_id, userpoint_x, userpoint_y, userpoint_experience) " +
-            "VALUES (1, 5, 5, 1)";
-        db.execSQL(insert_experience);
-        db.execSQL(insert_ups);
+        mp = new MapPresenter(view, activity);
     }
 
     /**
-     * Verifica che il costruttore lanci un'eccezione di tipo
-     * IllegalArgumentException con messaggio "Illegal null view"
-     * se invocato con view nulla.
+     * Verifica che il costruttore lanci un'eccezione se invocato con
+     * parametri null.
      */
-
-    @Test
-    public void constructorShouldThrowExceptionWhenNullView() {
-        exception.expect(IllegalArgumentException.class);
-        exception.expectMessage("Illegal null view");
-        MapPresenter mp = new MapPresenter(null, activity);
+    @Test(expected = IllegalArgumentException.class)
+    public void constructorShouldThrowExceptionWhenNullArgument1() {
+        new MapPresenter(null, activity);
     }
 
     /**
-     * Verifica che il costruttore lanci un'eccezione di tipo
-     * IllegalArgumentException con messaggio "Illegal null activity"
-     * se invocato con activity nulla.
+     * Verifica che il costruttore lanci un'eccezione se invocato con
+     * parametri null.
      */
-
-    @Test
-    public void constructorShouldThrowExceptionWhenNullActivity() {
-        exception.expect(IllegalArgumentException.class);
-        exception.expectMessage("Illegal null activity");
-        MapPresenter mp = new MapPresenter(view, null);
+    @Test(expected = IllegalArgumentException.class)
+    public void constructorShouldThrowExceptionWhenNullArgument2() {
+        new MapPresenter(view, null);
     }
 
     /**
-     * Verifica che il metodo newUserPoint lanci un'eccezione
-     * di tipo NoActiveExperienceException se al momento
-     * dell'invocazione non è attiva un'Esperienza.
+     * Verifica che il metodo newUserPoint lanci un'eccezione se non è attiva
+     * un'Esperienza.
      */
-
-    @Test
+    @Test(expected = NoActiveExperienceException.class)
     public void newUserPointShouldThrowExceptionWhenNoActiveExperience()
             throws NoActiveExperienceException {
-        MapPresenter mp = new MapPresenter(view, activity);
-        exception.expect(NoActiveExperienceException.class);
-        mp.newUserPoint();
+        new MapPresenter(view, activity).newUserPoint();
     }
 
     /**
-     * Verifica che il metodo resume non sollevi eccezioni e in
-     * generale non causi errori.
+     * Verifica che resume() causi la registrazione del presenter al sensore
+     * di posizione.
      */
-
     @Test
-    public void testResume() {
-        MapPresenter mp = new MapPresenter(view, activity);
+    public void resumeShouldRegisterSensor() {
         mp.resume();
+        verify(locMan).attachObserver(eq(mp), any(Integer.class));
     }
 
     /**
-     * Verifica che il metodo pause non sollevi eccezioni e in generale
-     * non causi errori.
+     * Verifica che pause() causi la deregistrazione del presenter dal sensore
+     * di posizione.
      */
-
     @Test
-    public void testPause() {
-        MapPresenter mp = new MapPresenter(view, activity);
-        mp.resume();
+    public void pauseShouldUnregisterSensor() {
         mp.pause();
+        verify(locMan).detachObserver(mp);
     }
 
     /**
-     * Verifica che il metodo newUserPoint non causi errori o sollevi
-     * eccezioni.
+     * Verifica che setActiveExperience() sollevi un'eccezione al passaggio
+     * di un'Esperienza null.
      */
+    @Test(expected = IllegalArgumentException.class)
+    public void setActiveExperienceShouldThrowWhenNullExperience() {
+        MapPresenter mp = new MapPresenter(view, activity);
+        mp.setActiveExperience(null);
+    }
+
+    /**
+     * Verifica che setActiveExperience() pulisca la vista.
+     */
+    @Test
+    public void settingActiveExperienceShouldClearView() {
+        MapPresenter mp = new MapPresenter(view, activity);
+        mp.setActiveExperience(mock(IExperience.class));
+        verify(view).clear();
+    }
+
+    /**
+     * Verifica che onLocationUpdate() sollevi un'eccezione al passaggio di
+     * parametri null.
+     */
+    @Test(expected = IllegalArgumentException.class)
+    public void onLocationUpdateShouldThrowWhenNullLocation() {
+        mp.onLocationUpdate(null);
+    }
 
     @Test
-    public void testNewUserPoint() throws NoActiveExperienceException {
-        MapPresenter mp = new MapPresenter(view, activity);
-        Iterable<IExperience> experiences = dataSource.getExperiences();
-        mp.setActiveExperience(experiences.iterator().next());
-        mp.newUserPoint();
-        mp.onLocationUpdate(new GeoPoint(5, 4));
+    public void onLocationUpdateShouldUpdateView() {
+        GeoPoint gp = mock(GeoPoint.class);
+        mp.onLocationUpdate(gp);
+        verify(view).setUserLocation(gp);
+    }
+
+    @Test(expected = NoActiveExperienceException.class)
+    public void newUserPointShouldThrowWhenNoActiveExperience()
+            throws NoActiveExperienceException {
         mp.newUserPoint();
     }
 
