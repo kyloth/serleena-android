@@ -47,7 +47,7 @@ import com.kyloth.serleena.presentation.ICompassView;
  */
 public class CompassFragment extends Fragment implements ICompassView {
 
-    ICompassPresenter presenter;
+    private ICompassPresenter presenter;
 
     /**
      * Crea un nuovo oggetto CompassFragment.
