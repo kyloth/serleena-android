@@ -78,7 +78,9 @@ public class MapFragment extends Fragment implements IMapView,
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        return inflater.inflate(R.layout.fragment_map, container, false);
+        View v = inflater.inflate(R.layout.fragment_map, container, false);
+        map = (MapWidget) v.findViewById(R.id.map_widget);
+        return v;
     }
 
     @Override

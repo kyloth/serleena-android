@@ -5,18 +5,10 @@
              tools:context="com.kyloth.serleena.view.fragments.MapFragment"
              android:padding="0dp">
 
-    <!--
     <com.kyloth.serleena.view.widgets.MapWidget
         android:layout_width="240px"
         android:layout_height="240px"
         android:id="@+id/map_widget"
         android:layout_margin="0dp"/>
-    -->
-
-    <TextView
-        android:layout_width="fill_parent"
-        android:layout_height="fill_parent"
-        android:id="@+id/map_text"
-        android:text="Location"/>
 
 </FrameLayout>
