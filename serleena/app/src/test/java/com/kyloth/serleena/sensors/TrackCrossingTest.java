@@ -124,7 +124,7 @@ public class TrackCrossingTest {
      */
     @Test
     public void testThatCheckpointsAreCrossedCorrectly()
-            throws NoSuchCheckpointException, TrackEndedException, NoTrackCrossingException {
+            throws NoSuchCheckpointException, NoTrackCrossingException {
         TrackCrossing tc = getTrackCrossing();
         tc.startTrack(getTrack());
 
@@ -262,7 +262,7 @@ public class TrackCrossingTest {
      */
     @Test(expected = NoTrackCrossingException.class)
     public void testThatNextCheckpointWithNoActiveTrackThrows()
-            throws NoTrackCrossingException, TrackEndedException {
+            throws NoTrackCrossingException {
         TrackCrossing tc = getTrackCrossing();
         tc.getNextCheckpoint();
     }
