@@ -72,7 +72,7 @@ import java.util.List;
  * @see android.support.v7.app.AppCompatActivity
  */
 public class SerleenaActivity extends Activity
-        implements ISerleenaActivity, IObjectListObserver, ILocationObserver {
+        implements ISerleenaActivity, IObjectListObserver {
 
     private ISerleenaDataSource dataSource;
     private ISensorManager sensorManager;
@@ -87,10 +87,6 @@ public class SerleenaActivity extends Activity
     private TrackSelectionFragment trackSelectionFragment;
     private ObjectListFragment menuFragment;
     private ObjectListFragment experienceFragment;
-
-    private BackgroundLocationManager blm;
-    private ObjectListFragment testListFragment;
-    private List<Object> testList;
 
     /**
      * Ridefinisce Activity.onCreate().
@@ -146,20 +142,8 @@ public class SerleenaActivity extends Activity
             new CompassPresenter(compassFragment, this);
             new MapPresenter(mapFragment, this);
 
-            testList = new ArrayList<>();
-            testListFragment = new ObjectListFragment();
-            testListFragment.setList(testList);
-
-            /*
             getFragmentManager().beginTransaction()
                     .add(R.id.main_container, menuFragment).commit();
-            */
-            getFragmentManager().beginTransaction()
-                    .add(R.id.main_container, testListFragment).commit();
-
-            blm = new BackgroundLocationManager(this,
-                    (AlarmManager) getSystemService(ALARM_SERVICE));
-            blm.attachObserver(this, 60);
         }
     }
 
@@ -204,16 +188,4 @@ public class SerleenaActivity extends Activity
                 .replace(R.id.main_container, f).commit();
     }
 
-    @Override
-    protected void onDestroy() {
-        super.onDestroy();
-        blm.detachObserver(this);
-    }
-
-    @Override
-    public void onLocationUpdate(GeoPoint loc) {
-        testList.add(loc.latitude() + " " + loc.longitude() + " at " + new
-                Date().toString());
-        testListFragment.setList(testList);
-    }
 }
