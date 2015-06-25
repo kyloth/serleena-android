@@ -274,4 +274,54 @@ public class TrackCrossingTest {
         assertTrue(tc.getTrack() == oneCheckpointTrack);
     }
 
+    /**
+     * Verifica che getNextCheckpoint() sollevi un'eccezione in seguito alla
+     * chiamata di abort().
+     */
+    @Test(expected = NoTrackCrossingException.class)
+    public void getNextCheckpointShouldThrowIfAbortedTrack()
+            throws NoTrackCrossingException {
+        tc.startTrack(track);
+        tc.advanceCheckpoint();
+        tc.advanceCheckpoint();
+        tc.abort();
+        tc.getNextCheckpoint();
+    }
+
+    /**
+     * Verifica che getTrack() sollevi un'eccezione in seguito alla chiamata di
+     * abort().
+     */
+    @Test(expected = NoTrackCrossingException.class)
+    public void getTrackShouldThrowIfAbortedTrack()
+            throws NoTrackCrossingException {
+        tc.startTrack(track);
+        tc.abort();
+        tc.getTrack();
+    }
+
+    /**
+     * Verifica che getLastCrossed() sollevi un'eccezione in seguito a una
+     * chiamata a abort().
+     */
+    @Test(expected = NoSuchCheckpointException.class)
+    public void getLastCrossedShouldThrowIfAbortedTrack()
+            throws NoTrackCrossingException, NoSuchCheckpointException {
+        tc.startTrack(track);
+        tc.advanceCheckpoint();
+        tc.advanceCheckpoint();
+        tc.abort();
+        tc.getLastCrossed();
+    }
+
+    /**
+     * Verifica che una chiamata ad abort() causi la deregistrazione
+     * dell'oggetto TrackCrossing dal ILocationReachedManager.
+     */
+    @Test
+    public void abortingShouldDetachFromSensor() {
+        tc.abort();
+        verify(locReaMan).detachObserver(tc);
+    }
+
 }
