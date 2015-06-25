@@ -128,6 +128,15 @@ public class TelemetryFragment extends Fragment
     }
 
     /**
+     * Ridefinisce Fragment.onDestroy().
+     */
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        presenter.disableTelemetry();
+    }
+
+    /**
      * Implementa OnClickListener.onClick().
      */
     @Override
