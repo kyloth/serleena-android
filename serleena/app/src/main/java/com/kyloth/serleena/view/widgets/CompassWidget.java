@@ -71,4 +71,8 @@ public class CompassWidget extends ImageView {
         this.invalidate();
     }
 
+    public void reset() {
+        this.setImageResource(android.R.color.transparent);
+        invalidate();
+    }
 }
