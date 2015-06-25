@@ -65,7 +65,7 @@ public class CompassWidget extends ImageView {
         super.onDraw(canvas);
     }
 
-    public void setDirection(float direction) {
+    public void setOrientation(float direction) {
         this.direction = direction;
         this.setImageResource(R.drawable.compass);
         this.invalidate();

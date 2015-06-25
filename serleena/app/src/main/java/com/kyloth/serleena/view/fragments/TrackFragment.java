@@ -221,7 +221,7 @@ public class TrackFragment extends Fragment implements ITrackView {
         presenter.resume();
         CompassWidget w = (CompassWidget) getView().findViewById(R.id
                 .compass_widget_track);
-        w.setDirection(90);
+        w.setOrientation(90);
     }
 
     /**
