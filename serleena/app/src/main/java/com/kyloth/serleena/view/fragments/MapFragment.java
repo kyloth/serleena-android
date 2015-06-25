@@ -94,9 +94,7 @@ public class MapFragment extends Fragment implements IMapView,
 
     @Override
     public void setUserLocation(GeoPoint point) {
-        //map.setUserPosition(point);
-        TextView tv = (TextView) getView().findViewById(R.id.map_text);
-        tv.setText("Lat: " + point.latitude() + "    Lon: " + point.longitude());
+        map.setUserPosition(point);
     }
 
     @Override
