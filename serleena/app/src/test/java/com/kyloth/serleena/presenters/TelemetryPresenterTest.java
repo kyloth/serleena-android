@@ -150,7 +150,7 @@ public class TelemetryPresenterTest {
      * Verifica che un tentativo di abilitazione del Tracciamento con
      * Percorso già avviato causi una segnalazione alla vista.
      */
-    @Test
+    @Test(expected = TrackAlreadyStartedException.class)
     public void enablingWithTrackAlreadyStartedShouldThrow() throws
             TrackAlreadyStartedException {
         ITelemetryManager telMan = mock(ITelemetryManager.class);
@@ -166,7 +166,6 @@ public class TelemetryPresenterTest {
         TelemetryPresenter tp =
                 new TelemetryPresenter(view, activity);
         tp.enableTelemetry();
-        verify(view).displayTrackStartedError();
     }
 
 }

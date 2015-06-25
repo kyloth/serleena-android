@@ -90,12 +90,8 @@ public class TelemetryPresenter implements ITelemetryPresenter {
      * il tracciamento.
      */
     @Override
-    public void enableTelemetry() {
-        try {
-            telMan.enable();
-        } catch (TrackAlreadyStartedException e) {
-            view.displayTrackStartedError();
-        }
+    public void enableTelemetry() throws TrackAlreadyStartedException {
+        telMan.enable();
     }
 
     /**

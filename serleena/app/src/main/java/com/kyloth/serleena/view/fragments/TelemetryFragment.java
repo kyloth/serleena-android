@@ -50,6 +50,7 @@ import android.widget.TextView;
 import com.kyloth.serleena.R;
 import com.kyloth.serleena.presentation.ITelemetryPresenter;
 import com.kyloth.serleena.presentation.ITelemetryView;
+import com.kyloth.serleena.sensors.TrackAlreadyStartedException;
 
 
 /**
@@ -109,14 +110,6 @@ public class TelemetryFragment extends Fragment
     }
 
     /**
-     * Implementa ITelemetryView.displayTrackStartedError().
-     */
-    @Override
-    public void displayTrackStartedError() {
-        throw new UnsupportedOperationException();
-    }
-
-    /**
      * Ridefinisce Fragment.onResume().
      */
     @Override
@@ -146,7 +139,11 @@ public class TelemetryFragment extends Fragment
             status.setText("OFF");
         }
         else {
-            presenter.enableTelemetry();
+            try {
+                presenter.enableTelemetry();
+            } catch (TrackAlreadyStartedException e) {
+                status.setText("ERRORE: Percorso già avviato");
+            }
             status.setText("ON");
         }
     }

@@ -40,6 +40,8 @@
 
 package com.kyloth.serleena.presentation;
 
+import com.kyloth.serleena.sensors.TrackAlreadyStartedException;
+
 /**
  * ITelemetryPresenter e' l'interfaccia del Presenter per la schermata del
  * tracciamento.
@@ -54,7 +56,7 @@ public interface ITelemetryPresenter extends IPresenter {
 	 * Richiede al presenter di abilitare il tracciamento per il percorso
 	 * corrente presso il Model.
 	 */
-	void enableTelemetry();
+	void enableTelemetry() throws TrackAlreadyStartedException;
 
 	/**
 	 * Richiede al presenter di disabilitare il tracciamento per il percorso
