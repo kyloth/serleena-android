@@ -71,6 +71,7 @@ public class TelemetryFragment extends Fragment
      * Presenter collegato a un TelemetryFragment
      */
     private ITelemetryPresenter presenter;
+    private TextView status;
 
     public TelemetryFragment() {
         /* Null object pattern */
@@ -96,6 +97,8 @@ public class TelemetryFragment extends Fragment
                 false);
         ImageView iv = (ImageView) v.findViewById(R.id.telemetry_image);
         iv.setOnClickListener(this);
+
+        status = (TextView) v.findViewById(R.id.telemetry_status);
         return v;
     }
 
@@ -141,8 +144,6 @@ public class TelemetryFragment extends Fragment
      */
     @Override
     public void onClick(View v) {
-        TextView status =
-                (TextView) getActivity().findViewById(R.id.telemetry_status);
         if(status.getText().equals("ON")) {
             presenter.disableTelemetry();
             status.setText("OFF");
