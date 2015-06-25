@@ -31,85 +31,89 @@
 /**
  * Name: MapFragmentTest.java
  * Package: com.kyloth.serleena.view.fragments
- * Author: Sebastiano Valle
+ * Author: Filippo Sestini
  *
  * History:
  * Version  Programmer       Changes
- * 1.0.0    Sebastiano Valle Creazione file e scrittura di codice e
+ * 1.0.0    Filippo Sestini  Creazione file e scrittura di codice e
  *                           documentazione in Javadoc.
  */
 
 package com.kyloth.serleena.view.fragments;
 
-import android.app.Activity;
-import android.app.FragmentManager;
+import android.os.Bundle;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
 
-import com.kyloth.serleena.BuildConfig;
+import com.kyloth.serleena.R;
+import com.kyloth.serleena.common.GeoPoint;
+import com.kyloth.serleena.common.IQuadrant;
+import com.kyloth.serleena.common.LocationNotAvailableException;
+import com.kyloth.serleena.common.NoActiveExperienceException;
+import com.kyloth.serleena.common.UserPoint;
 import com.kyloth.serleena.presentation.IMapPresenter;
-import com.kyloth.serleena.presenters.ISerleenaActivity;
-import com.kyloth.serleena.model.ISerleenaDataSource;
-import com.kyloth.serleena.sensors.ISensorManager;
+import com.kyloth.serleena.view.widgets.MapWidget;
 
-import junit.framework.Assert;
-
-import org.robolectric.Robolectric;
-import org.robolectric.RobolectricGradleTestRunner;
-import org.robolectric.annotation.Config;
+import org.robolectric.RobolectricTestRunner;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.Before;
 
+import java.util.ArrayList;
+
+import static junit.framework.Assert.assertTrue;
 import static org.mockito.Mockito.*;
 
 /**
- * Contiene i test di unità per la classe MapFragment.
+ * Test di unità per la classe MapFragment
  *
- * @author Sebastiano Valle <valle.sebastiano93@gmail.com>
+ * @author Filippo Sestini <sestini.filippo@gmail.com>
  * @version 1.0.0
- * @see com.kyloth.serleena.view.fragments.MapFragment
  */
-@RunWith(RobolectricGradleTestRunner.class)
-@Config(constants = BuildConfig.class, emulateSdk = 19)
+@RunWith(RobolectricTestRunner.class)
 public class MapFragmentTest {
 
-    private static class TestActivity
-            extends Activity implements ISerleenaActivity {
-        public ISerleenaDataSource getDataSource() {
-            return null;
-        }
-        public ISensorManager getSensorManager() {
-            return null;
-        }
-    }
-
-    private TestActivity activity;
     private MapFragment fragment;
     private IMapPresenter presenter;
+    private MapWidget mapWidget;
+    private IQuadrant q;
+    private GeoPoint location;
+    private Iterable<UserPoint> userPoints;
 
     @Before
     public void initialize() {
-        activity = Robolectric.buildActivity(TestActivity.class).
-                create().get();
-        Assert.assertNotNull("initialization failed", activity);
+        userPoints = new ArrayList<>();
+        q = mock(IQuadrant.class);
+        location = mock(GeoPoint.class);
         fragment = new MapFragment();
-        FragmentManager fm = activity.getFragmentManager();
-        fm.beginTransaction().add(fragment, "TEST").commit();
-        Assert.assertEquals("fragment not attached", fragment.getActivity(), activity);
+        presenter = mock(IMapPresenter.class);
+        fragment.attachPresenter(presenter);
+
+        LayoutInflater inflater = mock(LayoutInflater.class);
+        ViewGroup vg = mock(ViewGroup.class);
+        View v = mock(View.class);
+        mapWidget = mock(MapWidget.class);
+
+        when(inflater.inflate(
+                eq(R.layout.fragment_map),
+                eq(vg),
+                any(Boolean.class))
+        ).thenReturn(v);
+        when(v.findViewById(R.id.map_widget)).thenReturn(mapWidget);
+        fragment.onCreateView(inflater, vg, mock(Bundle.class));
     }
 
     /**
-     * Verifica che sia possibile collegare un IMapPresenter ad un
-     * MapFragment.
-     *
+     * Verifica che i metodi resume() e pause() del presenter vengano
+     * chiamati correttamente.
      */
     @Test
     public void testAttachMapPresenter() {
-        presenter = mock(IMapPresenter.class);
-        fragment.attachPresenter(presenter);
         fragment.onResume();
-        fragment.onPause();
         verify(presenter).resume();
+        fragment.onPause();
         verify(presenter).pause();
     }
 
@@ -138,6 +142,62 @@ public class MapFragmentTest {
     @Test(expected = IllegalArgumentException.class)
     public void displayUPShouldThrowWhenNullArgument() {
         fragment.displayUP(null);
+    }
+
+    /**
+     * Verifica che il metodo displayQuadrant() imposti il MapWidget con il
+     * quadrante.
+     */
+    @Test
+    public void displayQuadrantShouldSetWidgetCorrectly() {
+        fragment.displayQuadrant(q);
+        verify(mapWidget).setQuadrant(q);
+    }
+
+    /**
+     * Verifica che setUserLocation() imposti correttamente il MapWidget.
+     */
+    @Test
+    public void setUserLocationShouldSetWidgetCorrectly() {
+        fragment.setUserLocation(location);
+        verify(mapWidget).setUserPosition(location);
+    }
+
+    /**
+     * Verifica che displayUP() imposti correttamente il MapWidget.
+     */
+    @Test
+    public void displayUPShouldSetWidgetCorrectly() {
+        fragment.displayUP(userPoints);
+        verify(mapWidget).setUserPoints(userPoints);
+    }
+
+    /**
+     * Verifica che clear() pulisca correttamente MapWidget.
+     */
+    @Test
+    public void clearShouldCrealWidgetToo() {
+        fragment.clear();
+        verify(mapWidget).clear();
+    }
+
+    /**
+     * Verifica che la chiamata di onClick() notifichi il Presenter della
+     * volontà di creare un nuovo punto utente.
+     */
+    @Test
+    public void userClickShouldAskPresenterForNewUserPoint()
+            throws NoActiveExperienceException, LocationNotAvailableException {
+        fragment.onClick(mock(View.class));
+        verify(presenter).newUserPoint();
+    }
+
+    /**
+     * Verifica che toString() ritorni correttamente "Mappa".
+     */
+    @Test
+    public void toStringShouldReturnTheCorrectValue() {
+        assertTrue(fragment.toString() == "Mappa");
     }
 
 }
