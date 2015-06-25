@@ -37,6 +37,7 @@
  * Version  Programmer       Changes
  * 1.0.0    Sebastiano Valle Creazione file e scrittura di codice e
  *                           documentazione in Javadoc.
+ * 1.1.0    Filippo Sestini  Aumento copertura.
  */
 
 package com.kyloth.serleena.view.fragments;
@@ -45,12 +46,11 @@ import android.app.Activity;
 import android.app.FragmentManager;
 
 import com.kyloth.serleena.BuildConfig;
+import com.kyloth.serleena.model.ITrack;
 import com.kyloth.serleena.presentation.ITrackSelectionPresenter;
 import com.kyloth.serleena.presenters.ISerleenaActivity;
 import com.kyloth.serleena.model.ISerleenaDataSource;
 import com.kyloth.serleena.sensors.ISensorManager;
-
-import junit.framework.Assert;
 
 import org.robolectric.Robolectric;
 import org.robolectric.RobolectricGradleTestRunner;
@@ -60,13 +60,16 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.Before;
 
+import java.util.ArrayList;
+
+import static junit.framework.Assert.assertEquals;
 import static org.mockito.Mockito.*;
 
 /**
  * Contiene i test di unità per la classe CompassFragment.
  *
  * @author Sebastiano Valle <valle.sebastiano93@gmail.com>
- * @version 1.0.0
+ * @version 1.1.0
  */
 @RunWith(RobolectricGradleTestRunner.class)
 @Config(constants = BuildConfig.class, emulateSdk = 19, manifest = "src/main/AndroidManifest.xml")
@@ -93,34 +96,66 @@ public class TrackSelectionFragmentTest {
     public void initialize() {
         activity = Robolectric.buildActivity(TestActivity.class).
                 create().start().visible().get();
-        Assert.assertNotNull("initialization failed", activity);
         fragment = new TrackSelectionFragment();
         FragmentManager fm = activity.getFragmentManager();
-        fm.beginTransaction().add(fragment,"TEST").commit();
-        Assert.assertEquals(fragment.getActivity(), activity);
+        fm.beginTransaction().add(fragment, "TEST").commit();
+        presenter = mock(ITrackSelectionPresenter.class);
+        fragment.attachPresenter(presenter);
     }
 
     /**
-     * Verifica che sia possibile collegare un presenter alla vista.
+     * Verifica che resume() e pause() vengano chiamati correttamente dalla
+     * vista.
      */
     @Test
     public void presenterShouldBeAttachable() {
-        presenter = mock(ITrackSelectionPresenter.class);
-        fragment.attachPresenter(presenter);
         fragment.onResume();
-        fragment.onPause();
         verify(presenter).resume();
+        fragment.onPause();
         verify(presenter).pause();
     }
 
+    /**
+     * Verifica che setTracks() sollevi un'eccezione quando il parametro è null.
+     */
     @Test(expected = IllegalArgumentException.class)
     public void setTracksShouldThrowWhenNullArgument() {
         fragment.setTracks(null);
     }
 
+    /**
+     * Verifica che attachPresenter() sollevi un'eccezione quando il
+     * parametro è null.
+     */
     @Test(expected = IllegalArgumentException.class)
     public void attachPresenterShouldThrowWhenNullArgument() {
         fragment.attachPresenter(null);
+    }
+
+    /**
+     * Verifica che alla selezione di un elemento di lista da parte
+     * dell'utente, venga segnalato correttamente al presenter il Percorso
+     * selezionato.
+     */
+    @Test
+    public void presenterShouldBeSignaledWithRightTrack() {
+        ArrayList<ITrack> list = new ArrayList<>();
+        list.add(mock(ITrack.class));
+        ITrack track = mock(ITrack.class);
+        list.add(track);
+        list.add(mock(ITrack.class));
+
+        fragment.setTracks(list);
+        fragment.onListItemClick(fragment.getListView(), null, 1, 0);
+        verify(presenter).activateTrack(track);
+    }
+
+    /**
+     * Verifica che toString() restituisca il valore corretto.
+     */
+    @Test
+    public void toStringShouldReturnCorrectValue() {
+        assertEquals(fragment.toString(), "Imposta Percorso");
     }
 
 }
