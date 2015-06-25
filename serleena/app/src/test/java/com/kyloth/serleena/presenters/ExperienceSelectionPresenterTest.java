@@ -184,4 +184,20 @@ public class ExperienceSelectionPresenterTest {
         verify(view).setExperiences(exps);
     }
 
+    /**
+     * Verifica che activateExperience() notifichi correttamente gli Observer.
+     */
+    @Test
+    public void activateExperienceShouldNotifyObservers() {
+        ExperienceSelectionPresenter p = new ExperienceSelectionPresenter
+                (view, activity);
+        IExperienceActivationObserver o = mock(IExperienceActivationObserver
+                .class);
+        p.attachObserver(o);
+
+        IExperience e = mock(IExperience.class);
+        p.activateExperience(e);
+        verify(o).onExperienceActivated(e);
+    }
+
 }
