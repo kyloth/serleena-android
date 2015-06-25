@@ -122,9 +122,7 @@ public class MapFragment extends Fragment implements IMapView,
 
     @Override
     public void clear() {
-        map.setQuadrant(null);
-        map.setUserPoints(null);
-        map.setUserPosition(null);
+        map.clear();
     }
 
     /**
