@@ -182,6 +182,13 @@ public class MapWidget extends ImageView {
         }
     }
 
+    public void clear() {
+        quadrant = null;
+        userPosition = null;
+        upList = null;
+        invalidate();
+    }
+
     private void drawUserPoint(UserPoint up, Canvas canvas) {
         Paint red = new Paint();
         red.setColor(Color.RED);
