@@ -197,7 +197,7 @@ public class MapFragmentTest {
      */
     @Test
     public void toStringShouldReturnTheCorrectValue() {
-        assertTrue(fragment.toString() == "Mappa");
+        assertTrue(fragment.toString().equals("Mappa"));
     }
 
 }
