@@ -181,12 +181,4 @@ public class TrackSelectionPresenterTest {
         verify(tc).startTrack(track);
     }
 
-    @Test
-    public void onExperienceActivatedShouldPopulateView() {
-        TrackSelectionPresenter p = new TrackSelectionPresenter(view,
-                activity, source);
-        p.onExperienceActivated(experience);
-        verify(view).setTracks(experience.getTracks());
-    }
-
 }
