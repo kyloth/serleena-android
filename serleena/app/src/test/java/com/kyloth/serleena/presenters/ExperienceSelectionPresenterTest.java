@@ -137,7 +137,8 @@ public class ExperienceSelectionPresenterTest {
     }
 
     /**
-     * Verifica che gli observer vengano notificati correttamente.
+     * Verifica che il metodo notifyObservers() notifichi correttamente gli
+     * Observer.
      */
     @Test
     public void observersNotificationShouldWorkCorrectly() {
