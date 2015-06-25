@@ -192,6 +192,16 @@ public final class TrackCrossing implements ITrackCrossing,
     }
 
     /**
+     * Implementa ITrackCrossing.abort().
+     */
+    @Override
+    public void abort() {
+        track = null;
+        nextCheckpointIndex = 0;
+        locReachMan.detachObserver(this);
+    }
+
+    /**
      * Implementa ITrackCrossing.onLocationReached().
      */
     @Override

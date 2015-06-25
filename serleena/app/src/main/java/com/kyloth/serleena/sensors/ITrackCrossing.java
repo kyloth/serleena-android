@@ -154,4 +154,9 @@ public interface ITrackCrossing {
      */
     boolean isTrackCrossing();
 
+    /**
+     * Arresta il Percorso in esecuzione.
+     */
+    void abort();
+
 }
