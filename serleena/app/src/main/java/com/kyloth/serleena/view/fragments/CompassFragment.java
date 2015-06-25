@@ -97,7 +97,7 @@ public class CompassFragment extends Fragment implements ICompassView {
 
     @Override
     public void clearView() {
-
+        compass.reset();
     }
 
     @Override
