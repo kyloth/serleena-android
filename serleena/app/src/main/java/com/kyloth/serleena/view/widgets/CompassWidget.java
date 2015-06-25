@@ -46,17 +46,14 @@ public class CompassWidget extends ImageView {
      */
     public CompassWidget(Context context) {
         super(context);
-        this.setImageResource(R.drawable.compass);
     }
 
     public CompassWidget(Context context, AttributeSet attrs) {
         super(context, attrs);
-        this.setImageResource(R.drawable.compass);
     }
 
     public CompassWidget(Context context, AttributeSet attrs, int defStyle) {
         super(context, attrs, defStyle);
-        this.setImageResource(R.drawable.compass);
     }
 
     @Override
@@ -70,6 +67,7 @@ public class CompassWidget extends ImageView {
 
     public void setDirection(float direction) {
         this.direction = direction;
+        this.setImageResource(R.drawable.compass);
         this.invalidate();
     }
 
