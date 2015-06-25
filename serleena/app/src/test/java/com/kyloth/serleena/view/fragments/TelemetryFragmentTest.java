@@ -42,14 +42,24 @@
 package com.kyloth.serleena.view.fragments;
 
 import android.app.Activity;
+import android.app.FragmentManager;
+import android.content.IntentFilter;
+import android.os.Bundle;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.ImageView;
+import android.widget.TextView;
 
 import com.kyloth.serleena.BuildConfig;
+import com.kyloth.serleena.R;
 import com.kyloth.serleena.model.ITrack;
 import com.kyloth.serleena.presentation.ITelemetryPresenter;
 import com.kyloth.serleena.presenters.ISerleenaActivity;
 import com.kyloth.serleena.model.IExperience;
 import com.kyloth.serleena.model.ISerleenaDataSource;
 import com.kyloth.serleena.sensors.ISensorManager;
+import com.kyloth.serleena.sensors.TrackAlreadyStartedException;
 
 import junit.framework.Assert;
 
@@ -99,27 +109,49 @@ public class TelemetryFragmentTest {
 
     @Before
     public void initialize() {
-        activity = Robolectric.buildActivity(TestActivity.class).
-                create().get();
+        activity = Robolectric.buildActivity(TestActivity.class).create().get();
         Assert.assertNotNull("initialization failed", activity);
         fragment = new TelemetryFragment();
-        //FragmentManager fm = activity.getFragmentManager();
-        //fm.beginTransaction().add(fragment,"TEST").commit();
-        //Assert.assertEquals("fragment not attached",fragment.getActivity(),activity);
+        FragmentManager fm = activity.getFragmentManager();
+        fm.beginTransaction().add(fragment,"TEST").commit();
+        Assert.assertEquals(fragment.getActivity(), activity);
+        presenter = mock(ITelemetryPresenter.class);
+        fragment.attachPresenter(presenter);
     }
 
     /**
-     * Verifica che sia possibile collegare un ITrackPresenter ad un
-     * TrackFragment.
-     *
+     * Verifica che i metodi resume() e pause() del presenter vengano
+     * chiamati correttamente.
      */
     @Test
     public void testAttachCompassPresenter() {
-        presenter = mock(ITelemetryPresenter.class);
-        fragment.attachPresenter(presenter);
         fragment.onResume();
-        fragment.onPause();
         verify(presenter).resume();
+        fragment.onPause();
         verify(presenter).pause();
     }
+
+    /**
+     * Verifica che la distruzione del Fragment interrompa il Tracciamento,
+     * che altrimenti continuerebbe anche dopo il termine dell'applicazione.
+     */
+    @Test
+    public void destroyingFragmentShouldDisableTelemetry() {
+        fragment.onDestroy();
+        verify(presenter).disableTelemetry();
+    }
+
+    @Test
+    public void presenterShouldBeNotifiedWhenUserClicks() throws
+            TrackAlreadyStartedException {
+        fragment.onClick(mock(View.class));
+        verify(presenter).enableTelemetry();
+        fragment.onClick(mock(View.class));
+        verify(presenter).disableTelemetry();
+        fragment.onClick(mock(View.class));
+        verify(presenter, times(2)).enableTelemetry();
+        fragment.onClick(mock(View.class));
+        verify(presenter, times(2)).disableTelemetry();
+    }
+
 }
