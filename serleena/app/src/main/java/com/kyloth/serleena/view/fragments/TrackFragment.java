@@ -89,6 +89,8 @@ public class TrackFragment extends Fragment implements ITrackView {
             @Override
             public void advanceCheckpoint() throws NoTrackCrossingException { }
             @Override
+            public void abortTrack() { }
+            @Override
             public void resume() { }
             @Override
             public void pause() { }

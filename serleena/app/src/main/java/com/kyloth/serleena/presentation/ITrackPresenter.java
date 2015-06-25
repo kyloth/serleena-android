@@ -61,4 +61,5 @@ public interface ITrackPresenter extends IPresenter {
 	 */
 	void advanceCheckpoint() throws NoTrackCrossingException;
 
+	void abortTrack();
 }

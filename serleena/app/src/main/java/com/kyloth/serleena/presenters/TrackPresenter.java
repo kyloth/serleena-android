@@ -356,4 +356,9 @@ public class TrackPresenter implements ITrackPresenter, ITrackCrossingObserver,
         }
     }
 
+    @Override
+    public void abortTrack() {
+        tc.abort();
+    }
+
 }
