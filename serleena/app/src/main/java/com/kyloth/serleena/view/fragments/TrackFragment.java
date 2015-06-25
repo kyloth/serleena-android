@@ -234,6 +234,15 @@ public class TrackFragment extends Fragment implements ITrackView {
     }
 
     /**
+     * Ridefinisce Fragment.onDestroy().
+     */
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        presenter.abortTrack();
+    }
+
+    /**
      * Ridefinisce Object.toString().
      */
     @Override
