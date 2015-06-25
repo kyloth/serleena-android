@@ -49,6 +49,7 @@ import com.kyloth.serleena.model.ITrack;
 import static org.mockito.Mockito.*;
 import static org.junit.Assert.*;
 
+import org.junit.Before;
 import org.junit.Test;
 
 import java.util.Iterator;
@@ -61,7 +62,13 @@ import java.util.Iterator;
  */
 public class TrackCrossingTest {
 
-    private ITrack getTrack() {
+    TrackCrossing tc;
+    ILocationReachedManager locReaMan;
+    ITrack track;
+    ITrack oneCheckpointTrack;
+
+    @Before
+    public void initialize() {
         DirectAccessList<Checkpoint> checkpoints =
                 new DirectAccessList<Checkpoint>() {
                     @Override public int size() { return Integer.MAX_VALUE; }
@@ -72,14 +79,10 @@ public class TrackCrossingTest {
                         return null;
                     }
                 };
-        ITrack track = mock(ITrack.class);
+        track = mock(ITrack.class);
         when(track.getCheckpoints()).thenReturn(checkpoints);
-        return track;
-    }
 
-    private ITrack getOneCheckpointTrack() {
-        DirectAccessList<Checkpoint> checkpoints =
-                new DirectAccessList<Checkpoint>() {
+        checkpoints = new DirectAccessList<Checkpoint>() {
                     @Override public int size() { return 1; }
                     @Override public Checkpoint get(int index) {
                         return new Checkpoint(0,0);
@@ -88,13 +91,11 @@ public class TrackCrossingTest {
                         return null;
                     }
                 };
-        ITrack track = mock(ITrack.class);
-        when(track.getCheckpoints()).thenReturn(checkpoints);
-        return track;
-    }
+        oneCheckpointTrack = mock(ITrack.class);
+        when(oneCheckpointTrack.getCheckpoints()).thenReturn(checkpoints);
 
-    private TrackCrossing getTrackCrossing() {
-        return new TrackCrossing(mock(ILocationReachedManager.class));
+        locReaMan = mock(ILocationReachedManager.class);
+        tc = new TrackCrossing(locReaMan);
     }
 
     /**
@@ -107,8 +108,7 @@ public class TrackCrossingTest {
         ITrackCrossingObserver o2 = mock(ITrackCrossingObserver.class);
         ITrackCrossingObserver o3 = mock(ITrackCrossingObserver.class);
 
-        TrackCrossing tc = getTrackCrossing();
-        tc.startTrack(getTrack());
+        tc.startTrack(track);
 
         tc.attachObserver(o1);
         tc.attachObserver(o2);
@@ -125,8 +125,7 @@ public class TrackCrossingTest {
     @Test
     public void testThatCheckpointsAreCrossedCorrectly()
             throws NoSuchCheckpointException, NoTrackCrossingException {
-        TrackCrossing tc = getTrackCrossing();
-        tc.startTrack(getTrack());
+        tc.startTrack(track);
 
         ITrackCrossingObserver observer = mock(ITrackCrossingObserver.class);
         tc.attachObserver(observer);
@@ -160,8 +159,7 @@ public class TrackCrossingTest {
     @Test(expected = NoSuchCheckpointException.class)
     public void testTrackLowerLimits()
             throws NoSuchCheckpointException {
-        TrackCrossing tc = getTrackCrossing();
-        tc.startTrack(getTrack());
+        tc.startTrack(track);
         tc.getLastCrossed();
     }
 
@@ -172,8 +170,7 @@ public class TrackCrossingTest {
     @Test(expected = NoTrackCrossingException.class)
     public void testTrackUpperLimits()
             throws NoTrackCrossingException {
-        TrackCrossing tc = getTrackCrossing();
-        tc.startTrack(getOneCheckpointTrack());
+        tc.startTrack(oneCheckpointTrack);
         tc.onLocationReached();
         tc.getNextCheckpoint();
     }
@@ -184,7 +181,6 @@ public class TrackCrossingTest {
      */
     @Test(expected = IllegalArgumentException.class)
     public void testThatNullTrackThrow() {
-        TrackCrossing tc = getTrackCrossing();
         tc.startTrack(null);
     }
 
@@ -204,8 +200,7 @@ public class TrackCrossingTest {
     @Test
     public void testThatLastPartialIsZeroAtBeginningOfTrack()
             throws NoTrackCrossingException {
-        TrackCrossing tc = getTrackCrossing();
-        tc.startTrack(getTrack());
+        tc.startTrack(track);
         assertTrue(tc.lastPartialTime() == 0);
     }
 
@@ -216,7 +211,6 @@ public class TrackCrossingTest {
     @Test(expected = NoTrackCrossingException.class)
     public void testThatLastPartialForAbortedTrackThrows1()
             throws NoTrackCrossingException {
-        TrackCrossing tc = getTrackCrossing();
         tc.lastPartialTime();
     }
 
@@ -226,7 +220,6 @@ public class TrackCrossingTest {
      */
     @Test
     public void testThatAttachingOrDetachingMultipleTimesDoesntThrows() {
-        TrackCrossing tc = getTrackCrossing();
         ITrackCrossingObserver observer = mock(ITrackCrossingObserver.class);
         tc.attachObserver(observer);
         tc.attachObserver(observer);
@@ -241,7 +234,6 @@ public class TrackCrossingTest {
     @Test(expected = NoTrackCrossingException.class)
     public void testThatAdvancingCheckpointWithNoActiveTrackThrows()
             throws NoTrackCrossingException {
-        TrackCrossing tc = getTrackCrossing();
         tc.advanceCheckpoint();
     }
 
@@ -252,7 +244,6 @@ public class TrackCrossingTest {
     @Test(expected = NoTrackCrossingException.class)
     public void testThatNotifyingObserversWithNoActiveTrackThrows()
             throws NoTrackCrossingException {
-        TrackCrossing tc = getTrackCrossing();
         tc.notifyObservers();
     }
 
@@ -263,7 +254,6 @@ public class TrackCrossingTest {
     @Test(expected = NoTrackCrossingException.class)
     public void testThatNextCheckpointWithNoActiveTrackThrows()
             throws NoTrackCrossingException {
-        TrackCrossing tc = getTrackCrossing();
         tc.getNextCheckpoint();
     }
 
@@ -278,11 +268,10 @@ public class TrackCrossingTest {
     @Test
     public void testGetTrack() throws
             NoTrackCrossingException {
-        ITrack track = getOneCheckpointTrack();
         TrackCrossing tc = new TrackCrossing(mock(ILocationReachedManager
                 .class));
-        tc.startTrack(track);
-        assertTrue(tc.getTrack() == track);
+        tc.startTrack(oneCheckpointTrack);
+        assertTrue(tc.getTrack() == oneCheckpointTrack);
     }
 
 }
