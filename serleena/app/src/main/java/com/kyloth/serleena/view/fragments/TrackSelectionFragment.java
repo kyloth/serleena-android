@@ -103,7 +103,7 @@ public class TrackSelectionFragment extends ListFragment
         ArrayList<ITrack> list = new ArrayList<ITrack>();
         for (ITrack t : tracks)
             list.add(t);
-        this.tracks = (ITrack[]) list.toArray();
+        this.tracks = list.toArray(new ITrack[list.size()]);
 
         if (getActivity() != null)
             setListAdapter(new ArrayAdapter<ITrack>(getActivity(),
