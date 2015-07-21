@@ -1,0 +1,40 @@
+{
+    "type": "array",
+    "items": {
+        "type": "object",
+        "parameters": {
+            "experience": "string",
+            "userPoints": {
+                "type": "object",
+                "parameters": {
+                    "x": "number",
+                    "y": "number"
+                }
+            },
+            "telemetryData": {
+                "type": "array",
+                "items": {
+                    "type": "object",
+                    "track": "string",
+                    "properties": {
+                        "events": {
+                            "type": "array",
+                            "items": {
+                                "type": "object",
+                                "properties": {
+                                    "type": {
+                                        "enum": [
+                                            "heart",
+                                            "checkpoint"
+                                        ]
+                                    },
+                                    "time": "number"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+}

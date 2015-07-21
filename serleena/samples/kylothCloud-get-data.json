@@ -1,0 +1,194 @@
+{
+    "type": "object",
+    "properties": {
+        "experiences": {
+            "type": "array",
+            "items": {
+                "type": "object",
+                "properties": {
+                    "name": "string",
+                    "boundingRect": {
+                        "type": "object",
+                        "properties": {
+                            "topLeft": {
+                                "type": "object",
+                                "properties": {
+                                    "x": "number",
+                                    "y": "number"
+                                }
+                            },
+                            "bottomRight": {
+                                "type": "object",
+                                "properties": {
+                                    "x": "number",
+                                    "y": "number"
+                                }
+                            }
+                        }
+                    },
+                    "rasterData": {
+                        "type": "array",
+                        "items": {
+                            "type": "object",
+                            "properties": {
+                                "id": "string",
+                                "data": "string",
+                                "topLeft": {
+                                    "type": "object",
+                                    "properties": {
+                                        "x": "number",
+                                        "y": "number"
+                                    }
+                                },
+                                "bottomRight": {
+                                    "type": "object",
+                                    "properties": {
+                                        "x": "number",
+                                        "y": "number"
+                                    }
+                                },
+                                "up": [
+                                    "string",
+                                    null
+                                ],
+                                "down": [
+                                    "string",
+                                    null
+                                ],
+                                "left": [
+                                    "string",
+                                    null
+                                ],
+                                "right": [
+                                    "string",
+                                    null
+                                ]
+                            }
+                        }
+                    },
+                    "user_points": {
+                        "type": "array",
+                        "items": {
+                            "type": "object",
+                            "properties": {
+                                "x": "number",
+                                "y": "number",
+                                "name": [
+                                    "string",
+                                    null
+                                ]
+                            }
+                        }
+                    },
+                    "tracks": {
+                        "type": "array",
+                        "items": {
+                            "type": "object",
+                            "properties": {
+                                "name": "string",
+                                "checkPoints": {
+                                    "type": "array",
+                                    "items": {
+                                        "type": "object",
+                                        "properties": {
+                                            "id": "number",
+                                            "x": "number",
+                                            "y": "number"
+                                        }
+                                    }
+                                },
+                                "bestTelemetry": {
+                                    "type": "object",
+                                    "properties": {
+                                        "events": {
+                                            "type": "array",
+                                            "items": {
+                                                "type": "object",
+                                                "properties": {
+                                                    "type": {
+                                                        "enum": [
+                                                            "heart",
+                                                            "checkpoint"
+                                                        ]
+                                                    },
+                                                    "time": "number"
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "weatherData": {
+            "type": "array",
+            "items": {
+                "type": "object",
+                "properties": {
+                    "time": "string",
+                    "temperature": "number",
+                    "condition": {
+                        "enum": [
+                            "rainy",
+                            "sunny",
+                            "cloudy",
+                            "fair",
+                            "snowy",
+                            "foggy"
+                        ]
+                    },
+                    "boundingRect": {
+                        "type": "object",
+                        "properties": {
+                            "topLeft": {
+                                "type": "object",
+                                "properties": {
+                                    "x": "number",
+                                    "y": "number"
+                                }
+                            },
+                            "bottomRight": {
+                                "type": "object",
+                                "properties": {
+                                    "x": "number",
+                                    "y": "number"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "emergencyData": {
+            "type": "array",
+            "items": {
+                "type": "object",
+                "properties": {
+                    "number": "string",
+                    "boundingRect": {
+                        "type": "object",
+                        "properties": {
+                            "topLeft": {
+                                "type": "object",
+                                "properties": {
+                                    "x": "number",
+                                    "y": "number"
+                                }
+                            },
+                            "bottomRight": {
+                                "type": "object",
+                                "properties": {
+                                    "x": "number",
+                                    "y": "number"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+}
