@@ -29,8 +29,8 @@
 
 
 /**
- * Name: IDataEntity
- * Package: com.hitchikers.serleena.presentation
+ * Name: ExperienceEntity.java
+ * Package: com.hitchikers.serleena.synchronization
  * Author: Tobia Tesan <tobia.tesan@gmail.com>
  *
  * History:
@@ -40,8 +40,20 @@
 
 package com.kyloth.serleena.synchronization;
 
+import com.kyloth.serleena.common.IQuadrant;
+import com.kyloth.serleena.common.UserPoint;
+
+import java.util.Collection;
+
 /**
- * Interfaccia per formato di scambio intermedio e agnostico tra Builder.
+ * Struct rappresentante un'esperienza
  */
-public interface IDataEntity {
+public class ExperienceEntity implements IDataEntity {
+	Collection<TrackEntity> tracks;
+	String name;
+	RasterDataEntity rasterData;
+	IQuadrant region;
+	Collection<UserPoint> userPoints;
+	// TODO: Il nostro UserPoint non ha un ID, il loro si'. Chi vince?
+	// TODO: Loro ci passano PointsOfInterest. Continuiamo a ignorarli? Cfr. SHANDROID-288
 }

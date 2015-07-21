@@ -29,8 +29,8 @@
 
 
 /**
- * Name: IDataEntity
- * Package: com.hitchikers.serleena.presentation
+ * Name: TrackEntity.java
+ * Package: com.hitchikers.serleena.synchronization
  * Author: Tobia Tesan <tobia.tesan@gmail.com>
  *
  * History:
@@ -40,8 +40,13 @@
 
 package com.kyloth.serleena.synchronization;
 
+import java.util.Collection;
+
 /**
- * Interfaccia per formato di scambio intermedio e agnostico tra Builder.
+ * Struct rappresentante un percorso
  */
-public interface IDataEntity {
+public class TrackEntity implements IDataEntity {
+	String name;
+	Collection<CheckpointEntity> checkpoints;
+	TelemetryEntity bestTelemetry;
 }

@@ -29,7 +29,7 @@
 
 
 /**
- * Name: IDataEntity
+ * Name: EmergencyDataEntity.java
  * Package: com.hitchikers.serleena.presentation
  * Author: Tobia Tesan <tobia.tesan@gmail.com>
  *
@@ -37,11 +37,15 @@
  * Version    Programmer   Changes
  * 1.0        Tobia Tesan  Creazione del file
  */
-
 package com.kyloth.serleena.synchronization;
 
+import com.kyloth.serleena.common.IQuadrant;
+
 /**
- * Interfaccia per formato di scambio intermedio e agnostico tra Builder.
+ * Created by tobia on 21/07/15.
  */
-public interface IDataEntity {
+public class EmergencyDataEntity implements IDataEntity {
+	IQuadrant rect;
+	String name;
+	int number;
 }

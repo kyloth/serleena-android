@@ -29,8 +29,8 @@
 
 
 /**
- * Name: IDataEntity
- * Package: com.hitchikers.serleena.presentation
+ * Name: TelemetryEntity.java
+ * Package: com.hitchikers.serleena.synchronization
  * Author: Tobia Tesan <tobia.tesan@gmail.com>
  *
  * History:
@@ -40,8 +40,12 @@
 
 package com.kyloth.serleena.synchronization;
 
+import java.util.Collection;
+
 /**
- * Interfaccia per formato di scambio intermedio e agnostico tra Builder.
+ * Struct rappresentante una telemetria
  */
-public interface IDataEntity {
+public class TelemetryEntity {
+	Collection<EventEntity> events;
+	int id;
 }

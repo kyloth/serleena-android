@@ -29,8 +29,8 @@
 
 
 /**
- * Name: IDataEntity
- * Package: com.hitchikers.serleena.presentation
+ * Name: WeatherDataEntity.java
+ * Package: com.hitchikers.serleena.synchronization
  * Author: Tobia Tesan <tobia.tesan@gmail.com>
  *
  * History:
@@ -40,8 +40,17 @@
 
 package com.kyloth.serleena.synchronization;
 
+import com.kyloth.serleena.common.IQuadrant;
+import com.kyloth.serleena.persistence.WeatherForecastEnum;
+
+import java.util.Date;
+
 /**
- * Interfaccia per formato di scambio intermedio e agnostico tra Builder.
+ * Struct rappresentante una previsione metereologica
  */
-public interface IDataEntity {
+public class WeatherDataEntity implements IDataEntity {
+	WeatherForecastEnum forecast;
+	IQuadrant boundingRect;
+	float temperature;
+	Date date;
 }

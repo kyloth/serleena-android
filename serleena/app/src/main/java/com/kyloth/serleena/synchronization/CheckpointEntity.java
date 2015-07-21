@@ -29,8 +29,8 @@
 
 
 /**
- * Name: IDataEntity
- * Package: com.hitchikers.serleena.presentation
+ * Name: CheckPointEntity.java
+ * Package: com.hitchikers.serleena.synchronization
  * Author: Tobia Tesan <tobia.tesan@gmail.com>
  *
  * History:
@@ -40,8 +40,12 @@
 
 package com.kyloth.serleena.synchronization;
 
+import com.kyloth.serleena.common.GeoPoint;
+
 /**
- * Interfaccia per formato di scambio intermedio e agnostico tra Builder.
+ * Struct rappresentante un checkpoint
  */
-public interface IDataEntity {
+public class CheckpointEntity implements IDataEntity {
+	GeoPoint point;
+	int id;
 }

@@ -29,8 +29,8 @@
 
 
 /**
- * Name: IDataEntity
- * Package: com.hitchikers.serleena.presentation
+ * Name: RasterDataEntity.java
+ * Package: com.hitchikers.serleena.synchronization
  * Author: Tobia Tesan <tobia.tesan@gmail.com>
  *
  * History:
@@ -41,7 +41,7 @@
 package com.kyloth.serleena.synchronization;
 
 /**
- * Interfaccia per formato di scambio intermedio e agnostico tra Builder.
+ * Struct rappresentante ua mappa raster
  */
-public interface IDataEntity {
+public class RasterDataEntity implements IDataEntity {
 }

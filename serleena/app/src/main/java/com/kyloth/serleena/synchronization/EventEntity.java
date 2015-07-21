@@ -29,8 +29,8 @@
 
 
 /**
- * Name: IDataEntity
- * Package: com.hitchikers.serleena.presentation
+ * Name: EventEntity.java
+ * Package: com.hitchikers.serleena.synchronization
  * Author: Tobia Tesan <tobia.tesan@gmail.com>
  *
  * History:
@@ -40,8 +40,13 @@
 
 package com.kyloth.serleena.synchronization;
 
+import java.util.Date;
+
 /**
- * Interfaccia per formato di scambio intermedio e agnostico tra Builder.
+ * Struct rappresentante un'evento
  */
-public interface IDataEntity {
+public class EventEntity {
+	int type;
+	Date time;
+	float value;
 }
