@@ -55,14 +55,14 @@ public interface IRegion {
      *
      * @return Primo punto geografico.
      */
-    GeoPoint getNorthEastPoint();
+    GeoPoint getNorthWestPoint();
 
     /**
      * Restituisce il punto a sud-ovest dell'area geografica.
      *
      * @return Secondo punto geografico
      */
-    GeoPoint getSouthWestPoint();
+    GeoPoint getSouthEastPoint();
 
     /**
      * Restituisce true se il punto geografico specificato è contenuto

@@ -143,8 +143,8 @@ public class SerleenaSQLiteDataSourceTest {
         GeoPoint p = new GeoPoint(-90.0 + SerleenaSQLiteDataSource.QUADRANT_LATSIZE / 2.0,
                                   -180.0 + SerleenaSQLiteDataSource.QUADRANT_LONGSIZE / 2.0);
         Quadrant q = (Quadrant) sds.getQuadrant(p);
-        GeoPoint first = q.getNorthEastPoint();
-        GeoPoint second = q.getSouthWestPoint();
+        GeoPoint first = q.getNorthWestPoint();
+        GeoPoint second = q.getSouthEastPoint();
         assertTrue(first.latitude() == -90.0);
         assertTrue(first.longitude() == -180.0);
         assertTrue(second.latitude() == -90.0 + SerleenaSQLiteDataSource.QUADRANT_LATSIZE);
@@ -160,8 +160,8 @@ public class SerleenaSQLiteDataSourceTest {
         GeoPoint p = new GeoPoint(-90.0 + SerleenaSQLiteDataSource.QUADRANT_LATSIZE,
                                   -180.0 + SerleenaSQLiteDataSource.QUADRANT_LONGSIZE);
         Quadrant q = (Quadrant) sds.getQuadrant(p);
-        GeoPoint first = q.getNorthEastPoint();
-        GeoPoint second = q.getSouthWestPoint();
+        GeoPoint first = q.getNorthWestPoint();
+        GeoPoint second = q.getSouthEastPoint();
         assertTrue(first.latitude() == -90.0
                    && second.latitude() == -90.0 + SerleenaSQLiteDataSource.QUADRANT_LATSIZE ||
                    first.latitude() == -90.0 + SerleenaSQLiteDataSource.QUADRANT_LATSIZE
@@ -180,14 +180,14 @@ public class SerleenaSQLiteDataSourceTest {
         for (int x = -180; x < 180; x++) {
             for (int y = -90; y <= 90; y++) {
                 IQuadrant quad = sds.getQuadrant(new GeoPoint(y, x));
-                assertTrue(quad.getNorthEastPoint().latitude() >= -90);
-                assertTrue(quad.getNorthEastPoint().latitude() <= +90);
-                assertTrue(quad.getNorthEastPoint().longitude() >= -180);
-                assertTrue(quad.getNorthEastPoint().longitude() < 180);
-                assertTrue(quad.getSouthWestPoint().latitude() >= -90);
-                assertTrue(quad.getSouthWestPoint().latitude() <= +90);
-                assertTrue(quad.getSouthWestPoint().longitude() >= -180);
-                assertTrue(quad.getSouthWestPoint().longitude() < 180);
+                assertTrue(quad.getNorthWestPoint().latitude() >= -90);
+                assertTrue(quad.getNorthWestPoint().latitude() <= +90);
+                assertTrue(quad.getNorthWestPoint().longitude() >= -180);
+                assertTrue(quad.getNorthWestPoint().longitude() < 180);
+                assertTrue(quad.getSouthEastPoint().latitude() >= -90);
+                assertTrue(quad.getSouthEastPoint().latitude() <= +90);
+                assertTrue(quad.getSouthEastPoint().longitude() >= -180);
+                assertTrue(quad.getSouthEastPoint().longitude() < 180);
             }
         }
     }
@@ -200,10 +200,10 @@ public class SerleenaSQLiteDataSourceTest {
         for (int x = -180; x < 180; x++) {
             for (int y = -90; y <= 90; y++) {
                 IQuadrant quad = sds.getQuadrant(new GeoPoint(y, x));
-                assertTrue(quad.getNorthEastPoint().latitude() < quad.getSouthWestPoint().latitude());
-                assertTrue(quad.getNorthEastPoint().longitude() < quad.getSouthWestPoint().longitude() ||
-                                quad.getNorthEastPoint().longitude() > quad.getSouthWestPoint().longitude() &&
-                                quad.getNorthEastPoint().longitude() < quad.getSouthWestPoint().longitude() + 360.0
+                assertTrue(quad.getNorthWestPoint().latitude() < quad.getSouthEastPoint().latitude());
+                assertTrue(quad.getNorthWestPoint().longitude() < quad.getSouthEastPoint().longitude() ||
+                                quad.getNorthWestPoint().longitude() > quad.getSouthEastPoint().longitude() &&
+                                quad.getNorthWestPoint().longitude() < quad.getSouthEastPoint().longitude() + 360.0
                 );
             }
         }

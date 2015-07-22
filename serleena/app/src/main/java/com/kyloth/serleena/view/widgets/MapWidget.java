@@ -113,12 +113,12 @@ public class MapWidget extends ImageView {
             }
 
             @Override
-            public GeoPoint getNorthEastPoint() {
+            public GeoPoint getNorthWestPoint() {
                 return new GeoPoint(30, 30);
             }
 
             @Override
-            public GeoPoint getSouthWestPoint() {
+            public GeoPoint getSouthEastPoint() {
                 return new GeoPoint(10, 10);
             }
 
@@ -211,15 +211,15 @@ public class MapWidget extends ImageView {
     }
 
     private float getTop(GeoPoint point) {
-        double topLat = quadrant.getNorthEastPoint().latitude();
-        double botLat = quadrant.getSouthWestPoint().latitude();
+        double topLat = quadrant.getNorthWestPoint().latitude();
+        double botLat = quadrant.getSouthEastPoint().latitude();
         double height = getMeasuredHeight();
         return (float)(height*(topLat - point.latitude()) / (topLat - botLat));
     }
 
     private float getLeft(GeoPoint point) {
-        double topLon = quadrant.getNorthEastPoint().longitude();
-        double botLon = quadrant.getSouthWestPoint().longitude();
+        double topLon = quadrant.getNorthWestPoint().longitude();
+        double botLon = quadrant.getSouthEastPoint().longitude();
         double width = getMeasuredWidth();
         return (float)(width * (topLon-point.longitude()) / (topLon - botLon));
     }

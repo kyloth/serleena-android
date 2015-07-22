@@ -29,7 +29,7 @@
 
 
 /**
- * Name: Quadrant.java
+ * Name: Region.java
  * Package: com.kyloth.serleena.common
  * Author: Tobia Tesan
  *
@@ -38,43 +38,79 @@
  * 1.0.0    Tobia Tesan  Creazione file e scrittura di codice
  *                                          e documentazione in Javadoc.
  */
+
 package com.kyloth.serleena.common;
 
-import android.graphics.Bitmap;
-
+//TODO: E' usato dal sync, dove altro? Se ci sono coppie di GeoPoint sfuse si potrebbe volerle rimpiazzare?
 /**
- * Classe che realizza l'interfaccia IQuadrant.
+ * Classe che realizza l'interfaccia IRegion
  *
- * @use Viene istanziato da persistence.sqlite.SerleenaSQLiteDataSource e restituito al chiamante dietro interfaccia.
+ * @use TODO
  * @field northWest : GeoPoint Punto a nord-est del rettangolo che individua l'area del quadrante
  * @field southEast : GeoPoint Punto a sud-ovest del rettangolo che individua l'area del quadrante
- * @field raster : Bitmap Immagine raster della porzione di mappa associata al quadrante
  * @author Tobia Tesan <tobia.tesan@gmail.com>
  * @version 1.0
  */
-public class Quadrant extends Region implements IQuadrant {
-    private Bitmap raster;
+
+public class Region implements IRegion {
+    private GeoPoint northWest;
+    private GeoPoint southEast;
 
     /**
-     * Crea un oggetto Quadrant.
+     * Crea un oggetto Region
      *
      * @param northWest
      * @param southEast
-     * @param raster L'immagine raster della mappa per il quadrante. Puo'
-     *               essere null.
-     * @throws IllegalArgumentException E' lanciata quando northEast o
+     * @throws IllegalArgumentException E' lanciata quando northWest o
      *               southEast sono null
      */
-    public Quadrant(GeoPoint northWest, GeoPoint southEast, Bitmap raster) throws IllegalArgumentException {
-        super(northWest, southEast);
-        this.raster = raster;
+    public Region(GeoPoint northWest, GeoPoint southEast) throws IllegalArgumentException {
+        if (northWest == null || southEast == null) {
+            throw new IllegalArgumentException();
+        }
+        this.northWest = northWest;
+        this.southEast = southEast;
     }
 
     /**
-     * Implementa IQuadrant.getRaster().
+     * Restituisce il punto a nord-est dell'area geografica.
+     *
+     * @return Primo punto geografico.
      */
     @Override
-    public Bitmap getRaster() {
-        return raster;
+    public GeoPoint getNorthWestPoint() {
+        return northWest;
     }
+
+    /**
+     * Restituisce il punto a sud-ovest dell'area geografica.
+     *
+     * @return Secondo punto geografico
+     */
+    @Override
+    public GeoPoint getSouthEastPoint() {
+        return southEast;
+    }
+
+    /**
+     * Verifica se un punto e' contenuto nella Region.
+     *
+     * @param p Punto geografico. Se null, viene sollevata un'eccezione
+     *          IllegalArgumentException.
+     * @return True se p e' contenuto nella regione
+     * @throws IllegalArgumentException se p e' null
+     */
+    @Override
+    public boolean contains(GeoPoint p) throws IllegalArgumentException {
+        if (p == null) {
+            throw new IllegalArgumentException();
+        }
+        return (
+                northWest.latitude() <= p.latitude() &&
+                        p.latitude() <= southEast.latitude() &&
+                        northWest.longitude() <= p.longitude() &&
+                        p.longitude() <= southEast.longitude()
+        );
+    }
+
 }
