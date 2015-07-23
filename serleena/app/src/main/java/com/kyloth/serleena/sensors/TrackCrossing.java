@@ -141,7 +141,9 @@ public final class TrackCrossing implements ITrackCrossing,
     @Override
     public synchronized void advanceCheckpoint()
             throws NoTrackCrossingException {
-        locReachMan.detachObserver(this);
+        locReachMan.detachObserver(
+                this,
+                track.getCheckpoints().get(nextCheckpointIndex));
         myAdvanceCheckpoint();
     }
 
