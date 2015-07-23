@@ -60,7 +60,7 @@ class LocationReachedManager
     public static final int LOCATION_RADIUS = 100;
     public static final int LOCATION_UPDATE_INTERVAL = 60;
 
-    private final Map<ILocationReachedObserver, GeoPoint> observers;
+    private final List<LocationReachedRequest> requests;
     private final IBackgroundLocationManager bkgrLocMan;
 
     /**
@@ -76,7 +76,7 @@ class LocationReachedManager
             throw new IllegalArgumentException("Illegal location manager");
 
         this.bkgrLocMan = bkgrLocMan;
-        this.observers = new HashMap<>();
+        this.requests = new ArrayList<>();
     }
 
     /**
@@ -98,8 +98,8 @@ class LocationReachedManager
         if (location == null)
             throw new IllegalArgumentException("Illegal null location");
 
-        observers.put(observer, location);
-        if (observers.size() == 1)
+        requests.add(new LocationReachedRequest(observer, location));
+        if (requests.size() == 1)
             bkgrLocMan.attachObserver(this, LOCATION_UPDATE_INTERVAL);
     }
 
@@ -111,16 +111,35 @@ class LocationReachedManager
      * @throws IllegalArgumentException
      */
     @Override
-    public synchronized void detachObserver(ILocationReachedObserver observer)
+    public synchronized void detachObserver(ILocationReachedObserver observer,
+                                            GeoPoint location)
             throws IllegalArgumentException {
         if (observer == null)
             throw new IllegalArgumentException("Illegal null observer");
-        if (observers.containsKey(observer)) {
-            observers.remove(observer);
+        if (location == null)
+            throw new IllegalArgumentException("Illegal null location");
 
-            if (observers.size() == 0)
+        LocationReachedRequest request =
+                new LocationReachedRequest(observer, location);
+        if (requests.contains(request)) {
+            requests.remove(request);
+            if (requests.size() == 0)
                 bkgrLocMan.detachObserver(this);
         }
+    }
+
+    @Override
+    public void detachObserver(ILocationReachedObserver observer) {
+        if (observer == null)
+            throw new IllegalArgumentException("Illegal null observer");
+        List<LocationReachedRequest> toRemove = new ArrayList<>();
+        for (LocationReachedRequest request : requests)
+            if (request.observer().equals(observer))
+                toRemove.add(request);
+        for (LocationReachedRequest request : toRemove)
+            requests.remove(request);
+        if (requests.size() == 0)
+            bkgrLocMan.detachObserver(this);
     }
 
     /**
@@ -133,19 +152,18 @@ class LocationReachedManager
      */
     @Override
     public void onLocationUpdate(GeoPoint loc) {
-        List<ILocationReachedObserver> toRemove = new ArrayList<>();
+        List<LocationReachedRequest> toRemove = new ArrayList<>();
 
-        for (Map.Entry<ILocationReachedObserver, GeoPoint> e
-                : observers.entrySet())
-            if (loc.distanceTo(e.getValue()) < LOCATION_RADIUS)
-                toRemove.add(e.getKey());
+        for (LocationReachedRequest request : requests)
+            if (request.location().distanceTo(loc) < LOCATION_RADIUS)
+                toRemove.add(request);
 
-        for (ILocationReachedObserver o : toRemove) {
-            o.onLocationReached();
-            observers.remove(o);
+        for (LocationReachedRequest request : toRemove) {
+            request.observer().onLocationReached();
+            requests.remove(request);
         }
 
-        if (observers.size() == 0)
+        if (requests.size() == 0)
             bkgrLocMan.detachObserver(this);
     }
 
