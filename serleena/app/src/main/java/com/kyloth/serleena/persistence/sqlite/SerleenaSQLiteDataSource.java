@@ -472,14 +472,14 @@ public class SerleenaSQLiteDataSource implements ISerleenaSQLiteDataSource {
         SQLiteDatabase db = dbHelper.getReadableDatabase();
         ArrayList<EmergencyContact> list = new ArrayList<EmergencyContact>();
 
-        String where = "(contact_ne_corner_latitude + 90) <= " +
-                (location.latitude() + 90) + " AND " +
-                "(contact_ne_corner_longitude + 180) <= " +
-                (location.longitude() + 180) + " AND " +
-                "(contact_sw_corner_latitude + 90) >= " +
-                (location.latitude() + 90) + " AND " +
-                "(contact_sw_corner_longitude + 180) >= " +
-                (location.longitude() + 180);
+        String where = "`contact_ne_corner_latitude` <= " +
+                location.latitude() + " AND " +
+                "`contact_ne_corner_longitude` <= " +
+                location.longitude() + " AND " +
+                "`contact_sw_corner_latitude` >= " +
+                location.latitude() + " AND " +
+                "`contact_sw_corner_longitude` >= " +
+                location.longitude();
         Cursor result = db.query(SerleenaDatabase.TABLE_CONTACTS,
                 new String[]{"contact_name", "contact_value"}, where,
                 null, null, null, null);
@@ -575,16 +575,16 @@ public class SerleenaSQLiteDataSource implements ISerleenaSQLiteDataSource {
         SQLiteDatabase db = dbHelper.getReadableDatabase();
 
         String where =
-                "weather_end >= " + startTime + " AND " +
-                "weather_start <= " + endTime + " AND " +
-                "(weather_ne_corner_latitude + 90) <= " +
-                (location.latitude() + 90) + " AND " +
-                "(weather_ne_corner_longitude + 180) <= " +
-                (location.longitude() + 180) + " AND " +
-                "(weather_sw_corner_latitude + 90) >= " +
-                (location.latitude() + 90) + " AND " +
-                "(weather_sw_corner_longitude + 180) >= " +
-                (location.longitude() + 180);
+                "`weather_end` >= " + startTime + " AND " +
+                "`weather_start` <= " + endTime + " AND " +
+                "`weather_ne_corner_latitude` <= " +
+                location.latitude() + " AND " +
+                "`weather_ne_corner_longitude` <= " +
+                location.longitude() + " AND " +
+                "`weather_sw_corner_latitude` >= " +
+                location.latitude() + " AND " +
+                "`weather_sw_corner_longitude` >= " +
+                location.longitude();
 
         Cursor result = db.query(SerleenaDatabase.TABLE_WEATHER_FORECASTS,
                 new String[] { "weather_condition", "weather_temperature" },
