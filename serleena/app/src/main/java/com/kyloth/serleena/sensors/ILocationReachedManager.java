@@ -74,7 +74,12 @@ public interface ILocationReachedManager {
      *
      * @param observer Oggetto da deregistrare ILocationReachedManager. Se null,
      *                 viene sollevata un'eccezione IllegalArgumentException.
+     * @param location Posizione geografica al raggiungimento del quale
+     *                 l'observer deve essere notificato.
      */
-    void detachObserver(ILocationReachedObserver observer)
+    void detachObserver(ILocationReachedObserver observer,
+                        GeoPoint location)
             throws IllegalArgumentException;
+
+    void detachObserver(ILocationReachedObserver observer);
 }

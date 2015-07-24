@@ -91,7 +91,7 @@ public final class TrackCrossing implements ITrackCrossing,
         this.track = track;
         nextCheckpointIndex = -1;
         try {
-            advanceCheckpoint();
+            myAdvanceCheckpoint();
         } catch (NoTrackCrossingException e) {}
     }
 
@@ -143,8 +143,15 @@ public final class TrackCrossing implements ITrackCrossing,
             throws NoTrackCrossingException {
         if (track == null)
             throw new NoTrackCrossingException();
+        locReachMan.detachObserver(
+                this,
+                track.getCheckpoints().get(nextCheckpointIndex));
+        myAdvanceCheckpoint();
+    }
 
-        locReachMan.detachObserver(this);
+    private void myAdvanceCheckpoint() throws NoTrackCrossingException {
+        if (track == null)
+            throw new NoTrackCrossingException();
 
         long now = System.currentTimeMillis() / 1000L;
         lastPartial = (int) (now - trackStartTimestamp);
@@ -207,7 +214,7 @@ public final class TrackCrossing implements ITrackCrossing,
     @Override
     public synchronized void onLocationReached() {
         try {
-            advanceCheckpoint();
+            myAdvanceCheckpoint();
         } catch (NoTrackCrossingException e) { }
     }
 

@@ -30,6 +30,7 @@
 
 package com.kyloth.serleena;
 
+import org.junit.Ignore;
 import org.junit.runner.RunWith;
 
 import java.util.Date;
@@ -48,6 +49,7 @@ import com.kyloth.serleena.common.TelemetryEventType;
 
 @RunWith(RobolectricGradleTestRunner.class)
 @Config(constants = BuildConfig.class, emulateSdk = 19)
+@Ignore
 public class TestDB {
 
     public static void experienceQuery(SQLiteDatabase db, int id, String name) {
