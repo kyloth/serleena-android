@@ -54,6 +54,7 @@ import com.kyloth.serleena.persistence.ITelemetryStorage;
 import com.kyloth.serleena.persistence.IWeatherStorage;
 import com.kyloth.serleena.persistence.WeatherForecastEnum;
 
+import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -62,6 +63,7 @@ import org.robolectric.RuntimeEnvironment;
 import org.robolectric.annotation.Config;
 
 import java.net.URISyntaxException;
+import java.util.Calendar;
 import java.util.GregorianCalendar;
 
 import static com.kyloth.serleena.persistence.sqlite.SerleenaDatabaseTestUtils.makeExperience;
@@ -405,16 +407,16 @@ public class SerleenaSQLiteDataSourceTest {
      */
     @Test
     public void testGetWeatherInfoHit()
-            throws NoSuchWeatherForecastException {
+    throws NoSuchWeatherForecastException {
         ContentValues values = new ContentValues();
         values.put("weather_start", (
-                new GregorianCalendar(2015,
-                                      GregorianCalendar.JANUARY, 01, 00, 00,
-                                      00)).getTimeInMillis() / 1000);
+                       new GregorianCalendar(2015,
+                                             GregorianCalendar.JANUARY, 01, 00, 00,
+                                             00)).getTimeInMillis() / 1000);
         values.put("weather_end", (
-                new GregorianCalendar(2015,
-                                      GregorianCalendar.JANUARY, 01, 23, 59,
-                                      59)).getTimeInMillis() / 1000);
+                       new GregorianCalendar(2015,
+                                             GregorianCalendar.JANUARY, 01, 23, 59,
+                                             59)).getTimeInMillis() / 1000);
         values.put("weather_condition", WeatherForecastEnum.Sunny.ordinal());
         values.put("weather_temperature", 1);
         values.put("weather_ne_corner_latitude", 0.0);
@@ -423,9 +425,11 @@ public class SerleenaSQLiteDataSourceTest {
         values.put("weather_sw_corner_longitude", 2.0);
         db.insertOrThrow(SerleenaDatabase.TABLE_WEATHER_FORECASTS, null, values);
         IWeatherStorage info = sds.getWeatherInfo(new GeoPoint(1.0, 1.0),
-                (new GregorianCalendar(2015,
+                               (new GregorianCalendar(2015,
                                        GregorianCalendar.JANUARY,
                                        01)).getTime());
+        assertTrue(info.getMorningForecast() == WeatherForecastEnum.Sunny);
+        assertTrue(info.getNightForecast() == WeatherForecastEnum.Sunny);
         assertTrue(info.getAfternoonForecast() == WeatherForecastEnum.Sunny);
     }
 
@@ -435,16 +439,16 @@ public class SerleenaSQLiteDataSourceTest {
      */
     @Test
     public void testGetWeatherInfoHitMargin()
-            throws NoSuchWeatherForecastException {
+    throws NoSuchWeatherForecastException {
         ContentValues values = new ContentValues();
         values.put("weather_start", (
-                new GregorianCalendar(2015,
-                                      GregorianCalendar.JANUARY, 01, 00, 00,
-                                      00)).getTimeInMillis() / 1000);
+                       new GregorianCalendar(2015,
+                                             GregorianCalendar.JANUARY, 01, 00, 00,
+                                             00)).getTimeInMillis() / 1000);
         values.put("weather_end", (
-                new GregorianCalendar(2015,
-                                      GregorianCalendar.JANUARY, 01, 23, 59,
-                                      59)).getTimeInMillis() / 1000);
+                       new GregorianCalendar(2015,
+                                             GregorianCalendar.JANUARY, 01, 23, 59,
+                                             59)).getTimeInMillis() / 1000);
         values.put("weather_condition", WeatherForecastEnum.Sunny.ordinal());
         values.put("weather_temperature", 1);
         values.put("weather_ne_corner_latitude", 0.0);
@@ -453,27 +457,294 @@ public class SerleenaSQLiteDataSourceTest {
         values.put("weather_sw_corner_longitude", 2.0);
         db.insertOrThrow(SerleenaDatabase.TABLE_WEATHER_FORECASTS, null, values);
         IWeatherStorage info = sds.getWeatherInfo(
-                new GeoPoint(0.0, 0.0), (new GregorianCalendar(2015,
-                GregorianCalendar.JANUARY, 01)).getTime());
+                                   new GeoPoint(0.0, 0.0), (new GregorianCalendar(2015,
+                                           GregorianCalendar.JANUARY, 01)).getTime());
         assertTrue(info.getAfternoonForecast() == WeatherForecastEnum.Sunny);
+    }
+
+    /**
+     * Controlla che getWeatherInfo restituisca correttamente le informazioni
+     * meteo per le specifiche zone temporali.
+     */
+    @Test
+    public void testGetWeatherInfoLocalHit()
+    throws NoSuchWeatherForecastException {
+        ContentValues morning = new ContentValues();
+        morning.put("weather_start", (
+                        new GregorianCalendar(2015,
+                                              GregorianCalendar.JANUARY, 01,
+                                              Math.max(SerleenaSQLiteDataSource.MORNING_CENTRAL_HOUR - 1, 0),
+                                              00,
+                                              00).getTimeInMillis() / 1000));
+        morning.put("weather_end", (
+                        new GregorianCalendar(2015,
+                                              GregorianCalendar.JANUARY, 01,
+                                              Math.min(SerleenaSQLiteDataSource.MORNING_CENTRAL_HOUR + 1, 24),
+                                              00,
+                                              00).getTimeInMillis() / 1000));
+        morning.put("weather_condition", WeatherForecastEnum.Sunny.ordinal());
+        morning.put("weather_temperature", 1);
+        morning.put("weather_ne_corner_latitude", 0.0);
+        morning.put("weather_ne_corner_longitude", 0.0);
+        morning.put("weather_sw_corner_latitude", 2.0);
+        morning.put("weather_sw_corner_longitude", 2.0);
+
+        ContentValues afternoon = new ContentValues();
+        afternoon.put("weather_start", (
+                          new GregorianCalendar(2015,
+                                                GregorianCalendar.JANUARY, 01,
+                                                Math.max(SerleenaSQLiteDataSource.AFTERNOON_CENTRAL_HOUR - 1, 0),
+                                                00,
+                                                00).getTimeInMillis() / 1000));
+        afternoon.put("weather_end", (
+                          new GregorianCalendar(2015,
+                                                GregorianCalendar.JANUARY, 01,
+                                                Math.min(SerleenaSQLiteDataSource.AFTERNOON_CENTRAL_HOUR + 1, 24),
+                                                00,
+                                                00).getTimeInMillis() / 1000));
+        afternoon.put("weather_condition", WeatherForecastEnum.Cloudy.ordinal());
+        afternoon.put("weather_temperature", 1);
+        afternoon.put("weather_ne_corner_latitude", 0.0);
+        afternoon.put("weather_ne_corner_longitude", 0.0);
+        afternoon.put("weather_sw_corner_latitude", 2.0);
+        afternoon.put("weather_sw_corner_longitude", 2.0);
+
+        ContentValues night = new ContentValues();
+        night.put("weather_start", (
+                      new GregorianCalendar(2015,
+                                            GregorianCalendar.JANUARY, 01,
+                                            Math.max(SerleenaSQLiteDataSource.NIGHT_CENTRAL_HOUR - 1, 0),
+                                            00,
+                                            00).getTimeInMillis() / 1000));
+        night.put("weather_end", (
+                      new GregorianCalendar(2015,
+                                            GregorianCalendar.JANUARY, 01,
+                                            Math.min(SerleenaSQLiteDataSource.NIGHT_CENTRAL_HOUR + 1, 24),
+                                            00,
+                                            00).getTimeInMillis() / 1000));
+        night.put("weather_condition", WeatherForecastEnum.Stormy.ordinal());
+        night.put("weather_temperature", 1);
+        night.put("weather_ne_corner_latitude", 0.0);
+        night.put("weather_ne_corner_longitude", 0.0);
+        night.put("weather_sw_corner_latitude", 2.0);
+        night.put("weather_sw_corner_longitude", 2.0);
+
+        db.insertOrThrow(SerleenaDatabase.TABLE_WEATHER_FORECASTS, null, morning);
+        db.insertOrThrow(SerleenaDatabase.TABLE_WEATHER_FORECASTS, null, afternoon);
+        db.insertOrThrow(SerleenaDatabase.TABLE_WEATHER_FORECASTS, null, night);
+
+        IWeatherStorage weather = sds.getWeatherInfo(
+                                      new GeoPoint(0.0, 0.0),
+                                      (new GregorianCalendar(2015,
+                                              GregorianCalendar.JANUARY,
+                                              01).getTime()));
+
+
+        Assert.assertEquals(weather.getMorningForecast(), WeatherForecastEnum.Sunny);
+        Assert.assertEquals(weather.getAfternoonForecast(), WeatherForecastEnum.Cloudy);
+        Assert.assertEquals(weather.getNightForecast(), WeatherForecastEnum.Stormy);
+
+        Assert.assertFalse(weather.getAfternoonForecast() == WeatherForecastEnum.Sunny);
+        Assert.assertFalse(weather.getNightForecast() == WeatherForecastEnum.Sunny);
+
+        Assert.assertFalse(weather.getMorningForecast() == WeatherForecastEnum.Cloudy);
+        Assert.assertFalse(weather.getNightForecast() == WeatherForecastEnum.Cloudy);
+
+        Assert.assertFalse(weather.getMorningForecast() == WeatherForecastEnum.Stormy);
+        Assert.assertFalse(weather.getAfternoonForecast() == WeatherForecastEnum.Stormy);
+    }
+
+    /**
+     * Controlla che getWeatherInfo sollevi NoSuchWeatherForecastException se non riesce a
+     * trovare le informazioni meteo per SerleenaSQLiteDataSource.AFTERNOON_CENTRAL_HOUR
+     * @throws NoSuchWeatherForecastException
+     */
+    @Test(expected = NoSuchWeatherForecastException.class)
+    public void testIncompleteWeatherFailsNoAfternoon()
+    throws NoSuchWeatherForecastException {
+        ContentValues morning = new ContentValues();
+        morning.put("weather_start", (
+                        new GregorianCalendar(2015,
+                                              GregorianCalendar.JANUARY, 01,
+                                              Math.max(SerleenaSQLiteDataSource.MORNING_CENTRAL_HOUR - 1, 0),
+                                              00,
+                                              00).getTimeInMillis() / 1000));
+        morning.put("weather_end", (
+                        new GregorianCalendar(2015,
+                                              GregorianCalendar.JANUARY, 01,
+                                              Math.min(SerleenaSQLiteDataSource.MORNING_CENTRAL_HOUR + 1, 24),
+                                              00,
+                                              00).getTimeInMillis() / 1000));
+        morning.put("weather_condition", WeatherForecastEnum.Sunny.ordinal());
+        morning.put("weather_temperature", 1);
+        morning.put("weather_ne_corner_latitude", 0.0);
+        morning.put("weather_ne_corner_longitude", 0.0);
+        morning.put("weather_sw_corner_latitude", 2.0);
+        morning.put("weather_sw_corner_longitude", 2.0);
+
+        ContentValues night = new ContentValues();
+        night.put("weather_start", (
+                      new GregorianCalendar(2015,
+                                            GregorianCalendar.JANUARY, 01,
+                                            Math.max(SerleenaSQLiteDataSource.AFTERNOON_CENTRAL_HOUR - 1, 0),
+                                            00,
+                                            00).getTimeInMillis() / 1000));
+        night.put("weather_end", (
+                      new GregorianCalendar(2015,
+                                            GregorianCalendar.JANUARY, 01,
+                                            Math.min(SerleenaSQLiteDataSource.AFTERNOON_CENTRAL_HOUR + 1, 24),
+                                            00,
+                                            00).getTimeInMillis() / 1000));
+        night.put("weather_condition", WeatherForecastEnum.Stormy.ordinal());
+        night.put("weather_temperature", 1);
+        night.put("weather_ne_corner_latitude", 0.0);
+        night.put("weather_ne_corner_longitude", 0.0);
+        night.put("weather_sw_corner_latitude", 2.0);
+        night.put("weather_sw_corner_longitude", 2.0);
+
+        db.insertOrThrow(SerleenaDatabase.TABLE_WEATHER_FORECASTS, null, morning);
+        db.insertOrThrow(SerleenaDatabase.TABLE_WEATHER_FORECASTS, null, night);
+
+        IWeatherStorage weather = sds.getWeatherInfo(
+                                      new GeoPoint(0.0, 0.0),
+                                      (new GregorianCalendar(2015,
+                                              GregorianCalendar.JANUARY,
+                                              01).getTime()));
+    }
+
+    /**
+     * Controlla che getWeatherInfo sollevi NoSuchWeatherForecastException se non riesce a
+     * trovare le informazioni meteo per SerleenaSQLiteDataSource.MORNING_CENTRAL_HOUR
+     * @throws NoSuchWeatherForecastException
+     */
+    @Test(expected = NoSuchWeatherForecastException.class)
+    public void testIncompleteWeatherFailsNoMorning()
+    throws NoSuchWeatherForecastException {
+
+        ContentValues afternoon = new ContentValues();
+        afternoon.put("weather_start", (
+                          new GregorianCalendar(2015,
+                                                GregorianCalendar.JANUARY, 01,
+                                                Math.max(SerleenaSQLiteDataSource.AFTERNOON_CENTRAL_HOUR - 1, 0),
+                                                00,
+                                                00).getTimeInMillis() / 1000));
+        afternoon.put("weather_end", (
+                          new GregorianCalendar(2015,
+                                                GregorianCalendar.JANUARY, 01,
+                                                Math.min(SerleenaSQLiteDataSource.AFTERNOON_CENTRAL_HOUR + 1, 24),
+                                                00,
+                                                00).getTimeInMillis() / 1000));
+        afternoon.put("weather_condition", WeatherForecastEnum.Cloudy.ordinal());
+        afternoon.put("weather_temperature", 1);
+        afternoon.put("weather_ne_corner_latitude", 0.0);
+        afternoon.put("weather_ne_corner_longitude", 0.0);
+        afternoon.put("weather_sw_corner_latitude", 2.0);
+        afternoon.put("weather_sw_corner_longitude", 2.0);
+
+        ContentValues night = new ContentValues();
+        night.put("weather_start", (
+                      new GregorianCalendar(2015,
+                                            GregorianCalendar.JANUARY, 01,
+                                            Math.max(SerleenaSQLiteDataSource.AFTERNOON_CENTRAL_HOUR - 1, 0),
+                                            00,
+                                            00).getTimeInMillis() / 1000));
+        night.put("weather_end", (
+                      new GregorianCalendar(2015,
+                                            GregorianCalendar.JANUARY, 01,
+                                            Math.min(SerleenaSQLiteDataSource.AFTERNOON_CENTRAL_HOUR + 1, 24),
+                                            00,
+                                            00).getTimeInMillis() / 1000));
+        night.put("weather_condition", WeatherForecastEnum.Stormy.ordinal());
+        night.put("weather_temperature", 1);
+        night.put("weather_ne_corner_latitude", 0.0);
+        night.put("weather_ne_corner_longitude", 0.0);
+        night.put("weather_sw_corner_latitude", 2.0);
+        night.put("weather_sw_corner_longitude", 2.0);
+
+        db.insertOrThrow(SerleenaDatabase.TABLE_WEATHER_FORECASTS, null, afternoon);
+        db.insertOrThrow(SerleenaDatabase.TABLE_WEATHER_FORECASTS, null, night);
+
+        IWeatherStorage weather = sds.getWeatherInfo(
+                                      new GeoPoint(0.0, 0.0),
+                                      (new GregorianCalendar(2015,
+                                              GregorianCalendar.JANUARY,
+                                              01).getTime()));
+    }
+
+    /**
+     * Controlla che getWeatherInfo sollevi NoSuchWeatherForecastException se non riesce a
+     * trovare le informazioni meteo per SerleenaSQLiteDataSource.NIGHT_CENTRAL_HOUR
+     * @throws NoSuchWeatherForecastException
+     */
+    @Test(expected = NoSuchWeatherForecastException.class)
+    public void testIncompleteWeatherFailsNoNight()
+    throws NoSuchWeatherForecastException {
+        ContentValues morning = new ContentValues();
+        morning.put("weather_start", (
+                        new GregorianCalendar(2015,
+                                              GregorianCalendar.JANUARY, 01,
+                                              Math.max(SerleenaSQLiteDataSource.MORNING_CENTRAL_HOUR - 1, 0),
+                                              00,
+                                              00).getTimeInMillis() / 1000));
+        morning.put("weather_end", (
+                        new GregorianCalendar(2015,
+                                              GregorianCalendar.JANUARY, 01,
+                                              Math.min(SerleenaSQLiteDataSource.MORNING_CENTRAL_HOUR + 1, 24),
+                                              00,
+                                              00).getTimeInMillis() / 1000));
+        morning.put("weather_condition", WeatherForecastEnum.Sunny.ordinal());
+        morning.put("weather_temperature", 1);
+        morning.put("weather_ne_corner_latitude", 0.0);
+        morning.put("weather_ne_corner_longitude", 0.0);
+        morning.put("weather_sw_corner_latitude", 2.0);
+        morning.put("weather_sw_corner_longitude", 2.0);
+
+        ContentValues afternoon = new ContentValues();
+        afternoon.put("weather_start", (
+                          new GregorianCalendar(2015,
+                                                GregorianCalendar.JANUARY, 01,
+                                                Math.max(SerleenaSQLiteDataSource.AFTERNOON_CENTRAL_HOUR - 1, 0),
+                                                00,
+                                                00).getTimeInMillis() / 1000));
+        afternoon.put("weather_end", (
+                          new GregorianCalendar(2015,
+                                                GregorianCalendar.JANUARY, 01,
+                                                Math.min(SerleenaSQLiteDataSource.AFTERNOON_CENTRAL_HOUR + 1, 24),
+                                                00,
+                                                00).getTimeInMillis() / 1000));
+        afternoon.put("weather_condition", WeatherForecastEnum.Cloudy.ordinal());
+        afternoon.put("weather_temperature", 1);
+        afternoon.put("weather_ne_corner_latitude", 0.0);
+        afternoon.put("weather_ne_corner_longitude", 0.0);
+        afternoon.put("weather_sw_corner_latitude", 2.0);
+        afternoon.put("weather_sw_corner_longitude", 2.0);
+
+        db.insertOrThrow(SerleenaDatabase.TABLE_WEATHER_FORECASTS, null, afternoon);
+        db.insertOrThrow(SerleenaDatabase.TABLE_WEATHER_FORECASTS, null, morning);
+
+        IWeatherStorage weather = sds.getWeatherInfo(
+                                      new GeoPoint(0.0, 0.0),
+                                      (new GregorianCalendar(2015,
+                                              GregorianCalendar.JANUARY,
+                                              01).getTime()));
     }
 
     /**
      * Controlla che getWeatherInfo non restituisca informazioni meteo
      * della regione sbagliata, ma lanci un'eccezione.
      */
-    @Test(expected=NoSuchWeatherForecastException.class)
+    @Test(expected = NoSuchWeatherForecastException.class)
     public void testGetWeatherInfoMissRegion()
-            throws NoSuchWeatherForecastException {
+    throws NoSuchWeatherForecastException {
         ContentValues values = new ContentValues();
         values.put("weather_start", (
-                new GregorianCalendar(2015,
-                                      GregorianCalendar.JANUARY, 01, 00, 00,
-                                      00)).getTimeInMillis() / 1000);
+                       new GregorianCalendar(2015,
+                                             GregorianCalendar.JANUARY, 01, 00, 00,
+                                             00)).getTimeInMillis() / 1000);
         values.put("weather_end", (
-                new GregorianCalendar(2015,
-                                      GregorianCalendar.JANUARY, 01, 23, 59,
-                                      59)).getTimeInMillis() / 1000);
+                       new GregorianCalendar(2015,
+                                             GregorianCalendar.JANUARY, 01, 23, 59,
+                                             59)).getTimeInMillis() / 1000);
         values.put("weather_condition", WeatherForecastEnum.Sunny.ordinal());
         values.put("weather_temperature", 1);
         values.put("weather_ne_corner_latitude", 4.0);
@@ -482,27 +753,27 @@ public class SerleenaSQLiteDataSourceTest {
         values.put("weather_sw_corner_longitude", 6.0);
         db.insertOrThrow(SerleenaDatabase.TABLE_WEATHER_FORECASTS, null, values);
         IWeatherStorage info = sds.getWeatherInfo(
-                new GeoPoint(1.0, 1.0),
-                (new GregorianCalendar(2015,
-                        GregorianCalendar.JANUARY, 01)).getTime());
+                                   new GeoPoint(1.0, 1.0),
+                                   (new GregorianCalendar(2015,
+                                           GregorianCalendar.JANUARY, 01)).getTime());
     }
 
     /**
      * Controlla che getWeatherInfo non restituisca informazioni meteo
      * relative al frame temporale sbagliato, ma lanci un'eccezione.
      */
-    @Test(expected=NoSuchWeatherForecastException.class)
+    @Test(expected = NoSuchWeatherForecastException.class)
     public void testGetWeatherInfoMissTime()
-            throws NoSuchWeatherForecastException {
+    throws NoSuchWeatherForecastException {
         ContentValues values = new ContentValues();
         values.put("weather_start", (
-                new GregorianCalendar(2010,
-                                      GregorianCalendar.JANUARY, 01, 00, 00,
-                                      00)).getTimeInMillis() / 1000);
+                       new GregorianCalendar(2010,
+                                             GregorianCalendar.JANUARY, 01, 00, 00,
+                                             00)).getTimeInMillis() / 1000);
         values.put("weather_end", (
-                new GregorianCalendar(2010,
-                                      GregorianCalendar.JANUARY, 01, 23, 59,
-                                      59)).getTimeInMillis() / 1000);
+                       new GregorianCalendar(2010,
+                                             GregorianCalendar.JANUARY, 01, 23, 59,
+                                             59)).getTimeInMillis() / 1000);
         values.put("weather_condition", WeatherForecastEnum.Sunny.ordinal());
         values.put("weather_temperature", 1);
         values.put("weather_ne_corner_latitude", 0.0);
