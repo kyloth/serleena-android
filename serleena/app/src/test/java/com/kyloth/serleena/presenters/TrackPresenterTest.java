@@ -332,6 +332,11 @@ public class TrackPresenterTest {
         verify(tc).advanceCheckpoint();
     }
 
+    /**
+     * Verifica che updateDelta() segnali alla vista il valore corretto di
+     * differenza tra la prestazione in corso e la migliore tra quelle
+     * precedenti.
+     */
     @Test
     public void updateDeltaShouldWorkCorrectly()
             throws NoSuchTelemetryException, NoTrackCrossingException,
