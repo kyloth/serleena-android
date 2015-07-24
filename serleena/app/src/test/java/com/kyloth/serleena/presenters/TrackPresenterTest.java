@@ -55,8 +55,10 @@ import java.util.Iterator;
 import java.util.List;
 
 import com.android.internal.util.Predicate;
+import com.kyloth.serleena.common.AzimuthMagneticNorth;
 import com.kyloth.serleena.common.CheckpointReachedTelemetryEvent;
 import com.kyloth.serleena.common.DirectAccessList;
+import com.kyloth.serleena.common.GeoPoint;
 import com.kyloth.serleena.common.TelemetryEvent;
 import com.kyloth.serleena.model.ITelemetry;
 import com.kyloth.serleena.model.NoSuchTelemetryEventException;
@@ -358,6 +360,23 @@ public class TrackPresenterTest {
         TrackPresenter tp = new TrackPresenter(view, activity);
         tp.updateDelta();
         verify(view).setDelta(-50);
+    }
+
+    /**
+     * Verifica che il metodo updateDirection() segnali alla vista la variazione
+     * corretta di orientamento necessaria al raggiungimento del prossimo
+     * checkpoint del Percorso attivo, in base alla posizione attuale
+     * dell'utente.
+     */
+    @Test
+    public void updateDirectionShouldSetCorrectOrientation()
+            throws NoSuchTelemetryException, NoTrackCrossingException, NoSuchCheckpointException {
+        TrackPresenter presenter = new TrackPresenter(view, activity);
+        setTrackCrossing(track, -1);
+        AzimuthMagneticNorth azimuth = mock(AzimuthMagneticNorth.class);
+        when(azimuth.orientation()).thenReturn(0.0f);
+        presenter.updateDirection(new GeoPoint(10, 0), azimuth);
+        verify(view).setDirection(180);
     }
 
 }
