@@ -53,9 +53,11 @@ import com.kyloth.serleena.common.GeoPoint;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.mockito.ArgumentCaptor;
 import org.robolectric.RobolectricTestRunner;
 import org.robolectric.RuntimeEnvironment;
 
+import static junit.framework.Assert.assertEquals;
 import static junit.framework.Assert.assertTrue;
 import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.eq;
@@ -272,6 +274,21 @@ public class BackgroundLocationManagerTest {
         verify(o1, never()).onLocationUpdate(any(GeoPoint.class));
         verify(o2, never()).onLocationUpdate(any(GeoPoint.class));
         verify(o3, never()).onLocationUpdate(any(GeoPoint.class));
+    }
+
+    /**
+     * Verifica che la chiamata a onReceive, causata dalla ricezione di un
+     * wakeup dall'AlarmManager, causi l'avvio del servizio LocationService.
+     */
+    @Test
+    public void onReceiveShouldStartALocationService() {
+        manager.onReceive(contextMock, mock(Intent.class));
+        ArgumentCaptor<Intent> intentArgumentCaptor =
+                ArgumentCaptor.forClass(Intent.class);
+        verify(contextMock).startService(intentArgumentCaptor.capture());
+        assertEquals(
+                "com.kyloth.serleena.sensors.LocationService",
+                intentArgumentCaptor.getValue().getComponent().getClassName());
     }
 
 }
