@@ -104,7 +104,7 @@ public class ExperienceSelectionFragment extends ListFragment
         ArrayList<IExperience> list = new ArrayList<IExperience>();
         for (IExperience t : experiences)
             list.add(t);
-        this.experiences = (IExperience[]) list.toArray();
+        this.experiences = list.toArray(new IExperience[list.size()]);
 
         if (getActivity() != null)
             setListAdapter(new ArrayAdapter<IExperience>(getActivity(),
