@@ -43,9 +43,15 @@ package com.kyloth.serleena.view.fragments;
 
 import android.app.Activity;
 import android.app.FragmentManager;
+import android.os.Bundle;
+import android.view.LayoutInflater;
+import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
+import android.widget.TextView;
 
 import com.kyloth.serleena.BuildConfig;
+import com.kyloth.serleena.R;
 import com.kyloth.serleena.presentation.IContactsPresenter;
 import com.kyloth.serleena.presenters.ISerleenaActivity;
 import com.kyloth.serleena.model.ISerleenaDataSource;
@@ -55,6 +61,7 @@ import junit.framework.Assert;
 
 import org.robolectric.Robolectric;
 import org.robolectric.RobolectricGradleTestRunner;
+import org.robolectric.RuntimeEnvironment;
 import org.robolectric.annotation.Config;
 
 import org.junit.Test;
@@ -63,6 +70,7 @@ import org.junit.Before;
 import org.junit.Rule;
 import org.junit.rules.ExpectedException;
 
+import static junit.framework.Assert.assertEquals;
 import static org.mockito.Mockito.*;
 
 /**
@@ -76,17 +84,9 @@ import static org.mockito.Mockito.*;
         manifest = "src/main/AndroidManifest.xml")
 public class ContactsFragmentTest {
 
-    private static class TestActivity
-            extends Activity implements ISerleenaActivity {
-        public ISerleenaDataSource getDataSource() {
-            return null;
-        }
-        public ISensorManager getSensorManager() {
-            return null;
-        }
-    }
-
-    private Activity activity;
+    private TextView fakeName;
+    private TextView fakeValue;
+    private ImageView fakeImage;
     private ContactsFragment fragment;
     private IContactsPresenter presenter;
 
@@ -99,13 +99,30 @@ public class ContactsFragmentTest {
      */
     @Before
     public void initialize() {
-        activity = Robolectric.buildActivity(TestActivity.class).
-                create().start().visible().get();
-        Assert.assertNotNull("initialization failed", activity);
+        presenter = mock(IContactsPresenter.class);
         fragment = new ContactsFragment();
-        FragmentManager fm = activity.getFragmentManager();
-        fm.beginTransaction().add(fragment, "TEST").commit();
-        Assert.assertEquals("fragment not attached", fragment.getActivity(), activity);
+        fragment.attachPresenter(presenter);
+
+        fakeName = new TextView(RuntimeEnvironment.application);
+        fakeValue = new TextView(RuntimeEnvironment.application);
+        fakeImage = new ImageView(RuntimeEnvironment.application);
+
+        LayoutInflater inflater = mock(LayoutInflater.class);
+        ViewGroup vg = mock(ViewGroup.class);
+        ViewGroup v = mock(ViewGroup.class);
+        when(v.getChildCount()).thenReturn(3);
+        when(v.getChildAt(0)).thenReturn(fakeImage);
+        when(v.getChildAt(1)).thenReturn(fakeName);
+        when(v.getChildAt(2)).thenReturn(fakeValue);
+
+        when(inflater.inflate(
+                        eq(R.layout.fragment_contacts),
+                        eq(vg),
+                        any(Boolean.class))
+        ).thenReturn(v);
+        when(v.findViewById(R.id.contact_name_text)).thenReturn(fakeName);
+        when(v.findViewById(R.id.contact_value_text)).thenReturn(fakeValue);
+        fragment.onCreateView(inflater, vg, mock(Bundle.class));
     }
 
     /**
@@ -114,8 +131,6 @@ public class ContactsFragmentTest {
      */
     @Test
     public void testAttachContactsPresenter() {
-        presenter = mock(IContactsPresenter.class);
-        fragment.attachPresenter(presenter);
         fragment.onResume();
         fragment.onPause();
         verify(presenter).resume();
@@ -155,14 +170,21 @@ public class ContactsFragmentTest {
      */
     @Test
     public void clickShouldAskForTheNextContact() {
-        presenter = mock(IContactsPresenter.class);
-        fragment.attachPresenter(presenter);
-
-        ViewGroup vg = (ViewGroup) fragment.getView();
-        for (int i = 0; i < vg.getChildCount(); i++) {
-            vg.getChildAt(i).callOnClick();
-            verify(presenter, times(i+1)).nextContact();
-        }
+        fakeImage.callOnClick();
+        verify(presenter, times(1)).nextContact();
+        fakeName.callOnClick();
+        verify(presenter, times(2)).nextContact();
+        fakeValue.callOnClick();
+        verify(presenter, times(3)).nextContact();
     }
 
+    /**
+     * Verifica che displayContact() imposti correttamente i widget della vista.
+     */
+    @Test
+    public void displayContactShouldSetTextViewsAccordingly() {
+        fragment.displayContact("contact_name", "contact_value");
+        assertEquals(fakeName.getText().toString(), "contact_name");
+        assertEquals(fakeValue.getText().toString(), "contact_value");
+    }
 }
