@@ -36,13 +36,15 @@
  * History:
  * Version   Programmer         Changes
  * 1.0.0     Sebastiano Valle   Creazione del file, scrittura del codice e di Javadoc
+ * 1.1.0     Filippo Sestini    Leggero refactoring
  */
 package com.kyloth.serleena.view.fragments;
 
-import android.app.Activity;
 import android.app.Fragment;
-import android.view.KeyEvent;
+import android.os.Bundle;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.ImageButton;
 import android.widget.TextView;
 
@@ -52,50 +54,31 @@ import com.kyloth.serleena.presentation.ISyncPresenter;
 import com.kyloth.serleena.presentation.ISyncView;
 
 import java.util.HashMap;
+import java.util.Map;
 
 /**
- * Classe che implementa la schermata “Sincronizzazione”, in cui è possibile richiedere la
+ * Implementa la schermata “Sincronizzazione”, in cui è possibile richiedere la
  * sincronizzazione con la piattaforma Cloud.
  *
  * @use Viene istanziata e utilizzata dall'Activity per la visualizzazione della schermata. Comunica con il Presenter associato attraverso l'interfaccia ISyncPresenter.
  * @field presenter : ISyncPresenter presenter collegato a un SyncFragment
  * @field info : TextView casella di testo dove verranno visualizzate le informazioni di stato
+ * @field token : TextView casella di testo dove verranno visualizzate le informazioni sul token per l'accoppiamento
  * @field states : HashMap<SyncStatusEnum,String> mappa di corrispondeze tra oggetti di tipo enumerativo e stringhe
  * @author Sebastiano Valle <valle.sebastiano93@gmail.com>
- * @version 1.0.0
+ * @version 1.1.0
  * @see android.app.Fragment
  */
 public class SyncFragment extends Fragment implements ISyncView {
 
     private ISyncPresenter presenter;
-
     private TextView info;
+    private TextView token;
+    Map<SyncStatusEnum, String> states;
 
-    private HashMap<SyncStatusEnum,String> states = new HashMap<>();
-
-    /**
-     * Questo metodo viene invocato ogni volta che un SyncFragment viene collegato ad un'Activity.
-     *
-     * @param activity Activity che ha appena terminato una transazione in cui viene aggiunto il corrente Fragment
-     */
-    @Override
-    public void onAttach(Activity activity) {
-        super.onAttach(activity);
-        initFrag();
-        ImageButton button = (ImageButton) activity.findViewById(R.id.button_sync);
-        button.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                presenter.synchronize();
-            }
-        });
-    }
-
-    /**
-     * Metodo che inizializza gli attributi Fragment, ovvero la mappa e il riferimenti alla View utilizzata.
-     */
-    private void initFrag() {
-        info = (TextView) getActivity().findViewById(R.id.textview_info);
+    public SyncFragment() {
+        super();
+        states = new HashMap<>();
         states.put(SyncStatusEnum.COMPLETE,"FATTO");
         states.put(SyncStatusEnum.FAILED,"ERRORE");
         states.put(SyncStatusEnum.INACTIVE,"SINCRONIZZAZIONE NON ATTIVA");
@@ -103,35 +86,60 @@ public class SyncFragment extends Fragment implements ISyncView {
         states.put(SyncStatusEnum.PREAUTH, "STO RICEVENDO IL TOKEN...");
         states.put(SyncStatusEnum.REJECTED, "INSERIMENTO NON CORRETTO");
         states.put(SyncStatusEnum.SYNCING, "SINCRONIZZANDO...");
+        /* Null object pattern */
+        presenter = new ISyncPresenter() {
+            @Override public void synchronize() { }
+            @Override public void resume() { }
+            @Override public void pause() { }
+        };
+    }
+
+    @Override
+    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+                             Bundle savedInstanceState) {
+        View v = inflater.inflate(
+                R.layout.fragment_sync_screen,
+                container,
+                false);
+        info = (TextView) v.findViewById(R.id.textview_info);
+        token = (TextView) v.findViewById(R.id.textview_token);
+        ImageButton button = (ImageButton) v.findViewById(R.id.button_sync);
+        button.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                presenter.synchronize();
+            }
+        });
+        return v;
     }
 
     /**
-     * Metodo utilizzato per fornire all'utente il token per l'accoppiamento.
+     * Visualizza un token per l'accoppiamento.
      *
-     * @param token Token da visualizzare
+     * @param token Token da visualizzare.
      */
     @Override
     public void displayToken(String token) {
-        TextView tokenTxt = (TextView) getActivity().findViewById(R.id.textview_token);
-        tokenTxt.setText(token);
+        this.token.setText(token);
     }
 
     /**
-     * Metodo utilizzato per visualizzare sul display dello smartwatch lo stato della sincronizzazione
+     * Metodo utilizzato per visualizzare sul display dello smartwatch lo stato
+     * della sincronizzazione
      *
      * @param status Stato da visualizzare
      */
     @Override
     public void setSyncStatus(SyncStatusEnum status) {
         if(status != SyncStatusEnum.INPUT_REQUIRED)
-            ((TextView) getActivity().findViewById(R.id.textview_token)).setText("");
+            token.setText("");
         info.setText(states.get(status));
     }
 
     /**
-     * Metodo per eseguire un'operazione di subscribe relativa ad un ISyncPresenter.
+     * Aggancia un Presenter alla vista.
      *
-     * @param presenter oggetto collegato che verrà notificato da questo Fragment
+     * @param presenter Presenter da agganciare.
      */
     @Override
     public void attachPresenter(ISyncPresenter presenter) {
@@ -139,18 +147,9 @@ public class SyncFragment extends Fragment implements ISyncView {
     }
 
     /**
-     * Metodo che richiede la sincronizzazione.
+     * Ridefinisce Fragment.onResume().
      *
-     * @param keyCode tasto premuto
-     * @param event KeyEvent avvenuto
-     */
-    public void keyDown(int keyCode, KeyEvent event) {
-        presenter.synchronize();
-    }
-
-    /**
-     * Metodo invocato quando il Fragment viene visualizzato.
-     *
+     * Chiama il metodo resume() del presenter associato alla vista.
      */
     @Override
     public void onResume() {
@@ -159,12 +158,14 @@ public class SyncFragment extends Fragment implements ISyncView {
     }
 
     /**
-     * Metodo invocato quando il Fragment smette di essere visualizzato.
+     * Ridefinisce Fragment.onPause().
      *
+     * Chiama il metodo pause() del presenter associato alla vista.
      */
     @Override
     public void onPause() {
         super.onPause();
         presenter.pause();
     }
+
 }
