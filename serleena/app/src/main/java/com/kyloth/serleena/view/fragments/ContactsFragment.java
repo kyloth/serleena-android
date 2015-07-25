@@ -66,6 +66,8 @@ public class ContactsFragment extends Fragment
         implements IContactsView, View.OnClickListener {
 
     private IContactsPresenter presenter;
+    private TextView textName;
+    private TextView textValue;
 
     /**
      * Crea un nuovo oggetto ContactsFragment.
@@ -89,11 +91,17 @@ public class ContactsFragment extends Fragment
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        ViewGroup group = (ViewGroup) inflater.inflate(
-                R.layout.fragment_contacts, container, false);
-        for (int i = 0; i < group.getChildCount(); i++)
-            group.getChildAt(i).setOnClickListener(this);
-        return group;
+        ViewGroup v = (ViewGroup) inflater.inflate(
+                R.layout.fragment_contacts,
+                container,
+                false);
+
+        textName = (TextView) v.findViewById(R.id.contact_name_text);
+        textValue = (TextView) v.findViewById(R.id.contact_value_text);
+
+        for (int i = 0; i < v.getChildCount(); i++)
+            v.getChildAt(i).setOnClickListener(this);
+        return v;
     }
 
     /**
@@ -115,10 +123,6 @@ public class ContactsFragment extends Fragment
         if (name == null || contact == null)
             throw new IllegalArgumentException("Illegal null contact");
 
-        TextView textName =
-                (TextView) getActivity().findViewById(R.id.contact_name_text);
-        TextView textValue =
-                (TextView) getActivity().findViewById(R.id.contact_value_text);
         textName.setText(name);
         textValue.setText(contact);
     }
@@ -128,10 +132,6 @@ public class ContactsFragment extends Fragment
      */
     @Override
     public void clearView() {
-        TextView textName =
-                (TextView) getActivity().findViewById(R.id.contact_name_text);
-        TextView textValue =
-                (TextView) getActivity().findViewById(R.id.contact_value_text);
         textName.setText("NESSUN CONTATTO");
         textValue.setText("DA VISUALIZZARE");
     }
