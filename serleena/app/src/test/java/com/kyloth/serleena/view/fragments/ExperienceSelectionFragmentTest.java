@@ -43,8 +43,12 @@ package com.kyloth.serleena.view.fragments;
 
 import android.app.Activity;
 import android.app.FragmentManager;
+import android.view.View;
+import android.widget.ListAdapter;
+import android.widget.ListView;
 
 import com.kyloth.serleena.BuildConfig;
+import com.kyloth.serleena.model.IExperience;
 import com.kyloth.serleena.presentation.IExperienceSelectionPresenter;
 import com.kyloth.serleena.presenters.ISerleenaActivity;
 import com.kyloth.serleena.model.ISerleenaDataSource;
@@ -62,6 +66,10 @@ import org.junit.Before;
 import org.junit.Rule;
 import org.junit.rules.ExpectedException;
 
+import java.util.ArrayList;
+import java.util.List;
+
+import static junit.framework.Assert.assertTrue;
 import static org.mockito.Mockito.*;
 
 /**
@@ -98,13 +106,14 @@ public class ExperienceSelectionFragmentTest {
      */
     @Before
     public void initialize() {
+        presenter = mock(IExperienceSelectionPresenter.class);
         activity = Robolectric.buildActivity(TestActivity.class).
                 create().start().visible().get();
         Assert.assertNotNull("initialization failed", activity);
         fragment = new ExperienceSelectionFragment();
         FragmentManager fm = activity.getFragmentManager();
         fm.beginTransaction().add(fragment,"TEST").commit();
-        Assert.assertTrue(fragment.getActivity() == activity);
+        assertTrue(fragment.getActivity() == activity);
     }
 
     /**
@@ -113,12 +122,72 @@ public class ExperienceSelectionFragmentTest {
      */
     @Test
     public void testAttachContactsPresenter() {
-        presenter = mock(IExperienceSelectionPresenter.class);
         fragment.attachPresenter(presenter);
         fragment.onResume();
         fragment.onPause();
         verify(presenter).resume();
         verify(presenter).pause();
+    }
+
+    /**
+     * Verifica che setExperiences() causi la creazione di un ListAdapter, e
+     * quindi il popolamento della ListView con le esperienze passate come
+     * parametro.
+     */
+    @Test
+    public void setExceptionShouldPopulateListViewWithExperiences() {
+        List<IExperience> list = new ArrayList<>();
+        IExperience e1 = mock(IExperience.class);
+        when(e1.getName()).thenReturn("e1");
+        IExperience e2 = mock(IExperience.class);
+        when(e2.getName()).thenReturn("e2");
+        list.add(e1);
+        list.add(e2);
+        fragment.setExperiences(list);
+
+        ListAdapter adapter = fragment.getListAdapter();
+        IExperience ee1 = (IExperience) adapter.getItem(0);
+        IExperience ee2 = (IExperience) adapter.getItem(1);
+        assertTrue((ee1.getName().equals("e1") && ee2.getName().equals("e2")) ||
+                (ee1.getName().equals("e2") && ee2.getName().equals("e1")));
+    }
+
+    /**
+     * Verifica che setExperiences() lanci un'eccezione
+     * IllegalArgumentException quando viene passato un parametro null.
+     */
+    @Test(expected = IllegalArgumentException.class)
+    public void setExceptionShouldThrowWhenArgumentIsNull() {
+        fragment.setExperiences(null);
+    }
+
+    /**
+     * Verifica che attachPresenter() lanci un'eccezione quando viene passato
+     * un parametro null.
+     */
+    @Test(expected = IllegalArgumentException.class)
+    public void attachPresenterShouldThrowWhenNullPresenter() {
+        fragment.attachPresenter(null);
+    }
+
+    /**
+     * Verifica che la selezione di un elemento sulla lista di Esperienze da
+     * parte dell'utente causi l'attivazione di quell'Esperienza.
+     */
+    @Test
+    public void clickingListViewShouldActivateAssociatedExperience() {
+        fragment.attachPresenter(presenter);
+
+        List<IExperience> list = new ArrayList<>();
+        IExperience e1 = mock(IExperience.class);
+        IExperience e2 = mock(IExperience.class);
+        list.add(e1);
+        list.add(e2);
+        fragment.setExperiences(list);
+
+        ListView listView = fragment.getListView();
+        fragment.onListItemClick(listView, mock(View.class), 1, 0);
+        verify(presenter).activateExperience(e2);
     }
 
 }
