@@ -30,7 +30,7 @@
 
 /**
  * Name: SerleenaActivity
- * Package: com.kyloth.serleena.presenters
+ * Package: com.kyloth.serleena.activity
  * Author: Filippo Sestini
  *
  * History:
@@ -67,7 +67,7 @@ import java.util.List;
  * @use Viene utilizzata solamente dall'Activity, che ne mantiene un riferimento. Il Presenter, alla creazione, si registra alla sua Vista, passando se stesso come parametro dietro interfaccia.
  * @field dataSource : sorgente dati utilizzata dall'activity e dai suoi presenter
  * @field sensorManager : gestore dei sensori utilizzato dall'activity e dai suoi presenter
- * @author Sebastiano Valle <valle.sebastiano93@gmail.com>
+ * @author Filippo Sestini <valle.sebastiano93@gmail.com>
  * @version 1.0.0
  * @see android.support.v7.app.AppCompatActivity
  */
