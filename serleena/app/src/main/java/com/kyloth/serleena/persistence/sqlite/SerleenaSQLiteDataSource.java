@@ -60,10 +60,10 @@ import com.kyloth.serleena.common.HeartRateTelemetryEvent;
 import com.kyloth.serleena.common.IQuadrant;
 import com.kyloth.serleena.common.ListAdapter;
 import com.kyloth.serleena.common.LocationTelemetryEvent;
+import com.kyloth.serleena.common.NoSuchWeatherForecastException;
 import com.kyloth.serleena.common.Quadrant;
 import com.kyloth.serleena.common.TelemetryEvent;
 import com.kyloth.serleena.common.UserPoint;
-import com.kyloth.serleena.common.NoSuchWeatherForecastException;
 import com.kyloth.serleena.persistence.IExperienceStorage;
 import com.kyloth.serleena.persistence.IWeatherStorage;
 import com.kyloth.serleena.persistence.WeatherForecastEnum;
@@ -92,6 +92,9 @@ public class SerleenaSQLiteDataSource implements ISerleenaSQLiteDataSource {
     final static int TOT_LAT_QUADRANTS = 180 / QUADRANT_LATSIZE;
     final static int TOT_LONG_QUADRANTS = 360 / QUADRANT_LONGSIZE;
     final static String RASTER_PATH = "raster/";
+    final static int MORNING_CENTRAL_HOUR = 8;
+    final static int AFTERNOON_CENTRAL_HOUR = 15;
+    final static int NIGHT_CENTRAL_HOUR = 22;
 
     private SerleenaDatabase dbHelper;
     private Context context;
@@ -360,6 +363,10 @@ public class SerleenaSQLiteDataSource implements ISerleenaSQLiteDataSource {
 
     /**
      * Implementazione di IPersistenceDataStorage.getWeatherInfo().
+     * Ricerca le previsioni per tre specifiche ore, AFTERNOON_CENTRAL_HOUR,
+     * MORNING_CENTRAL_HOUR, NIGHT_CENTRAL_HOUR, da visualizzare o altrimenti
+     * consumare come rappresentative delle condizioni di mattino, pomeriggio,
+     * sera.
      *
      * @param location  Posizione geografica di cui si vogliono ottenere le
      *                  previsioni. Se null, viene sollevata un'eccezione
@@ -370,7 +377,7 @@ public class SerleenaSQLiteDataSource implements ISerleenaSQLiteDataSource {
      */
     @Override
     public IWeatherStorage getWeatherInfo(GeoPoint location, Date date)
-            throws IllegalArgumentException, NoSuchWeatherForecastException {
+    throws IllegalArgumentException, NoSuchWeatherForecastException {
         if (date == null)
             throw new IllegalArgumentException("Illegal null date");
         if (location == null)
@@ -378,57 +385,48 @@ public class SerleenaSQLiteDataSource implements ISerleenaSQLiteDataSource {
 
         GregorianCalendar morning = new GregorianCalendar();
         morning.setTime(date);
-        morning.set(Calendar.HOUR_OF_DAY, 6);
+        morning.set(Calendar.HOUR_OF_DAY, MORNING_CENTRAL_HOUR);
         morning.set(Calendar.MINUTE, 0);
         morning.set(Calendar.SECOND, 0);
         morning.set(Calendar.MILLISECOND, 0);
 
-        GregorianCalendar morningAfter = new GregorianCalendar();
-        morningAfter.setTime(date);
-        morningAfter.set(Calendar.HOUR_OF_DAY, 6);
-        morningAfter.set(Calendar.HOUR_OF_DAY, 6);
-        morningAfter.set(Calendar.MINUTE, 0);
-        morningAfter.set(Calendar.SECOND, 0);
-        morningAfter.set(Calendar.MILLISECOND, 0);
-        morningAfter.add(Calendar.HOUR_OF_DAY, 24);
-
         GregorianCalendar afternoon = new GregorianCalendar();
         afternoon.setTime(date);
-        afternoon.set(Calendar.HOUR_OF_DAY, 14);
+        afternoon.set(Calendar.HOUR_OF_DAY, AFTERNOON_CENTRAL_HOUR);
         afternoon.set(Calendar.MINUTE, 0);
         afternoon.set(Calendar.SECOND, 0);
         afternoon.set(Calendar.MILLISECOND, 0);
 
         GregorianCalendar night = new GregorianCalendar();
         night.setTime(date);
-        night.set(Calendar.HOUR_OF_DAY, 21);
+        night.set(Calendar.HOUR_OF_DAY, NIGHT_CENTRAL_HOUR);
         night.set(Calendar.MINUTE, 0);
         night.set(Calendar.SECOND, 0);
         night.set(Calendar.MILLISECOND, 0);
 
-        int morningStart = Math.round(morning.getTimeInMillis() / 1000);
-        int morningEnd = Math.round(afternoon.getTimeInMillis() / 1000);
+        int morningUnix = Math.round(morning.getTimeInMillis() / 1000);
+        int afternoonUnix = Math.round(afternoon.getTimeInMillis() / 1000);
+        int nightUnix = Math.round(night.getTimeInMillis() / 1000);
 
-        int afternoonStart = Math.round(afternoon.getTimeInMillis() / 1000);
-        int afternoonEnd = Math.round(night.getTimeInMillis() / 1000);
+        /*
+         * Prendiamo le previsioni di una data ora (e.g. 11) per "il mattino",
+         * una per il pomeriggio (eg. 15.00), etc.
+         * Una versione piu' avanzata sarebbe fare la media o interpolare altrimenti.
+         */
 
-        int nightStart = Math.round(night.getTimeInMillis() / 1000);
-        int nightEnd = Math.round(morningAfter.getTimeInMillis() / 1000);
-
-        SimpleWeather morningWeather = getForecast(location, morningStart, morningEnd);
-        SimpleWeather afternoonWeather =
-                getForecast(location, afternoonStart, afternoonEnd);
-        SimpleWeather nightWeather = getForecast(location, nightStart, nightEnd);
+        SimpleWeather morningWeather = getForecast(location, morningUnix);
+        SimpleWeather afternoonWeather = getForecast(location, afternoonUnix);
+        SimpleWeather nightWeather = getForecast(location, nightUnix);
 
         if (morningWeather == null ||
-            morningWeather == null ||
-            morningWeather == null)
+                afternoonWeather == null ||
+                nightWeather == null)
             throw new NoSuchWeatherForecastException();
 
         return new SQLiteDAOWeather(morningWeather.forecast(),
-                afternoonWeather.forecast(), nightWeather.forecast(),
-                morningWeather.temperature(), afternoonWeather.temperature(),
-                nightWeather.temperature(), date);
+                                    afternoonWeather.forecast(), nightWeather.forecast(),
+                                    morningWeather.temperature(), afternoonWeather.temperature(),
+                                    nightWeather.temperature(), date);
     }
 
     /**
@@ -564,19 +562,16 @@ public class SerleenaSQLiteDataSource implements ISerleenaSQLiteDataSource {
      *
      * @param location Posizione geografica di cui si vogliono ottenere le
      *                 previsioni.
-     * @param startTime Inizio dell'intervallo di tempo di cui si vogliono
+     * @param time Punto temporale di cui si vogliono
      *                  ottenere le previsioni, in UNIX time.
-     * @param endTime Fine dell'intervallo di tempo di cui si vogliono
-     *                ottenere le previsioni, in UNIX time.
      * @return Previsioni metereologiche.
      */
-    private SimpleWeather getForecast(GeoPoint location, int startTime,
-                                      int endTime) {
+    private SimpleWeather getForecast(GeoPoint location, int time) {
         SQLiteDatabase db = dbHelper.getReadableDatabase();
 
         String where =
-                "`weather_end` >= " + startTime + " AND " +
-                "`weather_start` <= " + endTime + " AND " +
+                "weather_end >= " + time + " AND " +
+                "weather_start <= " + time + " AND " +
                 "`weather_ne_corner_latitude` <= " +
                 location.latitude() + " AND " +
                 "`weather_ne_corner_longitude` <= " +
