@@ -127,10 +127,13 @@ public class SerleenaDatabase extends SQLiteOpenHelper {
     private static final String CREATE_TABLE_WEATHER_FORECASTS =
         "CREATE TABLE " + TABLE_WEATHER_FORECASTS + "(" +
         "weather_id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, " +
-        "weather_start INTEGER NOT NULL, " +
-        "weather_end INTEGER NOT NULL, " +
-        "weather_condition INTEGER NOT NULL, " +
-        "weather_temperature INTEGER NOT NULL, " +
+        "weather_date INTEGER NOT NULL, " +
+        "weather_condition_morning INTEGER NOT NULL, " +
+        "weather_temperature_morning INTEGER NOT NULL, " +
+        "weather_condition_afternoon INTEGER NOT NULL, " +
+        "weather_temperature_afternoon INTEGER NOT NULL, " +
+        "weather_condition_night INTEGER NOT NULL, " +
+        "weather_temperature_night INTEGER NOT NULL, " +
         "weather_nw_corner_latitude REAL NOT NULL, " +
         "weather_nw_corner_longitude REAL NOT NULL, " +
         "weather_se_corner_latitude REAL NOT NULL, " +
