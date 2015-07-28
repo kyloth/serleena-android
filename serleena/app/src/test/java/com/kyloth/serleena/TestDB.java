@@ -116,8 +116,8 @@ public class TestDB {
     public static void contactQuery(SQLiteDatabase db, int id, String name,
             String value, double neLat, double neLon, double swLat, double swLon) {
         String query = "INSERT INTO contacts (contact_id, contact_name, " +
-                       "contact_value, contact_ne_corner_latitude, contact_ne_corner_longitude, " +
-                       "contact_sw_corner_latitude, contact_sw_corner_longitude) VALUES " +
+                       "contact_value, contact_nw_corner_latitude, contact_nw_corner_longitude, " +
+                       "contact_se_corner_latitude, contact_se_corner_longitude) VALUES " +
                        "(" + String.valueOf(id) + ", '" + name + "', '" + value + "', " +
                        String.valueOf(neLat) + ", " + String.valueOf(neLon) + ", " + String.valueOf(swLat) + ", " + String.valueOf(swLon) + ")";
         db.execSQL(query);
@@ -127,8 +127,8 @@ public class TestDB {
          long end, String condition, int temperature, double neLat, double neLon, double swLat, double swLon) {
         String query = "INSERT INTO weather_forecasts (weather_id, weather_start, " +
                        "weather_end, weather_condition, weather_temperature, " +
-                       "weather_ne_corner_latitude, weather_ne_corner_longitude, " +
-                       "weather_sw_corner_latitude, weather_sw_corner_longitude) VALUES " +
+                       "weather_nw_corner_latitude, weather_nw_corner_longitude, " +
+                       "weather_se_corner_latitude, weather_se_corner_longitude) VALUES " +
                        "(" + String.valueOf(id) + ", " + String.valueOf(start) + ", " +
                        String.valueOf(end) + ", '" + condition + "', " +
                        String.valueOf(temperature) + ", " + String.valueOf(neLat) + ", " +
