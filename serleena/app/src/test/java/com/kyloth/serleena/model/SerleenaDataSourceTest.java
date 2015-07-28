@@ -94,21 +94,21 @@ public class SerleenaDataSourceTest {
         serleenaDB.onUpgrade(db, 1, 2);
         String insertEmergencyContacts_1 = "INSERT INTO contacts " +
                                            "(contact_name, contact_value, " +
-                                           "contact_ne_corner_latitude, contact_ne_corner_longitude, " +
-                                           "contact_sw_corner_latitude, contact_sw_corner_longitude) " +
+                                           "contact_nw_corner_latitude, contact_nw_corner_longitude, " +
+                                           "contact_se_corner_latitude, contact_se_corner_longitude) " +
                                            "VALUES ('Contact_1', '100', 1, 1, 10, 10);";
         String insertEmergencyContacts_2 = "INSERT INTO contacts " +
                                            "(contact_name, contact_value, " +
-                                           "contact_ne_corner_latitude, contact_ne_corner_longitude, " +
-                                           "contact_sw_corner_latitude, contact_sw_corner_longitude) " +
+                                           "contact_nw_corner_latitude, contact_nw_corner_longitude, " +
+                                           "contact_se_corner_latitude, contact_se_corner_longitude) " +
                                            "VALUES ('Contact_2', '200', 1, 1, 10, 10);";
         Long start_weather = (new GregorianCalendar(2015, GregorianCalendar.JANUARY, 01, 00, 00, 00)).getTimeInMillis() / 1000;
         Long end_weather = (new GregorianCalendar(2015, GregorianCalendar.JANUARY, 01, 23, 59, 59)).getTimeInMillis() / 1000;
         String insertForecasts_1 = "INSERT INTO weather_forecasts " +
                                    "(weather_start, weather_end, weather_condition, " +
-                                   "weather_temperature, weather_ne_corner_latitude, " +
-                                   "weather_ne_corner_longitude, weather_sw_corner_latitude, " +
-                                   "weather_sw_corner_longitude) " +
+                                   "weather_temperature, weather_nw_corner_latitude, " +
+                                   "weather_nw_corner_longitude, weather_se_corner_latitude, " +
+                                   "weather_se_corner_longitude) " +
                                    "VALUES (" + start_weather + ", " + end_weather +
                                    ", 2, 100, 10, 10, 1, 1);";
         db.execSQL(insertEmergencyContacts_1);
@@ -118,10 +118,10 @@ public class SerleenaDataSourceTest {
         values_1.put("weather_end", (new GregorianCalendar(2015, GregorianCalendar.JANUARY, 01, 23, 59, 59)).getTimeInMillis() / 1000);
         values_1.put("weather_condition", WeatherForecastEnum.Sunny.ordinal());
         values_1.put("weather_temperature", 1);
-        values_1.put("weather_ne_corner_latitude", 0.0);
-        values_1.put("weather_ne_corner_longitude", 0.0);
-        values_1.put("weather_sw_corner_latitude", 2.0);
-        values_1.put("weather_sw_corner_longitude", 2.0);
+        values_1.put("weather_nw_corner_latitude", 0.0);
+        values_1.put("weather_nw_corner_longitude", 0.0);
+        values_1.put("weather_se_corner_latitude", 2.0);
+        values_1.put("weather_se_corner_longitude", 2.0);
         db.insertOrThrow(SerleenaDatabase.TABLE_WEATHER_FORECASTS, null, values_1);
         ContentValues values_2;
         values_2 = new ContentValues();

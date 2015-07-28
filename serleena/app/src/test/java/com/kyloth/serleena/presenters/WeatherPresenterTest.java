@@ -133,9 +133,9 @@ public class WeatherPresenterTest {
 
         String insertForecast = "INSERT INTO weather_forecasts " +
                                 "(weather_id, weather_start, weather_end, weather_condition, " +
-                                "weather_temperature, weather_ne_corner_latitude, " +
-                                "weather_ne_corner_longitude, weather_sw_corner_latitude, " +
-                                "weather_sw_corner_longitude) " +
+                                "weather_temperature, weather_nw_corner_latitude, " +
+                                "weather_nw_corner_longitude, weather_se_corner_latitude, " +
+                                "weather_se_corner_longitude) " +
                                 " VALUES (1, 0, 1749122263, 1, 10, 0, 0, 2, 2)";
         db.execSQL(insertForecast);
     }

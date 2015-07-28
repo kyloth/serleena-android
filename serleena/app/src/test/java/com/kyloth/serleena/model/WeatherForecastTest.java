@@ -95,19 +95,19 @@ public class WeatherForecastTest {
         values.put("weather_end", (new GregorianCalendar(2015, GregorianCalendar.JANUARY, 01, 12, 00, 00)).getTimeInMillis() / 1000);
         values.put("weather_condition", WeatherForecastEnum.Cloudy.ordinal());
         values.put("weather_temperature", 1);
-        values.put("weather_ne_corner_latitude", 0.0);
-        values.put("weather_ne_corner_longitude", 0.0);
-        values.put("weather_sw_corner_latitude", 2.0);
-        values.put("weather_sw_corner_longitude", 2.0);
+        values.put("weather_nw_corner_latitude", 0.0);
+        values.put("weather_nw_corner_longitude", 0.0);
+        values.put("weather_se_corner_latitude", 2.0);
+        values.put("weather_se_corner_longitude", 2.0);
         ContentValues values_1 = new ContentValues();
         values_1.put("weather_start", (new GregorianCalendar(2015, GregorianCalendar.JANUARY, 01, 12, 00, 01)).getTimeInMillis() / 1000);
         values_1.put("weather_end", (new GregorianCalendar(2015, GregorianCalendar.JANUARY, 01, 23, 59, 59)).getTimeInMillis() / 1000);
         values_1.put("weather_condition", WeatherForecastEnum.Sunny.ordinal());
         values_1.put("weather_temperature", 2);
-        values_1.put("weather_ne_corner_latitude", 0.0);
-        values_1.put("weather_ne_corner_longitude", 0.0);
-        values_1.put("weather_sw_corner_latitude", 2.0);
-        values_1.put("weather_sw_corner_longitude", 2.0);
+        values_1.put("weather_nw_corner_latitude", 0.0);
+        values_1.put("weather_nw_corner_longitude", 0.0);
+        values_1.put("weather_se_corner_latitude", 2.0);
+        values_1.put("weather_se_corner_longitude", 2.0);
 
         db.insertOrThrow(SerleenaDatabase.TABLE_WEATHER_FORECASTS, null, values);
         db.insertOrThrow(SerleenaDatabase.TABLE_WEATHER_FORECASTS, null, values_1);

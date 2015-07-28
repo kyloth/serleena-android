@@ -441,10 +441,10 @@ public class SerleenaDatabaseTest {
 			for (String contact : names) {
 				values.put("contact_name", name);
 				values.put("contact_value", contact);
-				values.put("contact_ne_corner_latitude", 1);
-				values.put("contact_ne_corner_longitude", 1);
-				values.put("contact_sw_corner_latitude", 1);
-				values.put("contact_sw_corner_longitude", 1);
+				values.put("contact_nw_corner_latitude", 1);
+				values.put("contact_nw_corner_longitude", 1);
+				values.put("contact_se_corner_latitude", 1);
+				values.put("contact_se_corner_longitude", 1);
 				db.insertOrThrow(SerleenaDatabase.TABLE_CONTACTS, null, values);
 			}
 		}
@@ -458,10 +458,10 @@ public class SerleenaDatabaseTest {
 		ContentValues values;
 		values = new ContentValues();
 		values.put("contact_value", "foo");
-		values.put("contact_ne_corner_latitude", 1);
-		values.put("contact_ne_corner_longitude", 1);
-		values.put("contact_sw_corner_latitude", 1);
-		values.put("contact_sw_corner_longitude", 1);
+		values.put("contact_nw_corner_latitude", 1);
+		values.put("contact_nw_corner_longitude", 1);
+		values.put("contact_se_corner_latitude", 1);
+		values.put("contact_se_corner_longitude", 1);
 		db.insertOrThrow(SerleenaDatabase.TABLE_TELEM_EVENTS_HEART_CHECKP, null, values);
 	}
 
@@ -473,10 +473,10 @@ public class SerleenaDatabaseTest {
 		ContentValues values;
 		values = new ContentValues();
 		values.put("contact_name", "foo");
-		values.put("contact_ne_corner_latitude", 1);
-		values.put("contact_ne_corner_longitude", 1);
-		values.put("contact_sw_corner_latitude", 1);
-		values.put("contact_sw_corner_longitude", 1);
+		values.put("contact_nw_corner_latitude", 1);
+		values.put("contact_nw_corner_longitude", 1);
+		values.put("contact_se_corner_latitude", 1);
+		values.put("contact_se_corner_longitude", 1);
 		db.insertOrThrow(SerleenaDatabase.TABLE_TELEM_EVENTS_HEART_CHECKP, null, values);
 	}
 
@@ -502,10 +502,10 @@ public class SerleenaDatabaseTest {
 			values.put("weather_temperature", 1);
 			values.put("weather_start", 1);
 			values.put("weather_end", 1);
-			values.put("weather_ne_corner_latitude", 1);
-			values.put("weather_ne_corner_longitude", 1);
-			values.put("weather_sw_corner_latitude", 1);
-			values.put("weather_sw_corner_longitude", 1);
+			values.put("weather_nw_corner_latitude", 1);
+			values.put("weather_nw_corner_longitude", 1);
+			values.put("weather_se_corner_latitude", 1);
+			values.put("weather_se_corner_longitude", 1);
 		}
 		db.insertOrThrow(SerleenaDatabase.TABLE_WEATHER_FORECASTS, null, values);
 	}
@@ -520,10 +520,10 @@ public class SerleenaDatabaseTest {
 		values.put("weather_condition", "foo");
 		values.put("weather_temperature", 1);
 		values.put("weather_end", 1);
-		values.put("weather_ne_corner_latitude", 1);
-		values.put("weather_ne_corner_longitude", 1);
-		values.put("weather_sw_corner_latitude", 1);
-		values.put("weather_sw_corner_longitude", 1);
+		values.put("weather_nw_corner_latitude", 1);
+		values.put("weather_nw_corner_longitude", 1);
+		values.put("weather_se_corner_latitude", 1);
+		values.put("weather_se_corner_longitude", 1);
 		db.insertOrThrow(SerleenaDatabase.TABLE_WEATHER_FORECASTS, null, values);
 	}
 
@@ -537,10 +537,10 @@ public class SerleenaDatabaseTest {
 		values.put("weather_condition", "foo");
 		values.put("weather_temperature", 1);
 		values.put("weather_start", 1);
-		values.put("weather_ne_corner_latitude", 1);
-		values.put("weather_ne_corner_longitude", 1);
-		values.put("weather_sw_corner_latitude", 1);
-		values.put("weather_sw_corner_longitude", 1);
+		values.put("weather_nw_corner_latitude", 1);
+		values.put("weather_nw_corner_longitude", 1);
+		values.put("weather_se_corner_latitude", 1);
+		values.put("weather_se_corner_longitude", 1);
 		db.insertOrThrow(SerleenaDatabase.TABLE_WEATHER_FORECASTS, null, values);
 	}
 

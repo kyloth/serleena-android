@@ -419,10 +419,10 @@ public class SerleenaSQLiteDataSourceTest {
                                              59)).getTimeInMillis() / 1000);
         values.put("weather_condition", WeatherForecastEnum.Sunny.ordinal());
         values.put("weather_temperature", 1);
-        values.put("weather_ne_corner_latitude", 0.0);
-        values.put("weather_ne_corner_longitude", 0.0);
-        values.put("weather_sw_corner_latitude", 2.0);
-        values.put("weather_sw_corner_longitude", 2.0);
+        values.put("weather_nw_corner_latitude", 0.0);
+        values.put("weather_nw_corner_longitude", 0.0);
+        values.put("weather_se_corner_latitude", 2.0);
+        values.put("weather_se_corner_longitude", 2.0);
         db.insertOrThrow(SerleenaDatabase.TABLE_WEATHER_FORECASTS, null, values);
         IWeatherStorage info = sds.getWeatherInfo(new GeoPoint(1.0, 1.0),
                                (new GregorianCalendar(2015,
@@ -451,10 +451,10 @@ public class SerleenaSQLiteDataSourceTest {
                                              59)).getTimeInMillis() / 1000);
         values.put("weather_condition", WeatherForecastEnum.Sunny.ordinal());
         values.put("weather_temperature", 1);
-        values.put("weather_ne_corner_latitude", 0.0);
-        values.put("weather_ne_corner_longitude", 0.0);
-        values.put("weather_sw_corner_latitude", 2.0);
-        values.put("weather_sw_corner_longitude", 2.0);
+        values.put("weather_nw_corner_latitude", 0.0);
+        values.put("weather_nw_corner_longitude", 0.0);
+        values.put("weather_se_corner_latitude", 2.0);
+        values.put("weather_se_corner_longitude", 2.0);
         db.insertOrThrow(SerleenaDatabase.TABLE_WEATHER_FORECASTS, null, values);
         IWeatherStorage info = sds.getWeatherInfo(
                                    new GeoPoint(0.0, 0.0), (new GregorianCalendar(2015,
@@ -484,10 +484,10 @@ public class SerleenaSQLiteDataSourceTest {
                                               00).getTimeInMillis() / 1000));
         morning.put("weather_condition", WeatherForecastEnum.Sunny.ordinal());
         morning.put("weather_temperature", 1);
-        morning.put("weather_ne_corner_latitude", 0.0);
-        morning.put("weather_ne_corner_longitude", 0.0);
-        morning.put("weather_sw_corner_latitude", 2.0);
-        morning.put("weather_sw_corner_longitude", 2.0);
+        morning.put("weather_nw_corner_latitude", 0.0);
+        morning.put("weather_nw_corner_longitude", 0.0);
+        morning.put("weather_se_corner_latitude", 2.0);
+        morning.put("weather_se_corner_longitude", 2.0);
 
         ContentValues afternoon = new ContentValues();
         afternoon.put("weather_start", (
@@ -504,10 +504,10 @@ public class SerleenaSQLiteDataSourceTest {
                                                 00).getTimeInMillis() / 1000));
         afternoon.put("weather_condition", WeatherForecastEnum.Cloudy.ordinal());
         afternoon.put("weather_temperature", 1);
-        afternoon.put("weather_ne_corner_latitude", 0.0);
-        afternoon.put("weather_ne_corner_longitude", 0.0);
-        afternoon.put("weather_sw_corner_latitude", 2.0);
-        afternoon.put("weather_sw_corner_longitude", 2.0);
+        afternoon.put("weather_nw_corner_latitude", 0.0);
+        afternoon.put("weather_nw_corner_longitude", 0.0);
+        afternoon.put("weather_se_corner_latitude", 2.0);
+        afternoon.put("weather_se_corner_longitude", 2.0);
 
         ContentValues night = new ContentValues();
         night.put("weather_start", (
@@ -524,10 +524,10 @@ public class SerleenaSQLiteDataSourceTest {
                                             00).getTimeInMillis() / 1000));
         night.put("weather_condition", WeatherForecastEnum.Stormy.ordinal());
         night.put("weather_temperature", 1);
-        night.put("weather_ne_corner_latitude", 0.0);
-        night.put("weather_ne_corner_longitude", 0.0);
-        night.put("weather_sw_corner_latitude", 2.0);
-        night.put("weather_sw_corner_longitude", 2.0);
+        night.put("weather_nw_corner_latitude", 0.0);
+        night.put("weather_nw_corner_longitude", 0.0);
+        night.put("weather_se_corner_latitude", 2.0);
+        night.put("weather_se_corner_longitude", 2.0);
 
         db.insertOrThrow(SerleenaDatabase.TABLE_WEATHER_FORECASTS, null, morning);
         db.insertOrThrow(SerleenaDatabase.TABLE_WEATHER_FORECASTS, null, afternoon);
@@ -577,10 +577,10 @@ public class SerleenaSQLiteDataSourceTest {
                                               00).getTimeInMillis() / 1000));
         morning.put("weather_condition", WeatherForecastEnum.Sunny.ordinal());
         morning.put("weather_temperature", 1);
-        morning.put("weather_ne_corner_latitude", 0.0);
-        morning.put("weather_ne_corner_longitude", 0.0);
-        morning.put("weather_sw_corner_latitude", 2.0);
-        morning.put("weather_sw_corner_longitude", 2.0);
+        morning.put("weather_nw_corner_latitude", 0.0);
+        morning.put("weather_nw_corner_longitude", 0.0);
+        morning.put("weather_se_corner_latitude", 2.0);
+        morning.put("weather_se_corner_longitude", 2.0);
 
         ContentValues night = new ContentValues();
         night.put("weather_start", (
@@ -597,10 +597,10 @@ public class SerleenaSQLiteDataSourceTest {
                                             00).getTimeInMillis() / 1000));
         night.put("weather_condition", WeatherForecastEnum.Stormy.ordinal());
         night.put("weather_temperature", 1);
-        night.put("weather_ne_corner_latitude", 0.0);
-        night.put("weather_ne_corner_longitude", 0.0);
-        night.put("weather_sw_corner_latitude", 2.0);
-        night.put("weather_sw_corner_longitude", 2.0);
+        night.put("weather_nw_corner_latitude", 0.0);
+        night.put("weather_nw_corner_longitude", 0.0);
+        night.put("weather_se_corner_latitude", 2.0);
+        night.put("weather_se_corner_longitude", 2.0);
 
         db.insertOrThrow(SerleenaDatabase.TABLE_WEATHER_FORECASTS, null, morning);
         db.insertOrThrow(SerleenaDatabase.TABLE_WEATHER_FORECASTS, null, night);
@@ -636,10 +636,10 @@ public class SerleenaSQLiteDataSourceTest {
                                                 00).getTimeInMillis() / 1000));
         afternoon.put("weather_condition", WeatherForecastEnum.Cloudy.ordinal());
         afternoon.put("weather_temperature", 1);
-        afternoon.put("weather_ne_corner_latitude", 0.0);
-        afternoon.put("weather_ne_corner_longitude", 0.0);
-        afternoon.put("weather_sw_corner_latitude", 2.0);
-        afternoon.put("weather_sw_corner_longitude", 2.0);
+        afternoon.put("weather_nw_corner_latitude", 0.0);
+        afternoon.put("weather_nw_corner_longitude", 0.0);
+        afternoon.put("weather_se_corner_latitude", 2.0);
+        afternoon.put("weather_se_corner_longitude", 2.0);
 
         ContentValues night = new ContentValues();
         night.put("weather_start", (
@@ -656,10 +656,10 @@ public class SerleenaSQLiteDataSourceTest {
                                             00).getTimeInMillis() / 1000));
         night.put("weather_condition", WeatherForecastEnum.Stormy.ordinal());
         night.put("weather_temperature", 1);
-        night.put("weather_ne_corner_latitude", 0.0);
-        night.put("weather_ne_corner_longitude", 0.0);
-        night.put("weather_sw_corner_latitude", 2.0);
-        night.put("weather_sw_corner_longitude", 2.0);
+        night.put("weather_nw_corner_latitude", 0.0);
+        night.put("weather_nw_corner_longitude", 0.0);
+        night.put("weather_se_corner_latitude", 2.0);
+        night.put("weather_se_corner_longitude", 2.0);
 
         db.insertOrThrow(SerleenaDatabase.TABLE_WEATHER_FORECASTS, null, afternoon);
         db.insertOrThrow(SerleenaDatabase.TABLE_WEATHER_FORECASTS, null, night);
@@ -694,10 +694,10 @@ public class SerleenaSQLiteDataSourceTest {
                                               00).getTimeInMillis() / 1000));
         morning.put("weather_condition", WeatherForecastEnum.Sunny.ordinal());
         morning.put("weather_temperature", 1);
-        morning.put("weather_ne_corner_latitude", 0.0);
-        morning.put("weather_ne_corner_longitude", 0.0);
-        morning.put("weather_sw_corner_latitude", 2.0);
-        morning.put("weather_sw_corner_longitude", 2.0);
+        morning.put("weather_nw_corner_latitude", 0.0);
+        morning.put("weather_nw_corner_longitude", 0.0);
+        morning.put("weather_se_corner_latitude", 2.0);
+        morning.put("weather_se_corner_longitude", 2.0);
 
         ContentValues afternoon = new ContentValues();
         afternoon.put("weather_start", (
@@ -714,10 +714,10 @@ public class SerleenaSQLiteDataSourceTest {
                                                 00).getTimeInMillis() / 1000));
         afternoon.put("weather_condition", WeatherForecastEnum.Cloudy.ordinal());
         afternoon.put("weather_temperature", 1);
-        afternoon.put("weather_ne_corner_latitude", 0.0);
-        afternoon.put("weather_ne_corner_longitude", 0.0);
-        afternoon.put("weather_sw_corner_latitude", 2.0);
-        afternoon.put("weather_sw_corner_longitude", 2.0);
+        afternoon.put("weather_nw_corner_latitude", 0.0);
+        afternoon.put("weather_nw_corner_longitude", 0.0);
+        afternoon.put("weather_se_corner_latitude", 2.0);
+        afternoon.put("weather_se_corner_longitude", 2.0);
 
         db.insertOrThrow(SerleenaDatabase.TABLE_WEATHER_FORECASTS, null, afternoon);
         db.insertOrThrow(SerleenaDatabase.TABLE_WEATHER_FORECASTS, null, morning);
@@ -747,10 +747,10 @@ public class SerleenaSQLiteDataSourceTest {
                                              59)).getTimeInMillis() / 1000);
         values.put("weather_condition", WeatherForecastEnum.Sunny.ordinal());
         values.put("weather_temperature", 1);
-        values.put("weather_ne_corner_latitude", 4.0);
-        values.put("weather_ne_corner_longitude", 6.0);
-        values.put("weather_sw_corner_latitude", 4.0);
-        values.put("weather_sw_corner_longitude", 6.0);
+        values.put("weather_nw_corner_latitude", 4.0);
+        values.put("weather_nw_corner_longitude", 6.0);
+        values.put("weather_se_corner_latitude", 4.0);
+        values.put("weather_se_corner_longitude", 6.0);
         db.insertOrThrow(SerleenaDatabase.TABLE_WEATHER_FORECASTS, null, values);
         IWeatherStorage info = sds.getWeatherInfo(
                                    new GeoPoint(1.0, 1.0),
@@ -776,10 +776,10 @@ public class SerleenaSQLiteDataSourceTest {
                                              59)).getTimeInMillis() / 1000);
         values.put("weather_condition", WeatherForecastEnum.Sunny.ordinal());
         values.put("weather_temperature", 1);
-        values.put("weather_ne_corner_latitude", 0.0);
-        values.put("weather_ne_corner_longitude", 0.0);
-        values.put("weather_sw_corner_latitude", 2.0);
-        values.put("weather_sw_corner_longitude", 2.0);
+        values.put("weather_nw_corner_latitude", 0.0);
+        values.put("weather_nw_corner_longitude", 0.0);
+        values.put("weather_se_corner_latitude", 2.0);
+        values.put("weather_se_corner_longitude", 2.0);
         db.insertOrThrow(SerleenaDatabase.TABLE_WEATHER_FORECASTS, null, values);
         IWeatherStorage info = sds.getWeatherInfo(
                 new GeoPoint(1.0, 1.0),
@@ -796,10 +796,10 @@ public class SerleenaSQLiteDataSourceTest {
         ContentValues values = new ContentValues();
         values.put("contact_name", "foo");
         values.put("contact_value", "asdfghj");
-        values.put("contact_ne_corner_latitude", 0.0);
-        values.put("contact_ne_corner_longitude", 0.0);
-        values.put("contact_sw_corner_latitude", 2.0);
-        values.put("contact_sw_corner_longitude", 2.0);
+        values.put("contact_nw_corner_latitude", 0.0);
+        values.put("contact_nw_corner_longitude", 0.0);
+        values.put("contact_se_corner_latitude", 2.0);
+        values.put("contact_se_corner_longitude", 2.0);
         db.insertOrThrow(SerleenaDatabase.TABLE_CONTACTS, null, values);
         Iterable<EmergencyContact> contacts = sds.getContacts(new GeoPoint(1.0, 1.0));
         int i = 0;
@@ -818,10 +818,10 @@ public class SerleenaSQLiteDataSourceTest {
         ContentValues values = new ContentValues();
         values.put("contact_name", "foo");
         values.put("contact_value", "asdfghj");
-        values.put("contact_ne_corner_latitude", 0.0);
-        values.put("contact_ne_corner_longitude", 0.0);
-        values.put("contact_sw_corner_latitude", 2.0);
-        values.put("contact_sw_corner_longitude", 2.0);
+        values.put("contact_nw_corner_latitude", 0.0);
+        values.put("contact_nw_corner_longitude", 0.0);
+        values.put("contact_se_corner_latitude", 2.0);
+        values.put("contact_se_corner_longitude", 2.0);
         db.insertOrThrow(SerleenaDatabase.TABLE_CONTACTS, null, values);
         Iterable<EmergencyContact> contacts = sds.getContacts(new GeoPoint(0.0, 0.0));
         int i = 0;
@@ -840,10 +840,10 @@ public class SerleenaSQLiteDataSourceTest {
         ContentValues values = new ContentValues();
         values.put("contact_name", "foo");
         values.put("contact_value", "asdfghj");
-        values.put("contact_ne_corner_latitude", 10.0);
-        values.put("contact_ne_corner_longitude", 10.0);
-        values.put("contact_sw_corner_latitude", 20.0);
-        values.put("contact_sw_corner_longitude", 20.0);
+        values.put("contact_nw_corner_latitude", 10.0);
+        values.put("contact_nw_corner_longitude", 10.0);
+        values.put("contact_se_corner_latitude", 20.0);
+        values.put("contact_se_corner_longitude", 20.0);
         db.insertOrThrow(SerleenaDatabase.TABLE_CONTACTS, null, values);
         Iterable<EmergencyContact> contacts = sds.getContacts(new GeoPoint(1.0, 1.0));
         int i = 0;

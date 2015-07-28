@@ -119,10 +119,10 @@ public class SerleenaDatabase extends SQLiteOpenHelper {
         "contact_id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, " +
         "contact_name TEXT NOT NULL, " +
         "contact_value TEXT NOT NULL, " +
-        "contact_ne_corner_latitude REAL NOT NULL, " +
-        "contact_ne_corner_longitude REAL NOT NULL, " +
-        "contact_sw_corner_latitude REAL NOT NULL, " +
-        "contact_sw_corner_longitude REAL NOT NULL)";
+        "contact_nw_corner_latitude REAL NOT NULL, " +
+        "contact_nw_corner_longitude REAL NOT NULL, " +
+        "contact_se_corner_latitude REAL NOT NULL, " +
+        "contact_se_corner_longitude REAL NOT NULL)";
 
     private static final String CREATE_TABLE_WEATHER_FORECASTS =
         "CREATE TABLE " + TABLE_WEATHER_FORECASTS + "(" +
@@ -131,10 +131,10 @@ public class SerleenaDatabase extends SQLiteOpenHelper {
         "weather_end INTEGER NOT NULL, " +
         "weather_condition INTEGER NOT NULL, " +
         "weather_temperature INTEGER NOT NULL, " +
-        "weather_ne_corner_latitude REAL NOT NULL, " +
-        "weather_ne_corner_longitude REAL NOT NULL, " +
-        "weather_sw_corner_latitude REAL NOT NULL, " +
-        "weather_sw_corner_longitude REAL NOT NULL)";
+        "weather_nw_corner_latitude REAL NOT NULL, " +
+        "weather_nw_corner_longitude REAL NOT NULL, " +
+        "weather_se_corner_latitude REAL NOT NULL, " +
+        "weather_se_corner_longitude REAL NOT NULL)";
 
     private static final String CREATE_TABLE_USER_POINTS =
         "CREATE TABLE " + TABLE_USER_POINTS + "(" +

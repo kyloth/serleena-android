@@ -117,13 +117,13 @@ public class ContactsPresenterTest {
 
         String insert_contact_1 = "INSERT INTO contacts " +
                                   "(contact_id, contact_name, contact_value, " +
-                                  "contact_ne_corner_latitude, contact_ne_corner_longitude, " +
-                                  "contact_sw_corner_latitude, contact_sw_corner_longitude) " +
+                                  "contact_nw_corner_latitude, contact_nw_corner_longitude, " +
+                                  "contact_se_corner_latitude, contact_se_corner_longitude) " +
                                   "VALUES (1, 'Contact_1', '1', 0, 0, 2, 2)";
         String insert_contact_2 = "INSERT INTO contacts " +
                                   "(contact_id, contact_name, contact_value, " +
-                                  "contact_ne_corner_latitude, contact_ne_corner_longitude, " +
-                                  "contact_sw_corner_latitude, contact_sw_corner_longitude) " +
+                                  "contact_nw_corner_latitude, contact_nw_corner_longitude, " +
+                                  "contact_se_corner_latitude, contact_se_corner_longitude) " +
                                   "VALUES (2, 'Contact_2', '2', 0, 0, 2, 2)";
         db.execSQL(insert_contact_1);
         db.execSQL(insert_contact_2);
