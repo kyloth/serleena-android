@@ -92,9 +92,6 @@ public class SerleenaSQLiteDataSource implements ISerleenaSQLiteDataSource {
     final static int TOT_LAT_QUADRANTS = 180 / QUADRANT_LATSIZE;
     final static int TOT_LONG_QUADRANTS = 360 / QUADRANT_LONGSIZE;
     final static String RASTER_PATH = "raster/";
-    final static int MORNING_CENTRAL_HOUR = 8;
-    final static int AFTERNOON_CENTRAL_HOUR = 15;
-    final static int NIGHT_CENTRAL_HOUR = 22;
 
     private SerleenaDatabase dbHelper;
     private Context context;
