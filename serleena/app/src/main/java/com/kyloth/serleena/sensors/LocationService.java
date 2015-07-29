@@ -84,7 +84,9 @@ public class LocationService extends Service implements LocationListener {
                 "LocationServiceWakeLock"
         );
         wl.acquire();
-        lm.requestSingleUpdate(LocationManager.GPS_PROVIDER, this, null);
+        lm.requestLocationUpdates(
+                LocationManager.GPS_PROVIDER, 0, 0, this, null
+        );
 
         timeout = new Handler();
         runnable = new Runnable() {
@@ -120,6 +122,7 @@ public class LocationService extends Service implements LocationListener {
      */
     @Override
     public void onLocationChanged(Location location) {
+        lm.removeUpdates(this);
         for (Intent intent : intents) {
             ResultReceiver rec = intent.getParcelableExtra("receiverTag");
             Bundle b = new Bundle();
