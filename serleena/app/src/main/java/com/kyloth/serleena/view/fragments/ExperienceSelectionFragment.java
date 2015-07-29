@@ -40,7 +40,7 @@
 
 package com.kyloth.serleena.view.fragments;
 
-        import android.app.ListFragment;
+import android.app.ListFragment;
         import android.os.Bundle;
         import android.view.View;
         import android.widget.ArrayAdapter;
