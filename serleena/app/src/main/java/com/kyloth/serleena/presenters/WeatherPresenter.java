@@ -119,6 +119,10 @@ public class WeatherPresenter implements IWeatherPresenter, ILocationObserver {
 
         Calendar c = Calendar.getInstance();
         c.setTime(new Date());
+        c.set(Calendar.HOUR_OF_DAY, 0);
+        c.set(Calendar.MINUTE, 0);
+        c.set(Calendar.SECOND, 0);
+        c.set(Calendar.MILLISECOND, 0);
         c.add(Calendar.DATE, daysPastNow);
         Date d = c.getTime();
 

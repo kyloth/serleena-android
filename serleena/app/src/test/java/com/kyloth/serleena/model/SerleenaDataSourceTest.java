@@ -41,30 +41,32 @@
 
 package com.kyloth.serleena.model;
 
-import java.util.Iterator;
-import java.util.Date;
-import java.util.GregorianCalendar;
+import android.content.ContentValues;
+import android.database.sqlite.SQLiteDatabase;
 
+import com.kyloth.serleena.BuildConfig;
+import com.kyloth.serleena.common.EmergencyContact;
+import com.kyloth.serleena.common.GeoPoint;
+import com.kyloth.serleena.common.NoSuchWeatherForecastException;
+import com.kyloth.serleena.common.Quadrant;
+import com.kyloth.serleena.persistence.WeatherForecastEnum;
+import com.kyloth.serleena.persistence.sqlite.SerleenaDatabase;
+import com.kyloth.serleena.persistence.sqlite.SerleenaSQLiteDataSource;
+
+import org.junit.After;
+import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import static org.junit.Assert.*;
-import org.junit.Before;
-import org.junit.After;
 import org.robolectric.RobolectricGradleTestRunner;
 import org.robolectric.RuntimeEnvironment;
 import org.robolectric.annotation.Config;
 
-import android.content.ContentValues;
-import android.database.sqlite.SQLiteDatabase;
+import java.util.Date;
+import java.util.GregorianCalendar;
+import java.util.Iterator;
 
-import com.kyloth.serleena.persistence.sqlite.SerleenaSQLiteDataSource;
-import com.kyloth.serleena.persistence.sqlite.SerleenaDatabase;
-import com.kyloth.serleena.persistence.WeatherForecastEnum;
-import com.kyloth.serleena.BuildConfig;
-import com.kyloth.serleena.common.EmergencyContact;
-import com.kyloth.serleena.common.GeoPoint;
-import com.kyloth.serleena.common.Quadrant;
-import com.kyloth.serleena.common.NoSuchWeatherForecastException;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
 
 /**
  * Contiene test per la classe SerleenaDataSource.
@@ -114,10 +116,13 @@ public class SerleenaDataSourceTest {
         db.execSQL(insertEmergencyContacts_1);
         db.execSQL(insertEmergencyContacts_2);
         ContentValues values_1 = new ContentValues();
-        values_1.put("weather_start", (new GregorianCalendar(2015, GregorianCalendar.JANUARY, 01, 00, 00, 00)).getTimeInMillis() / 1000);
-        values_1.put("weather_end", (new GregorianCalendar(2015, GregorianCalendar.JANUARY, 01, 23, 59, 59)).getTimeInMillis() / 1000);
-        values_1.put("weather_condition", WeatherForecastEnum.Sunny.ordinal());
-        values_1.put("weather_temperature", 1);
+        values_1.put("weather_date", (new GregorianCalendar(2015, GregorianCalendar.JANUARY, 01, 00, 00, 00)).getTimeInMillis() / 1000);
+        values_1.put("weather_condition_morning", WeatherForecastEnum.Stormy.ordinal());
+        values_1.put("weather_temperature_morning", -2);
+        values_1.put("weather_condition_afternoon", WeatherForecastEnum.Cloudy.ordinal());
+        values_1.put("weather_temperature_afternoon", 0);
+        values_1.put("weather_condition_night", WeatherForecastEnum.Sunny.ordinal());
+        values_1.put("weather_temperature_night", 2);
         values_1.put("weather_nw_corner_latitude", 0.0);
         values_1.put("weather_nw_corner_longitude", 0.0);
         values_1.put("weather_se_corner_latitude", 2.0);
@@ -184,7 +189,7 @@ public class SerleenaDataSourceTest {
         WeatherForecast forecast = (WeatherForecast) dataSource.getWeatherInfo(new GeoPoint(1.0, 1.0),
                                    (new GregorianCalendar(2015, GregorianCalendar.JANUARY, 01)).getTime());
         assertTrue(forecast != null);
-        assertTrue(forecast.getAfternoonForecast() == WeatherForecastEnum.Sunny);
+        assertTrue(forecast.getAfternoonForecast() == WeatherForecastEnum.Cloudy);
     }
 
     /**

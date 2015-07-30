@@ -498,10 +498,13 @@ public class SerleenaDatabaseTest {
 		strings.addAll(invalidStrings);
 
 		for (String value : strings) {
-			values.put("weather_condition", value);
-			values.put("weather_temperature", 1);
-			values.put("weather_start", 1);
-			values.put("weather_end", 1);
+			values.put("weather_condition_morning", value);
+			values.put("weather_temperature_morning", 1);
+			values.put("weather_condition_afternoon", value);
+			values.put("weather_temperature_afternoon", 1);
+			values.put("weather_condition_night", value);
+			values.put("weather_temperature_night", 1);
+			values.put("weather_date", 1);
 			values.put("weather_nw_corner_latitude", 1);
 			values.put("weather_nw_corner_longitude", 1);
 			values.put("weather_se_corner_latitude", 1);

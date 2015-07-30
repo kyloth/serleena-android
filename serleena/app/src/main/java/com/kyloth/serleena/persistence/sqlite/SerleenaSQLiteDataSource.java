@@ -92,9 +92,6 @@ public class SerleenaSQLiteDataSource implements ISerleenaSQLiteDataSource {
     final static int TOT_LAT_QUADRANTS = 180 / QUADRANT_LATSIZE;
     final static int TOT_LONG_QUADRANTS = 360 / QUADRANT_LONGSIZE;
     final static String RASTER_PATH = "raster/";
-    final static int MORNING_CENTRAL_HOUR = 8;
-    final static int AFTERNOON_CENTRAL_HOUR = 15;
-    final static int NIGHT_CENTRAL_HOUR = 22;
 
     private SerleenaDatabase dbHelper;
     private Context context;
@@ -210,7 +207,7 @@ public class SerleenaSQLiteDataSource implements ISerleenaSQLiteDataSource {
         SQLiteDatabase db = dbHelper.getReadableDatabase();
         String where = "telem_track = " + track.id();
         Cursor result = db.query(SerleenaDatabase.TABLE_TELEMETRIES,
-                new String[] { "telem_id" }, where, null, null, null, null);
+                new String[]{"telem_id"}, where, null, null, null, null);
 
         ArrayList<SQLiteDAOTelemetry> list = new
                 ArrayList<SQLiteDAOTelemetry>();
@@ -362,74 +359,6 @@ public class SerleenaSQLiteDataSource implements ISerleenaSQLiteDataSource {
     }
 
     /**
-     * Implementazione di IPersistenceDataStorage.getWeatherInfo().
-     * Ricerca le previsioni per tre specifiche ore, AFTERNOON_CENTRAL_HOUR,
-     * MORNING_CENTRAL_HOUR, NIGHT_CENTRAL_HOUR, da visualizzare o altrimenti
-     * consumare come rappresentative delle condizioni di mattino, pomeriggio,
-     * sera.
-     *
-     * @param location  Posizione geografica di cui si vogliono ottenere le
-     *                  previsioni. Se null, viene sollevata un'eccezione
-     *                  IllegalArgumentException.
-     * @param date      Data di cui si vogliono ottenere le previsioni. Se null,
-     *                  viene sollevata un'eccezione IllegalArgumentException.
-     * @return Previsioni metereologiche.
-     */
-    @Override
-    public IWeatherStorage getWeatherInfo(GeoPoint location, Date date)
-    throws IllegalArgumentException, NoSuchWeatherForecastException {
-        if (date == null)
-            throw new IllegalArgumentException("Illegal null date");
-        if (location == null)
-            throw new IllegalArgumentException("Illegal null location");
-
-        GregorianCalendar morning = new GregorianCalendar();
-        morning.setTime(date);
-        morning.set(Calendar.HOUR_OF_DAY, MORNING_CENTRAL_HOUR);
-        morning.set(Calendar.MINUTE, 0);
-        morning.set(Calendar.SECOND, 0);
-        morning.set(Calendar.MILLISECOND, 0);
-
-        GregorianCalendar afternoon = new GregorianCalendar();
-        afternoon.setTime(date);
-        afternoon.set(Calendar.HOUR_OF_DAY, AFTERNOON_CENTRAL_HOUR);
-        afternoon.set(Calendar.MINUTE, 0);
-        afternoon.set(Calendar.SECOND, 0);
-        afternoon.set(Calendar.MILLISECOND, 0);
-
-        GregorianCalendar night = new GregorianCalendar();
-        night.setTime(date);
-        night.set(Calendar.HOUR_OF_DAY, NIGHT_CENTRAL_HOUR);
-        night.set(Calendar.MINUTE, 0);
-        night.set(Calendar.SECOND, 0);
-        night.set(Calendar.MILLISECOND, 0);
-
-        int morningUnix = Math.round(morning.getTimeInMillis() / 1000);
-        int afternoonUnix = Math.round(afternoon.getTimeInMillis() / 1000);
-        int nightUnix = Math.round(night.getTimeInMillis() / 1000);
-
-        /*
-         * Prendiamo le previsioni di una data ora (e.g. 11) per "il mattino",
-         * una per il pomeriggio (eg. 15.00), etc.
-         * Una versione piu' avanzata sarebbe fare la media o interpolare altrimenti.
-         */
-
-        SimpleWeather morningWeather = getForecast(location, morningUnix);
-        SimpleWeather afternoonWeather = getForecast(location, afternoonUnix);
-        SimpleWeather nightWeather = getForecast(location, nightUnix);
-
-        if (morningWeather == null ||
-                afternoonWeather == null ||
-                nightWeather == null)
-            throw new NoSuchWeatherForecastException();
-
-        return new SQLiteDAOWeather(morningWeather.forecast(),
-                                    afternoonWeather.forecast(), nightWeather.forecast(),
-                                    morningWeather.temperature(), afternoonWeather.temperature(),
-                                    nightWeather.temperature(), date);
-    }
-
-    /**
      * Restituisce il quadrante i cui limiti comprendono la posizione
      * geografica specificata.
      *
@@ -566,12 +495,46 @@ public class SerleenaSQLiteDataSource implements ISerleenaSQLiteDataSource {
      *                  ottenere le previsioni, in UNIX time.
      * @return Previsioni metereologiche.
      */
-    private SimpleWeather getForecast(GeoPoint location, int time) {
+
+
+
+    /**
+     * Implementazione di IPersistenceDataStorage.getWeatherInfo().
+     * Ricerca le previsioni per tre specifiche ore, AFTERNOON_CENTRAL_HOUR,
+     * MORNING_CENTRAL_HOUR, NIGHT_CENTRAL_HOUR, da visualizzare o altrimenti
+     * consumare come rappresentative delle condizioni di mattino, pomeriggio,
+     * sera.
+     *
+     * @param location  Posizione geografica di cui si vogliono ottenere le
+     *                  previsioni. Se null, viene sollevata un'eccezione
+     *                  IllegalArgumentException.
+     * @param date      Data di cui si vogliono ottenere le previsioni. Se null,
+     *                  viene sollevata un'eccezione IllegalArgumentException.
+     * @return Previsioni metereologiche.
+     */
+    @Override
+    public IWeatherStorage getWeatherInfo(GeoPoint location, Date date)
+            throws IllegalArgumentException, NoSuchWeatherForecastException {
+
+
+        if (date == null)
+            throw new IllegalArgumentException("Illegal null date");
+        if (location == null)
+            throw new IllegalArgumentException("Illegal null location");
+
+        GregorianCalendar c = new GregorianCalendar();
+        c.setTimeInMillis(date.getTime());
+        if (c.get(Calendar.HOUR_OF_DAY) != 00 ||
+            c.get(Calendar.MINUTE) != 00 ||
+            c.get(Calendar.SECOND) != 00 ||
+            c.get(Calendar.MILLISECOND) != 00) {
+            throw new IllegalArgumentException("Illegal date, 00:00:00.000 required");
+        }
+
         SQLiteDatabase db = dbHelper.getReadableDatabase();
 
         String where =
-                "weather_end >= " + time + " AND " +
-                "weather_start <= " + time + " AND " +
+                "weather_date = " + (date.getTime()/1000) + " AND " +
                 "`weather_nw_corner_latitude` <= " +
                 location.latitude() + " AND " +
                 "`weather_nw_corner_longitude` <= " +
@@ -582,35 +545,34 @@ public class SerleenaSQLiteDataSource implements ISerleenaSQLiteDataSource {
                 location.longitude();
 
         Cursor result = db.query(SerleenaDatabase.TABLE_WEATHER_FORECASTS,
-                new String[] { "weather_condition", "weather_temperature" },
+                new String[]{
+                        "weather_condition_morning",
+                        "weather_temperature_morning",
+                        "weather_condition_afternoon",
+                        "weather_temperature_afternoon",
+                        "weather_condition_night",
+                        "weather_temperature_night"
+                },
                 where, null, null, null, null);
 
-        int conditionIndex = result.getColumnIndex("weather_condition");
-        int temperatureIndex = result.getColumnIndex("weather_temperature");
+        int conditionMorningIndex = result.getColumnIndex("weather_condition_morning");
+        int temperatureMorningIndex = result.getColumnIndex("weather_temperature_morning");
+        int conditionAfternoonIndex = result.getColumnIndex("weather_condition_afternoon");
+        int temperatureAfternoonIndex = result.getColumnIndex("weather_temperature_afternoon");
+        int conditionNightIndex = result.getColumnIndex("weather_condition_night");
+        int temperatureNightIndex = result.getColumnIndex("weather_temperature_night");
 
         if (result.moveToNext()) {
-            WeatherForecastEnum forecast =
-                    WeatherForecastEnum.values()[result.getInt(conditionIndex)];
-            int temperature = result.getInt(temperatureIndex);
-            return new SimpleWeather(forecast, temperature);
-        } else
-            return null;
-    }
-
-    /**
-     * Rappresenta una previsione metereologica in un istante di tempo,
-     * comprensiva di condizione e temperatura previste.
-     */
-    private class SimpleWeather {
-        private WeatherForecastEnum forecast;
-        private int temperature;
-
-        public SimpleWeather(WeatherForecastEnum forecast, int temperature) {
-            this.forecast = forecast;
-            this.temperature = temperature;
+            return new SQLiteDAOWeather(
+                    WeatherForecastEnum.values()[result.getInt(conditionMorningIndex)],
+                    WeatherForecastEnum.values()[result.getInt(conditionAfternoonIndex)],
+                    WeatherForecastEnum.values()[result.getInt(conditionNightIndex)],
+                    result.getInt(temperatureMorningIndex),
+                    result.getInt(temperatureAfternoonIndex),
+                    result.getInt(temperatureNightIndex),
+                    date);
+        } else {
+            throw new NoSuchWeatherForecastException();
         }
-        public WeatherForecastEnum forecast() { return forecast; }
-        public int temperature() { return temperature; }
     }
-
 }

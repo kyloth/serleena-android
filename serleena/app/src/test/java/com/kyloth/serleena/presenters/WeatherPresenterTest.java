@@ -43,32 +43,39 @@
 
 package com.kyloth.serleena.presenters;
 
-import org.junit.Test;
+import android.content.ContentValues;
+import android.database.sqlite.SQLiteDatabase;
+
+import com.kyloth.serleena.BuildConfig;
+import com.kyloth.serleena.common.GeoPoint;
+import com.kyloth.serleena.model.IWeatherForecast;
+import com.kyloth.serleena.model.SerleenaDataSource;
+import com.kyloth.serleena.persistence.WeatherForecastEnum;
+import com.kyloth.serleena.persistence.sqlite.SerleenaDatabase;
+import com.kyloth.serleena.persistence.sqlite.SerleenaSQLiteDataSource;
+import com.kyloth.serleena.presentation.IWeatherView;
+import com.kyloth.serleena.sensors.ILocationManager;
+import com.kyloth.serleena.sensors.ISensorManager;
+import com.kyloth.serleena.sensors.SerleenaSensorManager;
+
 import org.junit.Before;
 import org.junit.Rule;
-import org.junit.runner.RunWith;
+import org.junit.Test;
 import org.junit.rules.ExpectedException;
-import static org.mockito.Mockito.*;
-import static org.junit.Assert.*;
-
+import org.junit.runner.RunWith;
 import org.robolectric.RobolectricGradleTestRunner;
 import org.robolectric.RuntimeEnvironment;
 import org.robolectric.annotation.Config;
 
-import android.database.sqlite.SQLiteDatabase;
-
+import java.util.Calendar;
 import java.util.Date;
+import java.util.GregorianCalendar;
 
-import com.kyloth.serleena.BuildConfig;
-import com.kyloth.serleena.presentation.IWeatherView;
-import com.kyloth.serleena.sensors.ISensorManager;
-import com.kyloth.serleena.sensors.SerleenaSensorManager;
-import com.kyloth.serleena.sensors.ILocationManager;
-import com.kyloth.serleena.model.SerleenaDataSource;
-import com.kyloth.serleena.model.IWeatherForecast;
-import com.kyloth.serleena.persistence.sqlite.SerleenaDatabase;
-import com.kyloth.serleena.persistence.sqlite.SerleenaSQLiteDataSource;
-import com.kyloth.serleena.common.GeoPoint;
+import static org.mockito.Mockito.any;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.timeout;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
 /**
  * Contiene test per la classe WeatherPresenter.
@@ -128,16 +135,46 @@ public class WeatherPresenterTest {
         dataSource = new SerleenaDataSource(serleenaSQLDS);
 
         when(activity.getDataSource()).thenReturn(dataSource);
-        Date date = new Date();
 
+        Date date = Calendar.getInstance().getTime();
 
-        String insertForecast = "INSERT INTO weather_forecasts " +
-                                "(weather_id, weather_start, weather_end, weather_condition, " +
-                                "weather_temperature, weather_nw_corner_latitude, " +
-                                "weather_nw_corner_longitude, weather_se_corner_latitude, " +
-                                "weather_se_corner_longitude) " +
-                                " VALUES (1, 0, 1749122263, 1, 10, 0, 0, 2, 2)";
-        db.execSQL(insertForecast);
+        Calendar today = new GregorianCalendar();
+        today.setTime(date);
+        today.set(Calendar.HOUR_OF_DAY, 00);
+        today.set(Calendar.MINUTE, 00);
+        today.set(Calendar.SECOND, 00);
+        today.set(Calendar.MILLISECOND, 00);
+        ContentValues values = new ContentValues();
+        values.put("weather_date", (today).getTimeInMillis() / 1000);
+        values.put("weather_condition_morning", WeatherForecastEnum.Stormy.ordinal());
+        values.put("weather_temperature_morning", -2);
+        values.put("weather_condition_afternoon", WeatherForecastEnum.Cloudy.ordinal());
+        values.put("weather_temperature_afternoon", 0);
+        values.put("weather_condition_night", WeatherForecastEnum.Sunny.ordinal());
+        values.put("weather_temperature_night", 2);
+        values.put("weather_nw_corner_latitude", 0.0);
+        values.put("weather_nw_corner_longitude", 0.0);
+        values.put("weather_se_corner_latitude", 2.0);
+        values.put("weather_se_corner_longitude", 2.0);
+        db.insertOrThrow(SerleenaDatabase.TABLE_WEATHER_FORECASTS, null, values);
+
+        Calendar tomorrow = new GregorianCalendar();
+        tomorrow.setTime(today.getTime());
+        tomorrow.add(Calendar.DAY_OF_YEAR, 1);
+        values = new ContentValues();
+        values.put("weather_date", (tomorrow).getTimeInMillis() / 1000);
+        values.put("weather_condition_morning", WeatherForecastEnum.Stormy.ordinal());
+        values.put("weather_temperature_morning", -2);
+        values.put("weather_condition_afternoon", WeatherForecastEnum.Cloudy.ordinal());
+        values.put("weather_temperature_afternoon", 0);
+        values.put("weather_condition_night", WeatherForecastEnum.Sunny.ordinal());
+        values.put("weather_temperature_night", 2);
+        values.put("weather_nw_corner_latitude", 0.0);
+        values.put("weather_nw_corner_longitude", 0.0);
+        values.put("weather_se_corner_latitude", 2.0);
+        values.put("weather_se_corner_longitude", 2.0);
+        db.insertOrThrow(SerleenaDatabase.TABLE_WEATHER_FORECASTS, null, values);
+
     }
 
     /**
