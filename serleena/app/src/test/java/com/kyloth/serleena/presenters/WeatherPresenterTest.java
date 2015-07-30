@@ -67,6 +67,7 @@ import org.robolectric.RobolectricGradleTestRunner;
 import org.robolectric.RuntimeEnvironment;
 import org.robolectric.annotation.Config;
 
+import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
 
@@ -134,12 +135,34 @@ public class WeatherPresenterTest {
         dataSource = new SerleenaDataSource(serleenaSQLDS);
 
         when(activity.getDataSource()).thenReturn(dataSource);
-        Date date = new Date();
+
+        Date date = Calendar.getInstance().getTime();
+
+        Calendar today = new GregorianCalendar();
+        today.setTime(date);
+        today.set(Calendar.HOUR_OF_DAY, 00);
+        today.set(Calendar.MINUTE, 00);
+        today.set(Calendar.SECOND, 00);
+        today.set(Calendar.MILLISECOND, 00);
         ContentValues values = new ContentValues();
-        values.put("weather_date", (
-                new GregorianCalendar(2015,
-                        GregorianCalendar.JANUARY, 01, 00, 00,
-                        00)).getTimeInMillis() / 1000);
+        values.put("weather_date", (today).getTimeInMillis() / 1000);
+        values.put("weather_condition_morning", WeatherForecastEnum.Stormy.ordinal());
+        values.put("weather_temperature_morning", -2);
+        values.put("weather_condition_afternoon", WeatherForecastEnum.Cloudy.ordinal());
+        values.put("weather_temperature_afternoon", 0);
+        values.put("weather_condition_night", WeatherForecastEnum.Sunny.ordinal());
+        values.put("weather_temperature_night", 2);
+        values.put("weather_nw_corner_latitude", 0.0);
+        values.put("weather_nw_corner_longitude", 0.0);
+        values.put("weather_se_corner_latitude", 2.0);
+        values.put("weather_se_corner_longitude", 2.0);
+        db.insertOrThrow(SerleenaDatabase.TABLE_WEATHER_FORECASTS, null, values);
+
+        Calendar tomorrow = new GregorianCalendar();
+        tomorrow.setTime(today.getTime());
+        tomorrow.add(Calendar.DAY_OF_YEAR, 1);
+        values = new ContentValues();
+        values.put("weather_date", (tomorrow).getTimeInMillis() / 1000);
         values.put("weather_condition_morning", WeatherForecastEnum.Stormy.ordinal());
         values.put("weather_temperature_morning", -2);
         values.put("weather_condition_afternoon", WeatherForecastEnum.Cloudy.ordinal());
