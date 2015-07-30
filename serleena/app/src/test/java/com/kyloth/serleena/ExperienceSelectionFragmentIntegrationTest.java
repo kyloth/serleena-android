@@ -77,6 +77,8 @@ import org.junit.After;
 import org.junit.Rule;
 import org.junit.rules.ExpectedException;
 
+import java.lang.Boolean;
+import java.lang.Integer;
 import java.lang.Override;
 import java.util.ArrayList;
 
@@ -112,10 +114,17 @@ public class ExperienceSelectionFragmentIntegrationTest {
         }
     }
 
+    private class TestingExperienceObserver implements IExperienceActivationObserver {
+        private String name;
+        @Override
+        public void onExperienceActivated(IExperience experience) { name = experience.getName(); }
+        public String getName() { return name;}
+    }
+
     private ExperienceSelectionFragment fragment;
     private ExperienceSelectionPresenter presenter;
     private static ArrayList<IExperience> list = new ArrayList<>();
-    private IExperienceActivationObserver obs;
+    private TestingExperienceObserver obs;
     private CustomDataSourceActivity activity;
 
     private Application app;
@@ -141,6 +150,7 @@ public class ExperienceSelectionFragmentIntegrationTest {
 
         db = TestDB.getEmptyDatabase();
         sqLiteDatabase = db.getWritableDatabase();
+        obs = new TestingExperienceObserver();
         updateExperiencesList();
 
         fragment.attachPresenter(presenter);
@@ -155,6 +165,7 @@ public class ExperienceSelectionFragmentIntegrationTest {
                         RuntimeEnvironment.application, db));
         activity.setDataSource(dataSource);
         presenter = new ExperienceSelectionPresenter(fragment,activity);
+        presenter.attachObserver(obs);
     }
 
     @Test
@@ -168,11 +179,12 @@ public class ExperienceSelectionFragmentIntegrationTest {
         Assert.assertEquals("expo",exp.getName());
     }
 
-    @Test
+    @After
     public void testActivateExperience() {
-        //IExperience experience = list.get(0);
-        //fragment.onListItemClick(null, null, 0, 0);
-        //verify(obs).onExperienceActivated(experience);
+        ListAdapter adapter = fragment.getListAdapter();
+        IExperience experience = (IExperience) adapter.getItem(0);
+        fragment.onListItemClick(null, null, 0, 0);
+        Assert.assertEquals("expo",obs.getName());
     }
 
 }
