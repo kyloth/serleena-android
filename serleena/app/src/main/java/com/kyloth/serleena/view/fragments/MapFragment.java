@@ -80,6 +80,7 @@ public class MapFragment extends Fragment implements IMapView,
                              Bundle savedInstanceState) {
         View v = inflater.inflate(R.layout.fragment_map, container, false);
         map = (MapWidget) v.findViewById(R.id.map_widget);
+        map.setOnClickListener(this);
         return v;
     }
 
