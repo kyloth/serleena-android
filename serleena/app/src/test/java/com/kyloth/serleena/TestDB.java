@@ -117,16 +117,16 @@ public class TestDB {
     }
 
     public static void forecastQuery(SQLiteDatabase db, int id, long start,
-         long end, String condition, int temperature, double neLat, double neLon, double swLat, double swLon) {
+         long end, String condition, int temperature, double nwLat, double nwLon, double seLat, double seLon) {
         String query = "INSERT INTO weather_forecasts (weather_id, weather_start, " +
                        "weather_end, weather_condition, weather_temperature, " +
                        "weather_nw_corner_latitude, weather_nw_corner_longitude, " +
                        "weather_se_corner_latitude, weather_se_corner_longitude) VALUES " +
                        "(" + String.valueOf(id) + ", " + String.valueOf(start) + ", " +
                        String.valueOf(end) + ", '" + condition + "', " +
-                       String.valueOf(temperature) + ", " + String.valueOf(neLat) + ", " +
-                       String.valueOf(neLon) + ", " + String.valueOf(swLat) + ", " +
-                       String.valueOf(swLon) + ")";
+                       String.valueOf(temperature) + ", " + String.valueOf(nwLat) + ", " +
+                       String.valueOf(nwLon) + ", " + String.valueOf(seLat) + ", " +
+                       String.valueOf(seLon) + ")";
         db.execSQL(query);
     }
 
