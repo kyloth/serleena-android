@@ -217,18 +217,10 @@ public class SerleenaDatabaseTest {
 
 		long id = makeTelemetry(db);
 		values = new ContentValues();
-		values.put("eventl_telem", id);
-		values.put("eventl_timestamp", "asdfb");
-		values.put("eventl_latitude", "1");
-		values.put("eventl_longitude", "2");
-		db.insertOrThrow(SerleenaDatabase.TABLE_TELEM_EVENTS_LOCATION, null, values);
-
-		values = new ContentValues();
-		values.put("eventhc_telem", id);
-		values.put("eventhc_timestamp", "asdfb");
-		values.put("eventhc_value", "1");
-		values.put("eventhc_type", "asdfasdf");
-		db.insertOrThrow(SerleenaDatabase.TABLE_TELEM_EVENTS_HEART_CHECKP, null, values);
+		values.put("eventc_telem", id);
+		values.put("eventc_timestamp", 300);
+		values.put("eventc_value", "1");
+		db.insertOrThrow(SerleenaDatabase.TABLE_TELEM_EVENTS_CHECKP, null, values);
 	}
 
 	/**
@@ -249,165 +241,61 @@ public class SerleenaDatabaseTest {
 	 * Percorso inesistente.
 	 */
 	@Test(expected = SQLException.class)
-	public void testLocationWrongTelemFails() {
+	public void testCheckpointWrongTelemFails() {
 		ContentValues values = new ContentValues();
-		values.put("eventl_telem", 1234567890);
-		values.put("eventl_timestamp", 1);
-		values.put("eventl_latitude", 1);
-		values.put("eventl_longitude", 1);
-		db.insertOrThrow(SerleenaDatabase.TABLE_TELEM_EVENTS_LOCATION, null, values);
+		values.put("eventc_telem", 2342342);
+		values.put("eventc_timestamp", 300);
+		values.put("eventc_value", "1");
+		db.insertOrThrow(SerleenaDatabase.TABLE_TELEM_EVENTS_CHECKP, null, values);
 	}
 
 	/**
-	 * Verifica che l'eliminazione di un Tracciamento causi l'eliminazione dei suoi eventi location
-	 */
-	@Test(expected = SQLException.class)
-	public void testLocationCascade() {
-		ContentValues values = new ContentValues();
-		long id = makeTrack(db);
-		values.put("eventl_telem", id);
-		values.put("eventl_timestamp", 1);
-		values.put("eventl_latitude", 1);
-		values.put("eventl_longitude", 1);
-		db.insertOrThrow(SerleenaDatabase.TABLE_TELEM_EVENTS_LOCATION, null, values);
-		db.delete(SerleenaDatabase.TABLE_TRACKS, "track_id = " + id, null);
-		Cursor query = db.query(SerleenaDatabase.TABLE_TELEM_EVENTS_LOCATION, null, "eventl_telem = " + id, null, null, null, null);
-		assertTrue(query.getCount() == 0);
-	}
-
-	/**
-	 * Verifica che non sia possibile aggiungere un evento Location che non fa riferimanto ad alcun
-	 * Tracciamento.
-	 */
-	@Test(expected = SQLException.class)
-	public void testLocationNullTelemFails() {
-		ContentValues values = new ContentValues();
-		values.put("eventl_timestamp", 1);
-		values.put("eventl_latitude", 1);
-		values.put("eventl_longitude", 1);
-		db.insertOrThrow(SerleenaDatabase.TABLE_TELEM_EVENTS_LOCATION, null, values);
-	}
-
-	/**
-	 * Verifica che non sia possibile inserire eventi Location con timestamp nullo.
-	 */
-	@Test(expected = SQLException.class)
-	public void testLocationNullTimestampFails() {
-		long id = makeTelemetry(db);
-		ContentValues values;
-		values = new ContentValues();
-		values.put("eventl_telem", id);
-		values.put("eventl_latitude", 1);
-		values.put("eventl_longitude", 1);
-		db.insertOrThrow(SerleenaDatabase.TABLE_TELEM_EVENTS_LOCATION, null, values);
-	}
-
-	/**
-	 * Verifica che non sia possibile inserire eventi Location con latitudine nulla.
-	 */
-	@Test(expected = SQLException.class)
-	public void testLocationNullLatitudeFails() {
-		long id = makeTelemetry(db);
-		ContentValues values;
-		values = new ContentValues();
-		values.put("eventl_telem", id);
-		values.put("eventl_timestamp", -1);
-		values.put("eventl_longitude", 1);
-		db.insertOrThrow(SerleenaDatabase.TABLE_TELEM_EVENTS_LOCATION, null, values);
-	}
-
-	/**
-	 * Verifica che non sia possibile inserire eventi Location con longitudine nulla.
-	 */
-	@Test(expected = SQLException.class)
-	public void testLocationNullLongitudeFails() {
-		long id = makeTelemetry(db);
-		ContentValues values;
-		values = new ContentValues();
-		values.put("eventl_telem", id);
-		values.put("eventl_timestamp", -1);
-		values.put("eventl_latitude", 1);
-		db.insertOrThrow(SerleenaDatabase.TABLE_TELEM_EVENTS_LOCATION, null, values);
-	}
-
-	/*
-	 * TABLE_TELEM_EVENTS_HEART_CHECKP
-	 */
-
-	/**
-	 * Verifica che non sia possibile aggiungere un evento Heart che non fa riferimanto ad alcun
-	 * Tracciamento.
+	 * Verifica che non sia possibile aggiungere un evento checkpoint che non
+	 * fa riferimanto ad alcun Tracciamento.
 	 */
 	@Test(expected = SQLException.class)
 	public void testHeartWrongTelemFails() {
 		ContentValues values = new ContentValues();
-		values.put("eventl_telem", 1234567890);
-		values.put("eventl_timestamp", 1);
-		values.put("eventl_value", 1);
-		values.put("eventl_type", 1);
-		db.insertOrThrow(SerleenaDatabase.TABLE_TELEM_EVENTS_HEART_CHECKP, null, values);
+		values.put("eventc_telem", 1234567890);
+		values.put("eventc_timestamp", 1);
+		values.put("eventc_value", 1);
+		db.insertOrThrow(SerleenaDatabase.TABLE_TELEM_EVENTS_CHECKP, null, values);
 	}
 
 	/**
-	 * Verifica che l'eliminazione di un Tracciamento causi l'eliminazione dei suoi eventi Heart.
+	 * Verifica che l'eliminazione di un Tracciamento causi l'eliminazione dei
+	 * suoi eventi checkpoint.
 	 */
 	@Test(expected = SQLException.class)
 	public void testHeartCascade() {
 		ContentValues values = new ContentValues();
 		long id = makeTrack(db);
-		values.put("eventl_telem", id);
-		values.put("eventl_timestamp", 1);
-		values.put("eventl_value", 1);
-		values.put("eventl_type", 1);
-		db.insertOrThrow(SerleenaDatabase.TABLE_TELEM_EVENTS_HEART_CHECKP, null, values);
+		values.put("eventc_telem", id);
+		values.put("eventc_timestamp", 1);
+		values.put("eventc_value", 1);
+		db.insertOrThrow(SerleenaDatabase.TABLE_TELEM_EVENTS_CHECKP, null, values);
 		db.delete(SerleenaDatabase.TABLE_TRACKS, "track_id = " + id, null);
-		Cursor query = db.query(SerleenaDatabase.TABLE_TELEM_EVENTS_HEART_CHECKP, null, "eventl_telem = " + id, null, null, null, null);
+		Cursor query = db.query(SerleenaDatabase.TABLE_TELEM_EVENTS_CHECKP, null,
+				"eventc_telem = " + id, null, null, null, null);
 		assertTrue(query.getCount() == 0);
 	}
 
 	/**
-	 * Verifica che non sia possibile aggiungere eventi Heart che non fanno riferimento ad alcun
-	 * Tracciamento.
-	 */
-	@Test(expected = SQLException.class)
-	public void testHeartNullTelemFails() {
-		ContentValues values = new ContentValues();
-		values.put("eventl_timestamp", 1);
-		values.put("eventl_value", 1);
-		values.put("eventl_type", 1);
-		db.insertOrThrow(SerleenaDatabase.TABLE_TELEM_EVENTS_HEART_CHECKP, null, values);
-	}
-
-	/**
-	 * Verifica che non sia possibile aggiungere eventi Heart senza timestamp
+	 * Verifica che non sia possibile aggiungere eventi checkpoint senza
+	 * timestamp.
 	 */
 	@Test(expected = SQLException.class)
 	public void testHeartNullTimestampFails() {
 		long id = makeTelemetry(db);
 		ContentValues values;
 		values = new ContentValues();
-		values.put("eventl_telem", id);
-		values.put("eventl_value", 1);
-		values.put("eventl_type", 1);
-		db.insertOrThrow(SerleenaDatabase.TABLE_TELEM_EVENTS_HEART_CHECKP, null, values);
+		values.put("eventc_telem", id);
+		values.put("eventc_value", 1);
+		db.insertOrThrow(SerleenaDatabase.TABLE_TELEM_EVENTS_CHECKP, null, values);
 	}
 
 	/**
-	 * Verifica che non sia possibile aggiungere eventi Heart senza discriminante
-	 */
-	@Test(expected = SQLException.class)
-	public void testHeartNullTypeFails() {
-		long id = makeTelemetry(db);
-		ContentValues values;
-		values = new ContentValues();
-		values.put("eventl_telem", id);
-		values.put("eventl_timestamp", 1);
-		values.put("eventl_value", 1);
-		db.insertOrThrow(SerleenaDatabase.TABLE_TELEM_EVENTS_HEART_CHECKP, null, values);
-	}
-
-	/**
-	 * Verifica che non sia possibile aggiungere eventi Heart senza value
+	 * Verifica che non sia possibile aggiungere eventi checkpoint senza value.
 	 */
 	@Test(expected = SQLException.class)
 	public void testHeartNullValueFails() {
@@ -416,8 +304,7 @@ public class SerleenaDatabaseTest {
 		values = new ContentValues();
 		values.put("eventl_telem", id);
 		values.put("eventl_timestamp", 1);
-		values.put("eventl_type", 1);
-		db.insertOrThrow(SerleenaDatabase.TABLE_TELEM_EVENTS_HEART_CHECKP, null, values);
+		db.insertOrThrow(SerleenaDatabase.TABLE_TELEM_EVENTS_CHECKP, null, values);
 	}
 
 	/*
@@ -462,7 +349,7 @@ public class SerleenaDatabaseTest {
 		values.put("contact_nw_corner_longitude", 1);
 		values.put("contact_se_corner_latitude", 1);
 		values.put("contact_se_corner_longitude", 1);
-		db.insertOrThrow(SerleenaDatabase.TABLE_TELEM_EVENTS_HEART_CHECKP, null, values);
+		db.insertOrThrow(SerleenaDatabase.TABLE_CONTACTS, null, values);
 	}
 
 	/**
@@ -477,7 +364,7 @@ public class SerleenaDatabaseTest {
 		values.put("contact_nw_corner_longitude", 1);
 		values.put("contact_se_corner_latitude", 1);
 		values.put("contact_se_corner_longitude", 1);
-		db.insertOrThrow(SerleenaDatabase.TABLE_TELEM_EVENTS_HEART_CHECKP, null, values);
+		db.insertOrThrow(SerleenaDatabase.TABLE_CONTACTS, null, values);
 	}
 
 	/*

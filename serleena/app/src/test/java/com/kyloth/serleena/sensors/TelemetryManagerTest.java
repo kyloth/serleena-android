@@ -45,8 +45,6 @@ import com.kyloth.serleena.common.Checkpoint;
 import com.kyloth.serleena.common.CheckpointReachedTelemetryEvent;
 import com.kyloth.serleena.common.DirectAccessList;
 import com.kyloth.serleena.common.GeoPoint;
-import com.kyloth.serleena.common.HeartRateTelemetryEvent;
-import com.kyloth.serleena.common.LocationTelemetryEvent;
 import com.kyloth.serleena.common.NoTrackCrossingException;
 import com.kyloth.serleena.common.TelemetryEvent;
 import com.kyloth.serleena.model.ITrack;
@@ -123,7 +121,7 @@ public class TelemetryManagerTest {
     public void initialize() {
         bkgrLocMan = mock(IBackgroundLocationManager.class);
         tc = mock(ITrackCrossing.class);
-        manager = new TelemetryManager(bkgrLocMan, tc);
+        manager = new TelemetryManager(tc);
     }
 
     /**
@@ -161,16 +159,6 @@ public class TelemetryManagerTest {
     }
 
     /**
-     * Verifica che la disabilitazione del Tracciamento causi la
-     * deregistrazione ai sensori necessari al campionamento.
-     */
-    @Test
-    public void disablingTelemetryShouldUnregisterSensors() {
-        manager.disable();
-        verify(bkgrLocMan).detachObserver(manager);
-    }
-
-    /**
      * Verifica che, se abilitato, il Tracciamento venga avviato
      * all'attraversamento del primo checkpoint del Percorso.
      */
@@ -182,9 +170,6 @@ public class TelemetryManagerTest {
 
         manager.enable();
         manager.onCheckpointCrossed(0);
-
-        verify(bkgrLocMan).attachObserver(manager,
-                TelemetryManager.SAMPLING_RATE_SECONDS);
 
         CheckpointReachedTelemetryEvent crte =
                 (CheckpointReachedTelemetryEvent)
@@ -226,7 +211,6 @@ public class TelemetryManagerTest {
         manager.enable();
 
         manager.onCheckpointCrossed(0);
-        verify(bkgrLocMan).detachObserver(manager);
         assertTrue(!manager.isEnabled());
     }
 
@@ -265,23 +249,6 @@ public class TelemetryManagerTest {
     */
 
     /**
-     * Verifica che i dati ricevuti dai sensori vengano inseriti come eventi
-     * del Tracciamento in corso.
-     */
-    @Test
-    public void sensorUpdateShouldCreateEvent() {
-        GeoPoint gp = new GeoPoint(12, 21);
-        manager.onLocationUpdate(gp);
-
-        boolean found = false;
-        for (TelemetryEvent e : manager.getEvents())
-            if (e instanceof LocationTelemetryEvent)
-                found = found ||
-                        ((LocationTelemetryEvent)e).location().equals(gp);
-        assertTrue(found);
-    }
-
-    /**
      * Verifica che gli eventi restituiti non siano una singola istanza, ma
      * venga restituita una copia ad ogni richiesta.
      */
@@ -316,8 +283,6 @@ public class TelemetryManagerTest {
         when(tc.getTrack()).thenReturn(track);
 
         manager.onCheckpointCrossed(0);
-        verify(bkgrLocMan, never()).attachObserver(manager,
-                TelemetryManager.SAMPLING_RATE_SECONDS);
         verify(tc, never()).getTrack();
         assertTrue(!manager.getEvents().iterator().hasNext());
     }

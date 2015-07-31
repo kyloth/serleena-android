@@ -32,8 +32,8 @@ package com.kyloth.serleena;
 
 import android.database.sqlite.SQLiteDatabase;
 
+import com.kyloth.serleena.common.CheckpointReachedTelemetryEvent;
 import com.kyloth.serleena.common.GeoPoint;
-import com.kyloth.serleena.common.LocationTelemetryEvent;
 import com.kyloth.serleena.common.TelemetryEvent;
 import com.kyloth.serleena.common.UserPoint;
 import com.kyloth.serleena.model.IExperience;
@@ -80,13 +80,12 @@ public class PersistenceModelIntegrationTest {
             String.valueOf(id) + ", " + String.valueOf(track) + ")";
     }
 
-    private String getLocationTelemetryEventQuery(int id, int timestamp,
-            double lat, double lon, int telemetry) {
-        return "INSERT INTO telemetry_events_location (eventl_id, " +
-            "eventl_timestamp, eventl_latitude, eventl_longitude, " +
-                "eventl_telem) " +
+    private String getCheckpointTelemetryEventQuery(int id, int timestamp,
+                                                    int telemetry, int checkp) {
+        return "INSERT INTO telemetry_events_checkp (eventc_id, " +
+            "eventc_timestamp, eventc_value, eventc_telem) " +
             "VALUES (" + String.valueOf(id) + ", " + String.valueOf(timestamp) +
-            ", " + String.valueOf(lat) + ", " + String.valueOf(lon) + ", " + 
+            ", " + String.valueOf(checkp) + ", " +
             String.valueOf(telemetry) + ")";
     }
 
@@ -167,17 +166,17 @@ public class PersistenceModelIntegrationTest {
         db.execSQL(getExperienceQuery(1, "myExperience"));
         db.execSQL(getTrackQuery(1, "myTrack", 1));
         db.execSQL(getTelemetryQuery(1, 1));
-        db.execSQL(getLocationTelemetryEventQuery(1, 300, 3, 4, 1));
-        db.execSQL(getLocationTelemetryEventQuery(2, 400, 6, 2, 1));
+        db.execSQL(getCheckpointTelemetryEventQuery(1, 300, 1, 0));
+        db.execSQL(getCheckpointTelemetryEventQuery(2, 300, 1, 1));
 
         IExperience experience = dataSource.getExperiences().iterator().next();
         ITrack track = experience.getTracks().iterator().next();
         ITelemetry telemetry = track.getTelemetries().iterator().next();
 
-        assertTrue(containsEquals(telemetry.getEvents(), new
-                LocationTelemetryEvent(300, new GeoPoint(3, 4))));
-        assertTrue(containsEquals(telemetry.getEvents(), new
-                LocationTelemetryEvent(400, new GeoPoint(6, 2))));
+        assertTrue(containsEquals(telemetry.getEvents(),
+                new CheckpointReachedTelemetryEvent(300, 0)));
+        assertTrue(containsEquals(telemetry.getEvents(),
+                new CheckpointReachedTelemetryEvent(300, 0)));
     }
 
     @Test
@@ -189,17 +188,17 @@ public class PersistenceModelIntegrationTest {
         ITrack track = experience.getTracks().iterator().next();
 
         List<TelemetryEvent> list = new ArrayList<>();
-        list.add(new LocationTelemetryEvent(300, new GeoPoint(3, 4)));
-        list.add(new LocationTelemetryEvent(400, new GeoPoint(6, 3)));
+        list.add(new CheckpointReachedTelemetryEvent(300, 0));
+        list.add(new CheckpointReachedTelemetryEvent(300, 1));
 
         track.createTelemetry(list);
 
         ITelemetry telemetry = track.getTelemetries().iterator().next();
 
-        assertTrue(containsEquals(telemetry.getEvents(), new
-                LocationTelemetryEvent(300, new GeoPoint(3, 4))));
-        assertTrue(containsEquals(telemetry.getEvents(), new
-                LocationTelemetryEvent(400, new GeoPoint(6, 3))));
+        assertTrue(containsEquals(telemetry.getEvents(),
+                new CheckpointReachedTelemetryEvent(300, 0)));
+        assertTrue(containsEquals(telemetry.getEvents(),
+                new CheckpointReachedTelemetryEvent(300, 1)));
     }
 
 }

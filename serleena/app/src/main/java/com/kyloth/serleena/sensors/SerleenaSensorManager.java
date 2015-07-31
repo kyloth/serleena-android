@@ -113,7 +113,7 @@ public class SerleenaSensorManager implements ISensorManager {
 
         locMan = new SerleenaLocationManager(androidLocMan);
         tc = new TrackCrossing(new LocationReachedManager(bkgrLocMan));
-        telMan = new TelemetryManager(bkgrLocMan, tc);
+        telMan = new TelemetryManager(tc);
         try {
             hMan = new HeadingManager(sm);
         } catch (SensorNotAvailableException e) {

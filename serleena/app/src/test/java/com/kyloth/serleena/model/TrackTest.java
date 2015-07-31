@@ -54,7 +54,6 @@ import java.util.Iterator;
 import com.kyloth.serleena.persistence.ITrackStorage;
 import com.kyloth.serleena.persistence.ITelemetryStorage;
 import com.kyloth.serleena.common.TelemetryEvent;
-import com.kyloth.serleena.common.LocationTelemetryEvent;
 
 /**
  * Contiene i test di unità per la classe Track.

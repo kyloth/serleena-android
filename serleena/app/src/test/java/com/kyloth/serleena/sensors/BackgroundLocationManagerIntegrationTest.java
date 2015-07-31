@@ -28,24 +28,37 @@
 ///////////////////////////////////////////////////////////////////////////////
 
 
-/**
- * Name: TelemetryEventType.java
- * Package: com.kyloth.serleena.common
- * Author: Filippo Sestini
- *
- * History:
- * Version  Programmer       Changes
- * 1.0.0    Filippo Sestini  Creazione file e scrittura di
- *                                          codice e documentazione in Javadoc.
- */
+package com.kyloth.serleena.sensors;
 
-package com.kyloth.serleena.common;
+import android.app.AlarmManager;
+import android.content.Context;
 
-/**
- * Rappresenta i diversi tipi di eventi di Tracciamento utilizzati
- * dall'applicazione.
- *
- * @author Filippo Sestini <sestini.filippo@gmail.com>
- * @version 1.0.0
- */
-public enum TelemetryEventType { CheckpointReached }
+import org.junit.Before;
+import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.robolectric.RobolectricTestRunner;
+import org.robolectric.RuntimeEnvironment;
+import org.robolectric.Shadows;
+import org.robolectric.shadows.ShadowAlarmManager;
+
+@RunWith(RobolectricTestRunner.class)
+public class BackgroundLocationManagerIntegrationTest {
+    BackgroundLocationManager blm;
+    Context context;
+    ShadowAlarmManager shadowAlarmManager;
+    AlarmManager alarmManager;
+
+    @Before
+    public void initialize() {
+        context = RuntimeEnvironment.application;
+        alarmManager =
+                (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
+        shadowAlarmManager = Shadows.shadowOf(alarmManager);
+        blm = new BackgroundLocationManager(context, alarmManager);
+    }
+
+    @Test
+    public void test() {
+
+    }
+}

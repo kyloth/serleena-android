@@ -104,7 +104,7 @@ public class TelemetryTrackCrossingIntegrationTest {
         Application app = RuntimeEnvironment.application;
         lrm = new LocationReachedManager(mock(BackgroundLocationManager.class));
         tc = new TrackCrossing(lrm);
-        tm = new TelemetryManager(mock(BackgroundLocationManager.class), tc);
+        tm = new TelemetryManager(tc);
     }
 
     /**

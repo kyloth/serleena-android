@@ -42,24 +42,15 @@
 package com.kyloth.serleena.model;
 
 import org.junit.Test;
-import org.junit.Before;
-import org.junit.Rule;
-import org.junit.rules.ExpectedException;
-import org.mockito.Mockito;
 
 import static org.mockito.Mockito.*;
 import static org.junit.Assert.*;
 
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Iterator;
 import java.util.List;
 
 import com.android.internal.util.Predicate;
-import com.kyloth.serleena.common.GeoPoint;
 import com.kyloth.serleena.common.TelemetryEvent;
-import com.kyloth.serleena.common.TelemetryEventType;
-import com.kyloth.serleena.common.LocationTelemetryEvent;
 import com.kyloth.serleena.persistence.ITelemetryStorage;
 
 /**
