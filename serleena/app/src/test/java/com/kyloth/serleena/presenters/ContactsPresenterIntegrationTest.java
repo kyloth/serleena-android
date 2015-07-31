@@ -28,7 +28,7 @@
 ///////////////////////////////////////////////////////////////////////////////
 
 
-package com.kyloth.serleena;
+package com.kyloth.serleena.presenters;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -57,7 +57,9 @@ import android.view.ViewGroup;
 import android.os.Bundle;
 import android.database.sqlite.SQLiteDatabase;
 
-import com.kyloth.serleena.presenters.ContactsPresenter;
+import com.kyloth.serleena.BuildConfig;
+import com.kyloth.serleena.TestDB;
+import com.kyloth.serleena.R;
 import com.kyloth.serleena.activity.SerleenaActivity;
 import com.kyloth.serleena.model.SerleenaDataSource;
 import com.kyloth.serleena.common.GeoPoint;
