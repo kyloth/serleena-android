@@ -71,6 +71,8 @@ class Track implements ITrack {
      *                Percorso.
      */
     public Track(ITrackStorage storage) {
+        if (storage == null)
+            throw new IllegalArgumentException();
         this.storage = storage;
     }
 
@@ -97,6 +99,9 @@ class Track implements ITrack {
      */
     @Override
     public void createTelemetry(Iterable<TelemetryEvent> events) {
+        if (events == null)
+            throw new IllegalArgumentException();
+
         storage.createTelemetry(events);
     }
 
