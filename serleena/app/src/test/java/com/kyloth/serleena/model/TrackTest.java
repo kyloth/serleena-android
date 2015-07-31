@@ -31,26 +31,29 @@
 /**
  * Name: TrackTest.java
  * Package: com.kyloth.serleena.model;
- * Author: Gabriele Pozzan
+ * Author: Filippo Sestini
  *
  * History:
  * Version  Programmer       Changes
- * 1.0.0    Gabriele Pozzan  Creazione file scrittura
- *                                       codice e documentazione Javadoc
+ * 1.0.0    Filippo Sestini  Creazione file, scrittura
+ *                           codice e documentazione Javadoc
  */
 
 package com.kyloth.serleena.model;
 
 import org.junit.Test;
 import org.junit.Before;
-import org.junit.Rule;
-import org.junit.rules.ExpectedException;
 import static org.mockito.Mockito.*;
 import static org.junit.Assert.*;
 
-import java.util.Arrays;
+import java.util.ArrayList;
 import java.util.Iterator;
+import java.util.List;
 
+import com.kyloth.serleena.common.Checkpoint;
+import com.kyloth.serleena.common.CheckpointReachedTelemetryEvent;
+import com.kyloth.serleena.common.DirectAccessList;
+import com.kyloth.serleena.common.ListAdapter;
 import com.kyloth.serleena.persistence.ITrackStorage;
 import com.kyloth.serleena.persistence.ITelemetryStorage;
 import com.kyloth.serleena.common.TelemetryEvent;
@@ -58,44 +61,42 @@ import com.kyloth.serleena.common.TelemetryEvent;
 /**
  * Contiene i test di unità per la classe Track.
  *
- * @author Gabriele Pozzan <gabriele.pozzan@studenti.unipd.it>
+ * @author Filippo Sestini <sestini.filippo@gmail.com>
  * @version 1.0.0
  */
 
 public class TrackTest {
-    ITrackStorage track_storage;
-    ITrackStorage track_storage_nt;
-    ITelemetryStorage tel_storage1;
-    ITelemetryStorage tel_storage2;
-    ITelemetryStorage tel_storage_nt;
-    LocationTelemetryEvent lte1;
-    LocationTelemetryEvent lte2;
-    @Rule
-    public ExpectedException exception = ExpectedException.none();
+    ITrackStorage trackStorage;
+    Track track;
 
     /**
      * Inizializza i campi dati necessari alla conduzione dei test.
      */
     @Before
     public void initialize() {
-        track_storage = mock(ITrackStorage.class);
-        track_storage_nt = mock(ITrackStorage.class);
-        tel_storage1 = mock(ITelemetryStorage.class);
-        tel_storage2 = mock(ITelemetryStorage.class);
-        tel_storage_nt = mock(ITelemetryStorage.class);
-        lte1 = mock(LocationTelemetryEvent.class);
-        when(lte1.timestamp()).thenReturn(20);
-        lte2 = mock(LocationTelemetryEvent.class);
-        when(lte2.timestamp()).thenReturn(10);
-        when(tel_storage1.getEvents()).thenReturn(Arrays.asList(new TelemetryEvent[]
-                {lte1}));
-        when(tel_storage2.getEvents()).thenReturn(Arrays.asList(new TelemetryEvent[]
-                {lte2}));
-        when(tel_storage_nt.getEvents()).thenReturn(Arrays.asList(new TelemetryEvent[] {}));
-        when(track_storage.getTelemetries()).thenReturn(Arrays.asList(new ITelemetryStorage[]
-                {tel_storage1, tel_storage2}));
-        when(track_storage_nt.getTelemetries()).thenReturn(Arrays.asList(new ITelemetryStorage[]
-                {}));
+        trackStorage = mock(ITrackStorage.class);
+        ITelemetryStorage telStor1 = mock(ITelemetryStorage.class);
+        ITelemetryStorage telStor2 = mock(ITelemetryStorage.class);
+        List<ITelemetryStorage> list = new ArrayList<>();
+        list.add(telStor1);
+        list.add(telStor2);
+
+        List<Checkpoint> checkpointList = new ArrayList<>();
+        checkpointList.add(new Checkpoint(5, 5));
+        checkpointList.add(new Checkpoint(6, 6));
+        when(trackStorage.getCheckpoints()).thenReturn(
+                new ListAdapter<Checkpoint>(checkpointList));
+
+        TelemetryEvent e1 = new CheckpointReachedTelemetryEvent(100, 0);
+        List<TelemetryEvent> ll = new ArrayList<>(); ll.add(e1);
+        when(telStor1.getEvents()).thenReturn(ll);
+
+        TelemetryEvent e2 = new CheckpointReachedTelemetryEvent(200, 0);
+        List<TelemetryEvent> lll = new ArrayList<>(); lll.add(e2);
+        when(telStor2.getEvents()).thenReturn(lll);
+
+        when(trackStorage.getTelemetries()).thenReturn(list);
+        track = new Track(trackStorage);
     }
 
     /**
@@ -103,16 +104,19 @@ public class TrackTest {
      * la lista dei tracciamenti relativi al percorso.
      */
     @Test
-    public void getTelemetriesShouldReturnCorrectValues() {
-        Track track = new Track(track_storage);
-        Iterable<ITelemetry> telemetries = track.getTelemetries();
-        Iterator<ITelemetry> i_telemetries = telemetries.iterator();
-        Iterable<TelemetryEvent> events_1 = ((Telemetry) i_telemetries.next()).getEvents();
-        Iterator<TelemetryEvent> i_events1 = events_1.iterator();
-        Iterable<TelemetryEvent> events_2 = ((Telemetry) i_telemetries.next()).getEvents();
-        Iterator<TelemetryEvent> i_events2 = events_2.iterator();
-        assertTrue(i_events1.next().timestamp() == 20);
-        assertTrue(i_events2.next().timestamp() == 10);
+    public void getTelemetriesShouldReturnCorrectValues()
+            throws NoSuchTelemetryEventException {
+        final Iterable<ITelemetry> telemetries = track.getTelemetries();
+
+        Iterator<ITelemetry> iterator = telemetries.iterator();
+        ITelemetry t1 = iterator.next();
+        ITelemetry t2 = iterator.next();
+
+        TelemetryEvent e1 = t1.getEvents().iterator().next();
+        TelemetryEvent e2 = t2.getEvents().iterator().next();
+
+        assertTrue((e1.timestamp() == 100 && e2.timestamp() == 200) ||
+                (e1.timestamp() == 200 && e2.timestamp() == 100));
     }
 
     /**
@@ -121,21 +125,64 @@ public class TrackTest {
      */
     @Test
     public void getBestTelemetryShouldReturnCorrectValue()
-    throws NoSuchTelemetryException {
-        Track track = new Track(track_storage);
-        ITelemetry best_telemetry = track.getBestTelemetry();
-        Iterable<TelemetryEvent> events = ((Telemetry) best_telemetry).getEvents();
-        Iterator<TelemetryEvent> i_events = events.iterator();
-        assertTrue(i_events.next().timestamp() == 10);
+            throws NoSuchTelemetryException {
+        ITelemetry best = track.getBestTelemetry();
+        assertTrue(best.getEvents().iterator().next().timestamp() == 100);
     }
 
-    @Test
+    /**
+     * Verifica che getBestTelemetry() sollevi un'eccezione quando non il
+     * Percorso non ha associato alcun Tracciamento.
+     */
+    @Test(expected = NoSuchTelemetryException.class)
     public void getBestTelemetryShouldThrowExceptionWhenNoTelemetry()
-    throws NoSuchTelemetryException {
-        Track track = new Track(track_storage_nt);
-        exception.expect(NoSuchTelemetryException.class);
-        ITelemetry best_telemetry = track.getBestTelemetry();
+            throws NoSuchTelemetryException {
+        ITrackStorage stor = mock(ITrackStorage.class);
+        when(stor.getTelemetries()).thenReturn(
+                new ArrayList<ITelemetryStorage>());
+        new Track(stor).getBestTelemetry();
     }
 
+    /**
+     * Verifica che il costruttore di Track sollevi un'eccezione quando
+     * vengono passati parametri null.
+     */
+    @Test(expected = IllegalArgumentException.class)
+    public void ctorShouldThrowWhenNullArguments() {
+        new Track(null);
+    }
+
+    /**
+     * Verifica che createTelemetry() inoltri la chiamata all'oggetto
+     * ITrackStorage sottostante.
+     */
+    @Test
+    public void createTelemetryShouldForwardCallToStorage() {
+        Iterable<TelemetryEvent> events = new ArrayList<>();
+        track.createTelemetry(events);
+        verify(trackStorage).createTelemetry(events);
+    }
+
+    /**
+     * Verifica che createTelemetry() sollevi un'eccezione quando gli vengono
+     * passati parametri null.
+     */
+    @Test(expected = IllegalArgumentException.class)
+    public void createTelemetryShouldThrowWhenNullArgument() {
+        track.createTelemetry(null);
+    }
+
+    /**
+     * Verifica che i checkpoint del Percorso vengano prelevati correttamente
+     * dall'oggetto ITrackStorage sottostante.
+     */
+    @Test
+    public void getCheckpointsShouldGetDataFromStorage() {
+        DirectAccessList<Checkpoint> checkpoints = track.getCheckpoints();
+        assertEquals(trackStorage.getCheckpoints().get(0),
+                checkpoints.get(0));
+        assertEquals(trackStorage.getCheckpoints().get(1),
+                checkpoints.get(1));
+    }
 
 }
