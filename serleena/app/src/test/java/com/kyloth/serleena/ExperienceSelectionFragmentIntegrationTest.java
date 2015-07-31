@@ -44,22 +44,31 @@ package com.kyloth.serleena.view.fragments;
 import android.app.Activity;
 import android.app.Application;
 import android.app.FragmentManager;
+import android.app.ListFragment;
 import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
 import android.location.LocationManager;
+import android.view.KeyEvent;
 import android.widget.ListAdapter;
 
 import com.kyloth.serleena.BuildConfig;
+import com.kyloth.serleena.R;
 import com.kyloth.serleena.TestDB;
+import com.kyloth.serleena.activity.SerleenaActivity;
 import com.kyloth.serleena.model.IExperience;
 import com.kyloth.serleena.model.SerleenaDataSource;
 import com.kyloth.serleena.persistence.sqlite.SerleenaDatabase;
 import com.kyloth.serleena.persistence.sqlite.SerleenaSQLiteDataSource;
 import com.kyloth.serleena.presentation.IExperienceActivationObserver;
+import com.kyloth.serleena.presentation.IExperienceActivationSource;
+import com.kyloth.serleena.presentation.ITrackSelectionView;
 import com.kyloth.serleena.presenters.ExperienceSelectionPresenter;
 import com.kyloth.serleena.presenters.ISerleenaActivity;
 import com.kyloth.serleena.model.ISerleenaDataSource;
+import com.kyloth.serleena.presenters.TrackSelectionPresenter;
 import com.kyloth.serleena.sensors.ISensorManager;
+import com.kyloth.serleena.view.fragments.ExperienceSelectionFragment;
+import com.kyloth.serleena.view.fragments.TrackSelectionFragment;
 
 import junit.framework.Assert;
 
@@ -98,7 +107,7 @@ import static org.mockito.Mockito.*;
 public class ExperienceSelectionFragmentIntegrationTest {
 
     private static class CustomDataSourceActivity
-            extends Activity implements ISerleenaActivity {
+            extends SerleenaActivity {
         private SerleenaDataSource ds;
 
         public void setDataSource (SerleenaDataSource dataSource) {
@@ -109,22 +118,28 @@ public class ExperienceSelectionFragmentIntegrationTest {
         public ISerleenaDataSource getDataSource() {
             return ds;
         }
-        public ISensorManager getSensorManager() {
-            return null;
-        }
     }
 
-    private class TestingExperienceObserver implements IExperienceActivationObserver {
+    private class TestingTrackSelection extends TrackSelectionPresenter {
         private String name;
+
+        public TestingTrackSelection(ITrackSelectionView view, ISerleenaActivity activity,
+                                     IExperienceActivationSource source) {
+            super(view, activity, source);
+        }
         @Override
-        public void onExperienceActivated(IExperience experience) { name = experience.getName(); }
-        public String getName() { return name;}
+        public void onExperienceActivated(IExperience experience) {
+            super.onExperienceActivated(experience);
+            name = experience.getName();
+        }
+        public String getName() { return name; }
     }
 
     private ExperienceSelectionFragment fragment;
+    private TrackSelectionFragment trackFragment;
     private ExperienceSelectionPresenter presenter;
     private static ArrayList<IExperience> list = new ArrayList<>();
-    private TestingExperienceObserver obs;
+    private TestingTrackSelection obs;
     private CustomDataSourceActivity activity;
 
     private Application app;
@@ -139,18 +154,13 @@ public class ExperienceSelectionFragmentIntegrationTest {
     @Before
     public void initialize() {
         app = RuntimeEnvironment.application;
-        LocationManager lm = (LocationManager) app.getSystemService(Context.LOCATION_SERVICE);
-        slm = Shadows.shadowOf(lm);
         fragment = new ExperienceSelectionFragment();
 
         activity = Robolectric.buildActivity(CustomDataSourceActivity.class).
                 create().start().visible().get();
-        FragmentManager fm = activity.getFragmentManager();
-        fm.beginTransaction().add(fragment,"TEST").commit();
 
         db = TestDB.getEmptyDatabase();
         sqLiteDatabase = db.getWritableDatabase();
-        obs = new TestingExperienceObserver();
         updateExperiencesList();
 
         fragment.attachPresenter(presenter);
@@ -160,12 +170,41 @@ public class ExperienceSelectionFragmentIntegrationTest {
     }
 
     private void updateExperiencesList() {
+        switchToExpSel();
         dataSource = new SerleenaDataSource(
                 new SerleenaSQLiteDataSource(
                         RuntimeEnvironment.application, db));
         activity.setDataSource(dataSource);
         presenter = new ExperienceSelectionPresenter(fragment,activity);
+        switchToTrackSel();
+        obs = new TestingTrackSelection(trackFragment,activity,presenter);
         presenter.attachObserver(obs);
+    }
+
+    private void switchToExpSel() {
+        activity.onKeyDown(KeyEvent.KEYCODE_MENU, null);
+        ListFragment menu = (ListFragment) activity.getFragmentManager().
+                findFragmentById(R.id.main_container);
+        menu.onListItemClick(null, null, 0, 0);
+        ListFragment expMenu = (ListFragment) activity.getFragmentManager().
+                findFragmentById(R.id.main_container);
+        expMenu.onListItemClick(null, null, 2, 0);
+        fragment = (ExperienceSelectionFragment) activity.getFragmentManager().
+                findFragmentById(R.id.main_container);
+        fragment.onResume();
+    }
+
+    private void switchToTrackSel() {
+        activity.onKeyDown(KeyEvent.KEYCODE_MENU, null);
+        ListFragment menu = (ListFragment) activity.getFragmentManager().
+                findFragmentById(R.id.main_container);
+        menu.onListItemClick(null, null, 0, 0);
+        ListFragment expMenu = (ListFragment) activity.getFragmentManager().
+                findFragmentById(R.id.main_container);
+        expMenu.onListItemClick(null, null, 3, 0);
+        trackFragment = (TrackSelectionFragment) activity.getFragmentManager().
+                findFragmentById(R.id.main_container);
+        trackFragment.onResume();
     }
 
     @Test
