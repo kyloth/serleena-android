@@ -48,4 +48,4 @@ package com.kyloth.serleena.common;
  * @author Filippo Sestini <sestini.filippo@gmail.com>
  * @version 1.0.0
  */
-public enum TelemetryEventType { Location, CheckpointReached, HeartRate }
+public enum TelemetryEventType { CheckpointReached }

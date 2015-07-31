@@ -81,6 +81,9 @@ class SQLiteDAOTrack implements ITrackStorage {
      */
     @Override
     public void createTelemetry(Iterable<TelemetryEvent> events) {
+        if (events == null)
+            throw new IllegalArgumentException();
+
         dataSource.createTelemetry(events, this);
     }
 

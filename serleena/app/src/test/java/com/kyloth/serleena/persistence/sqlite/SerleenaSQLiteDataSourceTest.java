@@ -324,25 +324,22 @@ public class SerleenaSQLiteDataSourceTest {
         id = db.insertOrThrow(SerleenaDatabase.TABLE_TELEMETRIES, null, values);
 
         values = new ContentValues();
-        values.put("eventl_timestamp", (new GregorianCalendar(2015, GregorianCalendar.JANUARY, 01, 01, 00, 00)).getTimeInMillis() / 1000);
-        values.put("eventl_latitude", 1.0);
-        values.put("eventl_longitude", 1.0);
-        values.put("eventl_telem", id);
-        db.insertOrThrow(SerleenaDatabase.TABLE_TELEM_EVENTS_LOCATION, null, values);
+        values.put("eventc_timestamp", 100);
+        values.put("eventc_value", 0);
+        values.put("eventc_telem", id);
+        db.insertOrThrow(SerleenaDatabase.TABLE_TELEM_EVENTS_CHECKP, null, values);
 
         values = new ContentValues();
-        values.put("eventl_timestamp", (new GregorianCalendar(2015, GregorianCalendar.JANUARY, 01, 01, 00, 01)).getTimeInMillis() / 1000);
-        values.put("eventl_latitude", 1.1);
-        values.put("eventl_longitude", 1.1);
-        values.put("eventl_telem", id);
-        db.insertOrThrow(SerleenaDatabase.TABLE_TELEM_EVENTS_LOCATION, null, values);
+        values.put("eventc_timestamp", 200);
+        values.put("eventc_value", 1);
+        values.put("eventc_telem", id);
+        db.insertOrThrow(SerleenaDatabase.TABLE_TELEM_EVENTS_CHECKP, null, values);
 
         values = new ContentValues();
-        values.put("eventl_timestamp", (new GregorianCalendar(2015, GregorianCalendar.JANUARY, 01, 01, 00, 02)).getTimeInMillis() / 1000);
-        values.put("eventl_latitude", 1.2);
-        values.put("eventl_longitude", 1.2);
-        values.put("eventl_telem", id);
-        db.insertOrThrow(SerleenaDatabase.TABLE_TELEM_EVENTS_LOCATION, null, values);
+        values.put("eventc_timestamp", 300);
+        values.put("eventc_value", 2);
+        values.put("eventc_telem", id);
+        db.insertOrThrow(SerleenaDatabase.TABLE_TELEM_EVENTS_CHECKP, null, values);
 
         Iterable<IExperienceStorage> exps = sds.getExperiences();
         SQLiteDAOExperience exp = (SQLiteDAOExperience) exps.iterator().next();

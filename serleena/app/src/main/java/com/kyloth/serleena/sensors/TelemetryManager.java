@@ -43,8 +43,6 @@ package com.kyloth.serleena.sensors;
 
 import com.kyloth.serleena.common.CheckpointReachedTelemetryEvent;
 import com.kyloth.serleena.common.GeoPoint;
-import com.kyloth.serleena.common.HeartRateTelemetryEvent;
-import com.kyloth.serleena.common.LocationTelemetryEvent;
 import com.kyloth.serleena.common.NoTrackCrossingException;
 import com.kyloth.serleena.common.TelemetryEvent;
 
@@ -54,8 +52,6 @@ import java.util.ArrayList;
  * Concretizza ITelemetryManager
  *
  * @use Viene istanziato da SerleenaSensorManager e restituito al codice client dietro interfaccia
- * @field locMan : ILocationManager Gestore del sensore della posizione
- * @field hrMan : IHeadingManager Gestore del sensore di battito cardiaco
  * @field wkMan : IWakeupManager Gestore dei wakeup
  * @field events : ArrayList<TelemetryEvent> Lista di eventi campionati al momento
  * @field pm : IPowerManager Gestore dei lock sul processore
@@ -65,28 +61,21 @@ import java.util.ArrayList;
  * @author Filippo Sestini <sestini.filippo@gmail.com>
  */
 class TelemetryManager
-        implements ITelemetryManager, IHeartRateObserver,
-        ITrackCrossingObserver, ILocationObserver {
+        implements ITelemetryManager, ITrackCrossingObserver {
 
     public static int SAMPLING_RATE_SECONDS = 60;
 
-    private IBackgroundLocationManager bkgrLocMan;
-    private IHeartRateManager hrMan;
     private ITrackCrossing tc;
     private ArrayList<TelemetryEvent> events;
     private boolean enabled;
-    private long startTimestamp;
+
     /**
      * Crea un oggetto TelemetryManager.
      *
      * Il Manager utilizza altre risorse del dispositivo, passate come
      * parametri al costruttore.
      */
-    public TelemetryManager(IBackgroundLocationManager bkgrLocMan,
-                            IHeartRateManager hrMan,
-                            ITrackCrossing trackCrossing) {
-        this.bkgrLocMan = bkgrLocMan;
-        this.hrMan = hrMan;
+    public TelemetryManager(ITrackCrossing trackCrossing) {
         this.tc = trackCrossing;
 
         this.tc.attachObserver(this);
@@ -129,7 +118,6 @@ class TelemetryManager
      */
     @Override
     public synchronized void disable() {
-        stop();
         enabled = false;
     }
 
@@ -144,43 +132,7 @@ class TelemetryManager
     }
 
     private void start() {
-        bkgrLocMan.attachObserver(this, SAMPLING_RATE_SECONDS);
-        hrMan.attachObserver(this, SAMPLING_RATE_SECONDS);
         events.clear();
-        startTimestamp = System.currentTimeMillis() / 1000L;
-    }
-
-    private void stop() {
-        bkgrLocMan.detachObserver(this);
-    }
-
-    /**
-     * Implementa IHeartRateObserver.onHeartRateUpdate().
-     *
-     * Registra un evento HeartRateTelemetryEvent all'ottenimento di dati
-     * aggiornati da parte del monitor di battito cardiaco.
-     * Rilascia il lock del processore acquisito in onWakeup() per il sensori di
-     * battito cardiaco. Vedi onWakeup().
-     *
-     * @param rate Valore intero indicante il BPM.
-     */
-    @Override
-    public void onHeartRateUpdate(int rate) {
-        long now = System.currentTimeMillis() / 1000L;
-        int partial = (int)(now - startTimestamp);
-        events.add(new HeartRateTelemetryEvent(partial, rate));
-    }
-
-    /**
-     * Implementa ILocationObserver.onLocationUpdate().
-     *
-     * @param loc Posizione geografica dell'utente.
-     */
-    @Override
-    public void onLocationUpdate(GeoPoint loc) {
-        long now = System.currentTimeMillis() / 1000L;
-        int partial = (int)(now - startTimestamp);
-        events.add(new LocationTelemetryEvent(partial, loc));
     }
 
     /**
@@ -201,7 +153,6 @@ class TelemetryManager
 
                 int total = tc.getTrack().getCheckpoints().size();
                 if (checkpointNumber == total - 1) {
-                    stop();
                     enabled = false;
                     tc.getTrack().createTelemetry(getEvents());
                 }

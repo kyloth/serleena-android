@@ -28,35 +28,37 @@
 ///////////////////////////////////////////////////////////////////////////////
 
 
-/**
- * Name: IHeartRateObserver.java
- * Package: com.kyloth.serleena.sensors
- * Author: Gabriele Pozzan
- *
- * History:
- * Version  Programmer       Changes
- * 1.0.0    Gabriele Pozzan  Creazione file e scrittura
- *                                       codice e documentazione Javadoc
- */
-
 package com.kyloth.serleena.sensors;
 
-/**
- * Interfaccia che verrà implementata da un oggetto in grado
- * di osservare un oggetto di tipo IHeartRateManager.
- *
- * @use Viene implementata da CardioPresenter e TelemetryManager per ottenere dati sull'orientamento, rispettivamente per impostare la vista e campionare eventi di Tracciamento.
- * @author Gabriele Pozzan <gabriele.pozzan@studenti.unipd.it>
- * @version 1.0.0
- */
-public interface IHeartRateObserver {
-    /**
-     * Metodo di callback chiamato con l'update dell'oggetto
-     * osservato, il quale indica in questo caso la presenza
-     * di dati aggiornati dai sensori.
-     *
-     * @param rate Valore di tipo intero che indica l'heart
-     *             rate dell'Escursionista.
-     */
-    void onHeartRateUpdate(int rate);
+import android.app.AlarmManager;
+import android.content.Context;
+
+import org.junit.Before;
+import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.robolectric.RobolectricTestRunner;
+import org.robolectric.RuntimeEnvironment;
+import org.robolectric.Shadows;
+import org.robolectric.shadows.ShadowAlarmManager;
+
+@RunWith(RobolectricTestRunner.class)
+public class BackgroundLocationManagerIntegrationTest {
+    BackgroundLocationManager blm;
+    Context context;
+    ShadowAlarmManager shadowAlarmManager;
+    AlarmManager alarmManager;
+
+    @Before
+    public void initialize() {
+        context = RuntimeEnvironment.application;
+        alarmManager =
+                (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
+        shadowAlarmManager = Shadows.shadowOf(alarmManager);
+        blm = new BackgroundLocationManager(context, alarmManager);
+    }
+
+    @Test
+    public void test() {
+
+    }
 }

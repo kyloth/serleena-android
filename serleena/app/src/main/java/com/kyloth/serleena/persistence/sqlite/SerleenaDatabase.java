@@ -65,17 +65,14 @@ public class SerleenaDatabase extends SQLiteOpenHelper {
     public static final String TABLE_EXPERIENCES = "experiences";
     public static final String TABLE_TRACKS = "tracks";
     public static final String TABLE_TELEMETRIES = "telemetries";
-    public static final String TABLE_TELEM_EVENTS_HEART_CHECKP =
-        "telemetry_events_heart_checkp";
-    public static final String TABLE_TELEM_EVENTS_LOCATION =
-        "telemetry_events_location";
+    public static final String TABLE_TELEM_EVENTS_CHECKP =
+        "telemetry_events_checkp";
     public static final String TABLE_CONTACTS = "contacts";
     public static final String TABLE_WEATHER_FORECASTS = "weather_forecasts";
     public static final String TABLE_USER_POINTS = "user_points";
     public static final String TABLE_CHECKPOINTS = "checkpoints";
     private static final int DATABASE_VERSION = 1;
 
-    public static final String EVENT_TYPE_HEARTRATE = "event_heartrate";
     public static final String EVENT_TYPE_CHECKPOINT = "event_checkpoint";
 
     private static final String CREATE_TABLE_EXPERIENCES =
@@ -96,23 +93,13 @@ public class SerleenaDatabase extends SQLiteOpenHelper {
         "telem_track INTEGER NOT NULL, " +
         "FOREIGN KEY(telem_track) REFERENCES " + TABLE_TRACKS + "(track_id) ON DELETE CASCADE)";
 
-    private static final String CREATE_TABLE_TELEM_EVENTS_LOCATION =
-        "CREATE TABLE " + TABLE_TELEM_EVENTS_LOCATION + "(" +
-        "eventl_id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, " +
-        "eventl_timestamp INTEGER NOT NULL, " +
-        "eventl_latitude REAL NOT NULL, " +
-        "eventl_longitude REAL NOT NULL, " +
-        "eventl_telem INTEGER NOT NULL, " +
-        "FOREIGN KEY(eventl_telem) REFERENCES " + TABLE_TELEMETRIES + "(telem_id) ON DELETE CASCADE)";
-
-    private static final String CREATE_TABLE_TELEM_EVENTS_HEART_CHECKP =
-        "CREATE TABLE " + TABLE_TELEM_EVENTS_HEART_CHECKP + "(" +
-        "eventhc_id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, " +
-        "eventhc_timestamp INTEGER NOT NULL, " +
-        "eventhc_value INTEGER NOT NULL, " +
-        "eventhc_type TEXT NOT NULL, " +
-        "eventhc_telem INTEGER NOT NULL, " +
-        "FOREIGN KEY(eventhc_telem) REFERENCES " + TABLE_TELEMETRIES + "(telem_id) ON DELETE CASCADE)";
+    private static final String CREATE_TABLE_TELEM_EVENTS_CHECKP =
+        "CREATE TABLE " + TABLE_TELEM_EVENTS_CHECKP + "(" +
+        "eventc_id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, " +
+        "eventc_timestamp INTEGER NOT NULL, " +
+        "eventc_value INTEGER NOT NULL, " +
+        "eventc_telem INTEGER NOT NULL, " +
+        "FOREIGN KEY(eventc_telem) REFERENCES " + TABLE_TELEMETRIES + "(telem_id) ON DELETE CASCADE)";
 
     private static final String CREATE_TABLE_CONTACTS =
         "CREATE TABLE " + TABLE_CONTACTS + "(" +
@@ -195,8 +182,7 @@ public class SerleenaDatabase extends SQLiteOpenHelper {
         db.execSQL(CREATE_TABLE_EXPERIENCES);
         db.execSQL(CREATE_TABLE_TRACKS);
         db.execSQL(CREATE_TABLE_TELEMETRIES);
-        db.execSQL(CREATE_TABLE_TELEM_EVENTS_HEART_CHECKP);
-        db.execSQL(CREATE_TABLE_TELEM_EVENTS_LOCATION);
+        db.execSQL(CREATE_TABLE_TELEM_EVENTS_CHECKP);
         db.execSQL(CREATE_TABLE_CONTACTS);
         db.execSQL(CREATE_TABLE_WEATHER_FORECASTS);
         db.execSQL(CREATE_TABLE_USER_POINTS);
@@ -232,8 +218,7 @@ public class SerleenaDatabase extends SQLiteOpenHelper {
         db.execSQL("DROP TABLE IF EXISTS " + TABLE_EXPERIENCES);
         db.execSQL("DROP TABLE IF EXISTS " + TABLE_TRACKS);
         db.execSQL("DROP TABLE IF EXISTS " + TABLE_TELEMETRIES);
-        db.execSQL("DROP TABLE IF EXISTS " + TABLE_TELEM_EVENTS_HEART_CHECKP);
-        db.execSQL("DROP TABLE IF EXISTS " + TABLE_TELEM_EVENTS_LOCATION);
+        db.execSQL("DROP TABLE IF EXISTS " + TABLE_TELEM_EVENTS_CHECKP);
         db.execSQL("DROP TABLE IF EXISTS " + TABLE_CONTACTS);
         db.execSQL("DROP TABLE IF EXISTS " + TABLE_WEATHER_FORECASTS);
         db.execSQL("DROP TABLE IF EXISTS " + TABLE_USER_POINTS);

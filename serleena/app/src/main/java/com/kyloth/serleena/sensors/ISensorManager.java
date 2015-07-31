@@ -68,14 +68,6 @@ public interface ISensorManager {
             throws SensorNotAvailableException;
 
     /**
-     * Restituisce un Manager per ottenere dati sul battito cardiaco
-     * dell'Escursionista.
-     *
-     * @return Oggetto di tipo IHeartRateManager.
-     */
-    IHeartRateManager getHeartRateSource();
-
-    /**
      * Restituisce un Manager per offire servizi di registrazione del
      * Tracciamento dell'Escursionista.
      *
