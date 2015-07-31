@@ -106,6 +106,9 @@ import static org.mockito.Mockito.*;
         manifest = "src/main/AndroidManifest.xml")
 public class ExperienceSelectionFragmentIntegrationTest {
 
+    /**
+     * Activity che permette di fornire un datasource impostato ad hoc per i test.
+     */
     private static class CustomDataSourceActivity
             extends SerleenaActivity {
         private SerleenaDataSource ds;
@@ -120,6 +123,10 @@ public class ExperienceSelectionFragmentIntegrationTest {
         }
     }
 
+    /**
+     * Presenter che fornisce un metodo per verificare facilmente se a questo viene notificata
+     * correttamente l'attivazione di un'esperienza.
+     */
     private class TestingTrackSelection extends TrackSelectionPresenter {
         private String name;
 
@@ -169,6 +176,10 @@ public class ExperienceSelectionFragmentIntegrationTest {
         Assert.assertEquals(0, adapter.getCount());
     }
 
+    /**
+     * Metodo che aggiorna la lista di esperienze che il Presenter fornisce al Fragment
+     * aggiornando il datasource fornito all'Activity.
+     */
     private void updateExperiencesList() {
         switchToExpSel();
         dataSource = new SerleenaDataSource(
@@ -181,6 +192,9 @@ public class ExperienceSelectionFragmentIntegrationTest {
         presenter.attachObserver(obs);
     }
 
+    /**
+     * Metodo che fa diventare ExperienceSelectionFragment il Fragment visualizzato dall'Activity.
+     */
     private void switchToExpSel() {
         activity.onKeyDown(KeyEvent.KEYCODE_MENU, null);
         ListFragment menu = (ListFragment) activity.getFragmentManager().
@@ -194,6 +208,9 @@ public class ExperienceSelectionFragmentIntegrationTest {
         fragment.onResume();
     }
 
+    /**
+     * Metodo che fa diventare TrackSelectionFragment il Fragment visualizzato dall'Activity.
+     */
     private void switchToTrackSel() {
         activity.onKeyDown(KeyEvent.KEYCODE_MENU, null);
         ListFragment menu = (ListFragment) activity.getFragmentManager().
@@ -207,6 +224,9 @@ public class ExperienceSelectionFragmentIntegrationTest {
         trackFragment.onResume();
     }
 
+    /**
+     * Test che verifica se la lista e' stata popolata correttamente.
+     */
     @Test
     public void populatedDBShouldCauseSomeExperiencesInListAdapter() {
         TestDB.experienceQuery(sqLiteDatabase, 1, "expo");
@@ -218,6 +238,9 @@ public class ExperienceSelectionFragmentIntegrationTest {
         Assert.assertEquals("expo",exp.getName());
     }
 
+    /**
+     * Test che verifica la corretta attivazione di un'esperienza.
+     */
     @After
     public void testActivateExperience() {
         ListAdapter adapter = fragment.getListAdapter();
