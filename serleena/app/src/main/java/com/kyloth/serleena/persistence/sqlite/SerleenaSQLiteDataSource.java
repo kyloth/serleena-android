@@ -278,12 +278,14 @@ public class SerleenaSQLiteDataSource implements ISerleenaSQLiteDataSource {
     @Override
     public void createTelemetry(Iterable<TelemetryEvent> events,
                                 SQLiteDAOTrack track) {
+        if (events == null && track == null)
+            throw new IllegalArgumentException();
+
         SQLiteDatabase db = dbHelper.getWritableDatabase();
 
         ContentValues values = new ContentValues();
         values.put("telem_track", track.id());
         long newId = db.insert(SerleenaDatabase.TABLE_TELEMETRIES, null, values);
-
 
         for (TelemetryEvent event : events) {
             values = new ContentValues();
@@ -413,7 +415,7 @@ public class SerleenaSQLiteDataSource implements ISerleenaSQLiteDataSource {
 
         String where = "eventc_telem = " + id;
         Cursor result = db.query(SerleenaDatabase.TABLE_TELEM_EVENTS_CHECKP,
-                new String[] { "eventc_timestamp", "eventc_value" },
+                new String[]{"eventc_timestamp", "eventc_value"},
                 where, null, null, null, null);
 
         int timestampIndex = result.getColumnIndexOrThrow("eventc_timestamp");
