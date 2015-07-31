@@ -174,9 +174,6 @@ public class ExperienceSelectionFragmentIntegrationTest {
 
         ListAdapter adapter = fragment.getListAdapter();
         Assert.assertEquals(0, adapter.getCount());
-
-        TestDB.experienceQuery(sqLiteDatabase, 1, "expo");
-        updateExperiencesList();
     }
 
     /**
@@ -228,14 +225,26 @@ public class ExperienceSelectionFragmentIntegrationTest {
     }
 
     /**
-     * Test che verifica se la lista e' stata popolata correttamente.
+     * Test che verifica se la lista e' stata popolata correttamente con una singola
+     * esperienza.
      */
     @Test
-    public void initializationShouldCauseOneExperienceInListAdapter() {
+    public void initializationShouldHaveOneExperienceInListAdapter() {
+        initializationWithOneExperience();
         ListAdapter adapter = fragment.getListAdapter();
         Assert.assertEquals(1, adapter.getCount());
         IExperience exp = (IExperience) adapter.getItem(0);
-        Assert.assertEquals("expo",exp.getName());
+        Assert.assertEquals("expo", exp.getName());
+    }
+
+    /**
+     * Metodo che carica una sola esperienza nel database e nell'Activity.
+     */
+    private void initializationWithOneExperience() {
+        db = TestDB.getEmptyDatabase();
+        sqLiteDatabase = db.getWritableDatabase();
+        TestDB.experienceQuery(sqLiteDatabase, 1, "expo");
+        updateExperiencesList();
     }
 
     /**
@@ -243,8 +252,29 @@ public class ExperienceSelectionFragmentIntegrationTest {
      */
     @Test
     public void testActivateExperience() {
+        initializationWithOneExperience();
         fragment.onListItemClick(null, null, 0, 0);
         Assert.assertEquals("expo",obs.getName());
+    }
+
+    /**
+     * Test che verifica il corretto popolamento della lista nel Fragment quando questa
+     * ha due esperienze al suo interno.
+     */
+    @Test
+    public void shouldPutTwoExperiencesInExperiencesList() {
+        SerleenaDatabase otherDb = TestDB.getEmptyDatabase();
+        SQLiteDatabase sqlDb = otherDb.getWritableDatabase();
+        TestDB.experienceQuery(sqlDb, 1, "expo");
+        TestDB.experienceQuery(sqlDb, 2, "Visita alle mani di Gianni Morandi");
+        updateExperiencesList();
+
+        ListAdapter adapter = fragment.getListAdapter();
+        Assert.assertEquals(2, adapter.getCount());
+        IExperience exp = (IExperience) adapter.getItem(0);
+        Assert.assertEquals("expo", exp.getName());
+        exp = (IExperience) adapter.getItem(1);
+        Assert.assertEquals("Visita alle mani di Gianni Morandi", exp.getName());
     }
 
 }
