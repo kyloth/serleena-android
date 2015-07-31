@@ -74,39 +74,6 @@ import java.util.concurrent.Callable;
         manifest = "src/main/AndroidManifest.xml")
 public class ContactsPresenterIntegrationTest {
 
-    private static class MyContactsFragment extends ContactsFragment {
-        private TextView myTextName;
-        private TextView myTextValue;
-
-        public MyContactsFragment(Context context) {
-            super();
-            myTextName = new TextView(context);
-            myTextValue = new TextView(context);
-        }
-
-        @Override
-        public void displayContact(String name, String contact) {
-            super.displayContact(name, contact);
-            myTextName.setText(name);
-            myTextValue.setText(contact);
-        }
-
-        @Override
-        public void clearView() {
-            super.clearView();
-            myTextName.setText("NESSUN CONTATTO");
-            myTextValue.setText("DA VISUALIZZARE");
-        }
-
-        public TextView getTextName() {
-            return myTextName;
-        }
-
-        public TextView getTextValue() {
-            return myTextValue;
-        }
-    }
-
     private static class CustomDataSourceActivity extends SerleenaActivity {
         private SerleenaDataSource dataSource;
 
@@ -120,13 +87,15 @@ public class ContactsPresenterIntegrationTest {
         }
     }
 
-    MyContactsFragment fragment;
+    ContactsFragment fragment;
     CustomDataSourceActivity activity;
     ContactsPresenter presenter;
     Application app;
     LocationManager lm;
     ShadowLocationManager slm;
     SerleenaDataSource dataSource;
+    TextView textName;
+    TextView textValue;
 
     @Before
     public void initialize() {
@@ -135,15 +104,17 @@ public class ContactsPresenterIntegrationTest {
         slm = Shadows.shadowOf(lm);
         LayoutInflater inflater = mock(LayoutInflater.class);
         ViewGroup vg = mock(ViewGroup.class);
+	textName = new TextView(app);
+	textValue = new TextView(app);
         when(inflater.inflate(
                  eq(R.layout.fragment_contacts),
                  any(ViewGroup.class),
                  any(Boolean.class)
              )
             ).thenReturn(vg);
-        when(vg.findViewById(R.id.contact_name_text)).thenReturn(new TextView(app));
-        when(vg.findViewById(R.id.contact_value_text)).thenReturn(new TextView(app));
-        fragment = new MyContactsFragment(app);
+        when(vg.findViewById(R.id.contact_name_text)).thenReturn(textName);
+        when(vg.findViewById(R.id.contact_value_text)).thenReturn(textValue);
+        fragment = new ContactsFragment();
         fragment.onCreateView(inflater, vg, Bundle.EMPTY);
         SerleenaDatabase serleenaDb = TestDB.getEmptyDatabase();
         SQLiteDatabase db = serleenaDb.getWritableDatabase();
@@ -159,56 +130,65 @@ public class ContactsPresenterIntegrationTest {
 
     @Test
     public void testEmptyContacts() {
-        String textName = fragment.getTextName().getText().toString();
-        String textValue = fragment.getTextValue().getText().toString();
-        assertEquals(textName, "NESSUN CONTATTO");
-        assertEquals(textValue, "DA VISUALIZZARE");
+        String name = textName.getText().toString();
+        String value = textValue.getText().toString();
+        assertEquals("NESSUN CONTATTO", name);
+        assertEquals("DA VISUALIZZARE", value);
     }
-
+    
     @Test
-    public void testOnLocationUpdateShouldUpdateContacts() {
-        GeoPoint loc = new GeoPoint(1, 1);
-        presenter.onLocationUpdate(loc);
+    public void testNonEmptyContacts() {
+	Location currentLocation = createLocation(1, 1);
+	fragment.onResume();
+	slm.simulateLocation(currentLocation);
 
-        Awaitility.await().until(new Callable<Boolean>() {
+	Awaitility.await().until(new Callable<Boolean>() {
             @Override
             public Boolean call() throws Exception {
-                return !(fragment.getTextName().getText().toString().equals("NESSUN CONTATTO"));
+                return !(textName.getText().toString().equals("NESSUN CONTATTO"));
             }
         });
-        String textName = fragment.getTextName().getText().toString();
-        String textValue = fragment.getTextValue().getText().toString();
-        assertEquals("Contact_1", textName);
-        assertEquals("000", textValue);
-
+        String name = textName.getText().toString();
+        String value = textValue.getText().toString();
+        assertEquals("Contact_1", name);
+        assertEquals("000", value);
     }
 
     @Test
     public void testNextContact() {
-        GeoPoint loc = new GeoPoint(1, 1);
-        presenter.onLocationUpdate(loc);
+        Location currentLocation = createLocation(1, 1);
+	fragment.onResume();
+	slm.simulateLocation(currentLocation);
 
         Awaitility.await().until(new Callable<Boolean>() {
             @Override
             public Boolean call() throws Exception {
-                return !(fragment.getTextName().getText().toString().equals("NESSUN CONTATTO"));
+                return !(textName.getText().toString().equals("NESSUN CONTATTO"));
             }
         });
 
-        String textName = fragment.getTextName().getText().toString();
-        String textValue = fragment.getTextValue().getText().toString();
-        assertEquals("Contact_1", textName);
-        assertEquals("000", textValue);
+        String name = textName.getText().toString();
+        String value = textValue.getText().toString();
+        assertEquals("Contact_1", name);
+        assertEquals("000", value);
         presenter.nextContact();
-        textName = fragment.getTextName().getText().toString();
-        textValue = fragment.getTextValue().getText().toString();
-        assertEquals("Contact_2", textName);
-        assertEquals("111", textValue);
+        name = textName.getText().toString();
+        value = textValue.getText().toString();
+        assertEquals("Contact_2", name);
+        assertEquals("111", value);
         presenter.nextContact();
-        textName = fragment.getTextName().getText().toString();
-        textValue = fragment.getTextValue().getText().toString();
-        assertEquals("Contact_1", textName);
-        assertEquals("000", textValue);
+        name = textName.getText().toString();
+        value = textValue.getText().toString();
+        assertEquals("Contact_1", name);
+        assertEquals("000", value);
+    }
+    
+    private Location createLocation(double latitude, double longitude) {
+	Location location = new Location(LocationManager.GPS_PROVIDER);
+	location.setLatitude(latitude);
+	location.setLongitude(longitude);
+	location.setTime(System.currentTimeMillis());
+	return location;
     }
 
 }
