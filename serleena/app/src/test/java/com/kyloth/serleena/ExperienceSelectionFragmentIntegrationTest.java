@@ -174,6 +174,9 @@ public class ExperienceSelectionFragmentIntegrationTest {
 
         ListAdapter adapter = fragment.getListAdapter();
         Assert.assertEquals(0, adapter.getCount());
+
+        TestDB.experienceQuery(sqLiteDatabase, 1, "expo");
+        updateExperiencesList();
     }
 
     /**
@@ -228,10 +231,7 @@ public class ExperienceSelectionFragmentIntegrationTest {
      * Test che verifica se la lista e' stata popolata correttamente.
      */
     @Test
-    public void populatedDBShouldCauseSomeExperiencesInListAdapter() {
-        TestDB.experienceQuery(sqLiteDatabase, 1, "expo");
-        updateExperiencesList();
-
+    public void initializationShouldCauseOneExperienceInListAdapter() {
         ListAdapter adapter = fragment.getListAdapter();
         Assert.assertEquals(1, adapter.getCount());
         IExperience exp = (IExperience) adapter.getItem(0);
@@ -241,10 +241,8 @@ public class ExperienceSelectionFragmentIntegrationTest {
     /**
      * Test che verifica la corretta attivazione di un'esperienza.
      */
-    @After
+    @Test
     public void testActivateExperience() {
-        ListAdapter adapter = fragment.getListAdapter();
-        IExperience experience = (IExperience) adapter.getItem(0);
         fragment.onListItemClick(null, null, 0, 0);
         Assert.assertEquals("expo",obs.getName());
     }
