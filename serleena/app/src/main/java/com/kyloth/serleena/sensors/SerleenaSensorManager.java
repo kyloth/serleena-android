@@ -59,7 +59,6 @@ import java.util.HashMap;
  * @use Viene utilizzata direttamente dall'activity per ottenere un oggetto ISensorManager da utilizzare in tutta l'applicazione.
  * @field locMan : ILocationManager Gestore del sensore di posizione
  * @field hman : IHeadingManager Gestore dell'orientamento
- * @field hrMan : IHeartRateManager Gestore del sensore di battito cardiaco
  * @field locReaMan : ILocationReachedManager Gestore di raggiungimento di posizione
  * @field wMan : IWakeupManager Gestore dei wakeup
  * @field telMan : ITelemetryManager Gestore dei Tracciamenti
@@ -73,7 +72,6 @@ public class SerleenaSensorManager implements ISensorManager {
 
     private ILocationManager locMan;
     private IHeadingManager hMan;
-    private IHeartRateManager hrMan;
     private ITrackCrossing tc;
     private ITelemetryManager telMan;
 
@@ -114,9 +112,8 @@ public class SerleenaSensorManager implements ISensorManager {
                 (Context.SENSOR_SERVICE);
 
         locMan = new SerleenaLocationManager(androidLocMan);
-        hrMan = new HeartRateManager(context);
         tc = new TrackCrossing(new LocationReachedManager(bkgrLocMan));
-        telMan = new TelemetryManager(bkgrLocMan, hrMan, tc);
+        telMan = new TelemetryManager(bkgrLocMan, tc);
         try {
             hMan = new HeadingManager(sm);
         } catch (SensorNotAvailableException e) {
@@ -146,16 +143,6 @@ public class SerleenaSensorManager implements ISensorManager {
             throw new SensorNotAvailableException("Heading sensor not " +
                     "available");
         return hMan;
-    }
-
-    /**
-     * Implementa ISensorManager.getHeartRateManager().
-     *
-     * @return Oggetto IHeartRateManager.
-     */
-    @Override
-    public IHeartRateManager getHeartRateSource() {
-        return hrMan;
     }
 
     /**

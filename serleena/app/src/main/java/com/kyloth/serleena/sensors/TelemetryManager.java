@@ -55,7 +55,6 @@ import java.util.ArrayList;
  *
  * @use Viene istanziato da SerleenaSensorManager e restituito al codice client dietro interfaccia
  * @field locMan : ILocationManager Gestore del sensore della posizione
- * @field hrMan : IHeadingManager Gestore del sensore di battito cardiaco
  * @field wkMan : IWakeupManager Gestore dei wakeup
  * @field events : ArrayList<TelemetryEvent> Lista di eventi campionati al momento
  * @field pm : IPowerManager Gestore dei lock sul processore
@@ -65,13 +64,12 @@ import java.util.ArrayList;
  * @author Filippo Sestini <sestini.filippo@gmail.com>
  */
 class TelemetryManager
-        implements ITelemetryManager, IHeartRateObserver,
+        implements ITelemetryManager,
         ITrackCrossingObserver, ILocationObserver {
 
     public static int SAMPLING_RATE_SECONDS = 60;
 
     private IBackgroundLocationManager bkgrLocMan;
-    private IHeartRateManager hrMan;
     private ITrackCrossing tc;
     private ArrayList<TelemetryEvent> events;
     private boolean enabled;
@@ -83,10 +81,8 @@ class TelemetryManager
      * parametri al costruttore.
      */
     public TelemetryManager(IBackgroundLocationManager bkgrLocMan,
-                            IHeartRateManager hrMan,
                             ITrackCrossing trackCrossing) {
         this.bkgrLocMan = bkgrLocMan;
-        this.hrMan = hrMan;
         this.tc = trackCrossing;
 
         this.tc.attachObserver(this);
@@ -145,30 +141,12 @@ class TelemetryManager
 
     private void start() {
         bkgrLocMan.attachObserver(this, SAMPLING_RATE_SECONDS);
-        hrMan.attachObserver(this, SAMPLING_RATE_SECONDS);
         events.clear();
         startTimestamp = System.currentTimeMillis() / 1000L;
     }
 
     private void stop() {
         bkgrLocMan.detachObserver(this);
-    }
-
-    /**
-     * Implementa IHeartRateObserver.onHeartRateUpdate().
-     *
-     * Registra un evento HeartRateTelemetryEvent all'ottenimento di dati
-     * aggiornati da parte del monitor di battito cardiaco.
-     * Rilascia il lock del processore acquisito in onWakeup() per il sensori di
-     * battito cardiaco. Vedi onWakeup().
-     *
-     * @param rate Valore intero indicante il BPM.
-     */
-    @Override
-    public void onHeartRateUpdate(int rate) {
-        long now = System.currentTimeMillis() / 1000L;
-        int partial = (int)(now - startTimestamp);
-        events.add(new HeartRateTelemetryEvent(partial, rate));
     }
 
     /**

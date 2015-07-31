@@ -116,16 +116,14 @@ public class TelemetryManagerTest {
     }
 
     IBackgroundLocationManager bkgrLocMan;
-    IHeartRateManager hrMan;
     ITrackCrossing tc;
     TelemetryManager manager;
 
     @Before
     public void initialize() {
         bkgrLocMan = mock(IBackgroundLocationManager.class);
-        hrMan = mock(IHeartRateManager.class);
         tc = mock(ITrackCrossing.class);
-        manager = new TelemetryManager(bkgrLocMan, hrMan, tc);
+        manager = new TelemetryManager(bkgrLocMan, tc);
     }
 
     /**
@@ -186,8 +184,6 @@ public class TelemetryManagerTest {
         manager.onCheckpointCrossed(0);
 
         verify(bkgrLocMan).attachObserver(manager,
-                TelemetryManager.SAMPLING_RATE_SECONDS);
-        verify(hrMan).attachObserver(manager,
                 TelemetryManager.SAMPLING_RATE_SECONDS);
 
         CheckpointReachedTelemetryEvent crte =
@@ -283,14 +279,6 @@ public class TelemetryManagerTest {
                 found = found ||
                         ((LocationTelemetryEvent)e).location().equals(gp);
         assertTrue(found);
-
-        found = false;
-        manager.onHeartRateUpdate(22);
-        for (TelemetryEvent e : manager.getEvents())
-            if (e instanceof HeartRateTelemetryEvent)
-                found = found ||
-                        ((HeartRateTelemetryEvent)e).heartRate() == 22;
-        assertTrue(found);
     }
 
     /**
@@ -298,10 +286,15 @@ public class TelemetryManagerTest {
      * venga restituita una copia ad ogni richiesta.
      */
     @Test
-    public void eventsShouldBeReturnedAsAClone() {
-        manager.onHeartRateUpdate(22);
+    public void eventsShouldBeReturnedAsAClone()
+            throws TrackAlreadyStartedException, NoTrackCrossingException {
+        ITrack track = getTrack();
+        when(tc.getTrack()).thenReturn(track);
+        manager.enable();
+
+        manager.onCheckpointCrossed(0);
         Iterable<TelemetryEvent> events1 = manager.getEvents();
-        manager.onHeartRateUpdate(22);
+        manager.onCheckpointCrossed(1);
         Iterable<TelemetryEvent> events2 = manager.getEvents();
         assertTrue(events1 != events2);
 
