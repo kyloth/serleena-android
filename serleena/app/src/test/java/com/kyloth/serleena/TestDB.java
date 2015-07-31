@@ -114,12 +114,12 @@ public class TestDB {
     }
 
     public static void contactQuery(SQLiteDatabase db, int id, String name,
-            String value, double neLat, double neLon, double swLat, double swLon) {
+            String value, double nwLat, double nwLon, double seLat, double seLon) {
         String query = "INSERT INTO contacts (contact_id, contact_name, " +
                        "contact_value, contact_nw_corner_latitude, contact_nw_corner_longitude, " +
                        "contact_se_corner_latitude, contact_se_corner_longitude) VALUES " +
                        "(" + String.valueOf(id) + ", '" + name + "', '" + value + "', " +
-                       String.valueOf(neLat) + ", " + String.valueOf(neLon) + ", " + String.valueOf(swLat) + ", " + String.valueOf(swLon) + ")";
+                       String.valueOf(nwLat) + ", " + String.valueOf(nwLon) + ", " + String.valueOf(seLat) + ", " + String.valueOf(seLon) + ")";
         db.execSQL(query);
     }
 
