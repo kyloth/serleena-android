@@ -151,10 +151,10 @@ public class TelemetryFragment extends Fragment
         else {
             try {
                 presenter.enableTelemetry();
+                status.setText("ON");
             } catch (TrackAlreadyStartedException e) {
                 status.setText("ERRORE: Percorso già avviato");
             }
-            status.setText("ON");
         }
     }
 
