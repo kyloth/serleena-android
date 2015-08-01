@@ -68,6 +68,13 @@ public class Region implements IRegion {
         if (northWest == null || southEast == null) {
             throw new IllegalArgumentException();
         }
+        // Nord = 90'. Polo sud = -90'.
+        if (northWest.latitude() < southEast.latitude()
+               // || northWest.longitude() > southEast.longitude()
+               // TODO: Vale il wraparound?
+                ) {
+            throw new IllegalArgumentException();
+        }
         this.northWest = northWest;
         this.southEast = southEast;
     }
@@ -106,8 +113,9 @@ public class Region implements IRegion {
             throw new IllegalArgumentException();
         }
         return (
-                northWest.latitude() <= p.latitude() &&
-                        p.latitude() <= southEast.latitude() &&
+                // 0,0 e' contenuto in (-10,10), (10,-10).
+                northWest.latitude() >= p.latitude() &&
+                        p.latitude() >= southEast.latitude() &&
                         northWest.longitude() <= p.longitude() &&
                         p.longitude() <= southEast.longitude()
         );
