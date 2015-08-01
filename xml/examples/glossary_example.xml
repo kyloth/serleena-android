@@ -1,0 +1,27 @@
+<?xml version="1.0"?>
+<glossary>
+	
+	<glossentry>
+    <!-- 
+    
+    ATTENZIONE!!
+
+    * Corretto:
+    <name>nome del termine</name>
+    
+    * Incorretto:
+    <name>
+      nome del termine
+    </name>
+    
+    -->
+		<name>UML</name>
+		<description>Unified Modeling Language</description>
+	</glossentry>
+
+	<glossentry>
+		<name>Smartwatch</name>
+		<description>Dispositivo da polso dotato di funzionalità avanzate che vanno oltre il semplice cronometraggio.</description>
+	</glossentry>
+
+</glossary>

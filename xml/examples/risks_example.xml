@@ -1,0 +1,36 @@
+<?xml version="1.0"?>
+<risks>
+	
+	<!--
+
+	L'attributo level è una WSL (whitespace-separated-list) indicante i livelli di progetto riguardanti il rischio, e i cui elementi sono uno dei seguenti quattro:
+		
+		"technologies"  -> livello tecnologico
+	    "people"        -> livello del personale
+	    "organization"  -> livello organizzativo
+	    "requirements"  -> livello dei requisiti
+	    "assessment"    -> livello di valutazione
+	
+	L'attributo probability indica la probabilità che il rischio si verifichi, e può assumere i seguenti valori:
+		
+		"low"
+		"mid"
+		"high"
+
+	L'attributo danger-level indica il grado di pericolosità del rischio, e può assumere i seguenti valori
+	
+		"low"
+		"mid"
+		"high"
+
+	-->
+
+	<risk level="technologies" probability="mid" danger-level="high">
+		<name>Nome del rischio</name>
+		<description>Descrizione del rischio.</description>
+		<detection-strategy>Strategia per la rilevazione del rischio.</detection-strategy>
+		<prevention>Strategie di prevenzione...</prevention>
+		<countermeasures>Contromisure da adottare.</countermeasures>
+	</risk>
+
+</risks>

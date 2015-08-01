@@ -1,0 +1,41 @@
+<?xml version="1.0"?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema">
+
+  <xs:complexType name="text" mixed="true">
+    <xs:choice minOccurs="0" maxOccurs="unbounded">
+
+      <xs:element name="strong" type="text"/>
+      <xs:element name="emph" type="text"/>
+      <xs:element name="foreignword" type="text"/>
+      <xs:element name="fixedwidth" type="text"/>
+      <xs:element name="classname" type="text"/>
+      <xs:element name="methodname" type="text"/>
+      <xs:element name="gloss" type="text"/>
+      <xs:element name="projrole" type="text"/>
+      <xs:element name="projdoc" type="text"/>
+      <xs:element name="webaddress" type="text"/>
+      <xs:element name="email" type="text"/>
+      <xs:element name="pathcommand" type="text"/>
+      <xs:element name="code" type="text"/>
+      <xs:element name="uri" type="text"/>
+
+      <xs:element name="ar" type="text"/>
+      <xs:element name="gl" type="text"/>
+      <xs:element name="np" type="text"/>
+      <xs:element name="pp" type="text"/>
+      <xs:element name="pq" type="text"/>
+      <xs:element name="sf" type="text"/>
+      <xs:element name="st" type="text"/>
+      <xs:element name="ra" type="text"/>
+      <xs:element name="rp" type="text"/>
+      <xs:element name="rr" type="text"/>
+      <xs:element name="dp" type="text"/>
+      <xs:element name="mu" type="text"/>
+      <xs:element name="serleena" type="text"/>
+      <xs:element name="kyloth" type="text"/>
+      <xs:element name="cite" type="text"/>
+
+    </xs:choice>
+  </xs:complexType>
+
+</xs:schema>

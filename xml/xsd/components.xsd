@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema">
+  <xs:include schemaLocation="text.xsd"/>
+
+  <xs:element name="components">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element name="component" maxOccurs="unbounded">
+          <xs:complexType>
+            <xs:all>
+              <xs:element name="name" type="text"/>
+              <xs:element name="description" type="text"/>
+              <xs:element name="usage" minOccurs="0"  type="text"/>
+              <xs:element name="inheritance" minOccurs="0">
+                <xs:complexType>
+                  <xs:sequence>
+                    <xs:element name="super" minOccurs="1"
+                      maxOccurs="unbounded"  type="text"/>
+                  </xs:sequence>
+                </xs:complexType>
+              </xs:element>
+            </xs:all>
+            <xs:attribute name="type" use="required">
+              <xs:simpleType>
+                <xs:restriction base="xs:string">
+                  <xs:enumeration value="class" />
+                  <xs:enumeration value="interface" />
+                </xs:restriction>
+              </xs:simpleType>
+            </xs:attribute>
+          </xs:complexType>
+        </xs:element>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+
+</xs:schema>
