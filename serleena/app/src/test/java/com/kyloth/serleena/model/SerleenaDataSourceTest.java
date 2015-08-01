@@ -171,8 +171,8 @@ public class SerleenaDataSourceTest {
     @Test
     public void testGetQuadrant() {
         GeoPoint normal_point = new GeoPoint(10, 10);
-        GeoPoint min_point = new GeoPoint(-90.0, -180.0);
-        GeoPoint max_point = new GeoPoint(90.0 - 10 / 2.0,
+        GeoPoint min_point = new GeoPoint(90.0, -180.0);
+        GeoPoint max_point = new GeoPoint(-90.0 + 10 / 2.0,
                                           180.0 - 10 / 2.0);
         Quadrant quadrant = (Quadrant) dataSource.getQuadrant(normal_point);
         Quadrant max_limit_quadrant = (Quadrant) dataSource.getQuadrant(min_point);
