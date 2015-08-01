@@ -1,0 +1,158 @@
+<!-- Gli use case sono organizzati in elementi usecase-set.
+
+Considera il diagramma di esempio in
+http://epf.eclipse.org/wikis/openup/core.tech.common.extend_supp/guidances/concepts/resources/fig1_atm_ex.gif
+
+L'usecase-set è costituito da tre attori (Bank customer, Maintenance Person,
+Bank), e quattro use case (Withdraw cash, Transfer funds, Deposit funds, refill
+machine).
+
+-->
+
+<!-- Nome del diagramma. Idealmente, se si stanno considerando i casi d'uso 1.1,
+     1.2, 1.3 ecc. figli di UC1, il nome del diagramma sarà UC1 e così via. -->
+<usecase-set title="Scenario principale">
+
+  <!-- Nome del sistema che delimita i casi d'uso dagli attori. Nell'esempio,
+       l'ATM. -->
+  <system-name>ATM</system-name>
+
+  <!-- elenco dei casi d'uso -->
+  <usecases>
+
+    <!-- Il tag <usecase> rappresenta un singolo caso d'uso all'interno di un
+         usecase-set.Secondo la specifica UML, ogni caso d'uso ha una
+         descrizione testuale, qui rappresentata dagli elementi interni e
+         attributi dell'elemento <usecase>.-->
+
+    <!-- Numero identificativo dello use case, assegnato in maniera gerarchica e
+         con numerazione progressiva -->
+    <usecase id="1.4.3">
+
+      <!-- Titolo del caso d'uso -->
+      <title>Withdraw Cash</title>
+      <!-- Descrizione -->
+      <description>L'utente ritira i soldi, ecc.</description>
+
+      <!-- Tag per il tracciamento dei requisiti. Indica il codice di quali
+           requisiti implementano azioni richieste da questo caso d'uso. -->
+      <related-requirements>
+        <requirement>1P2.0.4</requirement>
+      </related-requirements>
+
+      <!-- Precondizione -->
+      <precondition>
+        L'utente ha inserito la carta nello sportello ATM.
+      </precondition>
+      <!-- Condizione del sistema nel caso lo scenario principale si concluda
+           con successo. -->
+      <postcondition>
+        L'utente ha ritirato la somma voluta.
+      </postcondition>
+
+      <!-- Attori primari. Ci deve essere almeno un attore primario. -->
+      <primary-actors>
+        <actor>Bank Customer</actor>
+        <actor>Bank</actor>
+      </primary-actors>
+      <!-- Attori secondari. Possono non esservene. In quel caso,
+           <secondary-actors />. -->
+      <secondary-actors>
+        <actor>Maintenance Person</actor>
+      </secondary-actors>
+
+      <!-- Flusso di eventi dello scenario principale. E' rappresentato da una
+           serie di step descriventi un'azione ognuno, e numerati in maniera
+           progressiva. -->
+      <flow>
+        <step number="1">L'utente seleziona la modalità "ritiro denaro".</step>
+        <step number="2">L'utente seleziona la somma da ritirare.</step>
+        <step number="3">L'utente sceglie se ottenere la ricevuta.</step>
+      </flow>
+
+      <!-- Estensione: descrizione di una serie di step alternativi a quelli
+           descritti nello scenario principale (fonte: libro Learning UML 2.0).
+           Il flusso di eventi alternativo si dirama a partire da uno step del
+           main flow (indicato con l'attributo branch-from), e definisce gli
+           step alternativi con solita numerazione incrementale. Per un esempio
+           vedi slide 12 del Prof. Cardin sugli Use Case. -->
+      <extensions>
+        <extension branch-from="2">
+          <precondition>Nel caso in cui bla bla bla...</precondition>
+          <flow>
+            <step number="1">
+              La somma indicata dall'utente supera il saldo disponibile.
+            </step>
+            <step number="2">
+              Il sistema rigetta la richiesta di ritiro e consente all'utente di
+              indicare una somma di denaro differente.
+            </step>
+          </flow>
+          <postcondition>Cose...</postcondition>
+        </extension>
+      </extensions>
+
+    </usecase>
+
+  </usecases>
+
+  <diagram>
+
+    <!-- Qui va il codice MetaUML del diagramma dell'intero set, che rappresenta
+         attori, casi d'uso, system boundary, ecc.
+         Il codice verrà poi embeddato nel sorgente LaTeX finale.
+
+         Per manuale di riferimento: http://metauml.sourceforge.net
+
+         Segue il diagramma di esempio linkato sopra scritto in MetaUML. -->
+
+    % Creo stringa che indica il nome del sistema.
+    Picture.a("ATM");
+
+    % Creo gli attori.
+    Actor.cust("Bank customer");
+    Actor.maint("Maintenance Person");
+    Actor.bank("Bank");
+
+    % Raggruppo gli attori di sinistra (customer e maintenance person) e li
+    % posiziono uno sopra l'altro.
+    topToBottom(20)(cust, maint);
+    Group.leftActrs(cust, maint);
+
+    % Creo i casi d'uso.
+    Usecase.WC("UC 1.4.3:", "Withdraw Cash");
+    Usecase.TF("Transfer funds");
+    Usecase.DF("Deposit Funds");
+    Usecase.RM("Refill Machine");
+
+    % Creo gruppo dei casi d'uso.
+    topToBottom(20)(WC, TF, DF, RM);
+    Group.g(WC, TF, DF, RM);
+
+    topToBottom(5)(a, g);
+
+    % Creo struttura finale con casi d'uso e nome del sistema, e delimito il
+    % sistema.
+    Group.gg(a, g);
+    gg.info.left := 30;
+    gg.info.right := 30;
+    gg.info.bottom := 10;
+    gg.info.boxed := 1;
+    gg.info.borderColor := black;
+
+    % Posiziono gli attori ai lati del sistema
+    leftToRight(30)(leftActrs, gg, bank);
+
+    % Disegno gli elementi
+    drawObjects(gg, leftActrs, bank);
+
+    % Creo le associazioni tra attori e casi d'uso
+    clink(association)(cust.human, WC);
+    clink(association)(cust.human, TF);
+    clink(association)(cust.human, DF);
+    clink(association)(bank.human, WC);
+    clink(association)(bank.human, TF);
+    clink(association)(bank.human, DF);
+    clink(association)(maint.human, RM);
+  </diagram>
+</usecase-set>

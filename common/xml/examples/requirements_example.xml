@@ -1,0 +1,28 @@
+<?xml version="1.0"?>
+<requirements>
+
+  <requirement id="1.5.2" accepted="true" >
+    <category>functional</category>
+    <importance>1</importance>
+    <sources>
+      <source>Capitolato</source>
+      <source>UC 1.4</source>
+      <source>UC 2.1.1</source>
+    </sources>
+    <description>
+      L'applicativo deve essere eseguibile su sistema
+      <strong>Ubuntu GNU/Linux</strong>.
+    </description>
+  </requirement>
+
+  <requirement id="1.5.3" accepted="true" >
+    <category>constraint</category>
+    <importance>2</importance>
+    <sources>
+      <source>Capitolato</source>
+      <source>Verbale 2015-02-05</source>
+    </sources>
+    <description>Qwertyuiop asdfghjkl zxcvbnm.</description>
+  </requirement>
+
+</requirements>

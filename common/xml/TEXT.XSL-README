@@ -1,0 +1,34 @@
+E' possibile usare i seguenti tag all'interno di elementi XML di tipo "text"
+(vedere gli schemi XSD per sapere quali).
+
+Viene indicata la mappatura tag/comando LaTeX:
+
+<strong>        <===>     \strong{}
+<emph>          <===>     \emph{}
+<foreignword>   <===>     \foreignword{}
+<fixedwidth>    <===>     \fixedwidth{}
+<classname>     <===>     \className{}
+<methodname>    <===>     \methodName{}
+<gloss>         <===>     \gloss{}
+<projrole>      <===>     \projrole{}
+<projdoc>       <===>     \projdoc{}
+<webaddress>    <===>     \webaddress{}
+<email>         <===>     \email{}
+<pathcommand>   <===>     \pathcommand{}
+<code>          <===>     \code{}
+<uri>           <===>     \uri
+<ar>            <===>     \AR{}
+<gl>            <===>     \GL{}
+<np>            <===>     \NP{}
+<pp>            <===>     \PP{}
+<pq>            <===>     \PQ{}
+<sf>            <===>     \SF{}
+<st>            <===>     \ST{}
+<ra>            <===>     \RA{}
+<rp>            <===>     \RP{}
+<rr>            <===>     \RR{}
+<dp>            <===>     \DP{}
+<mu>            <===>     \MU{}
+<serleena>         <===>     \serleena{}
+<kyloth>        <===>     \Kyloth{}
+<cite>          <===>     \cite{}

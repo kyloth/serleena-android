@@ -1,0 +1,29 @@
+<?xml version="1.0"?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema">
+
+<xs:include schemaLocation="text.xsd"/>
+
+<xs:element name="history">
+  <xs:complexType>
+    <xs:sequence>
+      <xs:element name="change" minOccurs="1" maxOccurs="unbounded">
+        <xs:complexType>
+          <xs:all>
+            <xs:element name="description" type="text" />
+            <xs:element name="author" type="xs:string" />
+            <xs:element name="date" type="xs:date" />
+            <xs:element name="version">
+              <xs:simpleType>
+                <xs:restriction base="xs:string">
+                  <xs:pattern value="\d+\.\d+\.\d+" />
+                </xs:restriction>
+              </xs:simpleType>
+            </xs:element>
+          </xs:all>
+        </xs:complexType>
+      </xs:element>
+    </xs:sequence>
+  </xs:complexType>
+</xs:element>
+
+</xs:schema>

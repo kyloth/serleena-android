@@ -1,0 +1,81 @@
+<?xml version="1.0"?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema">
+
+<xs:include schemaLocation="text.xsd"/>
+
+<xs:simpleType name="riskLevelEnum">
+  <xs:restriction base="xs:string">
+    <xs:enumeration value="technologies" />
+    <xs:enumeration value="people" />
+    <xs:enumeration value="organization" />
+    <xs:enumeration value="requirements" />
+    <xs:enumeration value="assessment" />
+  </xs:restriction>
+</xs:simpleType>
+
+<xs:simpleType name="riskLevelList">
+  <xs:list itemType="riskLevelEnum"/>
+</xs:simpleType>
+
+<xs:element name="risks">
+  <xs:complexType>
+    <xs:sequence>
+
+      <xs:element name="risk" minOccurs="0" maxOccurs="unbounded">
+        <xs:complexType>
+          <xs:all>
+          
+            <!-- Nome del rischio. -->
+            <xs:element name="name" type="text" />
+
+            <!-- Descrizione del rischio. -->
+            <xs:element name="description" type="text" />
+
+            <!-- Strategia da adottare per il rilevamento del rischio. -->
+            <xs:element name="detection-strategy" type="text" />
+
+            <!-- Contromisure da adottare per gestire il rischio. -->
+            <xs:element name="countermeasures" type="text" />
+
+            <!-- Strategia di prevenzione del rischio. -->
+            <xs:element name="prevention" type="text" />
+            
+            <!-- Attualizzazione del rischio. -->
+            <xs:element name="actualization" type="text" minOccurs="0" />
+
+          </xs:all>
+
+          <!-- Livello di progetto in cui si verifica il rischio. -->
+          <xs:attribute name="level" use="required" type="riskLevelList" />
+          
+          <!-- Probabilità che il rischio si verifichi. -->
+          <xs:attribute name="probability" use="required">
+            <xs:simpleType>
+              <xs:restriction base="xs:string">
+                <xs:enumeration value="low" />
+                <xs:enumeration value="mid" />
+                <xs:enumeration value="high" />
+              </xs:restriction>
+            </xs:simpleType>
+          </xs:attribute>
+
+          <!-- Grado di pericolosità del rischio -->
+          <xs:attribute name="danger-level" use="required">
+            <xs:simpleType>
+              <xs:restriction base="xs:string">
+                <xs:enumeration value="insignificant" />
+                <xs:enumeration value="tolerable" />
+                <xs:enumeration value="serious" />
+                <xs:enumeration value="catastrophic" />
+              </xs:restriction>
+            </xs:simpleType>
+          </xs:attribute>
+        
+        </xs:complexType>
+
+      </xs:element>
+    </xs:sequence>
+  </xs:complexType>
+</xs:element>
+
+</xs:schema>

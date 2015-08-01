@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema">
+  <xs:include schemaLocation="text.xsd"/>
+  
+  <xs:element name="test_list" type="t_test_list" />
+  
+  <xs:complexType name="t_test_list">
+    <xs:sequence>
+      <xs:element name="system" type="t_system" maxOccurs="unbounded" />
+    </xs:sequence>
+    <xs:attribute name="name" type="xs:string" />
+  </xs:complexType>
+  
+  <xs:complexType name="t_system">
+    <xs:sequence>
+      <xs:element name="package" type="t_package" maxOccurs="unbounded" />
+    </xs:sequence>
+    <xs:attribute name="name" type="xs:string" />
+  </xs:complexType>
+    
+  <xs:complexType name="t_package">
+    <xs:sequence>
+      <xs:element name="class" type="t_class" maxOccurs="unbounded" />      
+    </xs:sequence>
+    <xs:attribute name="name" type="xs:string" />
+  </xs:complexType>
+  
+  <xs:complexType name="t_class">
+    <xs:sequence>
+      <xs:element name="test" type="t_test" maxOccurs="unbounded" />
+    </xs:sequence>
+    <xs:attribute name="name" type="xs:string" />
+  </xs:complexType>
+  
+  <xs:complexType name="t_test">
+    <xs:sequence>
+      <xs:element name="description" type="text" />
+    </xs:sequence>    
+    <xs:attribute name="name" type="xs:string" />
+    <xs:attribute name="status" type="xs:string" />
+  </xs:complexType>
+  
+</xs:schema>

@@ -1,0 +1,16 @@
+<?xml version="1.0"?>
+
+<!-- Ogni elemento prospetto-economico rappresenta una tabella di prospetto economico per un'attività di progetto, analogamente alla ripartizione dei ruoli.
+
+Ogni elemento <prospetto-economico> contiene esattamente sei elementi <role>, ciascuno indicante il ruolo in oggetto, le ore di lavoro e il costo per quella fase.
+
+I valori che può assumere l'attributo name dell'elemento <role> sono fissi, e descritti dall'esempio. -->
+
+<prospetto-economico>
+  <role name="Reponsabile" hours="21" cost="630" />
+  <role name="Amministratore" hours="18" cost="360" />
+  <role name="Analista" hours="63" cost="1575" />
+  <role name="Progettista" hours="0" cost="0" />
+  <role name="Verificatore" hours="35" cost="525" />
+  <role name="Programmatore" hours="0" cost="0" />
+</prospetto-economico>

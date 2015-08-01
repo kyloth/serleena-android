@@ -1,0 +1,21 @@
+<?xml version="1.0"?>
+<partition>
+
+	<main-activity id="AN1" name="Norme di Progetto">
+
+		<activity id="AN1.1" name="Comunicazioni" role="Amministratore" person="Some person" hours="4" />
+		<activity id="AN1.2" name="Ambiente di lavoro" role="Amministratore" hours="4" />
+
+	</main-activity>
+
+	<main-activity id="AN2" name="Studio di Fattibilità">
+
+		<activity id="AN2.1" name="Valutazione costi-benefici" role="Analista 4" hours="3" />
+		<activity id="AN2.2" name="Valutazione rischi" role="Analista 2" hours="3" />
+		<activity id="AN2.3" name="Fattibilità tecnico organizzativa"
+							role="Analista 3"
+							hours="3" />
+
+	</main-activity>
+
+</partition>

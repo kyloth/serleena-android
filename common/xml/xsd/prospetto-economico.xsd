@@ -1,0 +1,29 @@
+<?xml version="1.0"?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema">
+
+<xs:element name="prospetto-economico">
+  <xs:complexType>
+    <xs:sequence>
+      <xs:element name="role" minOccurs="6" maxOccurs="6">
+        <xs:complexType>
+          <xs:attribute name="name" use="required">
+            <xs:simpleType>
+              <xs:restriction base="xs:string">
+                <xs:enumeration value="Responsabile" />
+                <xs:enumeration value="Amministratore" />
+                <xs:enumeration value="Analista" />
+                <xs:enumeration value="Progettista" />
+                <xs:enumeration value="Verificatore" />
+                <xs:enumeration value="Programmatore" />
+              </xs:restriction>
+            </xs:simpleType>
+          </xs:attribute>
+          <xs:attribute name="hours" use="required" type="xs:float" />
+          <xs:attribute name="cost" use="required" type="xs:float" />
+        </xs:complexType>
+      </xs:element>
+    </xs:sequence>
+  </xs:complexType>
+</xs:element>
+
+</xs:schema>
