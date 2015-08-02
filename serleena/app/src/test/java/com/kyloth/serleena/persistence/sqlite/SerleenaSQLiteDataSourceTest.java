@@ -403,9 +403,9 @@ public class SerleenaSQLiteDataSourceTest {
         ContentValues values = new ContentValues();
         values.put("contact_name", "foo");
         values.put("contact_value", "asdfghj");
-        values.put("contact_nw_corner_latitude", 0.0);
+        values.put("contact_nw_corner_latitude", 2.0);
         values.put("contact_nw_corner_longitude", 0.0);
-        values.put("contact_se_corner_latitude", 2.0);
+        values.put("contact_se_corner_latitude", 0.0);
         values.put("contact_se_corner_longitude", 2.0);
         db.insertOrThrow(SerleenaDatabase.TABLE_CONTACTS, null, values);
         Iterable<EmergencyContact> contacts = sds.getContacts(new GeoPoint(1.0, 1.0));
@@ -425,9 +425,9 @@ public class SerleenaSQLiteDataSourceTest {
         ContentValues values = new ContentValues();
         values.put("contact_name", "foo");
         values.put("contact_value", "asdfghj");
-        values.put("contact_nw_corner_latitude", 0.0);
+        values.put("contact_nw_corner_latitude", 2.0);
         values.put("contact_nw_corner_longitude", 0.0);
-        values.put("contact_se_corner_latitude", 2.0);
+        values.put("contact_se_corner_latitude", 0.0);
         values.put("contact_se_corner_longitude", 2.0);
         db.insertOrThrow(SerleenaDatabase.TABLE_CONTACTS, null, values);
         Iterable<EmergencyContact> contacts = sds.getContacts(new GeoPoint(0.0, 0.0));
