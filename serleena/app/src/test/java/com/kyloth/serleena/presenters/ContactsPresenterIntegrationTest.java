@@ -28,17 +28,32 @@
 ///////////////////////////////////////////////////////////////////////////////
 
 
-package com.kyloth.serleena.presenters;
+/**
+ * Name: ContactsPresenterIntegrationTest.java
+ * Package: com.kyloth.serleena.presenters
+ * Author: Filippo Sestini
+ *
+ * History:
+ * Version  Programmer       Changes
+ * 1.0.0    Filippo Sestini  Creazione file e scrittura
+ *                                       codice e documentazione Javadoc
+ */
 
-import org.junit.Before;
+package com.kyloth.serleena.view.presenters;
+
+import android.app.ListFragment;
+import android.content.Context;
+import android.database.sqlite.SQLiteDatabase;
+import android.location.Location;
+import android.location.LocationListener;
+import android.location.LocationManager;
+import android.widget.ListAdapter;
+import android.widget.TextView;
+
 import org.junit.Test;
+import org.junit.Before;
 import org.junit.runner.RunWith;
-import static org.junit.Assert.assertEquals;
-
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.when;
-import static org.mockito.Matchers.eq;
-import static org.mockito.Matchers.any;
+import static org.junit.Assert.*;
 
 import org.robolectric.Robolectric;
 import org.robolectric.RobolectricGradleTestRunner;
@@ -47,36 +62,31 @@ import org.robolectric.Shadows;
 import org.robolectric.annotation.Config;
 import org.robolectric.shadows.ShadowLocationManager;
 
-import android.app.Application;
-import android.widget.TextView;
-import android.location.Location;
-import android.location.LocationManager;
-import android.content.Context;
-import android.view.LayoutInflater;
-import android.view.ViewGroup;
-import android.os.Bundle;
-import android.database.sqlite.SQLiteDatabase;
-
 import com.kyloth.serleena.BuildConfig;
-import com.kyloth.serleena.TestDB;
 import com.kyloth.serleena.R;
+import com.kyloth.serleena.TestDB;
 import com.kyloth.serleena.activity.SerleenaActivity;
 import com.kyloth.serleena.model.SerleenaDataSource;
-import com.kyloth.serleena.common.GeoPoint;
-import com.kyloth.serleena.view.fragments.ContactsFragment;
 import com.kyloth.serleena.persistence.sqlite.SerleenaDatabase;
 import com.kyloth.serleena.persistence.sqlite.SerleenaSQLiteDataSource;
-
+import com.kyloth.serleena.view.fragments.ContactsFragment;
 import com.jayway.awaitility.Awaitility;
 
 import java.util.concurrent.Callable;
 
+/**
+ * Test di integrazione di ContactsPresenter e le due dipendenze, incluse le
+ * componenti di persistenza e di presentazione.
+ *
+ * @author Filippo Sestini <sestini.filippo@gmail.com>
+ * @version 1.0.0
+ */
 @RunWith(RobolectricGradleTestRunner.class)
 @Config(constants = BuildConfig.class, emulateSdk = 19,
         manifest = "src/main/AndroidManifest.xml")
 public class ContactsPresenterIntegrationTest {
 
-    private static class CustomDataSourceActivity extends SerleenaActivity {
+    private static class TestSerleenaActivity extends SerleenaActivity {
         private SerleenaDataSource dataSource;
 
         public void setDataSource(SerleenaDataSource dataSource) {
@@ -89,108 +99,175 @@ public class ContactsPresenterIntegrationTest {
         }
     }
 
-    ContactsFragment fragment;
-    CustomDataSourceActivity activity;
-    ContactsPresenter presenter;
-    Application app;
-    LocationManager lm;
-    ShadowLocationManager slm;
-    SerleenaDataSource dataSource;
-    TextView textName;
-    TextView textValue;
+    private TestSerleenaActivity activity;
+    private ContactsFragment fragment;
+    private SQLiteDatabase db;
+    private ShadowLocationManager slm;
+    private TextView name;
+    private TextView value;
 
     @Before
     public void initialize() {
-        app = RuntimeEnvironment.application;
-        lm = (LocationManager) app.getSystemService(Context.LOCATION_SERVICE);
-        slm = Shadows.shadowOf(lm);
-        LayoutInflater inflater = mock(LayoutInflater.class);
-        ViewGroup vg = mock(ViewGroup.class);
-	textName = new TextView(app);
-	textValue = new TextView(app);
-        when(inflater.inflate(
-                 eq(R.layout.fragment_contacts),
-                 any(ViewGroup.class),
-                 any(Boolean.class)
-             )
-            ).thenReturn(vg);
-        when(vg.findViewById(R.id.contact_name_text)).thenReturn(textName);
-        when(vg.findViewById(R.id.contact_value_text)).thenReturn(textValue);
-        fragment = new ContactsFragment();
-        fragment.onCreateView(inflater, vg, Bundle.EMPTY);
+        slm = Shadows.shadowOf(
+                (LocationManager) RuntimeEnvironment.application
+                        .getSystemService(Context.LOCATION_SERVICE));
         SerleenaDatabase serleenaDb = TestDB.getEmptyDatabase();
-        SQLiteDatabase db = serleenaDb.getWritableDatabase();
-        TestDB.contactQuery(db, 1, "Contact_1", "000", 0, 0, 2, 2);
-        TestDB.contactQuery(db, 2, "Contact_2", "111", 0, 0, 2, 2);
+        db = serleenaDb.getWritableDatabase();
 
-        dataSource = new SerleenaDataSource(new SerleenaSQLiteDataSource(app, serleenaDb));
-        activity = Robolectric.buildActivity(CustomDataSourceActivity.class)
-                   .create().start().visible().get();
+        SerleenaDataSource dataSource = new SerleenaDataSource(
+                new SerleenaSQLiteDataSource(
+                        RuntimeEnvironment.application, serleenaDb));
+
+        activity = Robolectric.buildActivity(TestSerleenaActivity.class)
+                .create().start().visible().get();
         activity.setDataSource(dataSource);
-        presenter = new ContactsPresenter(fragment, activity);
+
+        ListFragment menuFragment =
+                (ListFragment) activity.getFragmentManager()
+                        .findFragmentById(R.id.main_container);
+        menuFragment.onResume();
+        ListAdapter adapter = menuFragment.getListAdapter();
+        fragment = null;
+        for (int i = 0; i < adapter.getCount(); i++)
+            if (adapter.getItem(i).toString().equals("Autorità locali"))
+                fragment = (ContactsFragment) adapter.getItem(i);
+        activity.onObjectSelected(fragment);
+
+        name = (TextView) fragment.getView().findViewById(
+                R.id.contact_name_text);
+        value = (TextView) fragment.getView().findViewById(
+                R.id.contact_value_text);
+
+        fragment.onResume();
     }
 
+    /**
+     * Verifica che i contatti presenti nel database vengano visualizzati
+     * dalla vista in base alla posizione attuale dell'utente.
+     */
     @Test
-    public void testEmptyContacts() {
-        String name = textName.getText().toString();
-        String value = textValue.getText().toString();
-        assertEquals("NESSUN CONTATTO", name);
-        assertEquals("DA VISUALIZZARE", value);
-    }
-    
-    @Test
-    public void testNonEmptyContacts() {
-	Location currentLocation = createLocation(1, 1);
-	fragment.onResume();
-	slm.simulateLocation(currentLocation);
+    public void contactsShouldBeDisplayedAccordingToDBAndCurrentLocation() {
+        TestDB.contactQuery(db, 0, "Contact1", "Value1", 5, 5, 0, 0);
+        TestDB.contactQuery(db, 1, "Contact2", "Value2", 6, 6, 1, 1);
+        TestDB.contactQuery(db, 2, "Contact3", "Value3", 9, 9, 5, 5);
+        TestDB.contactQuery(db, 3, "Contact4", "Value4", 10, 10, 6, 6);
 
-	Awaitility.await().until(new Callable<Boolean>() {
-            @Override
-            public Boolean call() throws Exception {
-                return !(textName.getText().toString().equals("NESSUN CONTATTO"));
-            }
-        });
-        String name = textName.getText().toString();
-        String value = textValue.getText().toString();
-        assertEquals("Contact_1", name);
-        assertEquals("000", value);
-    }
+        Location location = new Location(LocationManager.GPS_PROVIDER);
+        location.setLatitude(4);
+        location.setLongitude(4);
+        simulateLocation(location);
 
-    @Test
-    public void testNextContact() {
-        Location currentLocation = createLocation(1, 1);
-	fragment.onResume();
-	slm.simulateLocation(currentLocation);
+        String name1, name2, value1, value2;
 
         Awaitility.await().until(new Callable<Boolean>() {
             @Override
             public Boolean call() throws Exception {
-                return !(textName.getText().toString().equals("NESSUN CONTATTO"));
+                String name1 = name.getText().toString();
+                return !name1.equals("NESSUN CONTATTO");
+            }});
+
+        name1 = name.getText().toString();
+        value1 = value.getText().toString();
+
+        name.callOnClick();
+
+        name2 = name.getText().toString();
+        value2 = value.getText().toString();
+
+        boolean b1, b2;
+        b1 = name1.equals("Contact1") && value1.equals("Value1") &&
+                name2.equals("Contact2") && value2.equals("Value2");
+        b2 = name2.equals("Contact1") && value2.equals("Value1") &&
+                name1.equals("Contact2") && value1.equals("Value2");
+        assertTrue(b1 || b2);
+    }
+
+    /**
+     * Verifica che i contatti presenti nel database per una certa posizione
+     * geografica vengano visualizzati secondo un buffer circolare.
+     */
+    @Test
+    public void contactsShouldBeDisplayedLikeACircularBuffer() {
+        TestDB.contactQuery(db, 0, "Contact1", "Value1", 5, 5, 0, 0);
+        TestDB.contactQuery(db, 1, "Contact2", "Value2", 6, 6, 1, 1);
+        TestDB.contactQuery(db, 2, "Contact3", "Value3", 9, 9, 5, 5);
+        TestDB.contactQuery(db, 3, "Contact4", "Value4", 10, 10, 6, 6);
+
+        Location location = new Location(LocationManager.GPS_PROVIDER);
+        location.setLatitude(4);
+        location.setLongitude(4);
+        simulateLocation(location);
+
+        Awaitility.await().until(new Callable<Boolean>() {
+            @Override
+            public Boolean call() throws Exception {
+                String name1 = name.getText().toString();
+                return !name1.equals("NESSUN CONTATTO");
+            }});
+
+        String name1, name2, value1, value2;
+        name1 = name.getText().toString();
+        value1 = value.getText().toString();
+        name.callOnClick();
+        name2 = name.getText().toString();
+        value2 = value.getText().toString();
+        name.callOnClick();
+
+        assertEquals(name1, name.getText().toString());
+        assertEquals(value1, value.getText().toString());
+    }
+
+    /**
+     * Verifica che il cambio di posizione dell'utente causi la corretta
+     * visualizzazione dei contatti sulla vista per quella posizione.
+     */
+    @Test
+    public void contactsShouldBeDisplayedAccordingToLocation() {
+        TestDB.contactQuery(db, 0, "Contact1", "Value1", 5, 5, 0, 0);
+        TestDB.contactQuery(db, 1, "Contact2", "Value2", 9, 9, 6, 6);
+
+        Location location = new Location(LocationManager.GPS_PROVIDER);
+        location.setLatitude(4);
+        location.setLongitude(4);
+        simulateLocation(location);
+
+        Awaitility.await().until(new Callable<Boolean>() {
+            @Override
+            public Boolean call() throws Exception {
+                return "Contact1".equals(name.getText().toString()) &&
+                        "Value1".equals(value.getText().toString());
             }
         });
 
-        String name = textName.getText().toString();
-        String value = textValue.getText().toString();
-        assertEquals("Contact_1", name);
-        assertEquals("000", value);
-        presenter.nextContact();
-        name = textName.getText().toString();
-        value = textValue.getText().toString();
-        assertEquals("Contact_2", name);
-        assertEquals("111", value);
-        presenter.nextContact();
-        name = textName.getText().toString();
-        value = textValue.getText().toString();
-        assertEquals("Contact_1", name);
-        assertEquals("000", value);
+        location.setLatitude(7);
+        location.setLongitude(7);
+        simulateLocation(location);
+
+        Awaitility.await().until(new Callable<Boolean>() {
+            @Override
+            public Boolean call() throws Exception {
+                return "Contact2".equals(name.getText().toString()) &&
+                        "Value2".equals(value.getText().toString());
+            }
+        });
+
+        location.setLatitude(15);
+        location.setLongitude(15);
+        simulateLocation(location);
+
+        Awaitility.await().until(new Callable<Boolean>() {
+            @Override
+            public Boolean call() throws Exception {
+                return "NESSUN CONTATTO".equals(name.getText().toString()) &&
+                        "DA VISUALIZZARE".equals(value.getText().toString());
+            }
+        });
     }
-    
-    private Location createLocation(double latitude, double longitude) {
-	Location location = new Location(LocationManager.GPS_PROVIDER);
-	location.setLatitude(latitude);
-	location.setLongitude(longitude);
-	location.setTime(System.currentTimeMillis());
-	return location;
+
+    private void simulateLocation(Location location) {
+        for (LocationListener listener : slm.getRequestLocationUpdateListeners())
+            listener.onLocationChanged(location);
     }
 
 }
+
