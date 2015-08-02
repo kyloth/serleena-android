@@ -1,0 +1,22 @@
+{
+    "name": "Track_1",
+    "checkPoints": [
+        {
+            "latitude": 45.279032,
+            "longitude": 11.655213,
+            "id": 0
+        },
+        {
+            "latitude": 45.276257,
+            "longitude": 11.654297,
+            "id": 1
+        }
+    ],
+    "bestTelemetry": {
+        "events": [
+            1437505820522,
+            1438441982647
+        ],
+        "track": "Track_1"
+    }
+}
