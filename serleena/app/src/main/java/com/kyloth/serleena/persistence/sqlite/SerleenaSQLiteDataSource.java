@@ -377,11 +377,11 @@ public class SerleenaSQLiteDataSource implements ISerleenaSQLiteDataSource {
         SQLiteDatabase db = dbHelper.getReadableDatabase();
         ArrayList<EmergencyContact> list = new ArrayList<EmergencyContact>();
 
-        String where = "`contact_nw_corner_latitude` <= " +
+        String where = "`contact_nw_corner_latitude` >= " +
                 location.latitude() + " AND " +
                 "`contact_nw_corner_longitude` <= " +
                 location.longitude() + " AND " +
-                "`contact_se_corner_latitude` >= " +
+                "`contact_se_corner_latitude` <= " +
                 location.latitude() + " AND " +
                 "`contact_se_corner_longitude` >= " +
                 location.longitude();
