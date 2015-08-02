@@ -45,11 +45,14 @@ import android.os.AsyncTask;
 import com.kyloth.serleena.common.DirectAccessList;
 import com.kyloth.serleena.common.EmergencyContact;
 import com.kyloth.serleena.common.GeoPoint;
+import com.kyloth.serleena.common.ListAdapter;
 import com.kyloth.serleena.model.ISerleenaDataSource;
 import com.kyloth.serleena.presentation.IContactsPresenter;
 import com.kyloth.serleena.presentation.IContactsView;
 import com.kyloth.serleena.sensors.ILocationManager;
 import com.kyloth.serleena.sensors.ILocationObserver;
+
+import java.util.ArrayList;
 
 /**
  * Concretizza IContactsPresenter
@@ -90,6 +93,8 @@ public class ContactsPresenter implements IContactsPresenter,
         this.view = view;
         this.activity = activity;
         locMan = activity.getSensorManager().getLocationSource();
+        contacts = new ListAdapter<>(
+                new ArrayList<EmergencyContact>());
 
         view.attachPresenter(this);
     }
