@@ -68,7 +68,7 @@ import java.util.ArrayList;
 public class ContactsPresenter implements IContactsPresenter,
         ILocationObserver {
 
-    private static final int UPDATE_INTERVAL_SECONDS = 180;
+    public static final int UPDATE_INTERVAL_SECONDS = 180;
 
     private IContactsView view;
     private ISerleenaActivity activity;
