@@ -31,90 +31,73 @@
 /**
  * Name: TelemetryFragmentTest.java
  * Package: com.kyloth.serleena.view.fragments
- * Author: Sebastiano Valle
+ * Author: Filippo Sestini
  *
  * History:
  * Version  Programmer       Changes
- * 1.0.0    Sebastiano Valle Creazione file e scrittura di codice e
+ * 1.0.0    Filippo Sestini  Creazione file e scrittura di codice e
  *                           documentazione in Javadoc.
  */
 
 package com.kyloth.serleena.view.fragments;
 
-import android.app.Activity;
-import android.app.FragmentManager;
-import android.content.IntentFilter;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
+import android.widget.ImageButton;
 import android.widget.TextView;
 
-import com.kyloth.serleena.BuildConfig;
 import com.kyloth.serleena.R;
-import com.kyloth.serleena.model.ITrack;
 import com.kyloth.serleena.presentation.ITelemetryPresenter;
-import com.kyloth.serleena.presenters.ISerleenaActivity;
-import com.kyloth.serleena.model.IExperience;
-import com.kyloth.serleena.model.ISerleenaDataSource;
-import com.kyloth.serleena.sensors.ISensorManager;
 import com.kyloth.serleena.sensors.TrackAlreadyStartedException;
 
-import junit.framework.Assert;
-
-import org.robolectric.Robolectric;
-import org.robolectric.RobolectricGradleTestRunner;
-import org.robolectric.annotation.Config;
+import org.mockito.ArgumentCaptor;
+import org.mockito.Mockito;
 
 import org.junit.Test;
-import org.junit.runner.RunWith;
 import org.junit.Before;
-import org.junit.Rule;
-import org.junit.rules.ExpectedException;
 
 import static org.mockito.Mockito.*;
 
 /**
  * Contiene i test di unità per la classe CompassFragment.
  *
- * @author Sebastiano Valle <valle.sebastiano93@gmail.com>
+ * @author Filippo Sestini <sestini.filippo@gmail.com>
  * @version 1.0.0
- * @see com.kyloth.serleena.view.fragments.CompassFragment
  */
-@RunWith(RobolectricGradleTestRunner.class)
-@Config(constants = BuildConfig.class, emulateSdk = 19)
 public class TelemetryFragmentTest {
 
-    private static class TestActivity
-            extends Activity implements ISerleenaActivity {
-        public void setActiveExperience(IExperience experience) { }
-        public void setActiveTrack(ITrack track) { }
-        public void enableTelemetry() {}
-        public void disableTelemetry() {}
-        public ISerleenaDataSource getDataSource() {
-            return null;
-        }
-        public ISensorManager getSensorManager() {
-            return null;
-        }
-    }
-
-    private TestActivity activity;
     private TelemetryFragment fragment;
     private ITelemetryPresenter presenter;
-
-    @Rule
-    public ExpectedException exception = ExpectedException.none();
+    private ImageButton button;
+    private TextView text;
+    private View.OnClickListener listener;
 
     @Before
     public void initialize() {
-        activity = Robolectric.buildActivity(TestActivity.class).create().get();
-        Assert.assertNotNull("initialization failed", activity);
         fragment = new TelemetryFragment();
-        FragmentManager fm = activity.getFragmentManager();
-        fm.beginTransaction().add(fragment,"TEST").commit();
-        Assert.assertEquals(fragment.getActivity(), activity);
+
+        LayoutInflater inflater = mock(LayoutInflater.class);
+        ViewGroup vg = mock(ViewGroup.class);
+        View v = mock(View.class);
+        button = mock(ImageButton.class);
+        text = mock(TextView.class);
+
+        when(inflater.inflate(
+                        eq(R.layout.fragment_telemetry),
+                        eq(vg),
+                        any(Boolean.class))
+        ).thenReturn(v);
+        when(v.findViewById(R.id.telemetry_image)).thenReturn(button);
+        when(v.findViewById(R.id.telemetry_status)).thenReturn(text);
+        fragment.onCreateView(inflater, vg, mock(Bundle.class));
+
+        ArgumentCaptor<View.OnClickListener> captor =
+                ArgumentCaptor.forClass(View.OnClickListener.class);
+        verify(button).setOnClickListener(captor.capture());
+        listener = captor.getValue();
+
         presenter = mock(ITelemetryPresenter.class);
         fragment.attachPresenter(presenter);
     }
@@ -141,17 +124,43 @@ public class TelemetryFragmentTest {
         verify(presenter).disableTelemetry();
     }
 
+    /**
+     * Verifica che inoltrata al presenter la richiesta di
+     * abilitare/disabilitare il tracciamento, iin base all'interazione
+     * dell'utente con la vista.
+     */
     @Test
     public void presenterShouldBeNotifiedWhenUserClicks() throws
             TrackAlreadyStartedException {
-        fragment.onClick(mock(View.class));
+        when(text.getText()).thenReturn("OFF");
+        listener.onClick(button);
         verify(presenter).enableTelemetry();
-        fragment.onClick(mock(View.class));
+
+        when(text.getText()).thenReturn("ON");
+        listener.onClick(button);
         verify(presenter).disableTelemetry();
-        fragment.onClick(mock(View.class));
+
+        when(text.getText()).thenReturn("OFF");
+        listener.onClick(button);
         verify(presenter, times(2)).enableTelemetry();
-        fragment.onClick(mock(View.class));
+
+        when(text.getText()).thenReturn("ON");
+        listener.onClick(button);
         verify(presenter, times(2)).disableTelemetry();
+    }
+
+    /**
+     * Verifica che la vista visualizzi un errore quando si tenta di
+     * abilitare il tracciamento per un percorso già avviato.
+     */
+    @Test
+    public void shouldDisplayErrorIfTrackAlreadyStarted()
+            throws TrackAlreadyStartedException {
+        Mockito.doThrow(TrackAlreadyStartedException.class)
+                .when(presenter).enableTelemetry();
+        when(text.getText()).thenReturn("OFF");
+        listener.onClick(button);
+        verify(text).setText("ERRORE: Percorso già avviato");
     }
 
 }
