@@ -92,7 +92,6 @@ public class ContactsPresenter implements IContactsPresenter,
         locMan = activity.getSensorManager().getLocationSource();
 
         view.attachPresenter(this);
-        resetView(contacts);
     }
 
     /**
@@ -117,6 +116,7 @@ public class ContactsPresenter implements IContactsPresenter,
     @Override
     public synchronized void resume() {
         locMan.attachObserver(this, UPDATE_INTERVAL_SECONDS);
+        resetView(contacts);
     }
 
     /**
