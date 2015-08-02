@@ -139,6 +139,12 @@ public class ContactsPresenterIntegrationTest {
                 R.id.contact_value_text);
 
         fragment.onResume();
+
+        TestDB.contactQuery(db, 0, "Contact1", "Value1", 5, 0, 0, 5);
+        TestDB.contactQuery(db, 1, "Contact2", "Value2", 6, 1, 1, 6);
+        TestDB.contactQuery(db, 2, "Contact3", "Value3", 9, 5, 5, 9);
+        TestDB.contactQuery(db, 3, "Contact4", "Value4", 10, 6, 6, 10);
+
     }
 
     /**
@@ -147,11 +153,6 @@ public class ContactsPresenterIntegrationTest {
      */
     @Test
     public void contactsShouldBeDisplayedAccordingToDBAndCurrentLocation() {
-        TestDB.contactQuery(db, 0, "Contact1", "Value1", 5, 5, 0, 0);
-        TestDB.contactQuery(db, 1, "Contact2", "Value2", 6, 6, 1, 1);
-        TestDB.contactQuery(db, 2, "Contact3", "Value3", 9, 9, 5, 5);
-        TestDB.contactQuery(db, 3, "Contact4", "Value4", 10, 10, 6, 6);
-
         Location location = new Location(LocationManager.GPS_PROVIDER);
         location.setLatitude(4);
         location.setLongitude(4);
@@ -188,11 +189,6 @@ public class ContactsPresenterIntegrationTest {
      */
     @Test
     public void contactsShouldBeDisplayedLikeACircularBuffer() {
-        TestDB.contactQuery(db, 0, "Contact1", "Value1", 5, 5, 0, 0);
-        TestDB.contactQuery(db, 1, "Contact2", "Value2", 6, 6, 1, 1);
-        TestDB.contactQuery(db, 2, "Contact3", "Value3", 9, 9, 5, 5);
-        TestDB.contactQuery(db, 3, "Contact4", "Value4", 10, 10, 6, 6);
-
         Location location = new Location(LocationManager.GPS_PROVIDER);
         location.setLatitude(4);
         location.setLongitude(4);
@@ -223,12 +219,12 @@ public class ContactsPresenterIntegrationTest {
      */
     @Test
     public void contactsShouldBeDisplayedAccordingToLocation() {
-        TestDB.contactQuery(db, 0, "Contact1", "Value1", 5, 5, 0, 0);
-        TestDB.contactQuery(db, 1, "Contact2", "Value2", 9, 9, 6, 6);
+        TestDB.contactQuery(db, 4, "Contact1", "Value1", 30, 0, 0, 30);
+        TestDB.contactQuery(db, 5, "Contact2", "Value2", 50, 40, 40, 50);
 
         Location location = new Location(LocationManager.GPS_PROVIDER);
-        location.setLatitude(4);
-        location.setLongitude(4);
+        location.setLatitude(20);
+        location.setLongitude(20);
         simulateLocation(location);
 
         Awaitility.await().until(new Callable<Boolean>() {
@@ -239,8 +235,8 @@ public class ContactsPresenterIntegrationTest {
             }
         });
 
-        location.setLatitude(7);
-        location.setLongitude(7);
+        location.setLatitude(45);
+        location.setLongitude(45);
         simulateLocation(location);
 
         Awaitility.await().until(new Callable<Boolean>() {
@@ -251,8 +247,8 @@ public class ContactsPresenterIntegrationTest {
             }
         });
 
-        location.setLatitude(15);
-        location.setLongitude(15);
+        location.setLatitude(60);
+        location.setLongitude(60);
         simulateLocation(location);
 
         Awaitility.await().until(new Callable<Boolean>() {
