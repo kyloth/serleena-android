@@ -121,7 +121,7 @@ public class ContactsPresenter implements IContactsPresenter,
     @Override
     public synchronized void resume() {
         locMan.attachObserver(this, UPDATE_INTERVAL_SECONDS);
-        resetView(contacts);
+        displayContacts(contacts);
     }
 
     /**
@@ -149,19 +149,17 @@ public class ContactsPresenter implements IContactsPresenter,
         if (loc == null)
             throw new IllegalArgumentException("Illegal null location");
 
-        final ISerleenaDataSource ds = activity.getDataSource();
-
         AsyncTask<Void, Void, DirectAccessList<EmergencyContact>> task =
                 new AsyncTask<Void, Void, DirectAccessList<EmergencyContact>>(){
             @Override
             protected DirectAccessList<EmergencyContact> doInBackground(
                     Void... voids) {
-                return ds.getContacts(loc);
+                return activity.getDataSource().getContacts(loc);
             }
             @Override
             protected void onPostExecute(
                     DirectAccessList<EmergencyContact> result) {
-                resetView(result);
+                displayContacts(result);
             }
         };
 
@@ -169,14 +167,19 @@ public class ContactsPresenter implements IContactsPresenter,
     }
 
     /**
-     * Reimposta la vista alla condizione iniziale.
+     * Mostra i contatti sulla vista, a partire dal primo della lista.
+     *
+     * @param contacts Lista ordinata di contatti da visualizzare.
      */
-    private synchronized void resetView(
+    public synchronized void displayContacts(
             DirectAccessList<EmergencyContact> contacts) {
+        if (contacts == null)
+            throw new IllegalArgumentException();
+
         this.contacts = contacts;
         index = 0;
 
-        if (contacts == null || contacts.size() == 0)
+        if (contacts.size() == 0)
             view.clearView();
         else {
             EmergencyContact c = contacts.get(0);
