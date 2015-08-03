@@ -141,6 +141,7 @@ public class SerleenaActivity extends Activity
 
             new CompassPresenter(compassFragment, this);
             new MapPresenter(mapFragment, this);
+            new ContactsPresenter(contactsFragment, this);
 
             getFragmentManager().beginTransaction()
                     .add(R.id.main_container, menuFragment).commit();
