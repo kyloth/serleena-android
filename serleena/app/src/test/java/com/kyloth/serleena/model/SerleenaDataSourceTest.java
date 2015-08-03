@@ -98,12 +98,14 @@ public class SerleenaDataSourceTest {
                                            "(contact_name, contact_value, " +
                                            "contact_nw_corner_latitude, contact_nw_corner_longitude, " +
                                            "contact_se_corner_latitude, contact_se_corner_longitude) " +
-                                           "VALUES ('Contact_1', '100', 1, 1, 10, 10);";
+                                           "VALUES ('Contact_1', '100', 10, " +
+                "1, 1, 10);";
         String insertEmergencyContacts_2 = "INSERT INTO contacts " +
                                            "(contact_name, contact_value, " +
                                            "contact_nw_corner_latitude, contact_nw_corner_longitude, " +
                                            "contact_se_corner_latitude, contact_se_corner_longitude) " +
-                                           "VALUES ('Contact_2', '200', 1, 1, 10, 10);";
+                                           "VALUES ('Contact_2', '200', 10, " +
+                "1, 1, 10);";
         Long start_weather = (new GregorianCalendar(2015, GregorianCalendar.JANUARY, 01, 00, 00, 00)).getTimeInMillis() / 1000;
         Long end_weather = (new GregorianCalendar(2015, GregorianCalendar.JANUARY, 01, 23, 59, 59)).getTimeInMillis() / 1000;
         String insertForecasts_1 = "INSERT INTO weather_forecasts " +
