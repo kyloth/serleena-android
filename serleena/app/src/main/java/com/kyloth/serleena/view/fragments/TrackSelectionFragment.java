@@ -69,6 +69,7 @@ public class TrackSelectionFragment extends ListFragment
      * Crea un oggetto ObjectListFragment.
      */
     public TrackSelectionFragment() {
+        tracks = new ITrack[] { };
         /* Null object pattern */
         presenter = new ITrackSelectionPresenter() {
             @Override
@@ -87,7 +88,6 @@ public class TrackSelectionFragment extends ListFragment
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        tracks = new ITrack[] { };
     }
 
     /**
