@@ -39,7 +39,7 @@
  *                                       codice e documentazione Javadoc
  */
 
-package com.kyloth.serleena.view.presenters;
+package com.kyloth.serleena.presenters;
 
 import android.app.ListFragment;
 import android.content.Context;
