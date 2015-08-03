@@ -51,6 +51,7 @@ import java.util.ArrayList;
 import com.kyloth.serleena.model.IExperience;
 import com.kyloth.serleena.model.ISerleenaDataSource;
 import com.kyloth.serleena.presentation.IExperienceActivationObserver;
+import com.kyloth.serleena.presentation.IExperienceSelectionPresenter;
 import com.kyloth.serleena.presentation.IExperienceSelectionView;
 
 
@@ -179,8 +180,10 @@ public class ExperienceSelectionPresenterTest {
     }
 
     @Test
-    public void presenterShouldPopulateViewCorrectly() {
-        new ExperienceSelectionPresenter(view, activity);
+    public void presenterShouldPopulateViewOnResume() {
+        IExperienceSelectionPresenter p =
+                new ExperienceSelectionPresenter(view, activity);
+        p.resume();
         verify(view).setExperiences(exps);
     }
 

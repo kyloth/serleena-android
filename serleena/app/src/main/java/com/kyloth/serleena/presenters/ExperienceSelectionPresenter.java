@@ -63,6 +63,8 @@ public class ExperienceSelectionPresenter
 
     private List<IExperienceActivationObserver> observers;
     private IExperience selectedExperience;
+    private IExperienceSelectionView view;
+    private ISerleenaActivity activity;
 
     /**
      * Crea un oggetto ExperienceSelectionPresenter.
@@ -88,29 +90,25 @@ public class ExperienceSelectionPresenter
             throw new IllegalArgumentException("Illegal null activity");
 
         this.observers = new ArrayList<IExperienceActivationObserver>();
-
-        view.setExperiences(activity.getDataSource().getExperiences());
+        this.view = view;
+        this.activity = activity;
         view.attachPresenter(this);
     }
 
     /**
      * Implementa IPresenter.resume().
      *
-     * Non effettua operazioni, in quanto i contenuti presentati non variano
-     * finchè l'applicazione è avviata, e non vengono utilizzate risorse da
-     * rilasciare.
+     * Refresha la vista con l'elenco di Esperienze memorizzate nel datasource.
      */
     @Override
     public void resume() {
-
+        view.setExperiences(activity.getDataSource().getExperiences());
     }
 
     /**
      * Implementa IPresenter.pause().
      *
-     * Non effettua operazioni, in quanto i contenuti presentati non variano
-     * finchè l'applicazione è avviata, e non vengono utilizzate risorse da
-     * rilasciare.
+     * Non effettua operazioni.
      */
     @Override
     public void pause() {

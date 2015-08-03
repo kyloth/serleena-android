@@ -40,7 +40,7 @@
 
 package com.kyloth.serleena.view.fragments;
 
-        import android.app.ListFragment;
+import android.app.ListFragment;
         import android.os.Bundle;
         import android.view.View;
         import android.widget.ArrayAdapter;
@@ -134,10 +134,10 @@ public class ExperienceSelectionFragment extends ListFragment
     @Override
     public void onResume() {
         super.onResume();
+        presenter.resume();
         setListAdapter(new ArrayAdapter<IExperience>(getActivity(),
                 android.R.layout.simple_list_item_1, android.R.id.text1,
                 this.experiences));
-        presenter.resume();
     }
 
     /**
