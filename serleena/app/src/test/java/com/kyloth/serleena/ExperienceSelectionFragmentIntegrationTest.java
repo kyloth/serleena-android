@@ -41,13 +41,9 @@
 
 package com.kyloth.serleena.view.fragments;
 
-import android.app.Activity;
-import android.app.Application;
-import android.app.FragmentManager;
+import android.app.Fragment;
 import android.app.ListFragment;
-import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
-import android.location.LocationManager;
 import android.view.KeyEvent;
 import android.widget.ListAdapter;
 
@@ -55,44 +51,36 @@ import com.kyloth.serleena.BuildConfig;
 import com.kyloth.serleena.R;
 import com.kyloth.serleena.TestDB;
 import com.kyloth.serleena.activity.SerleenaActivity;
+import com.kyloth.serleena.common.Checkpoint;
 import com.kyloth.serleena.model.IExperience;
+import com.kyloth.serleena.model.ITrack;
 import com.kyloth.serleena.model.SerleenaDataSource;
 import com.kyloth.serleena.persistence.sqlite.SerleenaDatabase;
 import com.kyloth.serleena.persistence.sqlite.SerleenaSQLiteDataSource;
-import com.kyloth.serleena.presentation.IExperienceActivationObserver;
 import com.kyloth.serleena.presentation.IExperienceActivationSource;
 import com.kyloth.serleena.presentation.ITrackSelectionView;
 import com.kyloth.serleena.presenters.ExperienceSelectionPresenter;
 import com.kyloth.serleena.presenters.ISerleenaActivity;
 import com.kyloth.serleena.model.ISerleenaDataSource;
 import com.kyloth.serleena.presenters.TrackSelectionPresenter;
-import com.kyloth.serleena.sensors.ISensorManager;
-import com.kyloth.serleena.view.fragments.ExperienceSelectionFragment;
-import com.kyloth.serleena.view.fragments.TrackSelectionFragment;
+import com.jayway.awaitility.Awaitility;
 
 import junit.framework.Assert;
 
 import org.robolectric.Robolectric;
 import org.robolectric.RobolectricGradleTestRunner;
 import org.robolectric.RuntimeEnvironment;
-import org.robolectric.Shadows;
 import org.robolectric.annotation.Config;
-import org.robolectric.shadows.ShadowLocationManager;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.Before;
-import org.junit.After;
-import org.junit.Rule;
-import org.junit.rules.ExpectedException;
 
-import java.lang.Boolean;
-import java.lang.Integer;
 import java.lang.Override;
-import java.util.ArrayList;
+import java.util.concurrent.Callable;
 
+import static junit.framework.Assert.assertEquals;
 import static junit.framework.Assert.assertTrue;
-import static org.mockito.Mockito.*;
 
 /**
  * Contiene i test di integrazione per la classe ExperienceSelectionFragment.
@@ -123,158 +111,133 @@ public class ExperienceSelectionFragmentIntegrationTest {
         }
     }
 
-    /**
-     * Presenter che fornisce un metodo per verificare facilmente se a questo viene notificata
-     * correttamente l'attivazione di un'esperienza.
-     */
-    private class TestingTrackSelection extends TrackSelectionPresenter {
-        private String name;
-
-        public TestingTrackSelection(ITrackSelectionView view, ISerleenaActivity activity,
-                                     IExperienceActivationSource source) {
-            super(view, activity, source);
-        }
-        @Override
-        public void onExperienceActivated(IExperience experience) {
-            super.onExperienceActivated(experience);
-            name = experience.getName();
-        }
-        public String getName() { return name; }
-    }
-
     private ExperienceSelectionFragment fragment;
-    private TrackSelectionFragment trackFragment;
-    private ExperienceSelectionPresenter presenter;
-    private static ArrayList<IExperience> list = new ArrayList<>();
-    private TestingTrackSelection obs;
     private CustomDataSourceActivity activity;
 
-    private Application app;
     private SerleenaDataSource dataSource;
-    private SerleenaDatabase db;
-    private SQLiteDatabase sqLiteDatabase;
-    private ShadowLocationManager slm;
+    private SQLiteDatabase db;
+    private ListAdapter experienceListAdapter;
 
     /**
      * Inizializza il test.
      */
     @Before
     public void initialize() {
-        app = RuntimeEnvironment.application;
-        fragment = new ExperienceSelectionFragment();
-
-        activity = Robolectric.buildActivity(CustomDataSourceActivity.class).
-                create().start().visible().get();
-
-        db = TestDB.getEmptyDatabase();
-        sqLiteDatabase = db.getWritableDatabase();
-        updateExperiencesList();
-
-        fragment.attachPresenter(presenter);
-
-        ListAdapter adapter = fragment.getListAdapter();
-        Assert.assertEquals(0, adapter.getCount());
-    }
-
-    /**
-     * Metodo che aggiorna la lista di esperienze che il Presenter fornisce al Fragment
-     * aggiornando il datasource fornito all'Activity.
-     */
-    private void updateExperiencesList() {
-        switchToExpSel();
+        SerleenaDatabase serleenaDB = TestDB.getEmptyDatabase();
+        db = serleenaDB.getWritableDatabase();
         dataSource = new SerleenaDataSource(
                 new SerleenaSQLiteDataSource(
-                        RuntimeEnvironment.application, db));
+                        RuntimeEnvironment.application, serleenaDB));
+    }
+
+    public void setup() {
+        activity = Robolectric.buildActivity(CustomDataSourceActivity.class).
+                create().start().visible().get();
         activity.setDataSource(dataSource);
-        presenter = new ExperienceSelectionPresenter(fragment,activity);
-        switchToTrackSel();
-        obs = new TestingTrackSelection(trackFragment,activity,presenter);
-        presenter.attachObserver(obs);
+
+        fragment =
+                (ExperienceSelectionFragment)
+                        switchToFragmentInExperienceFragment(
+                                "Imposta Esperienza");
+        experienceListAdapter = fragment.getListAdapter();
     }
 
-    /**
-     * Metodo che fa diventare ExperienceSelectionFragment il Fragment visualizzato dall'Activity.
-     */
-    private void switchToExpSel() {
+    private Fragment switchToFragmentInExperienceFragment(String string) {
         activity.onKeyDown(KeyEvent.KEYCODE_MENU, null);
-        ListFragment menu = (ListFragment) activity.getFragmentManager().
-                findFragmentById(R.id.main_container);
-        menu.onListItemClick(null, null, 0, 0);
-        ListFragment expMenu = (ListFragment) activity.getFragmentManager().
-                findFragmentById(R.id.main_container);
-        expMenu.onListItemClick(null, null, 2, 0);
-        fragment = (ExperienceSelectionFragment) activity.getFragmentManager().
-                findFragmentById(R.id.main_container);
-        fragment.onResume();
+        ListFragment menuFragment =
+                (ListFragment) activity.getFragmentManager()
+                        .findFragmentById(R.id.main_container);
+        menuFragment.onResume();
+        ListAdapter adapter = menuFragment.getListAdapter();
+        ListFragment expFragment = null;
+        for (int i = 0; i < adapter.getCount(); i++)
+            if (adapter.getItem(i).toString().equals("Esperienza"))
+                expFragment = (ListFragment) adapter.getItem(i);
+        activity.onObjectSelected(expFragment);
+        expFragment.onResume();
+        adapter = expFragment.getListAdapter();
+        Fragment frag = null;
+        for (int i = 0; i < adapter.getCount(); i++)
+            if (adapter.getItem(i).toString().equals(string))
+                frag = (Fragment) adapter.getItem(i);
+        activity.onObjectSelected(frag);
+        frag.onResume();
+        return frag;
     }
 
     /**
-     * Metodo che fa diventare TrackSelectionFragment il Fragment visualizzato dall'Activity.
+     * Verifica che la vista visualizzi un elenco vuoto quando il DB non
+     * contiene esperienze.
      */
-    private void switchToTrackSel() {
-        activity.onKeyDown(KeyEvent.KEYCODE_MENU, null);
-        ListFragment menu = (ListFragment) activity.getFragmentManager().
-                findFragmentById(R.id.main_container);
-        menu.onListItemClick(null, null, 0, 0);
-        ListFragment expMenu = (ListFragment) activity.getFragmentManager().
-                findFragmentById(R.id.main_container);
-        expMenu.onListItemClick(null, null, 3, 0);
-        trackFragment = (TrackSelectionFragment) activity.getFragmentManager().
-                findFragmentById(R.id.main_container);
-        trackFragment.onResume();
+    @Test
+    public void zeroExperiencesInDbShouldLeaveListBlank() {
+        setup();
+        assertEquals(0, experienceListAdapter.getCount());
     }
 
     /**
-     * Test che verifica se la lista e' stata popolata correttamente con una singola
+     * Verifica che la lista venga popolata correttamente con una singola
+     * esperienza quando il DB ne contiene solamente una.
+     */
+    @Test
+    public void oneExperienceInDbShouldBeShownByView() {
+        TestDB.experienceQuery(db, 0, "experience");
+        setup();
+
+        assertEquals(1, experienceListAdapter.getCount());
+        IExperience exp = (IExperience) experienceListAdapter.getItem(0);
+        assertEquals("experience", exp.getName());
+    }
+
+    /**
+     * Verifica che la lista sia stata popolata correttamente con una singola
      * esperienza.
      */
     @Test
-    public void initializationShouldHaveOneExperienceInListAdapter() {
-        initializationWithOneExperience();
-        ListAdapter adapter = fragment.getListAdapter();
-        Assert.assertEquals(1, adapter.getCount());
-        IExperience exp = (IExperience) adapter.getItem(0);
-        Assert.assertEquals("expo", exp.getName());
+    public void twoExperiencesInDbShouldBeShownByView() {
+        TestDB.experienceQuery(db, 0, "experience1");
+        TestDB.experienceQuery(db, 1, "experience2");
+        setup();
+
+        assertEquals(2, experienceListAdapter.getCount());
+        IExperience exp1 = (IExperience) experienceListAdapter.getItem(0);
+        IExperience exp2 = (IExperience) experienceListAdapter.getItem(1);
+        assertTrue(
+                (exp1.getName().equals("experience1") &&
+                        exp2.getName().equals("experience2")) ||
+                (exp1.getName().equals("experience2") &&
+                        exp2.getName().equals("experience1")));
     }
 
     /**
-     * Metodo che carica una sola esperienza nel database e nell'Activity.
-     */
-    private void initializationWithOneExperience() {
-        db = TestDB.getEmptyDatabase();
-        sqLiteDatabase = db.getWritableDatabase();
-        TestDB.experienceQuery(sqLiteDatabase, 1, "expo");
-        updateExperiencesList();
-    }
-
-    /**
-     * Test che verifica la corretta attivazione di un'esperienza.
+     * Verifica che l'esperienza attivata dall'interazione dell'utente con la
+     * lista venga comunicata correttamente agli osservatori dell'evento, in
+     * particolare alla vista "Imposta Percorso".
      */
     @Test
     public void testActivateExperience() {
-        initializationWithOneExperience();
+        TestDB.experienceQuery(db, 0, "experience");
+        TestDB.trackQuery(db, 0, "track", 0);
+        TestDB.checkpointQuery(db, 0, 1, 5, 6, 0);
+        setup();
+
         fragment.onListItemClick(null, null, 0, 0);
-        Assert.assertEquals("expo",obs.getName());
-    }
+        switchToFragmentInExperienceFragment("Imposta Percorso");
 
-    /**
-     * Test che verifica il corretto popolamento della lista nel Fragment quando questa
-     * ha due esperienze al suo interno.
-     */
-    @Test
-    public void shouldPutTwoExperiencesInExperiencesList() {
-        SerleenaDatabase otherDb = TestDB.getEmptyDatabase();
-        SQLiteDatabase sqlDb = otherDb.getWritableDatabase();
-        TestDB.experienceQuery(sqlDb, 1, "expo");
-        TestDB.experienceQuery(sqlDb, 2, "Visita alle mani di Gianni Morandi");
-        updateExperiencesList();
-
-        ListAdapter adapter = fragment.getListAdapter();
-        Assert.assertEquals(2, adapter.getCount());
-        IExperience exp = (IExperience) adapter.getItem(0);
-        Assert.assertEquals("expo", exp.getName());
-        exp = (IExperience) adapter.getItem(1);
-        Assert.assertEquals("Visita alle mani di Gianni Morandi", exp.getName());
+        final ListFragment trackFragment = (ListFragment) activity
+                .getFragmentManager().findFragmentById(R.id.main_container);
+        Awaitility.await().until(new Callable<Boolean>() {
+            @Override
+            public Boolean call() throws Exception {
+                return trackFragment.getListAdapter()
+                        .getCount() > 0;
+            }
+        });
+        ITrack track = (ITrack) trackFragment.getListAdapter().getItem(0);
+        assertEquals(1, track.getCheckpoints().size());
+        Checkpoint c = track.getCheckpoints().get(0);
+        assertEquals(5.0, c.latitude());
+        assertEquals(6.0, c.longitude());
     }
 
 }
