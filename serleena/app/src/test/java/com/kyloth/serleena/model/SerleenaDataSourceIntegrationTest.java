@@ -29,7 +29,7 @@
 
 
 /**
- * Name: SerleenaDataSourceTest.java
+ * Name: SerleenaDataSourceIntegrationTest.java
  * Package: com.kyloth.serleena.model;
  * Author: Gabriele Pozzan
  *
@@ -69,7 +69,7 @@ import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
 /**
- * Contiene test per la classe SerleenaDataSource.
+ * Contiene test di integrazione per le classi di persistenza.
  *
  * @author Gabriele Pozzan <gabriele.pozzan@studenti.unipd.it>
  * @version 1.0.0
@@ -77,7 +77,7 @@ import static org.junit.Assert.assertTrue;
 
 @RunWith(RobolectricGradleTestRunner.class)
 @Config(constants = BuildConfig.class, emulateSdk = 19)
-public class SerleenaDataSourceTest {
+public class SerleenaDataSourceIntegrationTest {
 
     SQLiteDatabase db;
     SerleenaDatabase serleenaDB;
