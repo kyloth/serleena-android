@@ -115,19 +115,19 @@ public class SerleenaSQLiteDataSource implements ISerleenaSQLiteDataSource {
      * @return Un array int [2] di due punti i,j che identifica il quadrante.
      */
     public static int[] getIJ(GeoPoint p) {
-        assert(p.latitude() >= -90.0);
-        assert(p.latitude() <= 90.0);
-        assert(p.longitude() >= -180.0);
-        assert(p.longitude() < 180.0);
         int ij[] = new int[2];
-        if (p.latitude() == 90.0) {
+        if (p.latitude() == -90.0) {
             ij[0] = TOT_LAT_QUADRANTS - 1;
         } else {
-            ij[0] = (int) (floor((p.latitude() + 90.0) / QUADRANT_LATSIZE));
+            ij[0] = (int) (floor(-(p.latitude() - 90.0) / QUADRANT_LATSIZE));
         }
-        assert(ij[0] < TOT_LAT_QUADRANTS);
+        if(ij[0] >= TOT_LAT_QUADRANTS) {
+            throw new IllegalArgumentException(ij[0]+" "+ij[1]);
+        };
         ij[1] = (int)(floor((p.longitude() + 180.0) / QUADRANT_LONGSIZE) %  TOT_LONG_QUADRANTS);
-        assert(ij[1] < TOT_LONG_QUADRANTS);
+        if(ij[1] >= TOT_LONG_QUADRANTS) {
+            throw new IllegalArgumentException(ij[0]+" "+ij[1]);
+        };
         return ij;
     }
 
@@ -352,10 +352,10 @@ public class SerleenaSQLiteDataSource implements ISerleenaSQLiteDataSource {
         assert(ij[1] < TOT_LONG_QUADRANTS);
 
         String fileName = getRasterPath(ij[0], ij[1]);
-        GeoPoint p1 = new GeoPoint((ij[0] * QUADRANT_LATSIZE - 90.0),
+        GeoPoint p1 = new GeoPoint((-(ij[0] * QUADRANT_LATSIZE) + 90.0),
                 (ij[1] * QUADRANT_LONGSIZE - 180.0));
         // Vogliamo longitudine 180.0 espressa come -180.0 (=in mod 2pi)
-        GeoPoint p2 = new GeoPoint(((ij[0] + 1) * QUADRANT_LATSIZE - 90.0),
+        GeoPoint p2 = new GeoPoint((-((ij[0]+1) * QUADRANT_LATSIZE) + 90.0),
                 (((ij[1] + 1) * QUADRANT_LONGSIZE) % 360.0) - 180.0);
 
         Bitmap raster = null;
@@ -377,11 +377,11 @@ public class SerleenaSQLiteDataSource implements ISerleenaSQLiteDataSource {
         SQLiteDatabase db = dbHelper.getReadableDatabase();
         ArrayList<EmergencyContact> list = new ArrayList<EmergencyContact>();
 
-        String where = "`contact_nw_corner_latitude` <= " +
+        String where = "`contact_nw_corner_latitude` >= " +
                 location.latitude() + " AND " +
                 "`contact_nw_corner_longitude` <= " +
                 location.longitude() + " AND " +
-                "`contact_se_corner_latitude` >= " +
+                "`contact_se_corner_latitude` <= " +
                 location.latitude() + " AND " +
                 "`contact_se_corner_longitude` >= " +
                 location.longitude();

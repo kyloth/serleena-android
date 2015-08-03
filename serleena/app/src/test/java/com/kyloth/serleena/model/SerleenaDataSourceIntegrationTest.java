@@ -29,7 +29,7 @@
 
 
 /**
- * Name: SerleenaDataSourceTest.java
+ * Name: SerleenaDataSourceIntegrationTest.java
  * Package: com.kyloth.serleena.model;
  * Author: Gabriele Pozzan
  *
@@ -69,7 +69,7 @@ import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
 /**
- * Contiene test per la classe SerleenaDataSource.
+ * Contiene test di integrazione per le classi di persistenza.
  *
  * @author Gabriele Pozzan <gabriele.pozzan@studenti.unipd.it>
  * @version 1.0.0
@@ -77,7 +77,7 @@ import static org.junit.Assert.assertTrue;
 
 @RunWith(RobolectricGradleTestRunner.class)
 @Config(constants = BuildConfig.class, emulateSdk = 19)
-public class SerleenaDataSourceTest {
+public class SerleenaDataSourceIntegrationTest {
 
     SQLiteDatabase db;
     SerleenaDatabase serleenaDB;
@@ -98,12 +98,14 @@ public class SerleenaDataSourceTest {
                                            "(contact_name, contact_value, " +
                                            "contact_nw_corner_latitude, contact_nw_corner_longitude, " +
                                            "contact_se_corner_latitude, contact_se_corner_longitude) " +
-                                           "VALUES ('Contact_1', '100', 1, 1, 10, 10);";
+                                           "VALUES ('Contact_1', '100', 10, " +
+                "1, 1, 10);";
         String insertEmergencyContacts_2 = "INSERT INTO contacts " +
                                            "(contact_name, contact_value, " +
                                            "contact_nw_corner_latitude, contact_nw_corner_longitude, " +
                                            "contact_se_corner_latitude, contact_se_corner_longitude) " +
-                                           "VALUES ('Contact_2', '200', 1, 1, 10, 10);";
+                                           "VALUES ('Contact_2', '200', 10, " +
+                "1, 1, 10);";
         Long start_weather = (new GregorianCalendar(2015, GregorianCalendar.JANUARY, 01, 00, 00, 00)).getTimeInMillis() / 1000;
         Long end_weather = (new GregorianCalendar(2015, GregorianCalendar.JANUARY, 01, 23, 59, 59)).getTimeInMillis() / 1000;
         String insertForecasts_1 = "INSERT INTO weather_forecasts " +
@@ -171,8 +173,8 @@ public class SerleenaDataSourceTest {
     @Test
     public void testGetQuadrant() {
         GeoPoint normal_point = new GeoPoint(10, 10);
-        GeoPoint min_point = new GeoPoint(-90.0, -180.0);
-        GeoPoint max_point = new GeoPoint(90.0 - 10 / 2.0,
+        GeoPoint min_point = new GeoPoint(90.0, -180.0);
+        GeoPoint max_point = new GeoPoint(-90.0 + 10 / 2.0,
                                           180.0 - 10 / 2.0);
         Quadrant quadrant = (Quadrant) dataSource.getQuadrant(normal_point);
         Quadrant max_limit_quadrant = (Quadrant) dataSource.getQuadrant(min_point);

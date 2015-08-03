@@ -54,9 +54,9 @@ public class QuadrantTest {
 	 */
 	@Test
 	public void testContains() {
-		GeoPoint ne = new GeoPoint(0, 0);
+		GeoPoint ne = new GeoPoint(2, 0);
 		GeoPoint p = new GeoPoint(1, 1);
-		GeoPoint sw = new GeoPoint(2, 2);
+		GeoPoint sw = new GeoPoint(0, 2);
 		Quadrant q = new Quadrant(ne, sw, null);
 		assertTrue(q.contains(p));
 	}
@@ -68,7 +68,7 @@ public class QuadrantTest {
 	@Test
 	public void testContainsNEEdge() {
 		GeoPoint ne = new GeoPoint(0, 0);
-		GeoPoint sw = new GeoPoint(2, 2);
+		GeoPoint sw = new GeoPoint(-2, 2);
 		Quadrant q = new Quadrant(ne, sw, null);
 		assertTrue(q.contains(ne));
 	}
@@ -80,7 +80,7 @@ public class QuadrantTest {
 	@Test
 	public void testContainsSWEdge() {
 		GeoPoint ne = new GeoPoint(0, 0);
-		GeoPoint sw = new GeoPoint(2, 2);
+		GeoPoint sw = new GeoPoint(-2, 2);
 		Quadrant q = new Quadrant(ne, sw, null);
 		assertTrue(q.contains(sw));
 	}
@@ -93,7 +93,7 @@ public class QuadrantTest {
 	public void testDoesNotContain() {
 		GeoPoint ne = new GeoPoint(0, 0);
 		GeoPoint p = new GeoPoint(3, 3);
-		GeoPoint sw = new GeoPoint(2, 2);
+		GeoPoint sw = new GeoPoint(-2, 2);
 		Quadrant q = new Quadrant(ne, sw, null);
 		assertFalse(q.contains(p));
 	}
@@ -105,7 +105,7 @@ public class QuadrantTest {
 	@Test(expected = IllegalArgumentException.class)
 	public void testNoNullContainsArg() {
 		GeoPoint ne = new GeoPoint(0, 0);
-		GeoPoint sw = new GeoPoint(2, 2);
+		GeoPoint sw = new GeoPoint(-2, 2);
 		Quadrant q = new Quadrant(ne, sw, null);
 		assertTrue(q.contains(null));
 	}
@@ -117,7 +117,7 @@ public class QuadrantTest {
 	@Test(expected = IllegalArgumentException.class)
 	public void testNoNullFirstArg() {
 		GeoPoint p = new GeoPoint(1, 1);
-		GeoPoint sw = new GeoPoint(2, 2);
+		GeoPoint sw = new GeoPoint(-2, 2);
 		Quadrant q = new Quadrant(null, sw, null);
 		assertTrue(q.contains(p));
 	}
