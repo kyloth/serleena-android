@@ -132,10 +132,10 @@ public class TrackSelectionFragment extends ListFragment
     @Override
     public void onResume() {
         super.onResume();
+        presenter.resume();
         setListAdapter(new ArrayAdapter<ITrack>(getActivity(),
                 android.R.layout.simple_list_item_1, android.R.id.text1,
                 this.tracks));
-        presenter.resume();
     }
 
     /**
