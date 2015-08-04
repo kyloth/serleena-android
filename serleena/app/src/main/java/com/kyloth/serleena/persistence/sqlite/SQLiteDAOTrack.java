@@ -72,6 +72,13 @@ class SQLiteDAOTrack implements ITrackStorage {
                           int id,
                           String name,
                           ISerleenaSQLiteDataSource dataSource) {
+        if (checkpoints == null)
+            throw new IllegalArgumentException("Illegal null checkpoints");
+        if (name == null)
+            throw new IllegalArgumentException("Illegal null name");
+        if (dataSource == null)
+            throw new IllegalArgumentException("Illegal null data source");;
+
         this.id = id;
         this.dataSource = dataSource;
         this.checkpoints = checkpoints;
