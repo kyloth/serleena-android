@@ -77,4 +77,10 @@ public interface ITrackStorage {
      */
     DirectAccessList<Checkpoint> getCheckpoints();
 
+    /**
+     * Restituisce il nome del Percorso.
+     *
+     * @return Nome del percorso.
+     */
+    String name();
 }
