@@ -56,6 +56,13 @@ import com.kyloth.serleena.common.TelemetryEvent;
 public interface ITrack {
 
     /**
+     * Restituisce il nome del percorso.
+     *
+     * @return Nome del percorso.
+     */
+    String name();
+
+    /**
      * Restituisce i Tracciamenti del Percorso.
      *
      * @return  Un Iterable che contiene tutti i Tracciamenti disponibili

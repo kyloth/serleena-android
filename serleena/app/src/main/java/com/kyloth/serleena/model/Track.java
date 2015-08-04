@@ -77,6 +77,16 @@ class Track implements ITrack {
     }
 
     /**
+     * Implementa ITrack.name()
+     *
+     * @return Nome del Percorso.
+     */
+    @Override
+    public String name() {
+        return this.storage.name();
+    }
+
+    /**
      * Implementa ITrack.getTelemetries().
      *
      * @return Insieme enumerabile di Tracciamenti.

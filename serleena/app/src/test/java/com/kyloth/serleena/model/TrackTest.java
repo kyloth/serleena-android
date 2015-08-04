@@ -185,4 +185,14 @@ public class TrackTest {
                 checkpoints.get(1));
     }
 
+    /**
+     * Verifica che il nome restituito dal metodo name() corrisponda a quello
+     * restituito dall'oggetto di persistenza sottostante.
+     */
+    @Test
+    public void trackNameShouldBeTheSameProvidedByStorageObject() {
+        when(trackStorage.name()).thenReturn("name");
+        assertEquals("name", track.name());
+    }
+
 }

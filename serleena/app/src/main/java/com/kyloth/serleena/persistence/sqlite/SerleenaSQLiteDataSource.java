@@ -146,15 +146,18 @@ public class SerleenaSQLiteDataSource implements ISerleenaSQLiteDataSource {
         SQLiteDatabase db = dbHelper.getReadableDatabase();
         String where = "track_experience = " + experience.id();
         Cursor result = db.query(SerleenaDatabase.TABLE_TRACKS,
-                new String[] { "track_id" }, where, null, null, null, null);
+                new String[] { "track_id, track_name" }, where, null, null,
+                null, null);
 
         ArrayList<SQLiteDAOTrack> list = new ArrayList<SQLiteDAOTrack>();
-        int columnIndex = result.getColumnIndexOrThrow("track_id");
+        int idIndex = result.getColumnIndexOrThrow("track_id");
+        int nameIndex = result.getColumnIndexOrThrow("track_name");
 
         while (result.moveToNext()) {
-            int trackId = result.getInt(columnIndex);
-            list.add(new SQLiteDAOTrack(getCheckpoints(trackId) ,trackId,
-                    this));
+            int trackId = result.getInt(idIndex);
+            String name = result.getString(nameIndex);
+            list.add(new SQLiteDAOTrack(
+                    getCheckpoints(trackId), trackId, name, this));
         }
 
         result.close();
