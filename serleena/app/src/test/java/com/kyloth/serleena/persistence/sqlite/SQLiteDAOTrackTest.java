@@ -46,6 +46,7 @@ import static org.junit.Assert.*;
 import org.junit.Before;
 import static org.mockito.Mockito.*;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Iterator;
 import java.util.List;
@@ -64,7 +65,9 @@ import com.kyloth.serleena.persistence.ITelemetryStorage;
  */
 
 public class SQLiteDAOTrackTest {
-    SerleenaSQLiteDataSource serleenaSQLDS;
+
+    private SerleenaSQLiteDataSource serleenaSQLDS;
+    private DirectAccessList<Checkpoint> emptyCheckpointList;
 
     /**
      * Inizializza i campi dati necessari alla conduzione dei test.
@@ -73,33 +76,69 @@ public class SQLiteDAOTrackTest {
     @Before
     public void initialize() {
         serleenaSQLDS = mock(SerleenaSQLiteDataSource.class);
+        emptyCheckpointList = new ListAdapter<>(new ArrayList<Checkpoint>());
     }
 
     /**
-     * Verifica che un nuovo oggetto sia costruito correttamente e che
-     * il metodo id ritorni il parametro passato.
+     * Verifica che il costruttore sollevi un'eccezione al passaggio di
+     * parametri null.
      */
+    @Test(expected = IllegalArgumentException.class)
+    public void ctorShouldThrowWhenNullCheckpoints() {
+        new SQLiteDAOTrack(null, 0, "", serleenaSQLDS);
+    }
 
+    /**
+     * Verifica che il costruttore sollevi un'eccezione al passaggio di
+     * parametri null.
+     */
+    @Test(expected = IllegalArgumentException.class)
+    public void ctorShouldThrowWhenNullName() {
+        new SQLiteDAOTrack(emptyCheckpointList, 0, null, serleenaSQLDS);
+    }
+
+    /**
+     * Verifica che il costruttore sollevi un'eccezione al passaggio di
+     * parametri null.
+     */
+    @Test(expected = IllegalArgumentException.class)
+    public void ctorShouldThrowWhenNullDataSource() {
+        new SQLiteDAOTrack(emptyCheckpointList, 0, "", null);
+    }
+
+    /**
+     * Verifica che l'id ritornato da id() sia quello corretto.
+     */
     @Test
-    public void testConstructorAndId() {
-        SQLiteDAOTrack daoTrack = new SQLiteDAOTrack(null, 123, serleenaSQLDS);
-        assertTrue(daoTrack.id() == 123);
+    public void idShouldBeReturnedCorrectly() {
+        SQLiteDAOTrack daoTrack = new SQLiteDAOTrack(
+                emptyCheckpointList, 123, "", serleenaSQLDS);
+        assertEquals(123, daoTrack.id());
+    }
+
+    /**
+     * Verifica che il nome ritornato da name() sia quello corretto.
+     */
+    @Test
+    public void nameShouldBeReturnedCorrectly() {
+        SQLiteDAOTrack daoTrack = new SQLiteDAOTrack(
+                emptyCheckpointList, 123, "name", serleenaSQLDS);
+        assertEquals("name", daoTrack.name());
     }
 
     /**
      * Verifica che il metodo getCheckPoints restituisca la
      * lista di Checkpoint passata al costruttore.
      */
-
     @Test
     public void testGetCheckpoints() {
         Checkpoint cp1 = new Checkpoint(1, 1);
         Checkpoint cp2 = new Checkpoint(2, 2);
         Checkpoint cp3 = new Checkpoint(3, 3);
         List<Checkpoint> list = Arrays.asList(cp1, cp2, cp3);
-        DirectAccessList<Checkpoint> cpList = new ListAdapter(list);
+        DirectAccessList<Checkpoint> cpList = new ListAdapter<Checkpoint>(list);
 
-        SQLiteDAOTrack daoTrack = new SQLiteDAOTrack(cpList, 123, serleenaSQLDS);
+        SQLiteDAOTrack daoTrack = new SQLiteDAOTrack(cpList, 1, "", serleenaSQLDS);
         DirectAccessList<Checkpoint> returnList = daoTrack.getCheckpoints();
         assertTrue(cp1.equals(returnList.get(0)));
         assertTrue(cp2.equals(returnList.get(1)));
@@ -111,11 +150,12 @@ public class SQLiteDAOTrackTest {
      * il metodo createTelemetry di SerleenaSQLiteDataSource fornendo
      * come parametri la lista degli eventi passata e il DAOTrack stesso.
      */
-
     @Test
     public void createTelemetryShouldForwardCorrectParams() {
-        SQLiteDAOTrack daoTrack = new SQLiteDAOTrack(null, 123, serleenaSQLDS);
-        Iterable<TelemetryEvent> mock_list = (Iterable<TelemetryEvent>) mock(Iterable.class);
+        SQLiteDAOTrack daoTrack = new SQLiteDAOTrack(
+                emptyCheckpointList, 123, "", serleenaSQLDS);
+        Iterable<TelemetryEvent> mock_list =
+                (Iterable<TelemetryEvent>) mock(Iterable.class);
         daoTrack.createTelemetry(mock_list);
         verify(serleenaSQLDS).createTelemetry(mock_list, daoTrack);
     }
@@ -124,14 +164,14 @@ public class SQLiteDAOTrackTest {
      * Verifica che il metodo getTelemetries richieda correttamente a
      * SerleenaSQLiteDataSource la lista dei tracciamenti e la restituisca.
      */
-
     @Test
     public void testGetTelemetries() {
         SQLiteDAOTelemetry t1 = new SQLiteDAOTelemetry(1, null);
         SQLiteDAOTelemetry t2 = new SQLiteDAOTelemetry(2, null);
         Iterable<SQLiteDAOTelemetry> telemetryList = Arrays.asList(t1, t2);
 
-        SQLiteDAOTrack daoTrack = new SQLiteDAOTrack(null, 123, serleenaSQLDS);
+        SQLiteDAOTrack daoTrack = new SQLiteDAOTrack(
+                emptyCheckpointList, 123, "", serleenaSQLDS);
         when(serleenaSQLDS.getTelemetries(daoTrack)).thenReturn(telemetryList);
         Iterable<ITelemetryStorage> result = daoTrack.getTelemetries();
         Iterator<ITelemetryStorage> i_result = result.iterator();
