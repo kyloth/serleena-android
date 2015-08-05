@@ -91,4 +91,22 @@ class SQLiteDAOTelemetry implements ITelemetryStorage {
         return id;
     }
 
+    /**
+     * Ridefinisce Object.equals()
+     *
+     * @return True se e solo se entrambi gli oggetti sono non null,
+     * di tipo SQLiteDAOTelemetry, e se il metodo equals restituisce true per
+     * gli id e l'elenco di eventi TelemetryEvent degli oggetti. False
+     * altrimenti.
+     */
+    @Override
+    public boolean equals(Object other) {
+        if (other != null && other instanceof SQLiteDAOTelemetry) {
+            SQLiteDAOTelemetry otherTelemetry = (SQLiteDAOTelemetry) other;
+            return id == otherTelemetry.id &&
+                    events.equals(otherTelemetry.events);
+        }
+        return false;
+    }
+
 }
