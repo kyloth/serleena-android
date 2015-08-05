@@ -45,6 +45,7 @@ import android.content.ContentValues;
 import android.database.sqlite.SQLiteDatabase;
 
 import com.kyloth.serleena.BuildConfig;
+import com.kyloth.serleena.TestDB;
 import com.kyloth.serleena.common.EmergencyContact;
 import com.kyloth.serleena.common.GeoPoint;
 import com.kyloth.serleena.common.NoSuchWeatherForecastException;
@@ -65,6 +66,7 @@ import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.Iterator;
 
+import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
@@ -206,7 +208,31 @@ public class SerleenaDataSourceIntegrationTest {
         assertTrue(experience.getName().equals("foo"));
     }
 
+    /**
+     * Verifica che il metodo equals() di Track restituisca risultati corretti.
+     */
+    @Test
+    public void testTrackEquals() {
+        SerleenaDatabase serleenaDb = TestDB.getEmptyDatabase();
+        SQLiteDatabase db = serleenaDb.getWritableDatabase();
+        TestDB.experienceQuery(db, 0, "experience");
+        TestDB.trackQuery(db, 0, "track", 0);
+        TestDB.checkpointQuery(db, 0, 1, 5, 5, 0);
+        TestDB.checkpointQuery(db, 1, 2, 6, 6, 0);
+        TestDB.telemetryQuery(db, 0, 0);
+        TestDB.telemetryQuery(db, 1, 0);
+        TestDB.checkPointEventQuery(db, 0, 100, 1, 0);
+        TestDB.checkPointEventQuery(db, 1, 200, 2, 0);
+        TestDB.checkPointEventQuery(db, 2, 500, 1, 1);
+        TestDB.checkPointEventQuery(db, 3, 600, 2, 1);
 
-
+        SerleenaDataSource dataSource = new SerleenaDataSource(new
+                SerleenaSQLiteDataSource(RuntimeEnvironment.application, serleenaDb));
+        ITrack track1 = dataSource.getExperiences().iterator().next()
+                .getTracks().iterator().next();
+        ITrack track2 = dataSource.getExperiences().iterator().next()
+                .getTracks().iterator().next();
+        assertTrue(track1.equals(track2));
+    }
 
 }
