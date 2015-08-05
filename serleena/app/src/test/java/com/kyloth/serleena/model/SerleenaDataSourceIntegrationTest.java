@@ -127,9 +127,9 @@ public class SerleenaDataSourceIntegrationTest {
         values_1.put("weather_temperature_afternoon", 0);
         values_1.put("weather_condition_night", WeatherForecastEnum.Sunny.ordinal());
         values_1.put("weather_temperature_night", 2);
-        values_1.put("weather_nw_corner_latitude", 0.0);
+        values_1.put("weather_nw_corner_latitude", 2.0);
         values_1.put("weather_nw_corner_longitude", 0.0);
-        values_1.put("weather_se_corner_latitude", 2.0);
+        values_1.put("weather_se_corner_latitude", 0.0);
         values_1.put("weather_se_corner_longitude", 2.0);
         db.insertOrThrow(SerleenaDatabase.TABLE_WEATHER_FORECASTS, null, values_1);
         ContentValues values_2;
