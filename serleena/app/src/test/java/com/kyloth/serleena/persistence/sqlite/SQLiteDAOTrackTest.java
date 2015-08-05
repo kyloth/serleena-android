@@ -154,6 +154,8 @@ public class SQLiteDAOTrackTest {
     public void createTelemetryShouldForwardCorrectParams() {
         SQLiteDAOTrack daoTrack = new SQLiteDAOTrack(
                 emptyCheckpointList, 123, "", serleenaSQLDS);
+        when(serleenaSQLDS.getTelemetries(any(SQLiteDAOTrack.class)))
+                .thenReturn(new ArrayList<SQLiteDAOTelemetry>());
         Iterable<TelemetryEvent> mock_list =
                 (Iterable<TelemetryEvent>) mock(Iterable.class);
         daoTrack.createTelemetry(mock_list);
@@ -166,13 +168,16 @@ public class SQLiteDAOTrackTest {
      */
     @Test
     public void testGetTelemetries() {
-        SQLiteDAOTelemetry t1 = new SQLiteDAOTelemetry(1, null);
-        SQLiteDAOTelemetry t2 = new SQLiteDAOTelemetry(2, null);
+        SQLiteDAOTelemetry t1 = new SQLiteDAOTelemetry(1,
+                new ArrayList<TelemetryEvent>());
+        SQLiteDAOTelemetry t2 = new SQLiteDAOTelemetry(2,
+                new ArrayList<TelemetryEvent>());
         Iterable<SQLiteDAOTelemetry> telemetryList = Arrays.asList(t1, t2);
 
         SQLiteDAOTrack daoTrack = new SQLiteDAOTrack(
                 emptyCheckpointList, 123, "", serleenaSQLDS);
-        when(serleenaSQLDS.getTelemetries(daoTrack)).thenReturn(telemetryList);
+        when(serleenaSQLDS.getTelemetries(any(SQLiteDAOTrack.class))).thenReturn
+                (telemetryList);
         Iterable<ITelemetryStorage> result = daoTrack.getTelemetries();
         Iterator<ITelemetryStorage> i_result = result.iterator();
         assertTrue(i_result.next() == t1);
