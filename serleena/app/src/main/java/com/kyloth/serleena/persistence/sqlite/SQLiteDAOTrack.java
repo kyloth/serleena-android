@@ -153,4 +153,12 @@ class SQLiteDAOTrack implements ITrackStorage {
         return false;
     }
 
+    /**
+     * Ridefinisce Object.hashCode()
+     */
+    @Override
+    public int hashCode() {
+        return id;
+    }
+
 }
