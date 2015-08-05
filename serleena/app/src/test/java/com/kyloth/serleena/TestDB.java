@@ -137,6 +137,19 @@ public class TestDB {
         db.execSQL(query);
     }
 
+    public static void checkPointEventQuery(SQLiteDatabase db, int id,
+                                            int timestamp, int checkpointNum,
+                                            int telemetryId) {
+        String query = "INSERT INTO " + SerleenaDatabase
+                .TABLE_TELEM_EVENTS_CHECKP + " (eventc_id, eventc_timestamp, " +
+                "eventc_value, eventc_telem) VALUES (" +
+                String.valueOf(id) + ", " +
+                String.valueOf(timestamp) + ", " +
+                String.valueOf(checkpointNum) + ", " +
+                String.valueOf(telemetryId) + ")";
+        db.execSQL(query);
+    }
+
     public static SerleenaDatabase getEmptyDatabase() {
         SerleenaDatabase serleenaDB = new SerleenaDatabase(
                 RuntimeEnvironment.application,

@@ -55,7 +55,7 @@ import com.kyloth.serleena.persistence.ITelemetryStorage;
  * @version 1.0.0
  * @see com.kyloth.serleena.persistence.ITelemetryStorage
  */
-final class SQLiteDAOTelemetry implements ITelemetryStorage {
+class SQLiteDAOTelemetry implements ITelemetryStorage {
 
     private final int id;
     private final Iterable<TelemetryEvent> events;
@@ -88,6 +88,32 @@ final class SQLiteDAOTelemetry implements ITelemetryStorage {
      * @return ID dell'oggetto esperienza.
      */
     public int id() {
+        return id;
+    }
+
+    /**
+     * Ridefinisce Object.equals()
+     *
+     * @return True se e solo se entrambi gli oggetti sono non null,
+     * di tipo SQLiteDAOTelemetry, e se il metodo equals restituisce true per
+     * gli id e l'elenco di eventi TelemetryEvent degli oggetti. False
+     * altrimenti.
+     */
+    @Override
+    public boolean equals(Object other) {
+        if (other != null && other instanceof SQLiteDAOTelemetry) {
+            SQLiteDAOTelemetry otherTelemetry = (SQLiteDAOTelemetry) other;
+            return id == otherTelemetry.id &&
+                    events.equals(otherTelemetry.events);
+        }
+        return false;
+    }
+
+    /**
+     * Ridefinisce Object.hashCode()
+     */
+    @Override
+    public int hashCode() {
         return id;
     }
 

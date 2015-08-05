@@ -135,4 +135,30 @@ class SQLiteDAOTrack implements ITrackStorage {
         return id;
     }
 
+    /**
+     * Ridefinisce Object.equals()
+     *
+     * @return Restituisce true se e solo se i due oggetti sono non null, di tipo
+     * SQLiteDAOTrack, e il metodo equals restituisce true per gli id, l'elenco
+     * di checkpoint e il nome degli oggetti. False altrimenti
+     */
+    @Override
+    public boolean equals(Object other) {
+        if (other != null && other instanceof SQLiteDAOTrack) {
+            SQLiteDAOTrack otherTrack = (SQLiteDAOTrack) other;
+            return id == otherTrack.id && name.equals(otherTrack.name) &&
+                    checkpoints.equals(otherTrack.checkpoints) &&
+                    getTelemetries().equals(otherTrack.getTelemetries());
+        }
+        return false;
+    }
+
+    /**
+     * Ridefinisce Object.hashCode()
+     */
+    @Override
+    public int hashCode() {
+        return id;
+    }
+
 }
