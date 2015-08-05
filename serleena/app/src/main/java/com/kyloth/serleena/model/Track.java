@@ -149,4 +149,20 @@ class Track implements ITrack {
         return best;
     }
 
+    /**
+     * Ridefinisce Object.equals().
+     *
+     * @param other Oggetto da confrontare con l'istanza.
+     * @return True se il metodo equals() sugli oggetti di persistenza
+     *         incapsulati restituisce True. False altrimenti.
+     */
+    @Override
+    public boolean equals(Object other) {
+        if (other != null && other instanceof Track) {
+            Track otherTrack = (Track) other;
+            return storage.equals(otherTrack.storage);
+        }
+        return false;
+    }
+
 }
