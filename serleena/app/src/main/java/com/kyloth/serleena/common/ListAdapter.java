@@ -108,4 +108,12 @@ public class ListAdapter<T> implements DirectAccessList<T> {
         return false;
     }
 
+    /**
+     * Ridefinisce Object.hashCode()
+     */
+    @Override
+    public int hashCode() {
+        return list.hashCode();
+    }
+
 }
