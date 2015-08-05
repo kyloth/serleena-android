@@ -55,7 +55,7 @@ import com.kyloth.serleena.persistence.ITelemetryStorage;
  * @version 1.0.0
  * @see com.kyloth.serleena.persistence.ITelemetryStorage
  */
-final class SQLiteDAOTelemetry implements ITelemetryStorage {
+class SQLiteDAOTelemetry implements ITelemetryStorage {
 
     private final int id;
     private final Iterable<TelemetryEvent> events;
