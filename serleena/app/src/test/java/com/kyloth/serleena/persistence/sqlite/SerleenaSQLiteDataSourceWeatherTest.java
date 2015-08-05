@@ -161,9 +161,9 @@ public class SerleenaSQLiteDataSourceWeatherTest {
         values.put("weather_temperature_afternoon", 0);
         values.put("weather_condition_night", WeatherForecastEnum.Sunny.ordinal());
         values.put("weather_temperature_night", 2);
-        values.put("weather_nw_corner_latitude", 0.0);
+        values.put("weather_nw_corner_latitude", 2.0);
         values.put("weather_nw_corner_longitude", 0.0);
-        values.put("weather_se_corner_latitude", 2.0);
+        values.put("weather_se_corner_latitude", 0.0);
         values.put("weather_se_corner_longitude", 2.0);
         db.insertOrThrow(SerleenaDatabase.TABLE_WEATHER_FORECASTS, null, values);
     }
