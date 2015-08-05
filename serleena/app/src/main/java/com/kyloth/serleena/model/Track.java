@@ -165,4 +165,12 @@ class Track implements ITrack {
         return false;
     }
 
+    /**
+     * Ridefinisce Object.hashCode()
+     */
+    @Override
+    public int hashCode() {
+        return storage.hashCode();
+    }
+
 }
