@@ -109,4 +109,12 @@ class SQLiteDAOTelemetry implements ITelemetryStorage {
         return false;
     }
 
+    /**
+     * Ridefinisce Object.hashCode()
+     */
+    @Override
+    public int hashCode() {
+        return id;
+    }
+
 }
