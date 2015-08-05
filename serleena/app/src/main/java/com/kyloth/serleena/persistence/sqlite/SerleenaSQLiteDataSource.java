@@ -487,11 +487,11 @@ public class SerleenaSQLiteDataSource implements ISerleenaSQLiteDataSource {
 
         String where =
                 "weather_date = " + (date.getTime()/1000) + " AND " +
-                "`weather_nw_corner_latitude` <= " +
+                "`weather_nw_corner_latitude` >= " +
                 location.latitude() + " AND " +
                 "`weather_nw_corner_longitude` <= " +
                 location.longitude() + " AND " +
-                "`weather_se_corner_latitude` >= " +
+                "`weather_se_corner_latitude` <= " +
                 location.latitude() + " AND " +
                 "`weather_se_corner_longitude` >= " +
                 location.longitude();
