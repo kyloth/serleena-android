@@ -47,6 +47,7 @@ import org.robolectric.RuntimeEnvironment;
 import org.robolectric.annotation.Config;
 
 import java.net.URISyntaxException;
+import java.util.Calendar;
 import java.util.GregorianCalendar;
 
 import static junit.framework.Assert.assertTrue;
@@ -66,18 +67,18 @@ public class SerleenaSQLiteDataSourceWeatherTest {
     @Test
     public void testGetWeatherInfoHit()
             throws NoSuchWeatherForecastException {
+
         IWeatherStorage info = sds.getWeatherInfo(
-                new GeoPoint(1.0, 1.0),
-                (new GregorianCalendar(2015,
-                        GregorianCalendar.JANUARY,
-                        01)
-                ).getTime());
-        assertTrue(info.getMorningForecast() == WeatherForecastEnum.Stormy);
-        assertTrue(info.getAfternoonForecast() == WeatherForecastEnum.Cloudy);
-        assertTrue(info.getNightForecast() == WeatherForecastEnum.Sunny);
-        assertTrue(info.getMorningTemperature() == -2);
-        assertTrue(info.getAfternoonTemperature() == 0);
-        assertTrue(info.getNightTemperature() == 2);
+                TestFixtures.WEATHER_FIXTURE_POINT_INSIDE,
+                TestFixtures.WEATHER_FIXTURE_CAL.getTime()
+        );
+
+        assertTrue(info.getMorningForecast() == TestFixtures.WEATHER_CONDITION_MORNING);
+        assertTrue(info.getAfternoonForecast() == TestFixtures.WEATHER_CONDITION_AFTERNOON);
+        assertTrue(info.getNightForecast()  == TestFixtures.WEATHER_CONDITION_NIGHT);
+        assertTrue(info.getMorningTemperature() == TestFixtures.WEATHER_TEMPERATURE_MORNING);
+        assertTrue(info.getAfternoonTemperature() == TestFixtures.WEATHER_TEMPERATURE_AFTERNOON);
+        assertTrue(info.getNightTemperature() == TestFixtures.WEATHER_TEMPERATURE_NIGHT);
     }
 
     /**
@@ -88,36 +89,31 @@ public class SerleenaSQLiteDataSourceWeatherTest {
     public void testGetWeatherInfoHitMargin()
             throws NoSuchWeatherForecastException {
         IWeatherStorage info = sds.getWeatherInfo(
-                new GeoPoint(0.0, 0.0),
-                (new GregorianCalendar(2015,
-                        GregorianCalendar.JANUARY,
-                        01,
-                        00,
-                        00,
-                        00)
-                ).getTime());
-        assertTrue(info.getMorningForecast() == WeatherForecastEnum.Stormy);
-        assertTrue(info.getAfternoonForecast() == WeatherForecastEnum.Cloudy);
-        assertTrue(info.getNightForecast() == WeatherForecastEnum.Sunny);
-        assertTrue(info.getMorningTemperature() == -2);
-        assertTrue(info.getAfternoonTemperature() == 0);
-        assertTrue(info.getNightTemperature() == 2);
+                TestFixtures.WEATHER_FIXTURE_NW_POINT,
+                TestFixtures.WEATHER_FIXTURE_CAL.getTime()
+        );
+
+        assertTrue(info.getMorningForecast() == TestFixtures.WEATHER_CONDITION_MORNING);
+        assertTrue(info.getAfternoonForecast() == TestFixtures.WEATHER_CONDITION_AFTERNOON);
+        assertTrue(info.getNightForecast()  == TestFixtures.WEATHER_CONDITION_NIGHT);
+        assertTrue(info.getMorningTemperature() == TestFixtures.WEATHER_TEMPERATURE_MORNING);
+        assertTrue(info.getAfternoonTemperature() == TestFixtures.WEATHER_TEMPERATURE_AFTERNOON);
+        assertTrue(info.getNightTemperature() == TestFixtures.WEATHER_TEMPERATURE_NIGHT);
 
         info = sds.getWeatherInfo(
-                new GeoPoint(2.0, 2.0),
-                (new GregorianCalendar(2015,
-                        GregorianCalendar.JANUARY,
-                        01,
-                        00,
-                        00,
-                        00)
-                ).getTime());
-        assertTrue(info.getMorningForecast() == WeatherForecastEnum.Stormy);
-        assertTrue(info.getAfternoonForecast() == WeatherForecastEnum.Cloudy);
-        assertTrue(info.getNightForecast() == WeatherForecastEnum.Sunny);
-        assertTrue(info.getMorningTemperature() == -2);
-        assertTrue(info.getAfternoonTemperature() == 0);
-        assertTrue(info.getNightTemperature() == 2);
+                new GeoPoint(
+                        TestFixtures.WEATHER_FIXTURE_NW_POINT.latitude(),
+                        TestFixtures.WEATHER_FIXTURE_NW_POINT.longitude()
+                        ),
+                TestFixtures.WEATHER_FIXTURE_CAL.getTime()
+        );
+
+        assertTrue(info.getMorningForecast() == TestFixtures.WEATHER_CONDITION_MORNING);
+        assertTrue(info.getAfternoonForecast() == TestFixtures.WEATHER_CONDITION_AFTERNOON);
+        assertTrue(info.getNightForecast()  == TestFixtures.WEATHER_CONDITION_NIGHT);
+        assertTrue(info.getMorningTemperature() == TestFixtures.WEATHER_TEMPERATURE_MORNING);
+        assertTrue(info.getAfternoonTemperature() == TestFixtures.WEATHER_TEMPERATURE_AFTERNOON);
+        assertTrue(info.getNightTemperature() == TestFixtures.WEATHER_TEMPERATURE_NIGHT);
     }
 
     /**
@@ -128,9 +124,9 @@ public class SerleenaSQLiteDataSourceWeatherTest {
     public void testGetWeatherInfoMissRegion()
             throws NoSuchWeatherForecastException {
         IWeatherStorage info = sds.getWeatherInfo(
-                new GeoPoint(3.0, 3.0),
-                (new GregorianCalendar(2015,
-                        GregorianCalendar.JANUARY, 01)).getTime());
+                TestFixtures.WEATHER_FIXTURE_POINT_OUTSIDE,
+                TestFixtures.WEATHER_FIXTURE_CAL.getTime()
+        );
     }
 
     /**
@@ -140,31 +136,20 @@ public class SerleenaSQLiteDataSourceWeatherTest {
     @Test(expected = NoSuchWeatherForecastException.class)
     public void testGetWeatherInfoMissTime()
             throws NoSuchWeatherForecastException {
+        GregorianCalendar wrongDate = (GregorianCalendar) TestFixtures.WEATHER_FIXTURE_CAL.clone();
+        wrongDate.add(Calendar.DAY_OF_YEAR, 10);
         IWeatherStorage info = sds.getWeatherInfo(
-                new GeoPoint(1.0, 1.0),
-                (new GregorianCalendar(2015,
-                        GregorianCalendar.JANUARY, 02)).getTime());
+                TestFixtures.WEATHER_FIXTURE_POINT_OUTSIDE,
+                wrongDate.getTime()
+        );
     }
 
     @Before
     public void setup() throws URISyntaxException {
         SerleenaDatabase sh = new SerleenaDatabase(RuntimeEnvironment.application, null, null, 1);
         db = sh.getWritableDatabase();
-        sds = new SerleenaSQLiteDataSource(RuntimeEnvironment.application, sh);        ContentValues values = new ContentValues();
-        values.put("weather_date", (
-                new GregorianCalendar(2015,
-                        GregorianCalendar.JANUARY, 01, 00, 00,
-                        00)).getTimeInMillis() / 1000);
-        values.put("weather_condition_morning", WeatherForecastEnum.Stormy.ordinal());
-        values.put("weather_temperature_morning", -2);
-        values.put("weather_condition_afternoon", WeatherForecastEnum.Cloudy.ordinal());
-        values.put("weather_temperature_afternoon", 0);
-        values.put("weather_condition_night", WeatherForecastEnum.Sunny.ordinal());
-        values.put("weather_temperature_night", 2);
-        values.put("weather_nw_corner_latitude", 2.0);
-        values.put("weather_nw_corner_longitude", 0.0);
-        values.put("weather_se_corner_latitude", 0.0);
-        values.put("weather_se_corner_longitude", 2.0);
+        sds = new SerleenaSQLiteDataSource(RuntimeEnvironment.application, sh);
+        ContentValues values = TestFixtures.pack(TestFixtures.WEATHER_FIXTURE);
         db.insertOrThrow(SerleenaDatabase.TABLE_WEATHER_FORECASTS, null, values);
     }
 }
