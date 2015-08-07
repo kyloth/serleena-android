@@ -53,6 +53,7 @@ import com.kyloth.serleena.common.Quadrant;
 import com.kyloth.serleena.persistence.WeatherForecastEnum;
 import com.kyloth.serleena.persistence.sqlite.SerleenaDatabase;
 import com.kyloth.serleena.persistence.sqlite.SerleenaSQLiteDataSource;
+import com.kyloth.serleena.persistence.sqlite.TestFixtures;
 
 import org.junit.After;
 import org.junit.Before;
@@ -119,18 +120,7 @@ public class SerleenaDataSourceIntegrationTest {
                                    ", 2, 100, 10, 10, 1, 1);";
         db.execSQL(insertEmergencyContacts_1);
         db.execSQL(insertEmergencyContacts_2);
-        ContentValues values_1 = new ContentValues();
-        values_1.put("weather_date", (new GregorianCalendar(2015, GregorianCalendar.JANUARY, 01, 00, 00, 00)).getTimeInMillis() / 1000);
-        values_1.put("weather_condition_morning", WeatherForecastEnum.Stormy.ordinal());
-        values_1.put("weather_temperature_morning", -2);
-        values_1.put("weather_condition_afternoon", WeatherForecastEnum.Cloudy.ordinal());
-        values_1.put("weather_temperature_afternoon", 0);
-        values_1.put("weather_condition_night", WeatherForecastEnum.Sunny.ordinal());
-        values_1.put("weather_temperature_night", 2);
-        values_1.put("weather_nw_corner_latitude", 2.0);
-        values_1.put("weather_nw_corner_longitude", 0.0);
-        values_1.put("weather_se_corner_latitude", 0.0);
-        values_1.put("weather_se_corner_longitude", 2.0);
+        ContentValues values_1 = TestFixtures.pack(TestFixtures.WEATHER_FIXTURE);
         db.insertOrThrow(SerleenaDatabase.TABLE_WEATHER_FORECASTS, null, values_1);
         ContentValues values_2;
         values_2 = new ContentValues();
@@ -189,9 +179,11 @@ public class SerleenaDataSourceIntegrationTest {
      */
     @Test
     public void testGetWeatherInfo() throws NoSuchWeatherForecastException {
-        Date time = (new GregorianCalendar(2015, GregorianCalendar.JANUARY, 01)).getTime();
-        WeatherForecast forecast = (WeatherForecast) dataSource.getWeatherInfo(new GeoPoint(1.0, 1.0),
-                                   (new GregorianCalendar(2015, GregorianCalendar.JANUARY, 01)).getTime());
+        WeatherForecast forecast = (WeatherForecast)
+                dataSource.getWeatherInfo(
+                        TestFixtures.WEATHER_FIXTURE_POINT_INSIDE,
+                        TestFixtures.WEATHER_FIXTURE_CAL.getTime()
+                );
         assertTrue(forecast != null);
         assertTrue(forecast.getAfternoonForecast() == WeatherForecastEnum.Cloudy);
     }
