@@ -97,34 +97,16 @@ public class SerleenaDataSourceIntegrationTest {
         db = serleenaDB.getWritableDatabase();
         serleenaDB.onConfigure(db);
         serleenaDB.onUpgrade(db, 1, 2);
-        String insertEmergencyContacts_1 = "INSERT INTO contacts " +
-                                           "(contact_name, contact_value, " +
-                                           "contact_nw_corner_latitude, contact_nw_corner_longitude, " +
-                                           "contact_se_corner_latitude, contact_se_corner_longitude) " +
-                                           "VALUES ('Contact_1', '100', 10, " +
-                "1, 1, 10);";
-        String insertEmergencyContacts_2 = "INSERT INTO contacts " +
-                                           "(contact_name, contact_value, " +
-                                           "contact_nw_corner_latitude, contact_nw_corner_longitude, " +
-                                           "contact_se_corner_latitude, contact_se_corner_longitude) " +
-                                           "VALUES ('Contact_2', '200', 10, " +
-                "1, 1, 10);";
-        Long start_weather = (new GregorianCalendar(2015, GregorianCalendar.JANUARY, 01, 00, 00, 00)).getTimeInMillis() / 1000;
-        Long end_weather = (new GregorianCalendar(2015, GregorianCalendar.JANUARY, 01, 23, 59, 59)).getTimeInMillis() / 1000;
-        String insertForecasts_1 = "INSERT INTO weather_forecasts " +
-                                   "(weather_start, weather_end, weather_condition, " +
-                                   "weather_temperature, weather_nw_corner_latitude, " +
-                                   "weather_nw_corner_longitude, weather_se_corner_latitude, " +
-                                   "weather_se_corner_longitude) " +
-                                   "VALUES (" + start_weather + ", " + end_weather +
-                                   ", 2, 100, 10, 10, 1, 1);";
-        db.execSQL(insertEmergencyContacts_1);
-        db.execSQL(insertEmergencyContacts_2);
-        ContentValues values_1 = TestFixtures.pack(TestFixtures.WEATHER_FIXTURE);
-        db.insertOrThrow(SerleenaDatabase.TABLE_WEATHER_FORECASTS, null, values_1);
+        ContentValues contacts_1 = TestFixtures.pack(TestFixtures.CONTACTS_FIXTURE_1);
+        db.insertOrThrow(SerleenaDatabase.TABLE_CONTACTS, null, contacts_1);
+        ContentValues contacts_2 = TestFixtures.pack(TestFixtures.CONTACTS_FIXTURE_2);
+        db.insertOrThrow(SerleenaDatabase.TABLE_CONTACTS, null, contacts_2);
+        ContentValues weather_1 = TestFixtures.pack(TestFixtures.WEATHER_FIXTURE);
+        db.insertOrThrow(SerleenaDatabase.TABLE_WEATHER_FORECASTS, null, weather_1);
         ContentValues values_2;
         values_2 = new ContentValues();
         values_2.put("experience_name", "foo");
+        // TODO: Sostituire con fixture
         db.insertOrThrow(SerleenaDatabase.TABLE_EXPERIENCES, null, values_2);
         serleenaSQLDS = new SerleenaSQLiteDataSource(RuntimeEnvironment.application, serleenaDB);
         dataSource = new SerleenaDataSource(serleenaSQLDS);
@@ -148,12 +130,27 @@ public class SerleenaDataSourceIntegrationTest {
 
     @Test
     public void testGetContacts() {
-        Iterable<EmergencyContact> contacts = dataSource.getContacts(new GeoPoint(5, 5));
+        Iterable<EmergencyContact> contacts = dataSource.getContacts(
+                TestFixtures.CONTACTS_FIXTURE_POINT_INSIDE_BOTH
+        );
+
         Iterator<EmergencyContact> i_contacts = contacts.iterator();
-        assertTrue(i_contacts.next().name().equals("Contact_1"));
-        assertTrue(i_contacts.next().name().equals("Contact_2"));
+        String name1 = i_contacts.next().name();
+        String name2 = i_contacts.next().name();
+        assertTrue(
+                (
+                    name1.equals(TestFixtures.CONTACTS_FIXTURE_1_NAME)
+                    && name2.equals(TestFixtures.CONTACTS_FIXTURE_2_NAME)
+                )
+                        ||
+                (
+                    name2.equals(TestFixtures.CONTACTS_FIXTURE_1_NAME)
+                    && name1.equals(TestFixtures.CONTACTS_FIXTURE_2_NAME)
+                )
+        );
         assertFalse(i_contacts.hasNext());
-        Iterable<EmergencyContact> void_contacts = dataSource.getContacts(new GeoPoint(20, 20));
+
+        Iterable<EmergencyContact> void_contacts = dataSource.getContacts(TestFixtures.CONTACTS_FIXTURE_POINT_INSIDE_NEITHER);
         Iterator<EmergencyContact> i_void_contacts = void_contacts.iterator();
         assertFalse(i_void_contacts.hasNext());
     }
@@ -217,6 +214,7 @@ public class SerleenaDataSourceIntegrationTest {
         TestDB.checkPointEventQuery(db, 1, 200, 2, 0);
         TestDB.checkPointEventQuery(db, 2, 500, 1, 1);
         TestDB.checkPointEventQuery(db, 3, 600, 2, 1);
+        // TODO: Cos'e'? Come fa a funzionare?
 
         SerleenaDataSource dataSource = new SerleenaDataSource(new
                 SerleenaSQLiteDataSource(RuntimeEnvironment.application, serleenaDb));
