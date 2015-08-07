@@ -41,6 +41,8 @@
 
 package com.kyloth.serleena.common;
 
+import com.kyloth.serleena.persistence.sqlite.TestFixtures;
+
 import org.junit.Test;
 
 import java.lang.Object;
@@ -48,6 +50,8 @@ import java.lang.String;
 import dalvik.annotation.TestTargetClass;
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.MatcherAssert.assertThat;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotEquals;
 
 /**
  * Contiene i test di unità per la classe EmergencyContact.
@@ -66,15 +70,17 @@ public class EmergencyContactTest {
      */
     @Test
     public void testLocationTelemetryEventGetters() {
-        String name = "Contact";
-        String value ="contact@foo.com";
+        String name = TestFixtures.CONTACTS_FIXTURE_1_NAME;
+        String value = TestFixtures.CONTACTS_FIXTURE_1_VALUE;
+        assertNotEquals(name, TestFixtures.CONTACTS_FIXTURE_2_NAME);
+        assertNotEquals(value, TestFixtures.CONTACTS_FIXTURE_2_VALUE);
+
         EmergencyContact c = new EmergencyContact(name, value);
 
-        org.junit.Assert.assertTrue(c.name().equals(name));
-        org.junit.Assert.assertTrue(c.value().equals(value));
-
-        org.junit.Assert.assertTrue(!(c.name().equals("Other contact")));
-        org.junit.Assert.assertTrue(!(c.value().equals("other@foo.com")));
+        assertEquals(c.name(), name);
+        assertEquals(c.value(), value);
+        assertNotEquals(c.name(), TestFixtures.CONTACTS_FIXTURE_2_NAME);
+        assertNotEquals(c.value(), TestFixtures.CONTACTS_FIXTURE_2_VALUE);
     }
 
     /**
@@ -82,21 +88,25 @@ public class EmergencyContactTest {
      */
     @Test
     public void testEqualsMethod() {
-        String name1 = "Contact";
-        String value1 ="contact@foo.com";
+        String name1 = TestFixtures.CONTACTS_FIXTURE_1_NAME;
+        String value1 = TestFixtures.CONTACTS_FIXTURE_1_VALUE;
+        assertNotEquals(name1, TestFixtures.CONTACTS_FIXTURE_2_NAME);
+        assertNotEquals(value1, TestFixtures.CONTACTS_FIXTURE_2_VALUE);
+
         EmergencyContact c1 = new EmergencyContact(name1, value1);
 
-        String name2 = "Contact";
-        String value2 ="contact@foo.com";
+        String name2 = TestFixtures.CONTACTS_FIXTURE_1_NAME;
+        String value2 = TestFixtures.CONTACTS_FIXTURE_1_VALUE;
+
         EmergencyContact c2 = new EmergencyContact(name2, value2);
 
-        String name3 = "Other contact";
-        String value3 ="ther.contact@foo.com";
+        String name3 = TestFixtures.CONTACTS_FIXTURE_2_NAME;
+        String value3 = TestFixtures.CONTACTS_FIXTURE_2_VALUE;
         EmergencyContact c3 = new EmergencyContact(name3, value3);
 
-        org.junit.Assert.assertTrue(c1.equals(c2));
-        org.junit.Assert.assertTrue(!(c1.equals(c3)));
-        org.junit.Assert.assertTrue(!(c1.equals(new Object())));
+        assertEquals(c1, c2);
+        assertNotEquals(c1, c3);
+        assertNotEquals(c1, new Object());
     }
 
 }
