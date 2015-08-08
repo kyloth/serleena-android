@@ -52,7 +52,6 @@ import java.util.Date;
  * @field activity : ISerleenaActivity Activity a cui il presenter appartiene
  * @field daysPastNow : int Giorni successivi a quello corrente la cui data corrispondente deve essere visualizzata sulla vista
  * @field locMan : ILocationManager Sensore di posizione
- * @field ds : ISerleenaDataSource DAO dell'applicazione
  * @field lastKnownLocation : GeoPoint Ultima posizione geografica nota dell'utente
  * @author Filippo Sestini <sestini.filippo@gmail.com>
  * @version 1.0.0
@@ -79,7 +78,6 @@ public class WeatherPresenter implements IWeatherPresenter, ILocationObserver {
 	this.activity = activity;
         this.view.attachPresenter(this);
         this.locMan = activity.getSensorManager().getLocationSource();
-        this.ds = activity.getDataSource();
         daysPastNow = 0;
     }
 
@@ -127,8 +125,8 @@ public class WeatherPresenter implements IWeatherPresenter, ILocationObserver {
         Date d = c.getTime();
 
         try {
-            IWeatherForecast info =
-                    ds.getWeatherInfo(location, d);
+            IWeatherForecast info = activity.getDataSource()
+                    .getWeatherInfo(location, d);
             view.setWeatherInfo(info);
         } catch (NoSuchWeatherForecastException ex) {
             view.clearWeatherInfo();
