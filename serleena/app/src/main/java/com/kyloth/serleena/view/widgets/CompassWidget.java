@@ -71,6 +71,14 @@ public class CompassWidget extends ImageView {
         this.invalidate();
     }
 
+    /**
+     * Restituisce il valore di orientamento impostato nel wedget.
+     * @return Gradi di rotazione in riferimento al nord reale.
+     */
+    public float getOrientation() {
+        return this.direction;
+    }
+
     public void reset() {
         this.setImageResource(android.R.color.transparent);
         invalidate();
