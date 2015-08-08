@@ -69,7 +69,7 @@ import java.util.List;
  * @version 1.0.0
  */
 @TargetApi(19)
-class HeadingManager implements IHeadingManager, SensorEventListener {
+public class HeadingManager implements IHeadingManager, SensorEventListener {
 
     private float[] accelerometerValues;
     private float[] magneticFieldValues;
