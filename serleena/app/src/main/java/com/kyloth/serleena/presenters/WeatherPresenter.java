@@ -86,7 +86,7 @@ public class WeatherPresenter implements IWeatherPresenter, ILocationObserver {
      */
     @Override
     public synchronized void advanceDate() {
-        daysPastNow = (daysPastNow + 1) % 6;
+        daysPastNow = (daysPastNow + 1) % 7;
         if (lastKnownLocation != null) {
             AsyncTask<Void, Void, Void> task = new AsyncTask<Void, Void, Void>() {
                 @Override
