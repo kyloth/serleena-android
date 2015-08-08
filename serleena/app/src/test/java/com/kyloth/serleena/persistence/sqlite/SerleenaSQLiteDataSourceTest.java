@@ -400,15 +400,11 @@ public class SerleenaSQLiteDataSourceTest {
      */
     @Test
     public void testGetContactsHit() {
-        ContentValues values = new ContentValues();
-        values.put("contact_name", "foo");
-        values.put("contact_value", "asdfghj");
-        values.put("contact_nw_corner_latitude", 2.0);
-        values.put("contact_nw_corner_longitude", 0.0);
-        values.put("contact_se_corner_latitude", 0.0);
-        values.put("contact_se_corner_longitude", 2.0);
+        ContentValues values = TestFixtures.pack(TestFixtures.CONTACTS_FIXTURE_1);
         db.insertOrThrow(SerleenaDatabase.TABLE_CONTACTS, null, values);
-        Iterable<EmergencyContact> contacts = sds.getContacts(new GeoPoint(1.0, 1.0));
+        Iterable<EmergencyContact> contacts = sds.getContacts(
+                TestFixtures.CONTACTS_FIXTURE_POINT_INSIDE_BOTH
+        );
         int i = 0;
         for (EmergencyContact contact : contacts) {
             i++;
@@ -422,20 +418,38 @@ public class SerleenaSQLiteDataSourceTest {
      */
     @Test
     public void testGetContactsHitMargin() {
-        ContentValues values = new ContentValues();
-        values.put("contact_name", "foo");
-        values.put("contact_value", "asdfghj");
-        values.put("contact_nw_corner_latitude", 2.0);
-        values.put("contact_nw_corner_longitude", 0.0);
-        values.put("contact_se_corner_latitude", 0.0);
-        values.put("contact_se_corner_longitude", 2.0);
+        ContentValues values = TestFixtures.pack(TestFixtures.CONTACTS_FIXTURE_1);
         db.insertOrThrow(SerleenaDatabase.TABLE_CONTACTS, null, values);
-        Iterable<EmergencyContact> contacts = sds.getContacts(new GeoPoint(0.0, 0.0));
-        int i = 0;
+
+        Iterable<EmergencyContact> contacts;
+        int i;
+
+        contacts = sds.getContacts(TestFixtures.CONTACTS_FIXTURE_1_NW_CORNER);
+        i = 0;
         for (EmergencyContact contact : contacts) {
             i++;
         }
         assertTrue(i == 1);
+
+        contacts = sds.getContacts(TestFixtures.CONTACTS_FIXTURE_1_SE_CORNER);
+        i = 0;
+        for (EmergencyContact contact : contacts) {
+            i++;
+        }
+        assertTrue(i == 1);
+
+        contacts = sds.getContacts(
+                new GeoPoint(
+                        TestFixtures.CONTACTS_FIXTURE_1_NW_CORNER.latitude(),
+                        TestFixtures.CONTACTS_FIXTURE_1_SE_CORNER.longitude()
+                )
+        );
+        i = 0;
+        for (EmergencyContact contact : contacts) {
+            i++;
+        }
+        assertTrue(i == 1);
+
     }
 
     /**
@@ -444,15 +458,11 @@ public class SerleenaSQLiteDataSourceTest {
      */
     @Test
     public void testGetContactsMiss() {
-        ContentValues values = new ContentValues();
-        values.put("contact_name", "foo");
-        values.put("contact_value", "asdfghj");
-        values.put("contact_nw_corner_latitude", 10.0);
-        values.put("contact_nw_corner_longitude", 10.0);
-        values.put("contact_se_corner_latitude", 20.0);
-        values.put("contact_se_corner_longitude", 20.0);
+        ContentValues values = TestFixtures.pack(TestFixtures.CONTACTS_FIXTURE_1);
         db.insertOrThrow(SerleenaDatabase.TABLE_CONTACTS, null, values);
-        Iterable<EmergencyContact> contacts = sds.getContacts(new GeoPoint(1.0, 1.0));
+        Iterable<EmergencyContact> contacts = sds.getContacts(
+                TestFixtures.CONTACTS_FIXTURE_POINT_INSIDE_NEITHER
+        );
         int i = 0;
         for (EmergencyContact contact : contacts) {
             i++;
