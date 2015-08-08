@@ -33,19 +33,12 @@ package com.kyloth.serleena;
 import org.junit.Ignore;
 import org.junit.runner.RunWith;
 
-import java.util.Date;
-
 import org.robolectric.RobolectricGradleTestRunner;
 import org.robolectric.RuntimeEnvironment;
 import org.robolectric.annotation.Config;
 
 import android.database.sqlite.SQLiteDatabase;
-
-import com.kyloth.serleena.BuildConfig;
-import com.kyloth.serleena.model.SerleenaDataSource;
-import com.kyloth.serleena.persistence.WeatherForecastEnum;
 import com.kyloth.serleena.persistence.sqlite.SerleenaDatabase;
-import com.kyloth.serleena.common.TelemetryEventType;
 
 @RunWith(RobolectricGradleTestRunner.class)
 @Config(constants = BuildConfig.class, emulateSdk = 19)
@@ -157,59 +150,6 @@ public class TestDB {
         SQLiteDatabase db = serleenaDB.getWritableDatabase();
         serleenaDB.onConfigure(db);
         serleenaDB.onUpgrade(db, 1, 2);
-        return serleenaDB;
-    }
-
-    public static SerleenaDatabase getDB() {
-        SerleenaDatabase serleenaDB = getEmptyDatabase();
-        SQLiteDatabase db = serleenaDB.getWritableDatabase();
-
-        /* ESPERIENZE */
-        experienceQuery(db, 1, "Experience_1");
-        experienceQuery(db, 2, "Experience_2");
-
-        /* PERCORSI */
-        trackQuery(db, 1, "Track_1", 1);
-        trackQuery(db, 2, "Track_2", 1);
-        trackQuery(db, 3, "Track_3", 2);
-        trackQuery(db, 4, "Track_4", 2);
-
-        /* TRACCIAMENTI */
-        telemetryQuery(db, 1, 1);
-        telemetryQuery(db, 2, 1);
-        telemetryQuery(db, 3, 2);
-        telemetryQuery(db, 4, 2);
-
-        /* EVENTI DI TRACCIAMENTO */
-        locationTelemetryEventQuery(db, 1, new Date(100).getTime(), 1.0, 1.0, 1);
-        locationTelemetryEventQuery(db, 2, new Date(200).getTime(), 1.0, 1.0, 2);
-        locationTelemetryEventQuery(db, 3, new Date(300).getTime(), 2.0, 2.0, 3);
-        locationTelemetryEventQuery(db, 4, new Date(400).getTime(), 2.0, 2.0, 4);
-        heartTelemetryEventQuery(db, 1, new Date(500).getTime(), 100, "event_heartrate", 1);
-        heartTelemetryEventQuery(db, 2, new Date(600).getTime(), 150, "event_heartrate", 2);
-        heartTelemetryEventQuery(db, 3, new Date(700).getTime(), 200, "event_heartrate", 3);
-        heartTelemetryEventQuery(db, 4, new Date(800).getTime(), 250, "event_heartrate", 4);
-
-        /* CHECKPOINT */
-        checkpointQuery(db, 1, 1, 1.0, 1.0, 1);
-        checkpointQuery(db, 2, 2, 2.0, 2.0, 1);
-        checkpointQuery(db, 3, 1, 3.0, 3.0, 2);
-        checkpointQuery(db, 4, 2, 4.0, 4.0, 2);
-
-        /* PUNTI UTENTE */
-        userPointQuery(db, 1, 1.0, 1.0, 1);
-        userPointQuery(db, 2, 2.0, 2.0, 1);
-        userPointQuery(db, 3, 3.0, 3.0, 2);
-        userPointQuery(db, 4, 4.0, 4.0, 2);
-
-        /* CONTATTI DI EMERGENZA */
-        contactQuery(db, 1, "Contact_1", "001", 2.0, 2.0, 1.0, 1.0);
-        contactQuery(db, 2, "Contact_2", "002", 4.0, 4.0, 2.0, 2.0);
-
-        /* PREVISIONI METEO */
-        forecastQuery(db, 1, new Date(100).getTime(), new Date(200).getTime(), "Sunny", 10, 2.0, 2.0, 1.0, 1.0);
-        forecastQuery(db, 2, new Date(200).getTime(), new Date(400).getTime(), "Cloudy", 20, 4.0, 4.0, 2.0, 2.0);
-
         return serleenaDB;
     }
 }

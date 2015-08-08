@@ -40,23 +40,25 @@
 
 package com.kyloth.serleena.persistence.sqlite;
 
+import android.database.sqlite.SQLiteDatabase;
+
+import com.kyloth.serleena.BuildConfig;
+import com.kyloth.serleena.common.UserPoint;
+import com.kyloth.serleena.persistence.ITrackStorage;
+
+import org.junit.After;
+import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import static org.junit.Assert.*;
-import org.junit.Before;
-import org.junit.After;
-
-import java.util.Iterator;
-
 import org.robolectric.RobolectricGradleTestRunner;
 import org.robolectric.RuntimeEnvironment;
 import org.robolectric.annotation.Config;
 
-import android.database.sqlite.SQLiteDatabase;
+import java.util.Iterator;
 
-import com.kyloth.serleena.BuildConfig;
-import com.kyloth.serleena.persistence.ITrackStorage;
-import com.kyloth.serleena.common.UserPoint;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
 
 /**
  * Contiene test per la classe SQLiteDAOExperience.
@@ -78,30 +80,43 @@ public class SQLiteDAOExperienceTest {
         db = serleenaDB.getWritableDatabase();
         serleenaDB.onConfigure(db);
         serleenaDB.onUpgrade(db, 1, 2);
-        String insertExperience_1 = "INSERT INTO experiences " +
-                                    "(experience_id, experience_name) VALUES " +
-                                    "(1, 'Experience_1');";
-        String insertExperience_2 = "INSERT INTO experiences " +
-                                    "(experience_id, experience_name) VALUES " +
-                                    "(2, 'Experience_2');";
-        String insertTracks_1 = "INSERT INTO tracks " +
-                                "(track_id, track_name, track_experience ) VALUES " +
-                                "(5, 'Track_1', 1);";
-        String insertTracks_2 = "INSERT INTO tracks " +
-                                "(track_id, track_name, track_experience ) VALUES " +
-                                "(9, 'Track_2', 1);";
-        String insertTracks_3 = "INSERT INTO tracks " +
-                                "(track_id, track_name, track_experience ) VALUES " +
-                                "(12, 'Track_3', 2);";
-        String insertUserPoints = "INSERT INTO user_points " +
-                                  "(userpoint_x, userpoint_y, userpoint_experience) VALUES " +
-                                  "(13, 73, 1);";
-        db.execSQL(insertExperience_1);
-        db.execSQL(insertExperience_2);
-        db.execSQL(insertTracks_1);
-        db.execSQL(insertTracks_2);
-        db.execSQL(insertTracks_3);
-        db.execSQL(insertUserPoints);
+
+        db.insertOrThrow(
+                SerleenaDatabase.TABLE_EXPERIENCES,
+                null,
+                TestFixtures.pack(TestFixtures.EXPERIENCES_FIXTURE_EXPERIENCE_1)
+        );
+
+        db.insertOrThrow(
+                SerleenaDatabase.TABLE_EXPERIENCES,
+                null,
+                TestFixtures.pack(TestFixtures.EXPERIENCES_FIXTURE_EXPERIENCE_2)
+        );
+
+        db.insertOrThrow(
+                SerleenaDatabase.TABLE_TRACKS,
+                null,
+                TestFixtures.pack(TestFixtures.EXPERIENCES_FIXTURE_EXPERIENCE_1_TRACK_1)
+        );
+
+        db.insertOrThrow(
+                SerleenaDatabase.TABLE_TRACKS,
+                null,
+                TestFixtures.pack(TestFixtures.EXPERIENCES_FIXTURE_EXPERIENCE_1_TRACK_2)
+        );
+
+        db.insertOrThrow(
+                SerleenaDatabase.TABLE_TRACKS,
+                null,
+                TestFixtures.pack(TestFixtures.EXPERIENCES_FIXTURE_EXPERIENCE_2_TRACK_1)
+        );
+
+        db.insertOrThrow(
+                SerleenaDatabase.TABLE_USER_POINTS,
+                null,
+                TestFixtures.pack(TestFixtures.EXPERIENCES_FIXTURE_EXPERIENCE_1_USERPOINT_1)
+        );
+
         serleenaSQLDS = new SerleenaSQLiteDataSource(RuntimeEnvironment.application, serleenaDB);
     }
 
@@ -121,9 +136,18 @@ public class SQLiteDAOExperienceTest {
 
     @Test
     public void testConstructorAndGetters() {
-        SQLiteDAOExperience daoExp = new SQLiteDAOExperience("DAOExp", 1, serleenaSQLDS);
-        assertTrue(daoExp.getName().equals("DAOExp"));
-        assertTrue(daoExp.id() == 1);
+        SQLiteDAOExperience daoExp = new SQLiteDAOExperience(
+                TestFixtures.EXPERIENCES_FIXTURE_EXPERIENCE_1_NAME,
+                TestFixtures.EXPERIENCES_FIXTURE_EXPERIENCE_1_ID,
+                serleenaSQLDS);
+        assertEquals(
+                daoExp.getName(),
+                TestFixtures.EXPERIENCES_FIXTURE_EXPERIENCE_1_NAME
+        );
+        assertEquals(
+                daoExp.id(),
+                TestFixtures.EXPERIENCES_FIXTURE_EXPERIENCE_1_ID
+        );
     }
 
     /**
@@ -134,14 +158,21 @@ public class SQLiteDAOExperienceTest {
 
     @Test
     public void testGetTracks() {
-        SQLiteDAOExperience daoExp = new SQLiteDAOExperience("DAOExp", 1, serleenaSQLDS);
+        SQLiteDAOExperience daoExp = new SQLiteDAOExperience(
+                TestFixtures.EXPERIENCES_FIXTURE_EXPERIENCE_1_NAME,
+                TestFixtures.EXPERIENCES_FIXTURE_EXPERIENCE_1_ID,
+                serleenaSQLDS);
         Iterable<ITrackStorage> trackStorage = daoExp.getTracks();
         Iterator<ITrackStorage> i_trackStorage = trackStorage.iterator();
         SQLiteDAOTrack track_1 = (SQLiteDAOTrack) i_trackStorage.next();
         SQLiteDAOTrack track_2 = (SQLiteDAOTrack) i_trackStorage.next();
         assertFalse(i_trackStorage.hasNext());
-        assertTrue(track_1.id() == 5);
-        assertTrue(track_2.id() == 9);
+        assertTrue(
+                (track_1.id() == TestFixtures.EXPERIENCES_FIXTURE_EXPERIENCE_1_TRACK_1_ID &&
+                 track_2.id() == TestFixtures.EXPERIENCES_FIXTURE_EXPERIENCE_1_TRACK_2_ID) ||
+                (track_1.id() == TestFixtures.EXPERIENCES_FIXTURE_EXPERIENCE_1_TRACK_2_ID &&
+                 track_2.id() == TestFixtures.EXPERIENCES_FIXTURE_EXPERIENCE_1_TRACK_1_ID)
+                );
     }
 
     /**
@@ -152,12 +183,15 @@ public class SQLiteDAOExperienceTest {
 
     @Test
     public void testGetUserPoints() {
-        SQLiteDAOExperience daoExp = new SQLiteDAOExperience("DAOExp", 1, serleenaSQLDS);
+        SQLiteDAOExperience daoExp = new SQLiteDAOExperience(
+                TestFixtures.EXPERIENCES_FIXTURE_EXPERIENCE_1_NAME,
+                TestFixtures.EXPERIENCES_FIXTURE_EXPERIENCE_1_ID,
+                serleenaSQLDS);
         Iterable<UserPoint> ups = daoExp.getUserPoints();
         Iterator<UserPoint> i_ups = ups.iterator();
         UserPoint up = i_ups.next();
-        assertTrue(up.latitude() == 13);
-        assertTrue(up.longitude() == 73);
+        assertTrue(up.latitude() == TestFixtures.EXPERIENCES_FIXTURE_EXPERIENCE_1_USERPOINT_1_LAT);
+        assertTrue(up.longitude() == TestFixtures.EXPERIENCES_FIXTURE_EXPERIENCE_1_USERPOINT_1_LON);
     }
 
     /**
@@ -168,16 +202,34 @@ public class SQLiteDAOExperienceTest {
 
     @Test
     public void testAddUserPoint() {
-        SQLiteDAOExperience daoExp = new SQLiteDAOExperience("DAOExp", 1, serleenaSQLDS);
+        SQLiteDAOExperience daoExp = new SQLiteDAOExperience(
+                TestFixtures.EXPERIENCES_FIXTURE_EXPERIENCE_1_NAME,
+                TestFixtures.EXPERIENCES_FIXTURE_EXPERIENCE_1_ID,
+                serleenaSQLDS);
         UserPoint up_1 = new UserPoint(44, 59);
         daoExp.addUserPoint(up_1);
         Iterable<UserPoint> ups = daoExp.getUserPoints();
         Iterator<UserPoint> i_ups = ups.iterator();
         UserPoint ups_1 = i_ups.next();
         UserPoint ups_2 = i_ups.next();
-        assertTrue(ups_2.latitude() == 44);
-        assertTrue(ups_2.longitude() == 59);
-        assertTrue(ups_1.latitude() == 13);
-        assertTrue(ups_1.longitude() == 73);
+        assertTrue(
+                (
+                    (ups_1.latitude() == 44
+                            &&
+                            ups_1.longitude() == 59) &&
+                    (ups_2.latitude() == TestFixtures.EXPERIENCES_FIXTURE_EXPERIENCE_1_USERPOINT_1_LAT
+                            &&
+                            ups_2.longitude() == TestFixtures.EXPERIENCES_FIXTURE_EXPERIENCE_1_USERPOINT_1_LON)
+                )
+                        ||
+                (
+                    (ups_2.latitude() == 44
+                            &&
+                            ups_2.longitude() == 59) &&
+                    (ups_1.latitude() == TestFixtures.EXPERIENCES_FIXTURE_EXPERIENCE_1_USERPOINT_1_LAT
+                            &&
+                            ups_1.longitude() == TestFixtures.EXPERIENCES_FIXTURE_EXPERIENCE_1_USERPOINT_1_LON)
+                )
+        );
     }
 }

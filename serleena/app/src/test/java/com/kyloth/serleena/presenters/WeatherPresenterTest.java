@@ -53,6 +53,7 @@ import com.kyloth.serleena.model.SerleenaDataSource;
 import com.kyloth.serleena.persistence.WeatherForecastEnum;
 import com.kyloth.serleena.persistence.sqlite.SerleenaDatabase;
 import com.kyloth.serleena.persistence.sqlite.SerleenaSQLiteDataSource;
+import com.kyloth.serleena.persistence.sqlite.TestFixtures;
 import com.kyloth.serleena.presentation.IWeatherView;
 import com.kyloth.serleena.sensors.ILocationManager;
 import com.kyloth.serleena.sensors.ISensorManager;
@@ -144,37 +145,20 @@ public class WeatherPresenterTest {
         today.set(Calendar.MINUTE, 00);
         today.set(Calendar.SECOND, 00);
         today.set(Calendar.MILLISECOND, 00);
-        ContentValues values = new ContentValues();
-        values.put("weather_date", (today).getTimeInMillis() / 1000);
-        values.put("weather_condition_morning", WeatherForecastEnum.Stormy.ordinal());
-        values.put("weather_temperature_morning", -2);
-        values.put("weather_condition_afternoon", WeatherForecastEnum.Cloudy.ordinal());
-        values.put("weather_temperature_afternoon", 0);
-        values.put("weather_condition_night", WeatherForecastEnum.Sunny.ordinal());
-        values.put("weather_temperature_night", 2);
-        values.put("weather_nw_corner_latitude", 2.0);
-        values.put("weather_nw_corner_longitude", 0.0);
-        values.put("weather_se_corner_latitude", 0.0);
-        values.put("weather_se_corner_longitude", 2.0);
-        db.insertOrThrow(SerleenaDatabase.TABLE_WEATHER_FORECASTS, null, values);
 
         Calendar tomorrow = new GregorianCalendar();
         tomorrow.setTime(today.getTime());
         tomorrow.add(Calendar.DAY_OF_YEAR, 1);
-        values = new ContentValues();
-        values.put("weather_date", (tomorrow).getTimeInMillis() / 1000);
-        values.put("weather_condition_morning", WeatherForecastEnum.Stormy.ordinal());
-        values.put("weather_temperature_morning", -2);
-        values.put("weather_condition_afternoon", WeatherForecastEnum.Cloudy.ordinal());
-        values.put("weather_temperature_afternoon", 0);
-        values.put("weather_condition_night", WeatherForecastEnum.Sunny.ordinal());
-        values.put("weather_temperature_night", 2);
-        values.put("weather_nw_corner_latitude", 2.0);
-        values.put("weather_nw_corner_longitude", 0.0);
-        values.put("weather_se_corner_latitude", 0.0);
-        values.put("weather_se_corner_longitude", 2.0);
+
+        ContentValues values = TestFixtures.pack(TestFixtures.WEATHER_FIXTURE);
+        values.remove("weather_date");
+        values.put("weather_date", (today).getTimeInMillis() / 1000);
         db.insertOrThrow(SerleenaDatabase.TABLE_WEATHER_FORECASTS, null, values);
 
+        values = TestFixtures.pack(TestFixtures.WEATHER_FIXTURE);
+        values.remove("weather_date");
+        values.put("weather_date", (tomorrow).getTimeInMillis() / 1000);
+        db.insertOrThrow(SerleenaDatabase.TABLE_WEATHER_FORECASTS, null, values);
     }
 
     /**

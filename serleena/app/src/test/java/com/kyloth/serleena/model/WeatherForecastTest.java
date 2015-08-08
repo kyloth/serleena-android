@@ -50,6 +50,7 @@ import com.kyloth.serleena.common.NoSuchWeatherForecastException;
 import com.kyloth.serleena.persistence.WeatherForecastEnum;
 import com.kyloth.serleena.persistence.sqlite.SerleenaDatabase;
 import com.kyloth.serleena.persistence.sqlite.SerleenaSQLiteDataSource;
+import com.kyloth.serleena.persistence.sqlite.TestFixtures;
 
 import org.junit.After;
 import org.junit.Before;
@@ -61,6 +62,7 @@ import org.robolectric.RobolectricGradleTestRunner;
 import org.robolectric.RuntimeEnvironment;
 import org.robolectric.annotation.Config;
 
+import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
 
@@ -89,22 +91,8 @@ public class WeatherForecastTest {
         db = serleenaDB.getWritableDatabase();
         serleenaDB.onConfigure(db);
         serleenaDB.onUpgrade(db, 1, 2);
-
-        ContentValues values = new ContentValues();
-        values.put("weather_date", (new GregorianCalendar(2015, GregorianCalendar.JANUARY, 01, 00, 00, 00)).getTimeInMillis() / 1000);
-        values.put("weather_condition_morning", WeatherForecastEnum.Stormy.ordinal());
-        values.put("weather_temperature_morning", -2);
-        values.put("weather_condition_afternoon", WeatherForecastEnum.Cloudy.ordinal());
-        values.put("weather_temperature_afternoon", 0);
-        values.put("weather_condition_night", WeatherForecastEnum.Sunny.ordinal());
-        values.put("weather_temperature_night", 2);
-        values.put("weather_nw_corner_latitude", 2.0);
-        values.put("weather_nw_corner_longitude", 0.0);
-        values.put("weather_se_corner_latitude", 0.0);
-        values.put("weather_se_corner_longitude", 2.0);
-
+        ContentValues values = TestFixtures.pack(TestFixtures.WEATHER_FIXTURE);
         db.insertOrThrow(SerleenaDatabase.TABLE_WEATHER_FORECASTS, null, values);
-
         serleenaSQLDS = new SerleenaSQLiteDataSource(RuntimeEnvironment.application, serleenaDB);
         dataSource = new SerleenaDataSource(serleenaSQLDS);
     }
@@ -124,15 +112,15 @@ public class WeatherForecastTest {
      */
     @Test
     public void testGetters() throws NoSuchWeatherForecastException {
-        GeoPoint location = new GeoPoint(1.0, 1.0);
-        Date time = new Date(new GregorianCalendar(2015, GregorianCalendar.JANUARY, 01, 00, 00, 00).getTimeInMillis());
+        GeoPoint location = TestFixtures.WEATHER_FIXTURE_POINT_INSIDE;
+        Date time = new Date(TestFixtures.WEATHER_FIXTURE_CAL.getTimeInMillis());
         WeatherForecast forecast = (WeatherForecast) dataSource.getWeatherInfo(location, time);
-        assertTrue(forecast.getMorningForecast() == WeatherForecastEnum.Stormy);
-        assertTrue(forecast.getAfternoonForecast() == WeatherForecastEnum.Cloudy);
-        assertTrue(forecast.getNightForecast() == WeatherForecastEnum.Sunny);
-        assertTrue(forecast.getMorningTemperature() == -2);
-        assertTrue(forecast.getAfternoonTemperature() == 0);
-        assertTrue(forecast.getNightTemperature() == 2);
+        assertTrue(forecast.getMorningForecast() == TestFixtures.WEATHER_CONDITION_MORNING);
+        assertTrue(forecast.getAfternoonForecast() == TestFixtures.WEATHER_CONDITION_AFTERNOON);
+        assertTrue(forecast.getNightForecast() == TestFixtures.WEATHER_CONDITION_NIGHT);
+        assertTrue(forecast.getMorningTemperature() == TestFixtures.WEATHER_TEMPERATURE_MORNING);
+        assertTrue(forecast.getAfternoonTemperature() == TestFixtures.WEATHER_TEMPERATURE_AFTERNOON);
+        assertTrue(forecast.getNightTemperature() == TestFixtures.WEATHER_TEMPERATURE_NIGHT);
         assertTrue(forecast.date().equals(time));
     }
 
@@ -144,8 +132,8 @@ public class WeatherForecastTest {
 
     @Test
     public void testExceptionWrongLocation() throws NoSuchWeatherForecastException {
-        GeoPoint fail_location = new GeoPoint(3.0, 3.0);
-        Date time = new Date(new GregorianCalendar(2015, GregorianCalendar.JANUARY, 01, 00, 00, 00).getTimeInMillis());
+        GeoPoint fail_location = TestFixtures.WEATHER_FIXTURE_POINT_OUTSIDE;
+        Date time = new Date(TestFixtures.WEATHER_FIXTURE_CAL.getTimeInMillis());
         exception.expect(NoSuchWeatherForecastException.class);
         WeatherForecast forecast = (WeatherForecast) dataSource.getWeatherInfo(fail_location, time);
 
@@ -159,8 +147,10 @@ public class WeatherForecastTest {
 
     @Test
     public void testExceptionWrongDate() throws NoSuchWeatherForecastException {
-        GeoPoint location = new GeoPoint(1.0, 1.0);
-        Date fail_time = new Date(new GregorianCalendar(2016, GregorianCalendar.JANUARY, 02, 00, 00, 00).getTimeInMillis());
+        GeoPoint location = TestFixtures.WEATHER_FIXTURE_POINT_INSIDE;
+        GregorianCalendar fail = (GregorianCalendar) TestFixtures.WEATHER_FIXTURE_CAL.clone();
+        fail.add(Calendar.DAY_OF_YEAR, 10);
+        Date fail_time = new Date(fail.getTimeInMillis());
         exception.expect(NoSuchWeatherForecastException.class);
         WeatherForecast forecast = (WeatherForecast) dataSource.getWeatherInfo(location, fail_time);
     }
@@ -173,8 +163,9 @@ public class WeatherForecastTest {
      */
     @Test
     public void testNonZeroHoursNotAllowed() throws NoSuchWeatherForecastException {
-        GeoPoint location = new GeoPoint(1.0, 1.0);
-        Date fail_time = new Date(new GregorianCalendar(2016, GregorianCalendar.JANUARY, 01, 01, 00, 00).getTimeInMillis());
+        GeoPoint location = TestFixtures.WEATHER_FIXTURE_POINT_INSIDE;
+        int delta = 1000*(3*60*60); // 3:0:0
+        Date fail_time = new Date(TestFixtures.WEATHER_FIXTURE_CAL.getTimeInMillis() + delta);
         exception.expect(IllegalArgumentException.class);
         WeatherForecast forecast = (WeatherForecast) dataSource.getWeatherInfo(location, fail_time);
     }
@@ -188,8 +179,9 @@ public class WeatherForecastTest {
      */
     @Test
     public void testNonZeroMinutesNotAllowed() throws NoSuchWeatherForecastException {
-        GeoPoint location = new GeoPoint(1.0, 1.0);
-        Date fail_time = new Date(new GregorianCalendar(2016, GregorianCalendar.JANUARY, 01, 00, 01, 00).getTimeInMillis());
+        GeoPoint location = TestFixtures.WEATHER_FIXTURE_POINT_INSIDE;
+        int delta = 1000*(3*60); // 0:3:0
+        Date fail_time = new Date(TestFixtures.WEATHER_FIXTURE_CAL.getTimeInMillis() + delta);
         exception.expect(IllegalArgumentException.class);
         WeatherForecast forecast = (WeatherForecast) dataSource.getWeatherInfo(location, fail_time);
     }

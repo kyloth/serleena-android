@@ -66,16 +66,20 @@ public class SQLiteDAOWeatherTest {
 
     @Test
     public void testConstructorAndGetters() {
-        SQLiteDAOWeather daoWeath = new SQLiteDAOWeather(WeatherForecastEnum.Sunny,
-                WeatherForecastEnum.Cloudy,
-                WeatherForecastEnum.Rainy,
-                10, 20, 30, new Date(140));
-        assertTrue(daoWeath.getMorningForecast() == WeatherForecastEnum.Sunny);
-        assertTrue(daoWeath.getAfternoonForecast() == WeatherForecastEnum.Cloudy);
-        assertTrue(daoWeath.getNightForecast() == WeatherForecastEnum.Rainy);
-        assertTrue(daoWeath.getMorningTemperature() == 10);
-        assertTrue(daoWeath.getAfternoonTemperature() == 20);
-        assertTrue(daoWeath.getNightTemperature() == 30);
-        assertTrue(daoWeath.date().equals(new Date(140)));
+        SQLiteDAOWeather daoWeath = new SQLiteDAOWeather(
+                TestFixtures.WEATHER_CONDITION_MORNING,
+                TestFixtures.WEATHER_CONDITION_AFTERNOON,
+                TestFixtures.WEATHER_CONDITION_NIGHT,
+                TestFixtures.WEATHER_TEMPERATURE_MORNING,
+                TestFixtures.WEATHER_TEMPERATURE_AFTERNOON,
+                TestFixtures.WEATHER_TEMPERATURE_NIGHT,
+                new Date(TestFixtures.WEATHER_FIXTURE_CAL.getTimeInMillis()));
+        assertTrue(daoWeath.getMorningForecast() == TestFixtures.WEATHER_CONDITION_MORNING);
+        assertTrue(daoWeath.getAfternoonForecast() == TestFixtures.WEATHER_CONDITION_AFTERNOON);
+        assertTrue(daoWeath.getNightForecast() == TestFixtures.WEATHER_CONDITION_NIGHT);
+        assertTrue(daoWeath.getMorningTemperature() == TestFixtures.WEATHER_TEMPERATURE_MORNING);
+        assertTrue(daoWeath.getAfternoonTemperature() == TestFixtures.WEATHER_TEMPERATURE_AFTERNOON);
+        assertTrue(daoWeath.getNightTemperature() == TestFixtures.WEATHER_TEMPERATURE_NIGHT);
+        assertTrue(daoWeath.date().equals(new Date(TestFixtures.WEATHER_FIXTURE_CAL.getTimeInMillis())));
     }
 }
