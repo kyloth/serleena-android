@@ -242,7 +242,6 @@ public class WeatherPresenterTest {
         WeatherPresenter presenter = new WeatherPresenter(view, activity);
         presenter.onLocationUpdate(new GeoPoint(1, 1));
 
-        verify(view, timeout(200).times(2)).setDate(any(Date.class));
         verify(view, timeout(200).times(1)).setWeatherInfo(any(IWeatherForecast.class));
         /* Nel db non sono presenti informazioni meteo
            per una localita con coordinate 15, 15
