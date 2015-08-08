@@ -72,10 +72,4 @@ public interface IWeatherView {
 	 */
 	void clearWeatherInfo();
 
-	/**
-	 * Imposta la data visualizzata.
-	 *
-	 * @since 1.0
-	 */
-	void setDate(Date date);
 }

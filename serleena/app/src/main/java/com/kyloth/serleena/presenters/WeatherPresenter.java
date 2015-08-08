@@ -126,12 +126,9 @@ public class WeatherPresenter implements IWeatherPresenter, ILocationObserver {
         c.add(Calendar.DATE, daysPastNow);
         Date d = c.getTime();
 
-        view.setDate(d);
-
         try {
             IWeatherForecast info =
                     ds.getWeatherInfo(location, d);
-            view.setDate(d);
             view.setWeatherInfo(info);
         } catch (NoSuchWeatherForecastException ex) {
             view.clearWeatherInfo();
