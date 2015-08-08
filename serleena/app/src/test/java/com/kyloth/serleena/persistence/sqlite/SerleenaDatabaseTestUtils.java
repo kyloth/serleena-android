@@ -54,7 +54,7 @@ class SerleenaDatabaseTestUtils {
     public static long makeExperience(SQLiteDatabase db) {
         ContentValues values;
         values = new ContentValues();
-        values.put("experience_name", "foo");
+        values.put("experience_name", TestFixtures.EXPERIENCES_FIXTURE_EXPERIENCE_1_NAME);
         return db.insertOrThrow(SerleenaDatabase.TABLE_EXPERIENCES, null, values);
     }
 
@@ -65,7 +65,7 @@ class SerleenaDatabaseTestUtils {
     public static long makeTrack(SQLiteDatabase db) {
         ContentValues values;
         values = new ContentValues();
-        values.put("track_name", "foo");
+        values.put("track_name", TestFixtures.EXPERIENCES_FIXTURE_EXPERIENCE_1_TRACK_1_NAME);
         values.put("track_experience", makeExperience(db));
         return db.insertOrThrow(SerleenaDatabase.TABLE_TRACKS, null, values);
     }
