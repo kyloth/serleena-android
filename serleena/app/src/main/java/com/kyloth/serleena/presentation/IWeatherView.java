@@ -32,8 +32,8 @@
  * Name: IWeatherView
  * Package: com.hitchikers.serleena.presentation
  * Author: Tobia Tesan <tobia.tesan@gmail.com>
- * 
- * History: 
+ *
+ * History:
  * Version    Programmer   Changes
  * 1.0        Tobia Tesan  Creazione del file
  */
@@ -64,6 +64,16 @@ public interface IWeatherView {
 	 * @since 1.0
 	 */
 	void setWeatherInfo(IWeatherForecast forecast);
+
+    /**
+     * Imposta la data da visualizzare sulla vista.
+     *
+     * Tale valore indica la data a cui si riferiscono le informazioni
+     * metereologiche visualizzare.
+     *
+     * @param date Data da visualizzare
+     */
+	void setDate(Date date);
 
 	/**
 	 * Pulisce le informazioni metereologiche della vista.
