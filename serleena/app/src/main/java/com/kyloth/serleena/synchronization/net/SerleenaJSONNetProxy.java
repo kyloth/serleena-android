@@ -191,7 +191,19 @@ public class SerleenaJSONNetProxy implements INetProxy {
             writer.flush();
             return new CloudJSONOutboundStream(os);
         } else {
-            throw new RuntimeException("Existing urlConnection. send() must be called after auth sequence, before get()");
+            throw new RuntimeException("Existing urlConnection? Disconnect first");
+        }
+    }
+
+    public boolean success() throws IOException {
+        if (urlConnection == null) {
+            throw new RuntimeException("No connection?");
+        } else {
+            if (urlConnection.getResponseCode() == HttpURLConnection.HTTP_OK) {
+                return true;
+            } else {
+                throw new IOException("Network error, status "+HttpURLConnection.HTTP_OK);
+            }
         }
     }
 

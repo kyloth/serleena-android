@@ -143,6 +143,9 @@ public class KylothCloudSynchronizer {
         CloudSerleenaSQLiteInboundDumpBuilder builder = new CloudSerleenaSQLiteInboundDumpBuilder(root);
         SerleenaSQLiteInboundDump dump = builder.build();
         sink.load(dump);
+        if (!proxy.success()) {
+            throw new IOException("Unknown network error");
+        }
         proxy.disconnect();
     }
 
@@ -157,6 +160,10 @@ public class KylothCloudSynchronizer {
 
         OutboundStream s = proxy.send();
         b.stream(s);
+        if (!proxy.success()) {
+            throw new IOException("Unknown network error");
+        }
+        proxy.disconnect();
     }
 
     /**

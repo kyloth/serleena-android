@@ -90,4 +90,6 @@ public interface INetProxy {
      * Disconnette dal servizio remoto
      */
     void disconnect();
+
+    boolean success() throws IOException;
 }
