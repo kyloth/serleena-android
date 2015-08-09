@@ -39,8 +39,11 @@
  */
 package com.kyloth.serleena.synchronization.net;
 
+import com.kyloth.serleena.synchronization.AuthException;
 import com.kyloth.serleena.synchronization.InboundStream;
 import com.kyloth.serleena.synchronization.OutboundStream;
+
+import java.io.IOException;
 
 /**
  * Concretizza l'interfaccia INetProxy permettendo di dialogare con
@@ -66,14 +69,14 @@ public class SerleenaJSONNetProxy implements INetProxy {
 	SerleenaJSONNetProxy(String url) {
 		this.url = url;
 	}
+
 	/**
-	 * Invia al servizio remoto un OutboundStream con i dati raccolti localmente.
-	 *
-	 * @param stream Un OutboundStream con i dati raccolti localmente da inviare
+	 * Fornisce un OutboundStream in cui scrivere i dati raccolti localmente
 	 */
 	@Override
-	public void send(OutboundStream stream) {
-		//TODO
+	public OutboundStream send() throws AuthException, IOException {
+		// TODO
+		return null;
 	}
 
 	/**
@@ -107,5 +110,10 @@ public class SerleenaJSONNetProxy implements INetProxy {
 	@Override
 	public void auth() {
 		//TODO
+	}
+
+	@Override
+	public void disconnect() {
+		// TODO
 	}
 }
