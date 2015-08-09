@@ -104,4 +104,9 @@ public class SerleenaJSONNetProxyTest {
         String preAuth = proxy.preAuth();
         assertEquals(preAuth, "Rush");
     }
+
+    @Test
+    public void authTest() throws AuthException, IOException {
+        proxy.auth();
+    }
 }
