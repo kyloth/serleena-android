@@ -29,7 +29,7 @@
 
 
 /**
- * Name: InboundDumpBuilder.java
+ * Name: JSONOutboundStream.java
  * Package: com.kyloth.serleena.synchronization
  * Author: Tobia Tesan
  *
@@ -40,13 +40,10 @@
 package com.kyloth.serleena.synchronization;
 
 /**
- * @usa KylothCloudSynchronizer ne usa una istanza per costruire, a partire dalla rappresentazione intermedia fornita da un InboundStreamParser, un dump idoneo ad essere caricato in un dumpLoader fornito dall'Activity (che coincidera' tipicamente con il database dell'applicazione)
+ * Interfaccia che rappresenta uno stream testuale
+ * in formato JSON in uscita.
+ *
  * @author Tobia Tesan <tobia.tesan@gmail.com>
  */
-public interface InboundDumpBuilder {
-    /**
-     * Restituisce un InboundDump idoneo a essere caricato nel database
-     * con i dati finora inseriti.
-     */
-    InboundDump build();
+public interface JSONOutboundStream extends OutboundStream {
 }

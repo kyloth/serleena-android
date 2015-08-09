@@ -49,42 +49,6 @@ package com.kyloth.serleena.synchronization;
  */
 public class SerleenaSQLiteInboundDumpBuilder implements InboundDumpBuilder {
 	/**
-	 * Aggiunge al'InboundDump in preparazione un
-	 * Tracciamento.
-	 *
-	 * @param telemetry Il Tracciamento da aggiungere
-	 */
-	@Override
-	public void addTelemetry(IDataEntity telemetry) {
-		// TODO
-	}
-
-	/**
-	 * Aggiunge una cella di dati meteo.
-	 */
-	@Override
-	public void addWeather(IDataEntity weatherCell) {
-		// TODO
-	}
-
-	/**
-	 * Aggiunge un'Esperienza.
-	 */
-	@Override
-	public void addExperience(IDataEntity experience) {
-		// TODO
-	}
-
-	/**
-	 * Aggiunge le informazioni per un quadrante di
-	 * mappa.
-	 */
-	@Override
-	public void addMapQuadrant(IDataEntity mapQuadrant) {
-		// TODO
-	}
-
-	/**
 	 * Restituisce un InboundDump idoneo a essere caricato nel database
 	 * interno con i dati finora inseriti.
 	 */

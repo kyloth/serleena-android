@@ -51,14 +51,12 @@ public class SerleenaJSONInboundStreamParser implements InboundStreamParser {
 	 * Dato un InboundStream contenente dati di sincronizzazione, fornisce
 	 * una rappresentazione intermedia agnostica.
 	 *
-	 * @param stream Un InboundStream contenente dati di sincronizzazione
-	 *               in arrivo dal servizio remoto
 	 * @return Una collezione di IDataEntity che costituiscono una
 	 * rappresentazione agnostica dei dati forniti dal servizio.
 	 */
+
 	@Override
-	public Iterable<IDataEntity> parse(InboundStream stream) {
-		// TODO
+	public IDataEntity parse() {
 		return null;
 	}
 }

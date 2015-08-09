@@ -42,6 +42,8 @@ package com.kyloth.serleena.synchronization;
 import com.kyloth.serleena.persistence.IExperienceStorage;
 import com.kyloth.serleena.persistence.ITelemetryStorage;
 
+import java.io.IOException;
+
 /**
  * Concretizza OutboundStreamBuilder in modo da poter costruire stream JSON
  * nel formato che KylothCloud si attende.
@@ -50,17 +52,6 @@ import com.kyloth.serleena.persistence.ITelemetryStorage;
  * @author Tobia Tesan <tobia.tesan@gmail.com>
  */
 public class SerleenaJSONOutboundStreamBuilder implements OutboundStreamBuilder {
-	/**
-	 * Aggiunge un Tracciamento all'OutboundStream da costruire.
-	 *
-	 * @param t Un Tracciamento raccolto sul dispositivo che si vuole
-	 *          inviare al servizio remoto.
-	 */
-	@Override
-	public void addTelemetry(ITelemetryStorage t) {
-		// TODO
-	}
-
 	/**
 	 * Aggiunge un'Esperienza (e di conseguenza i suoi Punti Utente
 	 * e eventuali altri dati raccolti localmente) all'OutboundStream
@@ -74,11 +65,15 @@ public class SerleenaJSONOutboundStreamBuilder implements OutboundStreamBuilder 
 		// TODO
 	}
 
+	@Override
+	public void stream(OutboundStream s) throws IOException {
+		// TODO
+	}
+
 	/**
 	 * Restituisce uno SerleenaJSONOutboundStream con i dati da inviare al
 	 * servizio remoto pronti per essere consumati da un idoneo proxy.
 	 */
-	@Override
 	public SerleenaJSONOutboundStream build() {
 		// TODO
 		return null;

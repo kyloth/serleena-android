@@ -42,6 +42,8 @@ package com.kyloth.serleena.synchronization;
 import com.kyloth.serleena.persistence.IExperienceStorage;
 import com.kyloth.serleena.persistence.ITelemetryStorage;
 
+import java.io.IOException;
+
 /**
  * Interfaccia implementata da un oggetto in grado di prendere
  * oggetti di tipo *Storage contenenti dati raccolti sul dispositivo e
@@ -51,14 +53,6 @@ import com.kyloth.serleena.persistence.ITelemetryStorage;
  * @use Viene usato da KylothCloudSynchronizer, che vi carica le Esperienze e i Tracciamenti raccolti sul dispositivo da inviare al cloud, somministrando l'OutboundStream risultante a un idoneo proxy.
  */
 public interface OutboundStreamBuilder {
-	/**
-	 * Aggiunge un Tracciamento all'OutboundStream da costruire.
-	 *
-	 * @param t Un Tracciamento raccolto sul dispositivo che si vuole
-	 *          inviare al servizio remoto.
-	 */
-	void addTelemetry(ITelemetryStorage t);
-
 	/**
 	 * Aggiunge un'Esperienza (e di conseguenza i suoi Punti Utente
 	 * e eventuali altri dati raccolti localmente) all'OutboundStream
@@ -73,5 +67,5 @@ public interface OutboundStreamBuilder {
 	 * Restituisce un OutboundStream con i dati da inviare al servizio remoto
 	 * pronti per essere consumati da un idoneo proxy.
 	 */
-	OutboundStream build();
+	void stream(OutboundStream s) throws IOException;
 }

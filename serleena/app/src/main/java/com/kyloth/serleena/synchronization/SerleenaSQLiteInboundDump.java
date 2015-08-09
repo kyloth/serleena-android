@@ -39,10 +39,16 @@
  */
 package com.kyloth.serleena.synchronization;
 
+import java.util.Iterator;
+
 /**
  * Concretizza InboundDump, contiene un dump SQLite leggibile da
  * ISerleenaDumpLoader
  */
 public class SerleenaSQLiteInboundDump implements InboundDump {
-	// TODO
+    @Override
+    public Iterator<String> iterator() {
+        return null;
+    }
+    // TODO
 }

@@ -50,14 +50,12 @@ package com.kyloth.serleena.synchronization;
  * @author Tobia Tesan <tobia.tesan@gmail.com>
  */
 public interface InboundStreamParser {
-	/**
-	 * Dato un InboundStream contenente dati di sincronizzazione, fornisce
-	 * una rappresentazione intermedia agnostica.
-	 *
-	 * @param stream Un InboundStream contenente dati di sincronizzazione
-	 *               in arrivo dal servizio remoto
-	 * @return Una collezione di IDataEntity che costituiscono una
-	 *         rappresentazione agnostica dei dati forniti dal servizio.
-	 */
-	Iterable<IDataEntity> parse(InboundStream stream);
+    /**
+     * Dato un InboundStream contenente dati di sincronizzazione, fornisce
+     * una rappresentazione intermedia agnostica.
+     *
+     * @return Una collezione di IDataEntity che costituiscono una
+     *         rappresentazione agnostica dei dati forniti dal servizio.
+     */
+    IDataEntity parse();
 }
