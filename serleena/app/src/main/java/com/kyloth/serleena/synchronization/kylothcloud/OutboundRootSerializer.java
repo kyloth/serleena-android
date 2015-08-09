@@ -28,57 +28,27 @@
 ///////////////////////////////////////////////////////////////////////////////
 
 
-/**
- * Name: ISerleenaSQLiteDataSink.java
- * Package: com.kyloth.serleena.persistence.sqlite
- * Author: Tobia Tesan
- *
- * History:
- * Version  Programmer       Changes
- * 1.0.0    Tobia Tesan      Creazione file e scrittura di codice
- *                                          e documentazione in Javadoc.
- */
+package com.kyloth.serleena.synchronization.kylothcloud;
 
-package com.kyloth.serleena.persistence.sqlite;
+import com.google.gson.JsonArray;
+import com.google.gson.JsonSerializationContext;
+import com.google.gson.JsonSerializer;
+import com.google.gson.JsonElement;
 
-import android.content.Context;
-import android.database.sqlite.SQLiteDatabase;
+import java.lang.reflect.Type;
 
-import com.kyloth.serleena.synchronization.InboundDump;
-import com.kyloth.serleena.synchronization.kylothcloud.inbound.SerleenaSQLiteInboundDump;
+import java.util.Iterator;
 
-public class SerleenaSQLiteDataSink implements ISerleenaSQLiteDataSink {
-    private SerleenaDatabase dbHelper;
-    private Context context;
-
-    public SerleenaSQLiteDataSink(Context context, SerleenaDatabase dbHelper) {
-        this.dbHelper = dbHelper;
-        this.context = context;
-    }
-
-    /**
-     * Carica un dump di dati proveniente dall'esterno.
-     *
-     * @param dump
-     */
+class OutboundRootSerializer implements JsonSerializer<OutboundRootEntity> {
     @Override
-    public void load(InboundDump dump) {
-        if (dump instanceof SerleenaSQLiteInboundDump) {
-            SQLiteDatabase a = dbHelper.getWritableDatabase();
-            for (String instr : dump) {
-                a.execSQL(instr);
-            }
-            // TODO: Esegui il dump riga per riga
-        } else {
-            throw new IllegalArgumentException();
+    public JsonElement serialize(OutboundRootEntity or, Type typeOfOr, JsonSerializationContext context) {
+        JsonArray outboundRoot = new JsonArray();
+        Iterator<OutboundDataEntity> i_data = or.data.iterator();
+        while(i_data.hasNext()) {
+            outboundRoot.add(new OutboundDataSerializer().serialize(i_data.next(), OutboundDataEntity.class, context));
         }
+
+        return outboundRoot;
     }
 
-    /**
-     * Svuota completamente i dati.
-     */
-    @Override
-    public void flush() {
-        // TODO: Svuota il database
-    }
 }

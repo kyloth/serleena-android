@@ -28,57 +28,30 @@
 ///////////////////////////////////////////////////////////////////////////////
 
 
-/**
- * Name: ISerleenaSQLiteDataSink.java
- * Package: com.kyloth.serleena.persistence.sqlite
- * Author: Tobia Tesan
- *
- * History:
- * Version  Programmer       Changes
- * 1.0.0    Tobia Tesan      Creazione file e scrittura di codice
- *                                          e documentazione in Javadoc.
- */
+package com.kyloth.serleena.synchronization.kylothcloud;
 
-package com.kyloth.serleena.persistence.sqlite;
+import com.google.gson.JsonArray;
+import com.google.gson.JsonPrimitive;
+import com.google.gson.JsonSerializationContext;
+import com.google.gson.JsonSerializer;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
 
-import android.content.Context;
-import android.database.sqlite.SQLiteDatabase;
+import java.lang.reflect.Type;
 
-import com.kyloth.serleena.synchronization.InboundDump;
-import com.kyloth.serleena.synchronization.kylothcloud.inbound.SerleenaSQLiteInboundDump;
+import java.util.Iterator;
 
-public class SerleenaSQLiteDataSink implements ISerleenaSQLiteDataSink {
-    private SerleenaDatabase dbHelper;
-    private Context context;
-
-    public SerleenaSQLiteDataSink(Context context, SerleenaDatabase dbHelper) {
-        this.dbHelper = dbHelper;
-        this.context = context;
-    }
-
-    /**
-     * Carica un dump di dati proveniente dall'esterno.
-     *
-     * @param dump
-     */
+class TelemetryEntitySerializer implements JsonSerializer<TelemetryEntity> {
     @Override
-    public void load(InboundDump dump) {
-        if (dump instanceof SerleenaSQLiteInboundDump) {
-            SQLiteDatabase a = dbHelper.getWritableDatabase();
-            for (String instr : dump) {
-                a.execSQL(instr);
-            }
-            // TODO: Esegui il dump riga per riga
-        } else {
-            throw new IllegalArgumentException();
+    public JsonElement serialize(TelemetryEntity te, Type typeOfTe, JsonSerializationContext context) {
+        JsonObject telemetry = new JsonObject();
+        JsonArray events = new JsonArray();
+        Iterator<Long> i_events = te.events.iterator();
+        while(i_events.hasNext()) {
+            JsonPrimitive j = new JsonPrimitive(i_events.next());
+            events.add(j);
         }
-    }
-
-    /**
-     * Svuota completamente i dati.
-     */
-    @Override
-    public void flush() {
-        // TODO: Svuota il database
+        telemetry.add("events", events);
+        return telemetry;
     }
 }

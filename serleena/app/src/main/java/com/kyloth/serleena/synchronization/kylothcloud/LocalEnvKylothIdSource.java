@@ -28,57 +28,40 @@
 ///////////////////////////////////////////////////////////////////////////////
 
 
+package com.kyloth.serleena.synchronization.kylothcloud;
+
+import java.math.BigInteger;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
+
 /**
- * Name: ISerleenaSQLiteDataSink.java
- * Package: com.kyloth.serleena.persistence.sqlite
- * Author: Tobia Tesan
+ * Implementa IKylothIdSource per scopi di sviluppo ricavando un id 
+ * "sufficientemente" univoco.
  *
- * History:
- * Version  Programmer       Changes
- * 1.0.0    Tobia Tesan      Creazione file e scrittura di codice
- *                                          e documentazione in Javadoc.
+ * Ricava un id dall'hash di 
+ * (user.name + user.home + user.dir + 
+ *  os.name + os.arch + os.version).
+ * In produzione deve essere sostituito con un opportuna chiamata all'hardware.
+ * 
  */
-
-package com.kyloth.serleena.persistence.sqlite;
-
-import android.content.Context;
-import android.database.sqlite.SQLiteDatabase;
-
-import com.kyloth.serleena.synchronization.InboundDump;
-import com.kyloth.serleena.synchronization.kylothcloud.inbound.SerleenaSQLiteInboundDump;
-
-public class SerleenaSQLiteDataSink implements ISerleenaSQLiteDataSink {
-    private SerleenaDatabase dbHelper;
-    private Context context;
-
-    public SerleenaSQLiteDataSink(Context context, SerleenaDatabase dbHelper) {
-        this.dbHelper = dbHelper;
-        this.context = context;
-    }
-
-    /**
-     * Carica un dump di dati proveniente dall'esterno.
-     *
-     * @param dump
-     */
+public class LocalEnvKylothIdSource implements IKylothIdSource {
     @Override
-    public void load(InboundDump dump) {
-        if (dump instanceof SerleenaSQLiteInboundDump) {
-            SQLiteDatabase a = dbHelper.getWritableDatabase();
-            for (String instr : dump) {
-                a.execSQL(instr);
-            }
-            // TODO: Esegui il dump riga per riga
-        } else {
-            throw new IllegalArgumentException();
+    public String getKylothId() {
+        String uname = System.getProperty("user.name");
+        String uhome = System.getProperty("user.home");
+        String udir  = System.getProperty("user.dir");
+        String oname = System.getProperty("os.name");
+        String oarch = System.getProperty("os.arch");
+        String ov = System.getProperty("os.version");
+        String hashable = uname + uhome + udir + oname + oarch + ov;
+        MessageDigest md = null;
+        try {
+            md = MessageDigest.getInstance("MD5");
+        } catch (NoSuchAlgorithmException e) {
+            e.printStackTrace();
         }
-    }
-
-    /**
-     * Svuota completamente i dati.
-     */
-    @Override
-    public void flush() {
-        // TODO: Svuota il database
+        md.update(hashable.getBytes(), 0, hashable.length());
+        String digest = new BigInteger(1, md.digest()).toString(16);
+        return digest;
     }
 }

@@ -29,56 +29,23 @@
 
 
 /**
- * Name: ISerleenaSQLiteDataSink.java
- * Package: com.kyloth.serleena.persistence.sqlite
- * Author: Tobia Tesan
+ * Name: CheckPointEntity.java
+ * Package: com.hitchikers.serleena.synchronization
+ * Author: Tobia Tesan <tobia.tesan@gmail.com>
  *
  * History:
- * Version  Programmer       Changes
- * 1.0.0    Tobia Tesan      Creazione file e scrittura di codice
- *                                          e documentazione in Javadoc.
+ * Version    Programmer   Changes
+ * 1.0        Tobia Tesan  Creazione del file
  */
 
-package com.kyloth.serleena.persistence.sqlite;
+package com.kyloth.serleena.synchronization.kylothcloud;
 
-import android.content.Context;
-import android.database.sqlite.SQLiteDatabase;
+import com.kyloth.serleena.common.GeoPoint;
 
-import com.kyloth.serleena.synchronization.InboundDump;
-import com.kyloth.serleena.synchronization.kylothcloud.inbound.SerleenaSQLiteInboundDump;
-
-public class SerleenaSQLiteDataSink implements ISerleenaSQLiteDataSink {
-    private SerleenaDatabase dbHelper;
-    private Context context;
-
-    public SerleenaSQLiteDataSink(Context context, SerleenaDatabase dbHelper) {
-        this.dbHelper = dbHelper;
-        this.context = context;
-    }
-
-    /**
-     * Carica un dump di dati proveniente dall'esterno.
-     *
-     * @param dump
-     */
-    @Override
-    public void load(InboundDump dump) {
-        if (dump instanceof SerleenaSQLiteInboundDump) {
-            SQLiteDatabase a = dbHelper.getWritableDatabase();
-            for (String instr : dump) {
-                a.execSQL(instr);
-            }
-            // TODO: Esegui il dump riga per riga
-        } else {
-            throw new IllegalArgumentException();
-        }
-    }
-
-    /**
-     * Svuota completamente i dati.
-     */
-    @Override
-    public void flush() {
-        // TODO: Svuota il database
-    }
+/**
+ * Struct rappresentante un checkpoint
+ */
+public class CheckpointEntity implements IKylothDataEntity {
+    public GeoPoint point;
+    public int id;
 }

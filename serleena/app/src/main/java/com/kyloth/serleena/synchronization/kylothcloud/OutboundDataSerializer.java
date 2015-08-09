@@ -28,57 +28,37 @@
 ///////////////////////////////////////////////////////////////////////////////
 
 
-/**
- * Name: ISerleenaSQLiteDataSink.java
- * Package: com.kyloth.serleena.persistence.sqlite
- * Author: Tobia Tesan
- *
- * History:
- * Version  Programmer       Changes
- * 1.0.0    Tobia Tesan      Creazione file e scrittura di codice
- *                                          e documentazione in Javadoc.
- */
+package com.kyloth.serleena.synchronization.kylothcloud;
 
-package com.kyloth.serleena.persistence.sqlite;
+import com.google.gson.JsonArray;
+import com.google.gson.JsonSerializationContext;
+import com.google.gson.JsonSerializer;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
 
-import android.content.Context;
-import android.database.sqlite.SQLiteDatabase;
+import java.lang.reflect.Type;
 
-import com.kyloth.serleena.synchronization.InboundDump;
-import com.kyloth.serleena.synchronization.kylothcloud.inbound.SerleenaSQLiteInboundDump;
+import java.util.Iterator;
 
-public class SerleenaSQLiteDataSink implements ISerleenaSQLiteDataSink {
-    private SerleenaDatabase dbHelper;
-    private Context context;
-
-    public SerleenaSQLiteDataSink(Context context, SerleenaDatabase dbHelper) {
-        this.dbHelper = dbHelper;
-        this.context = context;
-    }
-
-    /**
-     * Carica un dump di dati proveniente dall'esterno.
-     *
-     * @param dump
-     */
+class OutboundDataSerializer implements JsonSerializer<OutboundDataEntity> {
     @Override
-    public void load(InboundDump dump) {
-        if (dump instanceof SerleenaSQLiteInboundDump) {
-            SQLiteDatabase a = dbHelper.getWritableDatabase();
-            for (String instr : dump) {
-                a.execSQL(instr);
-            }
-            // TODO: Esegui il dump riga per riga
-        } else {
-            throw new IllegalArgumentException();
+    public JsonElement serialize(OutboundDataEntity or, Type typeOfOr, JsonSerializationContext context) {
+        JsonObject outboundData = new JsonObject();
+        outboundData.addProperty("experience", or.experience);
+        JsonArray userPoints = new JsonArray();
+        Iterator<UserPointEntity> i_userpoints = or.userPoints.iterator();
+        while(i_userpoints.hasNext()) {
+            userPoints.add(new UserPointSerializer().serialize(i_userpoints.next(), UserPointEntity.class, context));
         }
+        outboundData.add("userPoints", userPoints);
+        JsonArray telemetryData = new JsonArray();
+        Iterator<TelemetryEntity> i_telemetry = or.telemetryData.iterator();
+        while(i_telemetry.hasNext()) {
+            telemetryData.add(new TelemetryEntitySerializer().serialize(i_telemetry.next(), TelemetryEntity.class, context));
+        }
+        outboundData.add("telemetryData", telemetryData);
+
+        return outboundData;
     }
 
-    /**
-     * Svuota completamente i dati.
-     */
-    @Override
-    public void flush() {
-        // TODO: Svuota il database
-    }
 }

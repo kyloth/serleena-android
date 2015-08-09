@@ -29,56 +29,35 @@
 
 
 /**
- * Name: ISerleenaSQLiteDataSink.java
- * Package: com.kyloth.serleena.persistence.sqlite
- * Author: Tobia Tesan
+ * Name: ExperienceEntity.java
+ * Package: com.hitchikers.serleena.synchronization
+ * Author: Tobia Tesan <tobia.tesan@gmail.com>
  *
  * History:
- * Version  Programmer       Changes
- * 1.0.0    Tobia Tesan      Creazione file e scrittura di codice
- *                                          e documentazione in Javadoc.
+ * Version    Programmer   Changes
+ * 1.0        Tobia Tesan  Creazione del file
  */
 
-package com.kyloth.serleena.persistence.sqlite;
+package com.kyloth.serleena.synchronization.kylothcloud;
 
-import android.content.Context;
-import android.database.sqlite.SQLiteDatabase;
+import com.kyloth.serleena.common.IRegion;
 
-import com.kyloth.serleena.synchronization.InboundDump;
-import com.kyloth.serleena.synchronization.kylothcloud.inbound.SerleenaSQLiteInboundDump;
+import java.util.Collection;
+import java.util.LinkedList;
 
-public class SerleenaSQLiteDataSink implements ISerleenaSQLiteDataSink {
-    private SerleenaDatabase dbHelper;
-    private Context context;
-
-    public SerleenaSQLiteDataSink(Context context, SerleenaDatabase dbHelper) {
-        this.dbHelper = dbHelper;
-        this.context = context;
+/**
+ * Struct rappresentante un'esperienza
+ */
+public class ExperienceEntity implements IKylothDataEntity {
+    public Collection<TrackEntity> tracks;
+    public String name;
+    public Collection<RasterDataEntity> rasterData;
+    public IRegion region;
+    public Collection<UserPointEntity> userPoints;
+    public ExperienceEntity() {
+        tracks = new LinkedList<TrackEntity>();
+        userPoints = new LinkedList<UserPointEntity>();
     }
-
-    /**
-     * Carica un dump di dati proveniente dall'esterno.
-     *
-     * @param dump
-     */
-    @Override
-    public void load(InboundDump dump) {
-        if (dump instanceof SerleenaSQLiteInboundDump) {
-            SQLiteDatabase a = dbHelper.getWritableDatabase();
-            for (String instr : dump) {
-                a.execSQL(instr);
-            }
-            // TODO: Esegui il dump riga per riga
-        } else {
-            throw new IllegalArgumentException();
-        }
-    }
-
-    /**
-     * Svuota completamente i dati.
-     */
-    @Override
-    public void flush() {
-        // TODO: Svuota il database
-    }
+    // TODO: Il nostro UserPoint non ha un ID, il loro si'. Chi vince?
+    // TODO: Loro ci passano PointsOfInterest. Continuiamo a ignorarli? Cfr. SHANDROID-288
 }

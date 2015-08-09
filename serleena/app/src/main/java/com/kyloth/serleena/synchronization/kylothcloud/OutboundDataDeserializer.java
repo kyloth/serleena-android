@@ -28,57 +28,35 @@
 ///////////////////////////////////////////////////////////////////////////////
 
 
-/**
- * Name: ISerleenaSQLiteDataSink.java
- * Package: com.kyloth.serleena.persistence.sqlite
- * Author: Tobia Tesan
- *
- * History:
- * Version  Programmer       Changes
- * 1.0.0    Tobia Tesan      Creazione file e scrittura di codice
- *                                          e documentazione in Javadoc.
- */
+package com.kyloth.serleena.synchronization.kylothcloud;
 
-package com.kyloth.serleena.persistence.sqlite;
+import com.google.gson.JsonArray;
+import com.google.gson.JsonDeserializationContext;
+import com.google.gson.JsonDeserializer;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonParseException;
 
-import android.content.Context;
-import android.database.sqlite.SQLiteDatabase;
+import java.lang.reflect.Type;
 
-import com.kyloth.serleena.synchronization.InboundDump;
-import com.kyloth.serleena.synchronization.kylothcloud.inbound.SerleenaSQLiteInboundDump;
+import java.util.ArrayList;
 
-public class SerleenaSQLiteDataSink implements ISerleenaSQLiteDataSink {
-    private SerleenaDatabase dbHelper;
-    private Context context;
+class OutboundDataDeserializer implements JsonDeserializer<OutboundDataEntity> {
 
-    public SerleenaSQLiteDataSink(Context context, SerleenaDatabase dbHelper) {
-        this.dbHelper = dbHelper;
-        this.context = context;
-    }
-
-    /**
-     * Carica un dump di dati proveniente dall'esterno.
-     *
-     * @param dump
-     */
     @Override
-    public void load(InboundDump dump) {
-        if (dump instanceof SerleenaSQLiteInboundDump) {
-            SQLiteDatabase a = dbHelper.getWritableDatabase();
-            for (String instr : dump) {
-                a.execSQL(instr);
-            }
-            // TODO: Esegui il dump riga per riga
-        } else {
-            throw new IllegalArgumentException();
+    public OutboundDataEntity deserialize(JsonElement json, Type typeOfT, JsonDeserializationContext context) throws JsonParseException {
+        OutboundDataEntity ode = new OutboundDataEntity();
+        ode.experience = json.getAsJsonObject().get("experience").getAsString();
+        ode.userPoints = new ArrayList<UserPointEntity>();
+        JsonArray userPoints = json.getAsJsonObject().get("userPoints").getAsJsonArray();
+        for (JsonElement up : userPoints) {
+            ode.userPoints.add(new UserPointDeserializer().deserialize(up, UserPointEntity.class, context));
         }
-    }
+        ode.telemetryData = new ArrayList<TelemetryEntity>();
+        JsonArray telemetryData = json.getAsJsonObject().get("telemetryData").getAsJsonArray();
+        for (JsonElement t : telemetryData) {
+            ode.telemetryData.add(new TelemetryEntityDeserializer().deserialize(t, TelemetryEntity.class, context));
+        }
 
-    /**
-     * Svuota completamente i dati.
-     */
-    @Override
-    public void flush() {
-        // TODO: Svuota il database
+        return ode;
     }
 }

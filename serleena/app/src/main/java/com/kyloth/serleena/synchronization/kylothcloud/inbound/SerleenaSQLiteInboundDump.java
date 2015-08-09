@@ -29,56 +29,31 @@
 
 
 /**
- * Name: ISerleenaSQLiteDataSink.java
- * Package: com.kyloth.serleena.persistence.sqlite
+ * Name: SerleenaSQLiteInboundDump.java
+ * Package: com.kyloth.serleena.synchronization
  * Author: Tobia Tesan
  *
  * History:
- * Version  Programmer       Changes
- * 1.0.0    Tobia Tesan      Creazione file e scrittura di codice
- *                                          e documentazione in Javadoc.
+ * Version  Programmer        Changes
+ * 0.0.1    Tobia Tesan       Creazione file
  */
-
-package com.kyloth.serleena.persistence.sqlite;
-
-import android.content.Context;
-import android.database.sqlite.SQLiteDatabase;
+package com.kyloth.serleena.synchronization.kylothcloud.inbound;
 
 import com.kyloth.serleena.synchronization.InboundDump;
-import com.kyloth.serleena.synchronization.kylothcloud.inbound.SerleenaSQLiteInboundDump;
 
-public class SerleenaSQLiteDataSink implements ISerleenaSQLiteDataSink {
-    private SerleenaDatabase dbHelper;
-    private Context context;
+import java.util.LinkedList;
 
-    public SerleenaSQLiteDataSink(Context context, SerleenaDatabase dbHelper) {
-        this.dbHelper = dbHelper;
-        this.context = context;
-    }
-
-    /**
-     * Carica un dump di dati proveniente dall'esterno.
-     *
-     * @param dump
-     */
-    @Override
-    public void load(InboundDump dump) {
-        if (dump instanceof SerleenaSQLiteInboundDump) {
-            SQLiteDatabase a = dbHelper.getWritableDatabase();
-            for (String instr : dump) {
-                a.execSQL(instr);
-            }
-            // TODO: Esegui il dump riga per riga
-        } else {
-            throw new IllegalArgumentException();
+/**
+ * Concretizza InboundDump, contiene un dump SQLite leggibile da
+ * IPersistenceDataSink
+ */
+public class SerleenaSQLiteInboundDump extends LinkedList<String> implements InboundDump {
+    // TODO
+    public String toString () {
+        String out = "";
+        for (String s : this) {
+            out = out + s + ";\n";
         }
-    }
-
-    /**
-     * Svuota completamente i dati.
-     */
-    @Override
-    public void flush() {
-        // TODO: Svuota il database
+        return out;
     }
 }
