@@ -59,6 +59,7 @@ import java.net.MalformedURLException;
 import java.net.URL;
 
 import static junit.framework.Assert.assertEquals;
+import static junit.framework.Assert.assertTrue;
 import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
@@ -116,5 +117,12 @@ public class SerleenaJSONNetProxyTest {
         proxy.send();
         String response = outputStream.toString();
         assertEquals(response, "Data=");
+    }
+
+    @Test
+    public void successTest() throws AuthException, IOException {
+        proxy.auth();
+        Boolean response = proxy.success();
+        assertTrue(response);
     }
 }
