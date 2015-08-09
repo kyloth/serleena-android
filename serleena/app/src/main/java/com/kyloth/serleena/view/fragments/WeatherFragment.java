@@ -35,6 +35,7 @@ import android.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.kyloth.serleena.R;
@@ -62,22 +63,25 @@ public class WeatherFragment extends Fragment
     private WeatherWidget morningWidget;
     private WeatherWidget afternoonWidget;
     private WeatherWidget nightWidget;
+    private LinearLayout morningLayout;
+    private LinearLayout afternoonLayout;
+    private LinearLayout nightLayout;
     private Map<Integer, String> monthNames;
 
     public WeatherFragment() {
         monthNames = new HashMap<>();
-        monthNames.put(1, "Gennaio");
-        monthNames.put(2, "Febbraio");
-        monthNames.put(3, "Marzo");
-        monthNames.put(4, "Aprile");
-        monthNames.put(5, "Maggio");
-        monthNames.put(6, "Giugno");
-        monthNames.put(7, "Luglio");
-        monthNames.put(8, "Agosto");
-        monthNames.put(9, "Settembre");
-        monthNames.put(10, "Ottobre");
-        monthNames.put(11, "Novembre");
-        monthNames.put(12, "Dicembre");
+        monthNames.put(0, "Gennaio");
+        monthNames.put(1, "Febbraio");
+        monthNames.put(2, "Marzo");
+        monthNames.put(3, "Aprile");
+        monthNames.put(4, "Maggio");
+        monthNames.put(5, "Giugno");
+        monthNames.put(6, "Luglio");
+        monthNames.put(7, "Agosto");
+        monthNames.put(8, "Settembre");
+        monthNames.put(9, "Ottobre");
+        monthNames.put(10, "Novembre");
+        monthNames.put(11, "Dicembre");
 
         presenter = new IWeatherPresenter() {
             @Override
@@ -95,6 +99,9 @@ public class WeatherFragment extends Fragment
         ViewGroup group = (ViewGroup) inflater.inflate(
                 R.layout.fragment_weather, container, false);
 
+        morningLayout = (LinearLayout) group.findViewById(R.id.morning_layout);
+        afternoonLayout = (LinearLayout) group.findViewById(R.id.afternoon_layout);
+        nightLayout = (LinearLayout) group.findViewById(R.id.night_layout);
         dateText = (TextView) group.findViewById(R.id.weather_date_text);
         noInfoText = (TextView) group.findViewById(R.id.weather_no_info);
         morningWidget = (WeatherWidget) group.findViewById(R.id.morning_widget);
@@ -130,20 +137,10 @@ public class WeatherFragment extends Fragment
             throw new IllegalArgumentException("Illegal null forecast");
 
         noInfoText.setVisibility(View.INVISIBLE);
-        morningWidget.setVisibility(View.VISIBLE);
-        afternoonWidget.setVisibility(View.VISIBLE);
-        nightWidget.setVisibility(View.VISIBLE);
-        morningTempText.setVisibility(View.VISIBLE);
-        afternoonTempText.setVisibility(View.VISIBLE);
-        nightTempText.setVisibility(View.VISIBLE);
+        morningLayout.setVisibility(View.VISIBLE);
+        afternoonLayout.setVisibility(View.VISIBLE);
+        nightLayout.setVisibility(View.VISIBLE);
 
-        Calendar calendar = Calendar.getInstance();
-        calendar.setTimeInMillis(forecast.date().getTime());
-        int year = calendar.get(Calendar.YEAR);
-        int month = calendar.get(Calendar.MONTH);
-        int day = calendar.get(Calendar.DAY_OF_MONTH);
-
-        dateText.setText(day + " " + monthNames.get(month) + " " + year);
         morningWidget.setCondition(forecast.getMorningForecast());
         afternoonWidget.setCondition(forecast.getAfternoonForecast());
         nightWidget.setCondition(forecast.getNightForecast());
@@ -153,14 +150,21 @@ public class WeatherFragment extends Fragment
     }
 
     @Override
+    public void setDate(Date date) {
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTimeInMillis(date.getTime());
+        int year = calendar.get(Calendar.YEAR);
+        int month = calendar.get(Calendar.MONTH);
+        int day = calendar.get(Calendar.DAY_OF_MONTH);
+        dateText.setText(day + " " + monthNames.get(month) + " " + year);
+    }
+
+    @Override
     public void clearWeatherInfo() {
         noInfoText.setVisibility(View.VISIBLE);
-        morningWidget.setVisibility(View.INVISIBLE);
-        afternoonWidget.setVisibility(View.INVISIBLE);
-        nightWidget.setVisibility(View.INVISIBLE);
-        morningTempText.setVisibility(View.INVISIBLE);
-        afternoonTempText.setVisibility(View.INVISIBLE);
-        nightTempText.setVisibility(View.INVISIBLE);
+        morningLayout.setVisibility(View.INVISIBLE);
+        afternoonLayout.setVisibility(View.INVISIBLE);
+        nightLayout.setVisibility(View.INVISIBLE);
     }
 
     @Override
