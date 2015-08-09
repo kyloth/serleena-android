@@ -109,4 +109,12 @@ public class SerleenaJSONNetProxyTest {
     public void authTest() throws AuthException, IOException {
         proxy.auth();
     }
+
+    @Test
+    public void sendTest() throws AuthException, IOException {
+        proxy.auth();
+        proxy.send();
+        String response = outputStream.toString();
+        assertEquals(response, "Data=");
+    }
 }
