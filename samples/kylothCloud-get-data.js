@@ -108,7 +108,7 @@
                 "forecast": "SUNNY",
                 "temperature": 2
             },
-            "time": 1437505820522
+            "time": 1437516000000
         }
     ]
 }
