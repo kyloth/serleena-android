@@ -48,11 +48,13 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.kyloth.serleena.BuildConfig;
 import com.kyloth.serleena.R;
 import com.kyloth.serleena.model.IWeatherForecast;
+import com.kyloth.serleena.persistence.WeatherForecastEnum;
 import com.kyloth.serleena.presentation.IWeatherPresenter;
 import com.kyloth.serleena.presenters.ISerleenaActivity;
 import com.kyloth.serleena.model.ISerleenaDataSource;
@@ -97,6 +99,9 @@ public class WeatherFragmentTest {
     private WeatherFragment fragment;
     private IWeatherPresenter presenter;
 
+    private LinearLayout morningLayout;
+    private LinearLayout afternoonLayout;
+    private LinearLayout nightLayout;
     private TextView dateText;
     private TextView noInfoText;
     private TextView morningTempText;
@@ -122,6 +127,13 @@ public class WeatherFragmentTest {
                         eq(vg),
                         any(Boolean.class))
         ).thenReturn(v);
+
+        morningLayout = mock(LinearLayout.class);
+        when(v.findViewById(R.id.morning_layout)).thenReturn(morningLayout);
+        afternoonLayout = mock(LinearLayout.class);
+        when(v.findViewById(R.id.afternoon_layout)).thenReturn(afternoonLayout);
+        nightLayout = mock(LinearLayout.class);
+        when(v.findViewById(R.id.night_layout)).thenReturn(nightLayout);
 
         dateText = mock(TextView.class);
         when(v.findViewById(R.id.weather_date_text)).thenReturn(dateText);
@@ -175,23 +187,48 @@ public class WeatherFragmentTest {
      * ContactsFragment.
      */
     @Test
-    public void testAttachContactsPresenter() {
+    public void resumeAndPauseEventsShouldBeForwardedToPresenter() {
         fragment.onResume();
         verify(presenter).resume();
         fragment.onPause();
         verify(presenter).pause();
     }
 
+    /**
+     * Verifica che la vista notifichi l'assenza di informazioni da
+     * visualizzare quando viene pulita.
+     */
     @Test
     public void clearingViewShouldTellUserNoInfoIsAvailable() {
         fragment.clearWeatherInfo();
         verify(noInfoText).setVisibility(View.VISIBLE);
-        verify(morningWidget).setVisibility(View.INVISIBLE);
-        verify(afternoonWidget).setVisibility(View.INVISIBLE);
-        verify(nightWidget).setVisibility(View.INVISIBLE);
-        verify(morningTempText).setVisibility(View.INVISIBLE);
-        verify(afternoonTempText).setVisibility(View.INVISIBLE);
-        verify(nightTempText).setVisibility(View.INVISIBLE);
+        verify(morningLayout).setVisibility(View.INVISIBLE);
+        verify(afternoonLayout).setVisibility(View.INVISIBLE);
+        verify(nightLayout).setVisibility(View.INVISIBLE);
+    }
+
+    /**
+     * Verifica che i widget che compongono la vista siano resi visibili
+     * quando viene impostata una previsione metereologica.
+     */
+    @Test
+    public void viewShouldBeVisibleWhenSettingWeatherInfo() {
+        IWeatherForecast forecast = mock(IWeatherForecast.class);
+        when(forecast.getMorningForecast())
+                .thenReturn(WeatherForecastEnum.Sunny);
+        when(forecast.getAfternoonForecast())
+                .thenReturn(WeatherForecastEnum.Snowy);
+        when(forecast.getNightForecast())
+                .thenReturn(WeatherForecastEnum.Rainy);
+        when(forecast.getMorningTemperature()).thenReturn(30);
+        when(forecast.getAfternoonTemperature()).thenReturn(20);
+        when(forecast.getNightTemperature()).thenReturn(10);
+
+        fragment.setWeatherInfo(forecast);
+        verify(noInfoText).setVisibility(View.INVISIBLE);
+        verify(morningLayout).setVisibility(View.VISIBLE);
+        verify(afternoonLayout).setVisibility(View.VISIBLE);
+        verify(nightLayout).setVisibility(View.VISIBLE);
     }
 
     /**
@@ -217,38 +254,23 @@ public class WeatherFragmentTest {
         }
     }
 
+    /**
+     * Verifica che la vista mostri correttamente la data delle previsioni
+     * impostata, indicando in numeri il giorno e l'anno, e a parole il mese.
+     */
     @Test
-    public void viewShouldShowTodayDateAsDefault() {
-        Map<Integer, String> monthNames = new HashMap<>();
-        monthNames.put(1, "Gennaio");
-        monthNames.put(2, "Febbraio");
-        monthNames.put(3, "Marzo");
-        monthNames.put(4, "Aprile");
-        monthNames.put(5, "Maggio");
-        monthNames.put(6, "Giugno");
-        monthNames.put(7, "Luglio");
-        monthNames.put(8, "Agosto");
-        monthNames.put(9, "Settembre");
-        monthNames.put(10, "Ottobre");
-        monthNames.put(11, "Novembre");
-        monthNames.put(12, "Dicembre");
+    public void viewShouldDisplayTheDateCorrectly() {
+        String[] months = new String[] { "Gennaio", "Febbraio", "Marzo",
+                "Aprile", "Maggio", "Giugno", "Luglio", "Agosto",
+                "Settembre", "Ottobre", "Novembre", "Dicembre" };
 
         Calendar calendar = Calendar.getInstance();
-        calendar.setTimeInMillis(System.currentTimeMillis());
-        String text = calendar.get(Calendar.DAY_OF_MONTH) + " " + monthNames
-                .get(calendar.get(Calendar.MONTH)) + " " + calendar.get
-                (Calendar.YEAR);
-        verify(dateText).setText(text);
-    }
 
-    @Test
-    public void viewShouldDisplayTheDateOfWeatherInfo() {
-        IWeatherForecast info = mock(IWeatherForecast.class);
-        Calendar calendar = Calendar.getInstance();
-        calendar.set(2015, 05, 01);
-        when(info.date()).thenReturn(calendar.getTime());
-        fragment.setWeatherInfo(info);
-        verify(dateText).setText("1 Maggio 2015");
+        for (int i = 0; i < 12; i++) {
+            calendar.set(2015, i, 01);
+            fragment.setDate(calendar.getTime());
+            verify(dateText).setText("1 " + months[i] + " 2015");
+        }
     }
 
 }
