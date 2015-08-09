@@ -43,16 +43,29 @@ package com.kyloth.serleena.view.fragments;
 
 import android.app.Activity;
 import android.app.FragmentManager;
+import android.content.DialogInterface;
+import android.os.Bundle;
+import android.view.LayoutInflater;
+import android.view.View;
 import android.view.ViewGroup;
+import android.widget.LinearLayout;
+import android.widget.TextView;
 
 import com.kyloth.serleena.BuildConfig;
+import com.kyloth.serleena.R;
+import com.kyloth.serleena.model.IWeatherForecast;
+import com.kyloth.serleena.persistence.WeatherForecastEnum;
 import com.kyloth.serleena.presentation.IWeatherPresenter;
 import com.kyloth.serleena.presenters.ISerleenaActivity;
 import com.kyloth.serleena.model.ISerleenaDataSource;
 import com.kyloth.serleena.sensors.ISensorManager;
+import com.kyloth.serleena.view.widgets.MapWidget;
+import com.kyloth.serleena.view.widgets.WeatherWidget;
 
 import junit.framework.Assert;
 
+import org.apache.maven.artifact.ant.shaded.cli.Arg;
+import org.mockito.ArgumentCaptor;
 import org.robolectric.Robolectric;
 import org.robolectric.RobolectricGradleTestRunner;
 import org.robolectric.annotation.Config;
@@ -62,7 +75,15 @@ import org.junit.runner.RunWith;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.rules.ExpectedException;
+import org.w3c.dom.Text;
 
+import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+import static junit.framework.Assert.assertEquals;
 import static org.mockito.Mockito.*;
 
 /**
@@ -75,20 +96,21 @@ import static org.mockito.Mockito.*;
 @Config(constants = BuildConfig.class, emulateSdk = 19, manifest = "src/main/AndroidManifest.xml")
 public class WeatherFragmentTest {
 
-    private static class TestActivity
-            extends Activity implements ISerleenaActivity {
-        @Override
-        public ISerleenaDataSource getDataSource() { return null; }
-        @Override
-        public ISensorManager getSensorManager() { return null; }
-    }
-
-    private Activity activity;
     private WeatherFragment fragment;
     private IWeatherPresenter presenter;
 
-    @Rule
-    public ExpectedException exception = ExpectedException.none();
+    private LinearLayout morningLayout;
+    private LinearLayout afternoonLayout;
+    private LinearLayout nightLayout;
+    private TextView dateText;
+    private TextView noInfoText;
+    private TextView morningTempText;
+    private TextView afternoonTempText;
+    private TextView nightTempText;
+    private WeatherWidget morningWidget;
+    private WeatherWidget afternoonWidget;
+    private WeatherWidget nightWidget;
+    private List<View.OnClickListener> listeners;
 
     /**
      * Inizializza il test.
@@ -96,14 +118,68 @@ public class WeatherFragmentTest {
      */
     @Before
     public void initialize() {
-        activity = Robolectric.buildActivity(TestActivity.class).
-                create().start().visible().get();
-        Assert.assertNotNull("initialization failed", activity);
+        LayoutInflater inflater = mock(LayoutInflater.class);
+        ViewGroup vg = mock(ViewGroup.class);
+        ViewGroup v = mock(ViewGroup.class);
+
+        when(inflater.inflate(
+                        eq(R.layout.fragment_weather),
+                        eq(vg),
+                        any(Boolean.class))
+        ).thenReturn(v);
+
+        morningLayout = mock(LinearLayout.class);
+        when(v.findViewById(R.id.morning_layout)).thenReturn(morningLayout);
+        afternoonLayout = mock(LinearLayout.class);
+        when(v.findViewById(R.id.afternoon_layout)).thenReturn(afternoonLayout);
+        nightLayout = mock(LinearLayout.class);
+        when(v.findViewById(R.id.night_layout)).thenReturn(nightLayout);
+
+        dateText = mock(TextView.class);
+        when(v.findViewById(R.id.weather_date_text)).thenReturn(dateText);
+        noInfoText = mock(TextView.class);
+        when(v.findViewById(R.id.weather_no_info)).thenReturn(noInfoText);
+
+        morningWidget = mock(WeatherWidget.class);
+        when(v.findViewById(R.id.morning_widget)).thenReturn(morningWidget);
+        afternoonWidget = mock(WeatherWidget.class);
+        when(v.findViewById(R.id.afternoon_widget)).thenReturn(afternoonWidget);
+        nightWidget = mock(WeatherWidget.class);
+        when(v.findViewById(R.id.night_widget)).thenReturn(nightWidget);
+
+        morningTempText = mock(TextView.class);
+        when(v.findViewById(R.id.morning_temp_text)).thenReturn(morningTempText);
+        afternoonTempText = mock(TextView.class);
+        when(v.findViewById(R.id.afternoon_temp_text)).thenReturn(afternoonTempText);
+        nightTempText = mock(TextView.class);
+        when(v.findViewById(R.id.night_temp_text)).thenReturn(nightTempText);
+
+        when(v.getChildCount()).thenReturn(8);
+        when(v.getChildAt(0)).thenReturn(dateText);
+        when(v.getChildAt(1)).thenReturn(morningWidget);
+        when(v.getChildAt(2)).thenReturn(afternoonWidget);
+        when(v.getChildAt(3)).thenReturn(nightWidget);
+        when(v.getChildAt(4)).thenReturn(morningTempText);
+        when(v.getChildAt(5)).thenReturn(afternoonTempText);
+        when(v.getChildAt(6)).thenReturn(nightTempText);
+        when(v.getChildAt(7)).thenReturn(noInfoText);
+
         fragment = new WeatherFragment();
-        FragmentManager fm = activity.getFragmentManager();
-        fm.beginTransaction().add(fragment,"TEST").commit();
-        Assert.assertEquals(
-                "fragment not attached", fragment.getActivity(), activity);
+        fragment.onCreateView(inflater, vg, mock(Bundle.class));
+        presenter = mock(IWeatherPresenter.class);
+        fragment.attachPresenter(presenter);
+
+        ArgumentCaptor<View.OnClickListener> captor =
+                ArgumentCaptor.forClass(View.OnClickListener.class);
+        verify(dateText).setOnClickListener(captor.capture());
+        verify(morningWidget).setOnClickListener(captor.capture());
+        verify(afternoonWidget).setOnClickListener(captor.capture());
+        verify(nightWidget).setOnClickListener(captor.capture());
+        verify(morningTempText).setOnClickListener(captor.capture());
+        verify(afternoonTempText).setOnClickListener(captor.capture());
+        verify(nightTempText).setOnClickListener(captor.capture());
+        verify(noInfoText).setOnClickListener(captor.capture());
+        listeners = captor.getAllValues();
     }
 
     /**
@@ -111,22 +187,48 @@ public class WeatherFragmentTest {
      * ContactsFragment.
      */
     @Test
-    public void testAttachContactsPresenter() {
-        presenter = mock(IWeatherPresenter.class);
-        fragment.attachPresenter(presenter);
+    public void resumeAndPauseEventsShouldBeForwardedToPresenter() {
         fragment.onResume();
-        fragment.onPause();
         verify(presenter).resume();
+        fragment.onPause();
         verify(presenter).pause();
     }
 
     /**
-     * Verifica che il passaggio di parametro null a setDate() sollevi
-     * un'eccezione.
+     * Verifica che la vista notifichi l'assenza di informazioni da
+     * visualizzare quando viene pulita.
      */
-    @Test(expected = IllegalArgumentException.class)
-    public void setDateShouldThrowWhenNullArgument() {
-        fragment.setDate(null);
+    @Test
+    public void clearingViewShouldTellUserNoInfoIsAvailable() {
+        fragment.clearWeatherInfo();
+        verify(noInfoText).setVisibility(View.VISIBLE);
+        verify(morningLayout).setVisibility(View.INVISIBLE);
+        verify(afternoonLayout).setVisibility(View.INVISIBLE);
+        verify(nightLayout).setVisibility(View.INVISIBLE);
+    }
+
+    /**
+     * Verifica che i widget che compongono la vista siano resi visibili
+     * quando viene impostata una previsione metereologica.
+     */
+    @Test
+    public void viewShouldBeVisibleWhenSettingWeatherInfo() {
+        IWeatherForecast forecast = mock(IWeatherForecast.class);
+        when(forecast.getMorningForecast())
+                .thenReturn(WeatherForecastEnum.Sunny);
+        when(forecast.getAfternoonForecast())
+                .thenReturn(WeatherForecastEnum.Snowy);
+        when(forecast.getNightForecast())
+                .thenReturn(WeatherForecastEnum.Rainy);
+        when(forecast.getMorningTemperature()).thenReturn(30);
+        when(forecast.getAfternoonTemperature()).thenReturn(20);
+        when(forecast.getNightTemperature()).thenReturn(10);
+
+        fragment.setWeatherInfo(forecast);
+        verify(noInfoText).setVisibility(View.INVISIBLE);
+        verify(morningLayout).setVisibility(View.VISIBLE);
+        verify(afternoonLayout).setVisibility(View.VISIBLE);
+        verify(nightLayout).setVisibility(View.VISIBLE);
     }
 
     /**
@@ -144,13 +246,31 @@ public class WeatherFragmentTest {
      */
     @Test
     public void testShouldRequestNextContactOnKeyDown() {
-        presenter = mock(IWeatherPresenter.class);
-        fragment.attachPresenter(presenter);
-
-        ViewGroup vg = (ViewGroup) fragment.getView();
-        for (int i = 0; i < vg.getChildCount(); i++) {
-            vg.getChildAt(i).callOnClick();
-            verify(presenter, times(i+1)).advanceDate();
+        int count = 0;
+        for (View.OnClickListener listener : listeners) {
+            listener.onClick(mock(View.class));
+            verify(presenter, times(count + 1)).advanceDate();
+            count++;
         }
     }
+
+    /**
+     * Verifica che la vista mostri correttamente la data delle previsioni
+     * impostata, indicando in numeri il giorno e l'anno, e a parole il mese.
+     */
+    @Test
+    public void viewShouldDisplayTheDateCorrectly() {
+        String[] months = new String[] { "Gennaio", "Febbraio", "Marzo",
+                "Aprile", "Maggio", "Giugno", "Luglio", "Agosto",
+                "Settembre", "Ottobre", "Novembre", "Dicembre" };
+
+        Calendar calendar = Calendar.getInstance();
+
+        for (int i = 0; i < 12; i++) {
+            calendar.set(2015, i, 01);
+            fragment.setDate(calendar.getTime());
+            verify(dateText).setText("1 " + months[i] + " 2015");
+        }
+    }
+
 }

@@ -52,14 +52,13 @@ import java.util.Date;
  * @field activity : ISerleenaActivity Activity a cui il presenter appartiene
  * @field daysPastNow : int Giorni successivi a quello corrente la cui data corrispondente deve essere visualizzata sulla vista
  * @field locMan : ILocationManager Sensore di posizione
- * @field ds : ISerleenaDataSource DAO dell'applicazione
  * @field lastKnownLocation : GeoPoint Ultima posizione geografica nota dell'utente
  * @author Filippo Sestini <sestini.filippo@gmail.com>
  * @version 1.0.0
  */
 public class WeatherPresenter implements IWeatherPresenter, ILocationObserver {
 
-    private static int LOCATION_UPDATE_INTERVAL_SECONDS = 60;
+    public static int LOCATION_UPDATE_INTERVAL_SECONDS = 60;
 
     private IWeatherView view;
     private ISerleenaActivity activity;
@@ -74,12 +73,11 @@ public class WeatherPresenter implements IWeatherPresenter, ILocationObserver {
             throw new IllegalArgumentException("Illegal null view");
         if (activity == null)
             throw new IllegalArgumentException("Illegal null activity");
-	
-	this.view = view;
-	this.activity = activity;
+
+        this.view = view;
+        this.activity = activity;
         this.view.attachPresenter(this);
         this.locMan = activity.getSensorManager().getLocationSource();
-        this.ds = activity.getDataSource();
         daysPastNow = 0;
     }
 
@@ -88,54 +86,12 @@ public class WeatherPresenter implements IWeatherPresenter, ILocationObserver {
      */
     @Override
     public synchronized void advanceDate() {
-        daysPastNow = (daysPastNow + 1) % 6;
-        if (lastKnownLocation != null) {
-            AsyncTask<Void, Void, Void> task = new AsyncTask<Void, Void, Void>() {
-                @Override
-                protected Void doInBackground(Void... voids) {
-                    present(daysPastNow, lastKnownLocation);
-                    return null;
-                }
-            };
-            task.execute();
-        }
-    }
+        daysPastNow = (daysPastNow + 1) % 7;
+        view.setDate(currentDate());
+        view.clearWeatherInfo();
 
-    /**
-     * Presenta alla vista associata le previsioni metereologiche del giorno
-     * specificato, relative alla posizione geografica specificata.
-     *
-     * @param daysPastNow Specifica la data delle previsioni da visualizzare,
-     *                    calcolata sommando alla data corrente il numero di
-     *                    giorni indicati dal parametro.
-     * @param location Posizione geografica delle previsioni da visualizzare.
-     *                 Se null, viene sollevata un'eccezione
-     *                 IllegalArgumentException.
-     */
-    public void present(int daysPastNow, GeoPoint location) throws
-            IllegalArgumentException {
-        if (location == null)
-            throw new IllegalArgumentException("Illegal null location");
-
-        Calendar c = Calendar.getInstance();
-        c.setTime(new Date());
-        c.set(Calendar.HOUR_OF_DAY, 0);
-        c.set(Calendar.MINUTE, 0);
-        c.set(Calendar.SECOND, 0);
-        c.set(Calendar.MILLISECOND, 0);
-        c.add(Calendar.DATE, daysPastNow);
-        Date d = c.getTime();
-
-        view.setDate(d);
-
-        try {
-            IWeatherForecast info =
-                    ds.getWeatherInfo(location, d);
-            view.setDate(d);
-            view.setWeatherInfo(info);
-        } catch (NoSuchWeatherForecastException ex) {
-            view.clearWeatherInfo();
-        }
+        if (lastKnownLocation != null)
+            present();
     }
 
     /**
@@ -143,6 +99,7 @@ public class WeatherPresenter implements IWeatherPresenter, ILocationObserver {
      */
     @Override
     public synchronized void resume() {
+        view.setDate(currentDate());
         locMan.attachObserver(this, LOCATION_UPDATE_INTERVAL_SECONDS);
     }
 
@@ -167,14 +124,44 @@ public class WeatherPresenter implements IWeatherPresenter, ILocationObserver {
             throw new IllegalArgumentException("Illegal null location");
 
         lastKnownLocation = loc;
-        AsyncTask<Void, Void, Void> task = new AsyncTask<Void, Void, Void>() {
-            @Override
-            protected Void doInBackground(Void... voids) {
-                present(daysPastNow, lastKnownLocation);
-                return null;
-            }
-        };
+        present();
+    }
+
+    private Date currentDate() {
+        Calendar c = Calendar.getInstance();
+        c.setTime(new Date());
+        c.set(Calendar.HOUR_OF_DAY, 0);
+        c.set(Calendar.MINUTE, 0);
+        c.set(Calendar.SECOND, 0);
+        c.set(Calendar.MILLISECOND, 0);
+        c.add(Calendar.DATE, daysPastNow);
+        return c.getTime();
+    }
+
+    private void present() throws
+            IllegalArgumentException {
+        AsyncTask<Void, Void, IWeatherForecast> task =
+                new AsyncTask<Void, Void, IWeatherForecast>() {
+                    @Override
+                    protected IWeatherForecast doInBackground(Void... params) {
+                        try {
+                            return activity.getDataSource().getWeatherInfo(
+                                    lastKnownLocation, currentDate());
+                        } catch (NoSuchWeatherForecastException ex) {
+                            return null;
+                        }
+                    }
+                    @Override
+                    protected void onPostExecute(IWeatherForecast result) {
+                        if (result != null)
+                            view.setWeatherInfo(result);
+                        else
+                            view.clearWeatherInfo();
+                    }
+                };
+
         task.execute();
     }
+
 
 }

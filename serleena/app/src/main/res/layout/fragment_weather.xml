@@ -10,86 +10,105 @@
         android:id="@+id/weather_date_text"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:text="September, Saturday 12"
-        android:textSize="15px"
+        android:text="20 Settembre, 2015"
+        android:textSize="15sp"
         android:gravity="top"
         android:textStyle="bold"/>
 
+    <!--android:text="Nessuna informazione disponibile"-->
+    <TextView
+        android:id="@+id/weather_no_info"
+        android:visibility="visible"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:text=""
+        android:textSize="15sp"
+        android:gravity="top"
+        android:textStyle="bold"/>
 
     <LinearLayout
+        android:id="@+id/morning_layout"
         android:layout_width="match_parent"
-        android:layout_height="40px"
+        android:layout_height="wrap_content"
+        android:visibility="visible"
         android:orientation="horizontal">
 
         <TextView
-            android:layout_width="70px"
-            android:layout_height="40px"
-            android:text="7am-12pm"
-            android:textSize="13px"
+            android:layout_width="80dp"
+            android:layout_height="wrap_content"
+            android:text="Mattino"
+            android:textSize="13sp"
             android:gravity="center_vertical"/>
 
-        <ImageView
-            android:layout_width="40px"
-            android:layout_height="40px"
-            android:src="@drawable/sun" />
+        <com.kyloth.serleena.view.widgets.WeatherWidget
+            android:id="@+id/morning_widget"
+            android:layout_width="25dp"
+            android:layout_height="25dp" />
 
         <TextView
-            android:layout_width="60px"
-            android:layout_height="40px"
+            android:id="@+id/morning_temp_text"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
             android:text="25°"
-            android:textSize="25px"
+            android:textSize="13sp"
             android:gravity="center_vertical"/>
 
     </LinearLayout>
 
     <LinearLayout
+        android:id="@+id/afternoon_layout"
+        android:visibility="visible"
         android:layout_width="match_parent"
-        android:layout_height="40px"
+        android:layout_height="wrap_content"
         android:orientation="horizontal">
 
         <TextView
-            android:layout_width="70px"
-            android:layout_height="40px"
-            android:text="12pm-9pm"
-            android:textSize="13px"
+            android:layout_width="80dp"
+            android:layout_height="wrap_content"
+            android:text="Pomeriggio"
+            android:textSize="13sp"
             android:gravity="center_vertical"/>
 
-        <ImageView
-            android:layout_width="40px"
-            android:layout_height="40px"
-            android:src="@drawable/sun" />
+        <com.kyloth.serleena.view.widgets.WeatherWidget
+            android:id="@+id/afternoon_widget"
+            android:layout_width="25dp"
+            android:layout_height="25dp" />
 
         <TextView
-            android:layout_width="60px"
-            android:layout_height="40px"
+            android:id="@+id/afternoon_temp_text"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
             android:text="25°"
-            android:textSize="25px"
+            android:textSize="13sp"
             android:gravity="center_vertical"/>
 
     </LinearLayout>
 
     <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="40px"
+        android:id="@+id/night_layout"
+        android:visibility="visible"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
         android:orientation="horizontal">
 
         <TextView
-            android:layout_width="70px"
-            android:layout_height="40px"
-            android:text="9pm-7am"
-            android:textSize="13px"
+            android:layout_width="80dp"
+            android:layout_height="wrap_content"
+            android:text="Sera"
+            android:textSize="13sp"
             android:gravity="center_vertical"/>
 
-        <ImageView
-            android:layout_width="40px"
-            android:layout_height="40px"
-            android:src="@drawable/sun" />
+        <com.kyloth.serleena.view.widgets.WeatherWidget
+            android:id="@+id/night_widget"
+            android:layout_width="25dp"
+            android:layout_height="25dp" />
 
         <TextView
-            android:layout_width="60px"
-            android:layout_height="40px"
+            android:id="@+id/night_temp_text"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
             android:text="25°"
-            android:textSize="25px"
+            android:textSize="13sp"
             android:gravity="center_vertical"/>
 
     </LinearLayout>

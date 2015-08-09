@@ -38,6 +38,8 @@ import org.robolectric.RuntimeEnvironment;
 import org.robolectric.annotation.Config;
 
 import android.database.sqlite.SQLiteDatabase;
+
+import com.kyloth.serleena.persistence.WeatherForecastEnum;
 import com.kyloth.serleena.persistence.sqlite.SerleenaDatabase;
 
 @RunWith(RobolectricGradleTestRunner.class)
@@ -116,17 +118,44 @@ public class TestDB {
         db.execSQL(query);
     }
 
-    public static void forecastQuery(SQLiteDatabase db, int id, long start,
-         long end, String condition, int temperature, double neLat, double neLon, double swLat, double swLon) {
-        String query = "INSERT INTO weather_forecasts (weather_id, weather_start, " +
-                       "weather_end, weather_condition, weather_temperature, " +
-                       "weather_nw_corner_latitude, weather_nw_corner_longitude, " +
-                       "weather_se_corner_latitude, weather_se_corner_longitude) VALUES " +
-                       "(" + String.valueOf(id) + ", " + String.valueOf(start) + ", " +
-                       String.valueOf(end) + ", '" + condition + "', " +
-                       String.valueOf(temperature) + ", " + String.valueOf(neLat) + ", " +
-                       String.valueOf(neLon) + ", " + String.valueOf(swLat) + ", " +
-                       String.valueOf(swLon) + ")";
+    public static void forecastQuery(
+            SQLiteDatabase db,
+            int id,
+            int date,
+            WeatherForecastEnum conditionMorning,
+            WeatherForecastEnum conditionAfternoon,
+            WeatherForecastEnum conditionNight,
+            int tempMorning,
+            int tempAfternoon,
+            int tempNight,
+            double nwLat, double nwLon, double seLat, double seLon) {
+        String query =
+                "INSERT INTO " + SerleenaDatabase.TABLE_WEATHER_FORECASTS + " ("  +
+                "weather_id, " +
+                "weather_date, " +
+                "weather_condition_morning, " +
+                "weather_temperature_morning, " +
+                "weather_condition_afternoon, " +
+                "weather_temperature_afternoon, " +
+                "weather_condition_night, " +
+                "weather_temperature_night, " +
+                "weather_nw_corner_latitude, " +
+                "weather_nw_corner_longitude, " +
+                "weather_se_corner_latitude, " +
+                "weather_se_corner_longitude) VALUES (" +
+                String.valueOf(id) + ", " +
+                String.valueOf(date) + ", " +
+                String.valueOf(conditionMorning.ordinal()) + ", " +
+                String.valueOf(tempMorning) + ", " +
+                String.valueOf(conditionAfternoon.ordinal()) + ", " +
+                String.valueOf(tempAfternoon) + ", " +
+                String.valueOf(conditionNight.ordinal()) + ", " +
+                String.valueOf(tempNight) + ", " +
+                String.valueOf(nwLat) + ", " +
+                String.valueOf(nwLon) + ", " +
+                String.valueOf(seLat) + ", " +
+                String.valueOf(seLon) + ")";
+
         db.execSQL(query);
     }
 
