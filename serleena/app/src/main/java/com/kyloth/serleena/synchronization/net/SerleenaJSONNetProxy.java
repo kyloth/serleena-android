@@ -279,24 +279,32 @@ public class SerleenaJSONNetProxy implements INetProxy {
     @Override
     public void auth() throws AuthException, IOException {
         authToken = null;
+        if (authToken != null) {
+            throw new RuntimeException("Existing authtoken? Cannot call auth() twice.");
+        }
+
         if (urlConnection != null) {
             throw new RuntimeException("Existing urlConnection. Looks like send() or get() attempted. auth() must be called first.");
-        } else {
-            HttpURLConnection tempUrlConnection = factory.createURLConnection(getAuthUrl());
-            if (tempUrlConnection.getResponseCode() == HttpURLConnection.HTTP_OK) {
-                String contentType = tempUrlConnection.getContentType();
-                if (contentType.contains("text/plain")) {
-                    InputStream stream = tempUrlConnection.getInputStream();
-                    Scanner s = new Scanner(stream).useDelimiter("\\A");
-                    String out = s.hasNext() ? s.next() : "";
-                    authToken = out.trim();
-                    tempToken = null;
-                } else {
-                    throw new IOException("Content type was" + contentType);
-                }
+        }
+
+        if (tempToken == null) {
+            throw new RuntimeException("No temp token? preauth() must be called first.");
+        }
+
+        HttpURLConnection tempUrlConnection = factory.createURLConnection(getAuthUrl());
+        if (tempUrlConnection.getResponseCode() == HttpURLConnection.HTTP_OK) {
+            String contentType = tempUrlConnection.getContentType();
+            if (contentType.contains("text/plain")) {
+                InputStream stream = tempUrlConnection.getInputStream();
+                Scanner s = new Scanner(stream).useDelimiter("\\A");
+                String out = s.hasNext() ? s.next() : "";
+                authToken = out.trim();
+                tempToken = null;
             } else {
-                throw new AuthException("Got " + tempUrlConnection.getResponseCode() + " from remote service");
+                throw new IOException("Content type was" + contentType);
             }
+        } else {
+            throw new AuthException("Got " + tempUrlConnection.getResponseCode() + " from remote service");
         }
     }
 }
