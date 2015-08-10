@@ -163,4 +163,22 @@ public class SerleenaJSONNetProxyNotAuthorizedTest {
     public void testSendWithoutAuthNotAllowed() throws AuthException, IOException {
         proxy.send();
     }
+
+    /**
+     * Verifica che se error 500 preauth sollevi AuthException
+     */
+    @Test(expected = AuthException.class)
+    public void testPreauthAuthExceptionOn500() throws AuthException, IOException {
+        when(urlConnection.getResponseCode()).thenReturn(500);
+        proxy.preAuth();
+    }
+
+    /**
+     * Verifica che se error 500 preauth sollevi AuthException
+     */
+    @Test(expected = AuthException.class)
+    public void testPreauthAuthExceptionOn403() throws AuthException, IOException {
+        when(urlConnection.getResponseCode()).thenReturn(HttpURLConnection.HTTP_FORBIDDEN);
+        proxy.preAuth();
+    }
 }
