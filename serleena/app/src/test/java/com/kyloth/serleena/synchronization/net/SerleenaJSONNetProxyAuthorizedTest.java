@@ -48,6 +48,8 @@ import com.kyloth.serleena.synchronization.kylothcloud.outbound.CloudJSONOutboun
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.mockito.invocation.InvocationOnMock;
+import org.mockito.stubbing.Answer;
 import org.robolectric.RobolectricGradleTestRunner;
 import org.robolectric.annotation.Config;
 
@@ -55,12 +57,14 @@ import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.net.HttpURLConnection;
+import java.net.MalformedURLException;
 import java.net.URL;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.Matchers.any;
+import static org.mockito.Matchers.eq;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
@@ -70,17 +74,69 @@ public class SerleenaJSONNetProxyAuthorizedTest {
 
     private SerleenaJSONNetProxy proxy;
     private SerleenaConnectionFactory factory = mock(SerleenaConnectionFactory.class);
+
+    final String PREAUTH_TOKEN = "Foo";
+    final String KYLOTH_ID = "Bar";
+    final String IN_DATA = "IN DATA";
+    final String OUT_DATA = "OUT DATA";
+
+    final URL BASE_URL;
+    {URL BASE_URL1;
+        try {
+            BASE_URL1 = new URL("http://localhost");
+        } catch (MalformedURLException e) {
+            BASE_URL1 = null;
+        }
+        BASE_URL = BASE_URL1;
+    }
+
+    final URL DATA_URL;
+
+    {URL DATA_URL;
+        try {
+            DATA_URL = new URL(BASE_URL + "/data/");
+            // Lo dice la ST
+        } catch (MalformedURLException e) {
+            DATA_URL = null;
+            e.printStackTrace();
+        }
+        this.DATA_URL = DATA_URL;
+    }
+
     private HttpURLConnection urlConnection = mock(HttpURLConnection.class);
     private ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
 
+    private HttpURLConnection urlConnectionData = mock(HttpURLConnection.class);
+    private ByteArrayOutputStream outputStreamData = new ByteArrayOutputStream();
 
-    private void initializeMocks () throws IOException {
-        String auth = "Rush";
+
+    private void initializeMocks() throws IOException {
         when(factory.createURLConnection(any(URL.class))).thenReturn(urlConnection);
+        when(factory.createURLConnection(eq(DATA_URL))).thenReturn(urlConnectionData);
+
         when(urlConnection.getOutputStream()).thenReturn(outputStream);
         when(urlConnection.getResponseCode()).thenReturn(HttpURLConnection.HTTP_OK);
         when(urlConnection.getContentType()).thenReturn("text/plain");
-        when(urlConnection.getInputStream()).thenReturn(new ByteArrayInputStream(auth.getBytes()));
+        when(urlConnection.getInputStream()).thenAnswer(
+                new Answer() {
+                    public Object answer(InvocationOnMock invocation) {
+                        Object[] args = invocation.getArguments();
+                        Object mock = invocation.getMock();
+                        return new ByteArrayInputStream(PREAUTH_TOKEN.getBytes());
+                    }
+                });
+
+        when(urlConnectionData.getOutputStream()).thenReturn(outputStreamData);
+        when(urlConnectionData.getResponseCode()).thenReturn(HttpURLConnection.HTTP_OK);
+        when(urlConnectionData.getContentType()).thenReturn("application/json");
+        when(urlConnectionData.getInputStream()).thenAnswer(
+                new Answer() {
+                    public Object answer(InvocationOnMock invocation) {
+                        Object[] args = invocation.getArguments();
+                        Object mock = invocation.getMock();
+                        return new ByteArrayInputStream(IN_DATA.getBytes());
+                    }
+                });
     }
 
     public SerleenaJSONNetProxyAuthorizedTest() {
@@ -94,12 +150,12 @@ public class SerleenaJSONNetProxyAuthorizedTest {
         IKylothIdSource entry = new IKylothIdSource() {
             @Override
             public String getKylothId() {
-                return "Geddy";
+                return KYLOTH_ID;
             }
         };
-        proxy = new SerleenaJSONNetProxy(new URL("http://localhost"), entry, factory);
+        proxy = new SerleenaJSONNetProxy(BASE_URL, entry, factory);
         String preAuth = proxy.preAuth();
-        assertEquals(preAuth, "Rush");
+        assertEquals(preAuth, PREAUTH_TOKEN);
         proxy.auth();
     }
 
@@ -117,7 +173,7 @@ public class SerleenaJSONNetProxyAuthorizedTest {
         s.write('C');
         s.flush();
         s.close();
-        String response = outputStream.toString();
+        String response = outputStreamData.toString();
         assertEquals(response, "Data=ABC");
         assertTrue(proxy.success());
         proxy.disconnect();
@@ -132,7 +188,7 @@ public class SerleenaJSONNetProxyAuthorizedTest {
     @Test(expected = AuthException.class)
     public void testSendAuthExceptionOn403() throws AuthException, IOException {
         CloudJSONOutboundStream s = proxy.send();
-        when(urlConnection.getResponseCode()).thenReturn(HttpURLConnection.HTTP_FORBIDDEN);
+        when(urlConnectionData.getResponseCode()).thenReturn(HttpURLConnection.HTTP_FORBIDDEN);
         proxy.success();
         proxy.disconnect();
     }
@@ -146,7 +202,7 @@ public class SerleenaJSONNetProxyAuthorizedTest {
     @Test(expected = IOException.class)
     public void testSendIOExceptionOn500() throws AuthException, IOException {
         CloudJSONOutboundStream s = proxy.send();
-        when(urlConnection.getResponseCode()).thenReturn(HttpURLConnection.HTTP_INTERNAL_ERROR);
+        when(urlConnectionData.getResponseCode()).thenReturn(HttpURLConnection.HTTP_INTERNAL_ERROR);
         proxy.success();
         proxy.disconnect();
     }
@@ -160,7 +216,7 @@ public class SerleenaJSONNetProxyAuthorizedTest {
     @Test(expected = AuthException.class)
     public void testGetAuthExceptionOn403() throws AuthException, IOException {
         proxy.get();
-        when(urlConnection.getResponseCode()).thenReturn(HttpURLConnection.HTTP_FORBIDDEN);
+        when(urlConnectionData.getResponseCode()).thenReturn(HttpURLConnection.HTTP_FORBIDDEN);
         proxy.success();
         proxy.disconnect();
     }
@@ -174,7 +230,7 @@ public class SerleenaJSONNetProxyAuthorizedTest {
     @Test(expected = IOException.class)
     public void testGetIOExceptionOn500() throws AuthException, IOException {
         proxy.get();
-        when(urlConnection.getResponseCode()).thenReturn(HttpURLConnection.HTTP_INTERNAL_ERROR);
+        when(urlConnectionData.getResponseCode()).thenReturn(HttpURLConnection.HTTP_INTERNAL_ERROR);
         proxy.success();
         proxy.disconnect();
     }

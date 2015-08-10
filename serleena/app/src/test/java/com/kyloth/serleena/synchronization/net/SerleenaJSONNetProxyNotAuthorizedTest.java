@@ -43,7 +43,6 @@ package com.kyloth.serleena.synchronization.net;
 import com.kyloth.serleena.BuildConfig;
 import com.kyloth.serleena.synchronization.AuthException;
 import com.kyloth.serleena.synchronization.kylothcloud.IKylothIdSource;
-import com.kyloth.serleena.synchronization.kylothcloud.outbound.CloudJSONOutboundStream;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -63,6 +62,7 @@ import java.net.URL;
 import static junit.framework.Assert.assertEquals;
 import static junit.framework.Assert.assertTrue;
 import static org.mockito.Matchers.any;
+import static org.mockito.Matchers.eq;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
@@ -72,27 +72,39 @@ public class SerleenaJSONNetProxyNotAuthorizedTest {
 
     private SerleenaJSONNetProxy proxy;
     private SerleenaConnectionFactory factory = mock(SerleenaConnectionFactory.class);
+
+    final String PREAUTH_TOKEN = "Foo";
+    final String KYLOTH_ID = "Bar";
+
+    final URL BASE_URL;
+    {URL BASE_URL1;
+        try {
+            BASE_URL1 = new URL("http://localhost");
+        } catch (MalformedURLException e) {
+            BASE_URL1 = null;
+        }
+        BASE_URL = BASE_URL1;
+    }
+
     private HttpURLConnection urlConnection = mock(HttpURLConnection.class);
     private ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
 
 
     private void initializeMocks () throws IOException {
-        final String auth = "Rush";
         when(factory.createURLConnection(any(URL.class))).thenReturn(urlConnection);
         when(urlConnection.getOutputStream()).thenReturn(outputStream);
         when(urlConnection.getResponseCode()).thenReturn(HttpURLConnection.HTTP_OK);
         when(urlConnection.getContentType()).thenReturn("text/plain");
         when(urlConnection.getInputStream()).thenAnswer(
-        new Answer() {
-            public Object answer(InvocationOnMock invocation) {
-                Object[] args = invocation.getArguments();
-                Object mock = invocation.getMock();
-                return new ByteArrayInputStream(auth.getBytes());
-            }
-        });
-
-
+                new Answer() {
+                    public Object answer(InvocationOnMock invocation) {
+                        Object[] args = invocation.getArguments();
+                        Object mock = invocation.getMock();
+                        return new ByteArrayInputStream(PREAUTH_TOKEN.getBytes());
+                    }
+                });
     }
+
 
     public SerleenaJSONNetProxyNotAuthorizedTest() {
         try {
@@ -105,7 +117,7 @@ public class SerleenaJSONNetProxyNotAuthorizedTest {
         IKylothIdSource entry = new IKylothIdSource() {
             @Override
             public String getKylothId() {
-                return "Geddy";
+                return KYLOTH_ID;
             }
         };
         proxy = new SerleenaJSONNetProxy(new URL("http://localhost"), entry, factory);
@@ -114,7 +126,7 @@ public class SerleenaJSONNetProxyNotAuthorizedTest {
     @Test
     public void preAuthTest() throws AuthException, IOException {
         String preAuth = proxy.preAuth();
-        assertEquals(preAuth, "Rush");
+        assertEquals(preAuth, PREAUTH_TOKEN);
     }
 
     /**
@@ -133,7 +145,7 @@ public class SerleenaJSONNetProxyNotAuthorizedTest {
     @Test(expected = RuntimeException.class)
     public void testTwiceAuthNotAllowed() throws AuthException, IOException {
         String preAuth = proxy.preAuth();
-        assertEquals(preAuth, "Rush");
+        assertEquals(preAuth, PREAUTH_TOKEN);
         proxy.auth();
         proxy.auth();
     }
@@ -146,10 +158,10 @@ public class SerleenaJSONNetProxyNotAuthorizedTest {
     @Test
     public void testMultiplePreauthAllowed() throws AuthException, IOException {
         String preAuth = proxy.preAuth();
-        assertEquals(preAuth, "Rush");
+        assertEquals(preAuth, PREAUTH_TOKEN);
         proxy.auth();
         preAuth = proxy.preAuth();
-        assertEquals(preAuth, "Rush");
+        assertEquals(preAuth, PREAUTH_TOKEN);
         proxy.auth();
         proxy.send();
     }
