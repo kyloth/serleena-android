@@ -55,11 +55,11 @@ import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.net.HttpURLConnection;
-import java.net.MalformedURLException;
 import java.net.URL;
 
-import static junit.framework.Assert.assertEquals;
-import static junit.framework.Assert.assertTrue;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
 import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
@@ -105,6 +105,7 @@ public class SerleenaJSONNetProxyAuthorizedTest {
 
     /**
      * Verifica che i dati vengano scritti correttamente nell'outputstream da send();
+     *
      * @throws AuthException
      * @throws IOException
      */
@@ -119,6 +120,62 @@ public class SerleenaJSONNetProxyAuthorizedTest {
         String response = outputStream.toString();
         assertEquals(response, "Data=ABC");
         assertTrue(proxy.success());
+        proxy.disconnect();
+    }
+
+    /**
+     * Verifica che uno status 403 risulti in una AuthException nel chiamare success() dopo send
+     *
+     * @throws AuthException
+     * @throws IOException
+     */
+    @Test(expected = AuthException.class)
+    public void testSendAuthExceptionOn403() throws AuthException, IOException {
+        CloudJSONOutboundStream s = proxy.send();
+        when(urlConnection.getResponseCode()).thenReturn(HttpURLConnection.HTTP_FORBIDDEN);
+        proxy.success();
+        proxy.disconnect();
+    }
+
+    /**
+     * Verifica che uno status 500 risulti in una IOException nel chiamare success() dopo send
+     *
+     * @throws AuthException
+     * @throws IOException
+     */
+    @Test(expected = IOException.class)
+    public void testSendIOExceptionOn500() throws AuthException, IOException {
+        CloudJSONOutboundStream s = proxy.send();
+        when(urlConnection.getResponseCode()).thenReturn(HttpURLConnection.HTTP_INTERNAL_ERROR);
+        proxy.success();
+        proxy.disconnect();
+    }
+
+    /**
+     * Verifica che uno status 403 risulti in una AuthException nel chiamare success() dopo get
+     *
+     * @throws AuthException
+     * @throws IOException
+     */
+    @Test(expected = AuthException.class)
+    public void testGetAuthExceptionOn403() throws AuthException, IOException {
+        proxy.get();
+        when(urlConnection.getResponseCode()).thenReturn(HttpURLConnection.HTTP_FORBIDDEN);
+        proxy.success();
+        proxy.disconnect();
+    }
+
+    /**
+     * Verifica che uno status 500 risulti in una IOException nel chiamare success() dopo get
+     *
+     * @throws AuthException
+     * @throws IOException
+     */
+    @Test(expected = IOException.class)
+    public void testGetIOExceptionOn500() throws AuthException, IOException {
+        proxy.get();
+        when(urlConnection.getResponseCode()).thenReturn(HttpURLConnection.HTTP_INTERNAL_ERROR);
+        proxy.success();
         proxy.disconnect();
     }
 
