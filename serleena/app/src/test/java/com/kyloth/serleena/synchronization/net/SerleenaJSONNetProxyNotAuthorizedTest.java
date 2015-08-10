@@ -125,6 +125,18 @@ public class SerleenaJSONNetProxyNotAuthorizedTest {
         proxy.auth();
     }
 
+    /**
+     * Verifica che chiamare auth due volte sollevi una RuntimeException
+     * @throws AuthException
+     * @throws IOException
+     */
+    @Test(expected = RuntimeException.class)
+    public void testTwiceAuthNotAllowed() throws AuthException, IOException {
+        String preAuth = proxy.preAuth();
+        assertEquals(preAuth, "Rush");
+        proxy.auth();
+        proxy.auth();
+    }
     @Test
     public void authTest() throws AuthException, IOException {
         proxy.auth();
