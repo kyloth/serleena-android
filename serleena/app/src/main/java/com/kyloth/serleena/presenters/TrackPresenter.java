@@ -154,11 +154,11 @@ public class TrackPresenter implements ITrackPresenter, ITrackCrossingObserver,
     public synchronized void resume() {
         active = true;
 
+        updateCheckpoints();
         AsyncTask<Void, Void, Void> task =
                 new AsyncTask<Void, Void, Void>() {
                     @Override
                     protected Void doInBackground(Void... params) {
-                        updateCheckpoints();
                         updateDelta();
                         return null;
                     }
@@ -343,11 +343,11 @@ public class TrackPresenter implements ITrackPresenter, ITrackCrossingObserver,
     @Override
     public void onCheckpointCrossed(final int checkpointNumber) {
         if (active) {
+            updateCheckpoints();
             AsyncTask<Void, Void, Void> task =
                     new AsyncTask<Void, Void, Void>() {
                 @Override
                 protected Void doInBackground(Void... params) {
-                    updateCheckpoints();
                     updateDelta();
                     return null;
                 }
