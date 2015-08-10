@@ -41,9 +41,11 @@ package com.kyloth.serleena.view.fragments;
 
 import android.app.Fragment;
 import android.os.Bundle;
+import android.transition.TransitionValues;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 
 import com.kyloth.serleena.R;
 import com.kyloth.serleena.presentation.ITrackPresenter;
@@ -59,26 +61,22 @@ import com.kyloth.serleena.view.widgets.CompassWidget;
  *
  * @use Viene istanziata e utilizzata dall'Activity per la visualizzazione della schermata. Comunica con il Presenter associato attraverso l'interfaccia ITrackPresenter.
  * @field presenter : ITrackPresenter presenter collegato a un TrackFragment
- * @field direction : Float direzione del prossimo checkpoint
- * @field totalCheckpoints : Integer numero di checkpoint totali
- * @field currentCheckpoint : Integer checkpoint a cui è arrivato l'utente
- * @field distance : Integer distanza dal prossimo checkpoint
- * @field gainVsGhost : Integer vantaggio netto sulla prestazione del ghost
- * @field elapsedTime : Integer tempo rilevato all'ultimo checkpoint
- * @field partialTW : TextView View dove è visualizzato il confronto tra checkpoint attraversati e totali
- * @field nextTW : TextView View dove sono visualizzate informazioni sul successivo checkpoint
- * @field elapsedTimeTW : TextView View dove è visualizzato il tempo parziale rilevato all'ultimo checkpoint
- * @field ghostTimeTW : TextView View dove è visualizzato il guadagno rispetto alla prestazione migliore
  * @author Sebastiano Valle <valle.sebastiano93@gmail.com>
  * @version 1.0.0
  * @see android.app.Fragment
  */
 public class TrackFragment extends Fragment implements ITrackView {
 
-    /**
-     * Presenter collegato a un TrackFragment
-     */
     private ITrackPresenter presenter;
+    private TextView trackNameText;
+    private TextView nextCheckpointText;
+    private TextView distanceText;
+    private CompassWidget orientationWidget;
+    private TextView deltaText;
+    private TextView lastPartialText;
+
+    private int totalCheckpoints;
+    private int nextCheckpoint;
 
     /**
      * Crea un nuovo oggetto TrackFragment.
@@ -98,12 +96,23 @@ public class TrackFragment extends Fragment implements ITrackView {
     }
 
     /**
-     * Ridefinisce Fragment.onCreateView().
+     * Ridefinisce Fragment.onCreateView()
      */
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        return inflater.inflate(R.layout.fragment_track, container, false);
+        View v = inflater.inflate(R.layout.fragment_track, container, false);
+
+        orientationWidget =
+                (CompassWidget) v.findViewById(R.id.compass_widget_track);
+        nextCheckpointText =
+                (TextView) v.findViewById(R.id.checkpoint_numbers_text);
+        trackNameText = (TextView) v.findViewById(R.id.track_name_text);
+        distanceText = (TextView) v.findViewById(R.id.distance_text);
+        deltaText = (TextView) v.findViewById(R.id.delta_text);
+        lastPartialText = (TextView) v.findViewById(R.id.last_partial_text);
+
+        return v;
     }
 
     /**
@@ -124,7 +133,15 @@ public class TrackFragment extends Fragment implements ITrackView {
      */
     @Override
     public void clearView() {
+        trackNameText.setText("NESSUN PERCORSO ATTIVO");
+        nextCheckpointText.setText("");
+        distanceText.setText("");
+        orientationWidget.setOrientation(0);
+        deltaText.setText("");
+        lastPartialText.setText("");
 
+        totalCheckpoints = 0;
+        nextCheckpoint = 0;
     }
 
     /**
@@ -135,7 +152,7 @@ public class TrackFragment extends Fragment implements ITrackView {
      */
     @Override
     public void setDirection(float heading) {
-
+        orientationWidget.setOrientation(heading);
     }
 
     /**
@@ -145,7 +162,10 @@ public class TrackFragment extends Fragment implements ITrackView {
      */
     @Override
     public void setDistance(int distance) {
+        if (distance < 0)
+            throw new IllegalArgumentException("Illegal negative distance");
 
+        distanceText.setText(distance + " m");
     }
 
     /**
@@ -155,7 +175,10 @@ public class TrackFragment extends Fragment implements ITrackView {
      */
     @Override
     public void setLastPartial(int seconds) {
+        if (seconds < 0)
+            throw new IllegalArgumentException("Illegal negative partial");
 
+        lastPartialText.setText("ULTIMO PARZIALE: " + seconds + " s");
     }
 
     /**
@@ -165,7 +188,7 @@ public class TrackFragment extends Fragment implements ITrackView {
      */
     @Override
     public void setDelta(int seconds) {
-
+        deltaText.setText("(" + seconds + " s)");
     }
 
     /**
@@ -175,7 +198,13 @@ public class TrackFragment extends Fragment implements ITrackView {
      */
     @Override
     public void setCheckpointNo(int n) {
+        if (n <= 0)
+            throw new IllegalArgumentException(
+                    "Illegal null or negative checkpoint");
 
+        nextCheckpoint = n;
+        if (totalCheckpoints > 0)
+            nextCheckpointText.setText(nextCheckpoint + "/" + totalCheckpoints);
     }
 
     /**
@@ -185,7 +214,13 @@ public class TrackFragment extends Fragment implements ITrackView {
      */
     @Override
     public void setTotalCheckpoints(int n) {
+        if (n <= 0)
+            throw new IllegalArgumentException(
+                    "Illegal null or negative checkpoint");
 
+        totalCheckpoints = n;
+        if (nextCheckpoint > 0)
+            nextCheckpointText.setText(nextCheckpoint + "/" + totalCheckpoints);
     }
 
     /**
@@ -201,7 +236,7 @@ public class TrackFragment extends Fragment implements ITrackView {
      */
     @Override
     public void displayTrackEnded() {
-        throw new UnsupportedOperationException();
+        nextCheckpointText.setText("FINE");
     }
 
     /**
@@ -209,7 +244,17 @@ public class TrackFragment extends Fragment implements ITrackView {
      */
     @Override
     public void clearDelta() {
+        deltaText.setText("");
+    }
 
+    /**
+     * Implementa ITrackView.setTrackName()
+     *
+     * @param name Nome del Percorso.
+     */
+    @Override
+    public void setTrackName(String name) {
+        trackNameText.setText(name);
     }
 
     /**
@@ -219,9 +264,6 @@ public class TrackFragment extends Fragment implements ITrackView {
     public void onResume() {
         super.onResume();
         presenter.resume();
-        CompassWidget w = (CompassWidget) getView().findViewById(R.id
-                .compass_widget_track);
-        w.setOrientation(90);
     }
 
     /**
