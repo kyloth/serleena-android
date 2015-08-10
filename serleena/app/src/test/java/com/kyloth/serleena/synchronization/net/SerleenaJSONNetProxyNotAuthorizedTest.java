@@ -154,10 +154,13 @@ public class SerleenaJSONNetProxyNotAuthorizedTest {
         proxy.send();
     }
 
+    /**
+     * Verifica che chiamare send() senza auth risulti in una AuthException.
+     * @throws AuthException
+     * @throws IOException
+     */
     @Test(expected = AuthException.class)
-    public void sendTest() throws AuthException, IOException {
+    public void testSendWithoutAuthNotAllowed() throws AuthException, IOException {
         proxy.send();
-        String response = outputStream.toString();
-        assertEquals(response, "Data=");
     }
 }
