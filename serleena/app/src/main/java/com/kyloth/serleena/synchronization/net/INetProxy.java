@@ -91,5 +91,5 @@ public interface INetProxy {
      */
     void disconnect();
 
-    boolean success() throws IOException;
+    boolean success() throws IOException, AuthException;
 }
