@@ -88,6 +88,12 @@ public class SerleenaJSONNetProxy implements INetProxy {
         return tempToken;
     }
 
+    private void reset() {
+        authToken = null;
+        tempToken = null;
+        urlConnection = null;
+    }
+
     private URL getAuthUrl() {
         URL authUrl = null;
 
@@ -240,6 +246,8 @@ public class SerleenaJSONNetProxy implements INetProxy {
      */
     @Override
     public String preAuth() throws AuthException, IOException {
+        reset();
+
         if (urlConnection != null) {
             throw new RuntimeException("Existing urlConnection. Looks like send() or get() attempted. preAuth() must be called first.");
         } else {
