@@ -137,9 +137,21 @@ public class SerleenaJSONNetProxyNotAuthorizedTest {
         proxy.auth();
         proxy.auth();
     }
+
+    /**
+     * Verifica che sia possibile ripetere preauth (ottenendo il reset).
+     * @throws AuthException
+     * @throws IOException
+     */
     @Test
-    public void authTest() throws AuthException, IOException {
+    public void testMultiplePreauthAllowed() throws AuthException, IOException {
+        String preAuth = proxy.preAuth();
+        assertEquals(preAuth, "Rush");
         proxy.auth();
+        preAuth = proxy.preAuth();
+        assertEquals(preAuth, "Rush");
+        proxy.auth();
+        proxy.send();
     }
 
     @Test(expected = AuthException.class)
