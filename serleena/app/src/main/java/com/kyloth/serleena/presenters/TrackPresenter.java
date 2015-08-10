@@ -190,24 +190,13 @@ public class TrackPresenter implements ITrackPresenter, ITrackCrossingObserver,
      *            dell'utente.
      */
     @Override
-    @TargetApi(19)
     public void onLocationUpdate(GeoPoint loc) {
         lastKnownLocation = loc;
 
-        AsyncTask<Void, Void, Void> task = new AsyncTask<Void, Void, Void>() {
-            @Override
-            protected Void doInBackground(Void... voids) {
-                try {
-                    updateDirection(lastKnownLocation, lastKnownHeading);
-                } catch (NoTrackCrossingException e) {}
-                try {
-                    updateDistance(lastKnownLocation);
-                } catch (NoTrackCrossingException ee) {}
-                return null;
-            }
-        };
-
-        task.execute();
+        try {
+            updateDirection(lastKnownLocation, lastKnownHeading);
+            updateDistance(lastKnownLocation);
+        } catch (NoTrackCrossingException e) {}
     }
 
     /**
