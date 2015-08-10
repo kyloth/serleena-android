@@ -41,27 +41,20 @@
 
 package com.kyloth.serleena.view.fragments;
 
-import android.app.Activity;
-import android.app.FragmentManager;
+import android.os.Bundle;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.TextView;
 
-import com.kyloth.serleena.BuildConfig;
+import com.kyloth.serleena.R;
 import com.kyloth.serleena.presentation.ITrackPresenter;
-import com.kyloth.serleena.presenters.ISerleenaActivity;
-import com.kyloth.serleena.model.ISerleenaDataSource;
-import com.kyloth.serleena.sensors.ISensorManager;
-
-import junit.framework.Assert;
-
-import org.robolectric.Robolectric;
-import org.robolectric.RobolectricGradleTestRunner;
-import org.robolectric.annotation.Config;
+import com.kyloth.serleena.view.widgets.CompassWidget;
 
 import org.junit.Test;
-import org.junit.runner.RunWith;
 import org.junit.Before;
-import org.junit.Rule;
-import org.junit.rules.ExpectedException;
 
+import static junit.framework.Assert.assertTrue;
 import static org.mockito.Mockito.*;
 
 /**
@@ -71,59 +64,171 @@ import static org.mockito.Mockito.*;
  * @version 1.0.0
  * @see com.kyloth.serleena.view.fragments.CompassFragment
  */
-@RunWith(RobolectricGradleTestRunner.class)
-@Config(constants = BuildConfig.class, emulateSdk = 19)
 public class TrackFragmentTest {
 
-    private static class TestActivity
-            extends Activity implements ISerleenaActivity {
-        public ISerleenaDataSource getDataSource() {
-            return null;
-        }
-        public ISensorManager getSensorManager() {
-            return null;
-        }
-    }
-
-    private TestActivity activity;
     private TrackFragment fragment;
     private ITrackPresenter presenter;
-
-    @Rule
-    public ExpectedException exception = ExpectedException.none();
+    private TextView trackNameText;
+    private TextView nextCheckpointText;
+    private TextView distanceText;
+    private CompassWidget orientationWidget;
+    private TextView deltaText;
+    private TextView lastPartialText;
 
     @Before
     public void initialize() {
-        activity = Robolectric.buildActivity(TestActivity.class).
-                create().get();
-        Assert.assertNotNull("initialization failed", activity);
+        trackNameText = mock(TextView.class);
+        nextCheckpointText = mock(TextView.class);
+        distanceText = mock(TextView.class);
+        orientationWidget = mock(CompassWidget.class);
+        deltaText = mock(TextView.class);
+        lastPartialText = mock(TextView.class);
+
+        LayoutInflater inflater = mock(LayoutInflater.class);
+        ViewGroup vg = mock(ViewGroup.class);
+        View v = mock(View.class);
+        when(inflater.inflate(
+                        eq(R.layout.fragment_track),
+                        eq(vg),
+                        any(Boolean.class))
+        ).thenReturn(v);
+        when(v.findViewById(R.id.track_name_text)).thenReturn(trackNameText);
+        when(v.findViewById(R.id.checkpoint_numbers_text))
+                .thenReturn(nextCheckpointText);
+        when(v.findViewById(R.id.distance_text)).thenReturn(distanceText);
+        when(v.findViewById(R.id.compass_widget_track))
+                .thenReturn(orientationWidget);
+        when(v.findViewById(R.id.delta_text)).thenReturn(deltaText);
+        when(v.findViewById(R.id.last_partial_text))
+                .thenReturn(lastPartialText);
+
         fragment = new TrackFragment();
-        FragmentManager fm = activity.getFragmentManager();
-        fm.beginTransaction().add(fragment, "TEST").commit();
-        Assert.assertEquals("fragment not attached", fragment.getActivity(), activity);
+        fragment.onCreateView(inflater, vg, mock(Bundle.class));
+        presenter = mock(ITrackPresenter.class);
+        fragment.attachPresenter(presenter);
     }
 
     /**
-     * Verifica che sia possibile collegare un ITrackPresenter ad un
-     * TrackFragment.
+     * Verifica che il tentativo di associare un presenter null alla vista
+     * sollevi un'eccezione IllegalArgumentException.
+     */
+    @Test(expected = IllegalArgumentException.class)
+    public void fragmentShouldThrowIfAttachingANullPresenter() {
+        fragment.attachPresenter(null);
+    }
+
+    /**
+     * Verifica che gli eventi di resume e pause del fragment vengano
+     * inoltrati al presenter collegato.
      */
     @Test
     public void testAttachCompassPresenter() {
-        presenter = mock(ITrackPresenter.class);
-        fragment.attachPresenter(presenter);
         fragment.onResume();
-        fragment.onPause();
         verify(presenter).resume();
+        fragment.onPause();
         verify(presenter).pause();
     }
 
-    /**
-     * Verifica che venga sollevata un'eccezione alla chiamata di
-     * attachPresenter() con parametri null.
-     */
+    @Test
+    public void settingEndedCheckpointShouldSetViewAccordingly() {
+        fragment.displayTrackEnded();
+        verify(nextCheckpointText).setText("FINE");
+    }
+
+    @Test
+    public void settingCheckpointNumbersShouldSetViewAccordingly() {
+        fragment.setTotalCheckpoints(5);
+        verifyZeroInteractions(nextCheckpointText);
+        fragment.setCheckpointNo(3);
+        verify(nextCheckpointText).setText("3/5");
+    }
+
+    @Test
+    public void fragmentShouldThrowWhenCheckpointNumberIsNullOrNegative() {
+        boolean ex1 = false;
+        boolean ex2 = false;
+
+        try {
+            fragment.setCheckpointNo(0);
+        } catch (IllegalArgumentException e) {
+            ex1 = true;
+        }
+        try {
+            fragment.setCheckpointNo(-1);
+        } catch (IllegalArgumentException e) {
+            ex2 = true;
+        }
+
+        assertTrue(ex1 && ex2);
+    }
+
+    @Test
+    public void settingDeltaShouldSetViewAccordingly() {
+        fragment.setDelta(300);
+        verify(deltaText).setText("(300 s)");
+        fragment.setDelta(-300);
+        verify(deltaText).setText("(-300 s)");
+    }
+
+    @Test
+    public void settingDistanceShouldSetViewAccordingly() {
+        fragment.setDistance(300);
+        verify(distanceText).setText("300 m");
+    }
+
     @Test(expected = IllegalArgumentException.class)
-    public void attachPresenterShouldThrowWhenNullArgument() {
-        fragment.attachPresenter(null);
+    public void fragmentShouldThrowWhenSettingNegativeDistance() {
+        fragment.setDistance(0);
+        verify(distanceText).setText("0 m");
+        fragment.setDistance(-1);
+    }
+
+    @Test
+    public void settingLastPartialShouldSetViewAccordingly() {
+        fragment.setLastPartial(20);
+        verify(lastPartialText).setText("ULTIMO PARZIALE: 20 s");
+    }
+
+    @Test(expected = IllegalArgumentException.class)
+    public void fragmentShouldThrowWhenSettingNegativePartial() {
+        fragment.setLastPartial(0);
+        verify(lastPartialText).setText("ULTIMO PARZIALE: 0 s");
+        fragment.setLastPartial(-1);
+    }
+
+    @Test
+    public void settingHeadingShouldSetViewAccordingly() {
+        fragment.setDirection(45);
+        verify(orientationWidget).setOrientation(45);
+    }
+
+    @Test
+    public void settingTrackNameShouldSetViewAccordingly() {
+        fragment.setTrackName("Track1");
+        verify(trackNameText).setText("Track1");
+    }
+
+    @Test
+    public void clearingDeltaShouldClearItsElementInTheView() {
+        fragment.clearDelta();
+        verify(deltaText).setText("");
+    }
+
+    @Test
+    public void clearingViewShouldClearAllOfItsElements() {
+        fragment.clearView();
+        verify(trackNameText).setText("NESSUN PERCORSO ATTIVO");
+        verify(nextCheckpointText).setText("");
+        verify(distanceText).setText("");
+        verify(orientationWidget).setOrientation(0);
+        verify(deltaText).setText("");
+        verify(lastPartialText).setText("");
+    }
+
+    @Test
+    public void fragmentShouldAbortTrackOnDestruction() {
+        fragment.onDestroy();
+        verify(presenter).abortTrack();
     }
 
 }
