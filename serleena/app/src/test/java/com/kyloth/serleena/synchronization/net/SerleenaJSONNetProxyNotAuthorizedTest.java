@@ -117,6 +117,14 @@ public class SerleenaJSONNetProxyNotAuthorizedTest {
         assertEquals(preAuth, "Rush");
     }
 
+    /**
+     * Verifica che auth senza preauth sollevi una RuntimeException
+     */
+    @Test(expected = RuntimeException.class)
+    public void testAuthWithoutPreauthNotAllowed() throws AuthException, IOException {
+        proxy.auth();
+    }
+
     @Test
     public void authTest() throws AuthException, IOException {
         proxy.auth();
