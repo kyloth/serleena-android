@@ -111,7 +111,7 @@ public class SerleenaJSONNetProxyNotAuthorizedTest {
         proxy.auth();
     }
 
-    @Test
+    @Test(expected = AuthException.class)
     public void sendTest() throws AuthException, IOException {
         proxy.send();
         String response = outputStream.toString();
