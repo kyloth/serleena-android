@@ -109,4 +109,28 @@ public class SerleenaJSONNetProxyAuthorizedTest {
         String response = outputStream.toString();
         assertEquals(response, "Data=");
     }
+
+    /**
+     * Controlla che chiamare get o send senza disconnect() dopo una send risulti in una RuntimeException
+     *
+     * @throws AuthException
+     * @throws IOException
+     */
+    @Test(expected=RuntimeException.class)
+    public void testMustDisconnectAfterSend() throws AuthException, IOException {
+        proxy.send();
+        proxy.get();
+    }
+
+    /**
+     * Controlla che chiamare get o send senza disconnect() dopo una get risulti in una RuntimeException
+     *
+     * @throws AuthException
+     * @throws IOException
+     */
+    @Test(expected=RuntimeException.class)
+    public void testMustDisconnectAfterGet() throws AuthException, IOException {
+        proxy.send();
+        proxy.get();
+    }
 }
