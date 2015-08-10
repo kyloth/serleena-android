@@ -110,7 +110,9 @@ public class SerleenaJSONNetProxy implements INetProxy {
         URL syncUrl = null;
 
         try {
-            syncUrl = new URL(baseUrl.toString()+"/users/sync/"+kylothIdSource.getKylothId());
+            // syncUrl = new URL(baseUrl.toString()+"/users/sync/"+kylothIdSource.getKylothId());
+            // TODO: Qual'e' il vero URL? ST o quello che dice Bronsa? Vedi SHCLOUD-34
+            syncUrl = new URL(baseUrl.toString()+"/data/");
         } catch (MalformedURLException e) {
             e.printStackTrace();
         }

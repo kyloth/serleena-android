@@ -137,7 +137,8 @@ public class DummyServerIntegrationTest {
                 Matcher preauthM = preauthP.matcher(path);
                 Pattern authP = Pattern.compile("/users/pair/([\\w|::]+)");
                 Matcher authM = authP.matcher(path);
-                Pattern syncP = Pattern.compile("/users/sync/([\\w|::]+)");
+                // TODO: La ST dice che e' /data, Bronsa dice che e' diverso
+                Pattern syncP = Pattern.compile("/data/([\\w|::]*)");
                 Matcher syncM = syncP.matcher(path);
                 // TODO: Controllare bene regexp con bronsa
                 if (preauthM.matches()) {
