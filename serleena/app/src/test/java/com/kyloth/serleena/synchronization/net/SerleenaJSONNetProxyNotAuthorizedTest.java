@@ -48,6 +48,8 @@ import com.kyloth.serleena.synchronization.kylothcloud.outbound.CloudJSONOutboun
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.mockito.invocation.InvocationOnMock;
+import org.mockito.stubbing.Answer;
 import org.robolectric.RobolectricGradleTestRunner;
 import org.robolectric.annotation.Config;
 
@@ -75,12 +77,21 @@ public class SerleenaJSONNetProxyNotAuthorizedTest {
 
 
     private void initializeMocks () throws IOException {
-        String auth = "Rush";
+        final String auth = "Rush";
         when(factory.createURLConnection(any(URL.class))).thenReturn(urlConnection);
         when(urlConnection.getOutputStream()).thenReturn(outputStream);
         when(urlConnection.getResponseCode()).thenReturn(HttpURLConnection.HTTP_OK);
         when(urlConnection.getContentType()).thenReturn("text/plain");
-        when(urlConnection.getInputStream()).thenReturn(new ByteArrayInputStream(auth.getBytes()));
+        when(urlConnection.getInputStream()).thenAnswer(
+        new Answer() {
+            public Object answer(InvocationOnMock invocation) {
+                Object[] args = invocation.getArguments();
+                Object mock = invocation.getMock();
+                return new ByteArrayInputStream(auth.getBytes());
+            }
+        });
+
+
     }
 
     public SerleenaJSONNetProxyNotAuthorizedTest() {
