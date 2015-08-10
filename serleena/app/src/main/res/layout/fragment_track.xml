@@ -6,25 +6,27 @@
              android:id="@+id/track_layout"
              android:orientation="vertical">
 
-    <LinearLayout
-        android:layout_width="fill_parent"
-        android:layout_height="40px">
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceMedium"
+        android:text="NESSUN PERCORSO ATTIVO"
+        android:id="@+id/track_name_text"/>
 
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textAppearance="?android:attr/textAppearanceMedium"
-            android:text="3/12"
-            android:id="@+id/textView"/>
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceMedium"
+        android:text="3/12"
+        android:id="@+id/checkpoint_numbers_text"/>
 
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textAppearance="?android:attr/textAppearanceMedium"
-            android:text="in 200 m"
-            android:id="@+id/textView2"
-            android:layout_marginLeft="20dp"/>
-    </LinearLayout>
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceMedium"
+        android:text="200 m"
+        android:id="@+id/distance_text"
+        android:layout_marginLeft="20dp"/>
 
     <com.kyloth.serleena.view.widgets.CompassWidget
         android:layout_width="90px"
@@ -33,24 +35,19 @@
         android:layout_gravity="center_horizontal"
         android:src="@drawable/compass"/>
 
-    <LinearLayout
-        android:layout_width="fill_parent"
-        android:layout_height="40px">
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="00:20:00"
+        android:id="@+id/last_partial_text"
+        android:layout_gravity="center_horizontal"/>
 
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="00:20:00"
-            android:id="@+id/elapsed_text"
-            android:layout_gravity="center_horizontal"/>
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="-00:04:00"
-            android:id="@+id/delta_text"
-            android:layout_gravity="center_horizontal"
-            android:layout_marginLeft="20px"/>
-    </LinearLayout>
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="-00:04:00"
+        android:id="@+id/delta_text"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginLeft="20px"/>
 
 </LinearLayout>
