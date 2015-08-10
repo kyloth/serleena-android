@@ -29,7 +29,7 @@
 
 
 /**
- * Name: SerleenaJSONNetProxyTest.java
+ * Name: SerleenaJSONNetProxyNotAuthorizedTest.java
  * Package: com.kyloth.serleena.synchronization.net
  * Author: Matteo Lisotto
  *
@@ -66,7 +66,7 @@ import static org.mockito.Mockito.when;
 
 @RunWith(RobolectricGradleTestRunner.class)
 @Config(constants = BuildConfig.class, emulateSdk = 19)
-public class SerleenaJSONNetProxyTest {
+public class SerleenaJSONNetProxyAuthorizedTest {
 
     private SerleenaJSONNetProxy proxy;
     private SerleenaConnectionFactory factory = mock(SerleenaConnectionFactory.class);
@@ -83,14 +83,14 @@ public class SerleenaJSONNetProxyTest {
         when(urlConnection.getInputStream()).thenReturn(new ByteArrayInputStream(auth.getBytes()));
     }
 
-    public SerleenaJSONNetProxyTest () {
+    public SerleenaJSONNetProxyAuthorizedTest() {
         try {
             initializeMocks();
         } catch (IOException e) {}
     }
 
     @Before
-    public void initialize() throws MalformedURLException {
+    public void initialize() throws IOException, AuthException {
         IKylothIdSource entry = new IKylothIdSource() {
             @Override
             public String getKylothId() {
@@ -98,31 +98,15 @@ public class SerleenaJSONNetProxyTest {
             }
         };
         proxy = new SerleenaJSONNetProxy(new URL("http://localhost"), entry, factory);
-    }
-
-    @Test
-    public void preAuthTest() throws AuthException, IOException {
         String preAuth = proxy.preAuth();
         assertEquals(preAuth, "Rush");
-    }
-
-    @Test
-    public void authTest() throws AuthException, IOException {
         proxy.auth();
     }
 
     @Test
     public void sendTest() throws AuthException, IOException {
-        proxy.auth();
         proxy.send();
         String response = outputStream.toString();
         assertEquals(response, "Data=");
-    }
-
-    @Test
-    public void successTest() throws AuthException, IOException {
-        proxy.auth();
-        Boolean response = proxy.success();
-        assertTrue(response);
     }
 }
