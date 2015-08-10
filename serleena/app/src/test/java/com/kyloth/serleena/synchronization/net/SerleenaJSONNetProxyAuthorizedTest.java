@@ -103,11 +103,23 @@ public class SerleenaJSONNetProxyAuthorizedTest {
         proxy.auth();
     }
 
+    /**
+     * Verifica che i dati vengano scritti correttamente nell'outputstream da send();
+     * @throws AuthException
+     * @throws IOException
+     */
     @Test
-    public void sendTest() throws AuthException, IOException {
-        proxy.send();
+    public void testSendOk() throws AuthException, IOException {
+        CloudJSONOutboundStream s = proxy.send();
+        s.write('A');
+        s.write('B');
+        s.write('C');
+        s.flush();
+        s.close();
         String response = outputStream.toString();
-        assertEquals(response, "Data=");
+        assertEquals(response, "Data=ABC");
+        assertTrue(proxy.success());
+        proxy.disconnect();
     }
 
     /**
