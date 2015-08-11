@@ -125,7 +125,7 @@ public class SerleenaJSONNetProxy implements INetProxy {
         URL preAuthUrl = null;
 
         try {
-            preAuthUrl = new URL(baseUrl.toString()+"/tokens/"+kylothIdSource.getKylothId());
+            preAuthUrl = new URL(baseUrl.toString()+"/token/"+kylothIdSource.getKylothId());
         } catch (MalformedURLException e) {
             e.printStackTrace();
         }
