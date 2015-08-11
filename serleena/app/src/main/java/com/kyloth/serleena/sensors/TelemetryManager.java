@@ -108,7 +108,7 @@ class TelemetryManager
                 enabled = true;
             else
                 throw new TrackAlreadyStartedException();
-        } catch (NoTrackCrossingException e) {
+        } catch (NoTrackCrossingException|NoActiveTrackException e) {
             enabled = true;
         }
     }
@@ -147,16 +147,14 @@ class TelemetryManager
                 start();
             try {
                 events.add(new CheckpointReachedTelemetryEvent(
-                        tc.lastPartialTime(),
-                        checkpointNumber
-                ));
+                        tc.getLastCrossed().partialTime(), checkpointNumber));
 
                 int total = tc.getTrack().getCheckpoints().size();
                 if (checkpointNumber == total - 1) {
                     enabled = false;
                     tc.getTrack().createTelemetry(getEvents());
                 }
-            } catch (NoTrackCrossingException e) {}
+            } catch (NoSuchCheckpointException | NoActiveTrackException e) { }
         }
 
     }
