@@ -100,35 +100,21 @@ public class CheckpointCrossingTest {
 
     /**
      * Verifica che il costruttore sollevi un'eccezione
-     * IllegalArgumentException se gli viene passato un numero di checkpoint
-     * inferiore a 1.
+     * IllegalArgumentException se gli viene passato un indice di checkpoint
+     * negativo
      */
-    @Test
-    public void ctorShouldThrowIfCheckpointNumberBelowOne() {
-        boolean b1 = false;
-        boolean b2 = false;
-
-        try {
-            new CheckpointCrossing(0, 100, track);
-        } catch (IllegalArgumentException e) {
-            b1 = true;
-        }
-        try {
-            new CheckpointCrossing(-1, 100, track);
-        } catch (IllegalArgumentException e) {
-            b2 = true;
-        }
-
-        assertTrue(b1 && b2);
+    @Test(expected = IllegalArgumentException.class)
+    public void ctorShouldThrowIfNegativeCheckpointIndex() {
+        new CheckpointCrossing(-1, 100, track);
     }
 
     /**
-     * Verifica che venga restituito il corretto numero di checkpoint
+     * Verifica che venga restituito il corretto indice di checkpoint
      * attraversato.
      */
     @Test
-    public void objectShouldReturnCorrectCheckpointNumber() {
-        assertEquals(2, crossing.checkPointNumber());
+    public void objectShouldReturnCorrectCheckpointIndex() {
+        assertEquals(2, crossing.checkPointIndex());
     }
 
     /**
