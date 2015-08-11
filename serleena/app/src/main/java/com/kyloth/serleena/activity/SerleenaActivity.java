@@ -156,6 +156,19 @@ public class SerleenaActivity extends Activity
     }
 
     /**
+     * Ridefinisce Activity.onDestroy()
+     *
+     * Annulla l'attraversamento del Percorso alla chiusura dell'Activity,
+     * evitando che risorse in background rimangano attive anche ad applicazione
+     * terminata.
+     */
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        getSensorManager().getTrackCrossingManager().abort();
+    }
+
+    /**
      * Ridefinisce Activity.onKeyDown().
      */
     @Override
