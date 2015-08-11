@@ -61,7 +61,7 @@ public class CompassWidget extends ImageView {
         int height = this.getHeight();
         int width = this.getWidth();
 
-        canvas.rotate(direction, width / 2, height / 2);
+        canvas.rotate(-direction, width / 2, height / 2);
         super.onDraw(canvas);
     }
 
