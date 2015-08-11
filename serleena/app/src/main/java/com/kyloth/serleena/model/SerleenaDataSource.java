@@ -48,6 +48,7 @@ import com.kyloth.serleena.common.IQuadrant;
 import com.kyloth.serleena.persistence.IExperienceStorage;
 import com.kyloth.serleena.persistence.IPersistenceDataSource;
 import com.kyloth.serleena.common.NoSuchWeatherForecastException;
+import com.kyloth.serleena.persistence.NoSuchQuadrantException;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -112,7 +113,8 @@ public class SerleenaDataSource implements ISerleenaDataSource {
      * @return Quadrante contenente il punto geografico specificato.
      */
     @Override
-    public IQuadrant getQuadrant(GeoPoint point) {
+    public IQuadrant getQuadrant(GeoPoint point)
+            throws NoSuchQuadrantException {
         return dataSource.getQuadrant(point);
     }
 

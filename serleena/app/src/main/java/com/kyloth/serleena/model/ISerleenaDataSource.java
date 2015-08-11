@@ -45,6 +45,7 @@ import com.kyloth.serleena.common.EmergencyContact;
 import com.kyloth.serleena.common.GeoPoint;
 import com.kyloth.serleena.common.IQuadrant;
 import com.kyloth.serleena.common.NoSuchWeatherForecastException;
+import com.kyloth.serleena.persistence.NoSuchQuadrantException;
 
 import java.util.Date;
 
@@ -83,7 +84,7 @@ public interface ISerleenaDataSource {
      *
      * @version 1.0
      */
-    IQuadrant getQuadrant(GeoPoint point);
+    IQuadrant getQuadrant(GeoPoint point) throws NoSuchQuadrantException;
 
     /**
      * Restituisce i contatti di emergenza che hanno giurisdizione su un dato
