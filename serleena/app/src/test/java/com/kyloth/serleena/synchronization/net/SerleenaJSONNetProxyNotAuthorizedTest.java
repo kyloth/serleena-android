@@ -234,4 +234,17 @@ public class SerleenaJSONNetProxyNotAuthorizedTest {
         proxy.get();
         proxy.auth();
     }
+
+    /**
+     * Verifica che non sia possibile autenticarsi dopo una send
+     */
+
+    @Test(expected = RuntimeException.class)
+    public void testAuthAfterSend () throws AuthException, IOException {
+        proxy.preAuth();
+        proxy.auth();
+        proxy.send();
+        proxy.auth();
+    }
+
 }
