@@ -147,10 +147,25 @@ public class SerleenaActivity extends Activity
                             experienceSelectionFragment, this);
             new TrackSelectionPresenter(trackSelectionFragment, this, esp);
             new WeatherPresenter(weatherFragment, this);
+            new TrackPresenter(trackFragment, this);
+            new TelemetryPresenter(telemetryFragment, this);
 
             getFragmentManager().beginTransaction()
                     .add(R.id.main_container, menuFragment).commit();
         }
+    }
+
+    /**
+     * Ridefinisce Activity.onDestroy()
+     *
+     * Annulla l'attraversamento del Percorso alla chiusura dell'Activity,
+     * evitando che risorse in background rimangano attive anche ad applicazione
+     * terminata.
+     */
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        getSensorManager().getTrackCrossingManager().abort();
     }
 
     /**
@@ -191,7 +206,8 @@ public class SerleenaActivity extends Activity
     public void onObjectSelected(Object obj) {
         Fragment f = (Fragment) obj;
         getFragmentManager().beginTransaction()
-                .replace(R.id.main_container, f).commit();
+                .replace(R.id.main_container, f).addToBackStack("fragment")
+                .commit();
     }
 
 }

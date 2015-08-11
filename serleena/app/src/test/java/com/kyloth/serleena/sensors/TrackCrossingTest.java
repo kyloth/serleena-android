@@ -43,6 +43,7 @@ package com.kyloth.serleena.sensors;
 
 import com.kyloth.serleena.common.Checkpoint;
 import com.kyloth.serleena.common.DirectAccessList;
+import com.kyloth.serleena.common.GeoPoint;
 import com.kyloth.serleena.common.NoTrackCrossingException;
 import com.kyloth.serleena.model.ITrack;
 
@@ -124,7 +125,8 @@ public class TrackCrossingTest {
      */
     @Test
     public void testThatCheckpointsAreCrossedCorrectly()
-            throws NoSuchCheckpointException, NoTrackCrossingException {
+            throws NoActiveTrackException, NoTrackCrossingException,
+            NoSuchCheckpointException {
         tc.startTrack(track);
 
         ITrackCrossingObserver observer = mock(ITrackCrossingObserver.class);
@@ -133,22 +135,22 @@ public class TrackCrossingTest {
         assertTrue(tc.getNextCheckpoint() == 0);
         tc.onLocationReached();
         verify(observer).onCheckpointCrossed(0);
-        assertTrue(tc.getLastCrossed() == 0);
+        assertTrue(tc.getLastCrossed().checkPointIndex() == 0);
 
         assertTrue(tc.getNextCheckpoint() == 1);
         tc.onLocationReached();
         verify(observer).onCheckpointCrossed(1);
-        assertTrue(tc.getLastCrossed() == 1);
+        assertTrue(tc.getLastCrossed().checkPointIndex() == 1);
 
         assertTrue(tc.getNextCheckpoint() == 2);
         tc.onLocationReached();
         verify(observer).onCheckpointCrossed(2);
-        assertTrue(tc.getLastCrossed() == 2);
+        assertTrue(tc.getLastCrossed().checkPointIndex() == 2);
 
         assertTrue(tc.getNextCheckpoint() == 3);
         tc.onLocationReached();
         verify(observer).onCheckpointCrossed(3);
-        assertTrue(tc.getLastCrossed() == 3);
+        assertTrue(tc.getLastCrossed().checkPointIndex() == 3);
     }
 
     /**
@@ -158,7 +160,7 @@ public class TrackCrossingTest {
      */
     @Test(expected = NoSuchCheckpointException.class)
     public void testTrackLowerLimits()
-            throws NoSuchCheckpointException {
+            throws NoActiveTrackException, NoSuchCheckpointException {
         tc.startTrack(track);
         tc.getLastCrossed();
     }
@@ -169,7 +171,7 @@ public class TrackCrossingTest {
      */
     @Test(expected = NoTrackCrossingException.class)
     public void testTrackUpperLimits()
-            throws NoTrackCrossingException {
+            throws NoActiveTrackException, NoTrackCrossingException {
         tc.startTrack(oneCheckpointTrack);
         tc.onLocationReached();
         tc.getNextCheckpoint();
@@ -194,24 +196,26 @@ public class TrackCrossingTest {
     }
 
     /**
-     * Verifica che lastPartialTime() restituisca un tempo parziale 0 quando
-     * il percorso è appena iniziato.
+     * Verifica che l'ultimo tempo parziale sia 0 quando il percorso è appena
+     * iniziato.
      */
     @Test
     public void testThatLastPartialIsZeroAtBeginningOfTrack()
-            throws NoTrackCrossingException {
+            throws NoActiveTrackException, NoSuchCheckpointException,
+            NoTrackCrossingException {
         tc.startTrack(track);
-        assertTrue(tc.lastPartialTime() == 0);
+        tc.advanceCheckpoint();
+        assertTrue(tc.getLastCrossed().partialTime() == 0);
     }
 
     /**
      * Verifica che il tentativo di ottenere il tempo parziale quando non è
      * stato avviato alcun percorso sollevi un'eccezione.
      */
-    @Test(expected = NoTrackCrossingException.class)
+    @Test(expected = NoActiveTrackException.class)
     public void testThatLastPartialForAbortedTrackThrows1()
-            throws NoTrackCrossingException {
-        tc.lastPartialTime();
+            throws NoActiveTrackException, NoSuchCheckpointException {
+        tc.getLastCrossed();
     }
 
     /**
@@ -231,45 +235,32 @@ public class TrackCrossingTest {
      * Verifica che il tentativo di avanzare di checkpoint quando non vi è un
      * percorso attivo sollevi un'eccezione.
      */
-    @Test(expected = NoTrackCrossingException.class)
+    @Test(expected = NoActiveTrackException.class)
     public void testThatAdvancingCheckpointWithNoActiveTrackThrows()
-            throws NoTrackCrossingException {
+            throws NoActiveTrackException, NoTrackCrossingException {
         tc.advanceCheckpoint();
-    }
-
-    /**
-     * Verifica che una chiamata a notifyObservers() quando non vi è un
-     * percorso attivo sollevi un'eccezione.
-     */
-    @Test(expected = NoTrackCrossingException.class)
-    public void testThatNotifyingObserversWithNoActiveTrackThrows()
-            throws NoTrackCrossingException {
-        tc.notifyObservers();
     }
 
     /**
      * Verifica che il tentativo di ottenere il prossimo checkpoint quando
      * non vi è un percorso attivo sollevi un'eccezione.
      */
-    @Test(expected = NoTrackCrossingException.class)
+    @Test(expected = NoActiveTrackException.class)
     public void testThatNextCheckpointWithNoActiveTrackThrows()
-            throws NoTrackCrossingException {
+            throws NoActiveTrackException, NoTrackCrossingException {
         tc.getNextCheckpoint();
     }
 
-    @Test(expected = NoTrackCrossingException.class)
-    public void testThatGetTrackWithNoTrackThrows() throws
-            NoTrackCrossingException {
-        TrackCrossing tc = new TrackCrossing(mock(ILocationReachedManager
-                .class));
+    @Test(expected = NoActiveTrackException.class)
+    public void testThatGetTrackWithNoActiveTrackThrows()
+            throws NoActiveTrackException {
+        TrackCrossing tc = new TrackCrossing(locReaMan);
         tc.getTrack();
     }
 
     @Test
-    public void testGetTrack() throws
-            NoTrackCrossingException {
-        TrackCrossing tc = new TrackCrossing(mock(ILocationReachedManager
-                .class));
+    public void testGetTrack() throws NoActiveTrackException {
+        TrackCrossing tc = new TrackCrossing(locReaMan);
         tc.startTrack(oneCheckpointTrack);
         assertTrue(tc.getTrack() == oneCheckpointTrack);
     }
@@ -278,9 +269,9 @@ public class TrackCrossingTest {
      * Verifica che getNextCheckpoint() sollevi un'eccezione in seguito alla
      * chiamata di abort().
      */
-    @Test(expected = NoTrackCrossingException.class)
+    @Test(expected = NoActiveTrackException.class)
     public void getNextCheckpointShouldThrowIfAbortedTrack()
-            throws NoTrackCrossingException {
+            throws NoActiveTrackException, NoTrackCrossingException {
         tc.startTrack(track);
         tc.advanceCheckpoint();
         tc.advanceCheckpoint();
@@ -292,9 +283,9 @@ public class TrackCrossingTest {
      * Verifica che getTrack() sollevi un'eccezione in seguito alla chiamata di
      * abort().
      */
-    @Test(expected = NoTrackCrossingException.class)
+    @Test(expected = NoActiveTrackException.class)
     public void getTrackShouldThrowIfAbortedTrack()
-            throws NoTrackCrossingException {
+            throws NoActiveTrackException {
         tc.startTrack(track);
         tc.abort();
         tc.getTrack();
@@ -304,9 +295,10 @@ public class TrackCrossingTest {
      * Verifica che getLastCrossed() sollevi un'eccezione in seguito a una
      * chiamata a abort().
      */
-    @Test(expected = NoSuchCheckpointException.class)
+    @Test(expected = NoActiveTrackException.class)
     public void getLastCrossedShouldThrowIfAbortedTrack()
-            throws NoTrackCrossingException, NoSuchCheckpointException {
+            throws NoTrackCrossingException, NoSuchCheckpointException,
+            NoActiveTrackException {
         tc.startTrack(track);
         tc.advanceCheckpoint();
         tc.advanceCheckpoint();
@@ -322,6 +314,12 @@ public class TrackCrossingTest {
     public void abortingShouldDetachFromSensor() {
         tc.abort();
         verify(locReaMan).detachObserver(tc);
+    }
+
+    @Test
+    public void shouldRegisterToSensorWhenNewTrackStarted() {
+        tc.startTrack(oneCheckpointTrack);
+        verify(locReaMan).attachObserver(eq(tc), any(GeoPoint.class));
     }
 
 }

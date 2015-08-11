@@ -43,26 +43,14 @@ package com.kyloth.serleena.presenters;
 
 import org.junit.Test;
 import org.junit.Before;
-import org.junit.runner.RunWith;
-import org.mockito.ArgumentCaptor;
-import org.robolectric.RobolectricTestRunner;
-
-import static org.junit.Assert.*;
+import org.mockito.Mockito;
 import static org.mockito.Mockito.*;
 
 import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.List;
 
-import com.android.internal.util.Predicate;
-import com.kyloth.serleena.common.AzimuthMagneticNorth;
-import com.kyloth.serleena.common.CheckpointReachedTelemetryEvent;
-import com.kyloth.serleena.common.DirectAccessList;
-import com.kyloth.serleena.common.GeoPoint;
-import com.kyloth.serleena.common.TelemetryEvent;
-import com.kyloth.serleena.model.ITelemetry;
-import com.kyloth.serleena.model.NoSuchTelemetryEventException;
+import com.kyloth.serleena.common.ListAdapter;
 import com.kyloth.serleena.presentation.ITrackView;
+import com.kyloth.serleena.sensors.CheckpointCrossing;
 import com.kyloth.serleena.sensors.IHeadingManager;
 import com.kyloth.serleena.sensors.ILocationManager;
 import com.kyloth.serleena.sensors.ISensorManager;
@@ -70,6 +58,7 @@ import com.kyloth.serleena.model.ITrack;
 import com.kyloth.serleena.model.NoSuchTelemetryException;
 import com.kyloth.serleena.common.Checkpoint;
 import com.kyloth.serleena.sensors.ITrackCrossing;
+import com.kyloth.serleena.sensors.NoActiveTrackException;
 import com.kyloth.serleena.sensors.NoSuchCheckpointException;
 import com.kyloth.serleena.common.NoTrackCrossingException;
 import com.kyloth.serleena.sensors.SensorNotAvailableException;
@@ -80,86 +69,19 @@ import com.kyloth.serleena.sensors.SensorNotAvailableException;
  * @author Gabriele Pozzan <gabriele.pozzan@studenti.unipd.it>
  * @version 1.0.0
  */
-@RunWith(RobolectricTestRunner.class)
 public class TrackPresenterTest {
 
-    private ITrack getTrack() throws NoSuchTelemetryException {
-        DirectAccessList<Checkpoint> checkpoints =
-                new DirectAccessList<Checkpoint>() {
-            @Override
-            public int size() {
-                return Integer.MAX_VALUE;
-            }
-            @Override
-            public Checkpoint get(int index) {
-                return new Checkpoint(0, 0);
-            }
-            @Override
-            public Iterator<Checkpoint> iterator() {
-                return null;
-            }
-        };
-        ITrack t = mock(ITrack.class);
-        when(t.getCheckpoints()).thenReturn(checkpoints);
-        when(t.getBestTelemetry()).thenThrow(NoSuchTelemetryException.class);
-        return t;
-    }
-
-    private ITrack getOneCheckpointTrack() throws NoSuchTelemetryException {
-        return getOneCheckpointTrack(new Checkpoint(0, 0));
-    }
-
-    private ITrack getOneCheckpointTrack(final Checkpoint cp)
-            throws NoSuchTelemetryException {
-        DirectAccessList<Checkpoint> checkpoints =
-                new DirectAccessList<Checkpoint>() {
-                    @Override public int size() { return 1; }
-                    @Override public Checkpoint get(int index) {
-                        return cp;
-                    }
-                    @Override public Iterator<Checkpoint> iterator() {
-                        return null;
-                    }
-                };
-        ITrack track = mock(ITrack.class);
-        when(track.getCheckpoints()).thenReturn(checkpoints);
-        when(track.getBestTelemetry()).thenThrow(NoSuchTelemetryException.class);
-        return track;
-    }
-
-    private void setTrackCrossing(ITrack track, int lastCrossed)
-            throws NoSuchCheckpointException, NoTrackCrossingException {
-        when(tc.getTrack()).thenReturn(track);
-        if (lastCrossed >= 0)
-            when(tc.getLastCrossed()).thenReturn(lastCrossed);
-        else
-            when(tc.getLastCrossed()).thenThrow(NoSuchCheckpointException
-                    .class);
-        if (lastCrossed == track.getCheckpoints().size() - 1) {
-            when(tc.getNextCheckpoint()).thenThrow(NoTrackCrossingException
-                    .class);
-            when(tc.isTrackCrossing()).thenReturn(false);
-        }
-        else {
-            when(tc.getNextCheckpoint()).thenReturn(lastCrossed + 1);
-            when(tc.isTrackCrossing()).thenReturn(true);
-        }
-    }
-
-    ILocationManager locMan;
-    IHeadingManager hMan;
-    ITrackCrossing tc;
-    ISensorManager sm;
-    ISerleenaActivity activity;
-    ITrackView view;
-    ITrack singleCheckpointTrack;
-    ITrack track;
+    private ILocationManager locMan;
+    private IHeadingManager hMan;
+    private ITrackCrossing tc;
+    private ISensorManager sm;
+    private ISerleenaActivity activity;
+    private ITrackView view;
+    private TrackPresenter presenter;
 
     @Before
     public void initialize() throws SensorNotAvailableException,
             NoSuchTelemetryException, NoTrackCrossingException {
-        singleCheckpointTrack = getOneCheckpointTrack();
-        track = getTrack();
         locMan = mock(ILocationManager.class);
         hMan = mock(IHeadingManager.class);
         tc = mock(ITrackCrossing.class);
@@ -170,6 +92,7 @@ public class TrackPresenterTest {
         when(sm.getLocationSource()).thenReturn(locMan);
         when(sm.getTrackCrossingManager()).thenReturn(tc);
         when(activity.getSensorManager()).thenReturn(sm);
+        presenter = new TrackPresenter(view, activity);
     }
 
     /**
@@ -177,8 +100,7 @@ public class TrackPresenterTest {
      */
     @Test
     public void presenterShouldAttachHimself() {
-        TrackPresenter tp = new TrackPresenter(view, activity);
-        verify(view).attachPresenter(tp);
+        verify(view).attachPresenter(presenter);
     }
 
     /**
@@ -187,7 +109,7 @@ public class TrackPresenterTest {
      */
     @Test(expected = IllegalArgumentException.class)
     public void ctorShouldThrowWhenNullView() {
-        new TrackPresenter(null, mock(ISerleenaActivity.class));
+        new TrackPresenter(null, activity);
     }
 
     /**
@@ -196,26 +118,7 @@ public class TrackPresenterTest {
      */
     @Test(expected = IllegalArgumentException.class)
     public void constructorShouldThrowWhenNullActivity() {
-        new TrackPresenter(mock(ITrackView.class), null);
-    }
-
-    /**
-     * Verifica che una chiamata a resume() quando non vi sono Percorsi
-     * attivi non comporti la registrazione agli eventi dei sensori.
-     */
-    @Test
-    public void resumeWhenNoTrackActiveShouldNotRegisterSensors()
-            throws SensorNotAvailableException, NoTrackCrossingException,
-            NoSuchCheckpointException {
-        TrackPresenter tp = new TrackPresenter(view, activity);
-        when(tc.getTrack()).thenThrow(NoTrackCrossingException.class);
-        when(tc.isTrackCrossing()).thenReturn(false);
-
-        tp.resume();
-        verify(view).clearView();
-        verify(locMan, never()).attachObserver(tp,
-                TrackPresenter.UPDATE_INTERVAL_SECONDS);
-        verify(hMan, never()).attachObserver(tp);
+        new TrackPresenter(view, null);
     }
 
     /**
@@ -225,96 +128,37 @@ public class TrackPresenterTest {
     @Test
     public void pauseShouldUnregisterSensors()
             throws SensorNotAvailableException, NoTrackCrossingException {
-        TrackPresenter tp = new TrackPresenter(view, activity);
-        tp.pause();
+        presenter.pause();
 
-        verify(locMan).detachObserver(tp);
-        verify(hMan).detachObserver(tp);
+        verify(locMan).detachObserver(presenter);
+        verify(hMan).detachObserver(presenter);
     }
 
+    /**
+     * Verifica che il presenter si registri ai gestori di sensoristica on
+     * resume.
+     */
     @Test
-    public void resumingWithActiveTrackShouldRegisterSensors()
+    public void resumingShouldRegisterSensors()
             throws SensorNotAvailableException, NoTrackCrossingException,
-            NoSuchTelemetryException, NoSuchCheckpointException {
-        TrackPresenter tp = new TrackPresenter(view, activity);
-        setTrackCrossing(track, 0);
-        tp.resume();
-        verify(locMan).attachObserver(tp,
-                TrackPresenter.UPDATE_INTERVAL_SECONDS);
-        verify(hMan).attachObserver(tp);
+            NoSuchTelemetryException, NoSuchCheckpointException, NoActiveTrackException {
+        Mockito.doThrow(NoActiveTrackException.class).when(tc).getTrack();
+        presenter.resume();
+        verify(locMan).attachObserver(
+                presenter, TrackPresenter.UPDATE_INTERVAL_SECONDS);
+        verify(hMan).attachObserver(presenter);
     }
 
     /**
-     * Verifica che, successivamente alla chiamata di resume con un Percorso
-     * appena terminato, venga impostata di conseguenza la vista.
+     * Verifica che una chiamata a resume() pulisca la vista associata al
+     * Presenter.
      */
     @Test
-    public void resumingWithTrackEndedShouldDisplayOnView()
-            throws NoTrackCrossingException, NoSuchCheckpointException {
-        setTrackCrossing(singleCheckpointTrack, 0);
-        TrackPresenter tp = new TrackPresenter(view, activity);
-        tp.resume();
-        verify(view).displayTrackEnded();
-    }
-
-    /**
-     * Verifica che una chiamata a resume() con nessun Percorso attivo o
-     * terminato pulisca la vista associata al Presenter.
-     */
-    @Test
-    public void resumingWithNoTrackShouldClearView() throws NoTrackCrossingException {
-        when(tc.getTrack()).thenThrow(NoTrackCrossingException.class);
-        TrackPresenter tp = new TrackPresenter(view, activity);
-        tp.resume();
+    public void resumingWithNoTrackShouldClearView()
+            throws NoActiveTrackException {
+        Mockito.doThrow(NoActiveTrackException.class).when(tc).getTrack();
+        presenter.resume();
         verify(view).clearView();
-    }
-
-    /**
-     * Verifica che il metodo updateDistance() imposti il valore corretto sulla
-     * vista, in base alla distanza tra l'utente e il prossimo checkpoint da
-     * raggiungere.
-     */
-    @Test
-    public void updateDistanceShouldSetCorrectValue() throws
-            NoSuchTelemetryException,
-            NoTrackCrossingException, NoSuchCheckpointException {
-        ITrack track = getOneCheckpointTrack(
-                new Checkpoint(50.06638888888889, -5.714722222222222));
-        TrackPresenter tp = new TrackPresenter(view, activity);
-        setTrackCrossing(track, -1);
-        tp.updateDistance(
-                new Checkpoint(58.64388888888889, -3.0700000000000003));
-
-        ArgumentCaptor<Integer> argument =
-                ArgumentCaptor.forClass(Integer.class);
-        verify(view).setDistance(argument.capture());
-        Integer res = argument.getValue();
-        assertTrue(968000 <= res && res <= 971000);
-    }
-
-    /**
-     * Verifica che il metodo updateDistance() sollevi un'eccezione al
-     * passaggio di parametri null.
-     */
-    @Test(expected = IllegalArgumentException.class)
-    public void updateDistanceShouldThrowWhenNullArguments()
-            throws NoTrackCrossingException {
-        TrackPresenter tp = new TrackPresenter(view, activity);
-        tp.updateDistance(null);
-    }
-
-    /**
-     * Verifica che il metodo updateDistance() sollevi un'eccezione
-     * NoTrackCrossingException quando non vi sono Percorso in corso.
-     */
-    @Test(expected = NoTrackCrossingException.class)
-    public void updateDistanceShouldThrowWhenNoTrackCrossing()
-            throws NoSuchTelemetryException, NoTrackCrossingException,
-            NoSuchCheckpointException {
-        ITrack track = getOneCheckpointTrack();
-        TrackPresenter tp = new TrackPresenter(view, activity);
-        setTrackCrossing(track, 0);
-        tp.updateDistance(new Checkpoint(0, 0));
     }
 
     /**
@@ -323,65 +167,42 @@ public class TrackPresenterTest {
      */
     @Test
     public void advanceCheckpointShouldForwardToTrackCrossing()
-            throws NoTrackCrossingException, NoSuchTelemetryException,
-            NoSuchCheckpointException {
-        ITrack track = getOneCheckpointTrack();
-        TrackPresenter tp = new TrackPresenter(view, activity);
-        setTrackCrossing(track, -1);
-        tp.advanceCheckpoint();
+            throws NoTrackCrossingException, NoActiveTrackException {
+        presenter.advanceCheckpoint();
         verify(tc).advanceCheckpoint();
     }
 
     /**
-     * Verifica che updateDelta() segnali alla vista il valore corretto di
-     * differenza tra la prestazione in corso e la migliore tra quelle
-     * precedenti.
+     * Verifica che advanceCheckpoint() sollevi un'eccezione NoTrackCrossing
+     * se nessun Percorso è in esecuzione.
      */
-    @Test
-    public void updateDeltaShouldWorkCorrectly()
-            throws NoSuchTelemetryException, NoTrackCrossingException,
-            NoSuchCheckpointException {
-        ITelemetry best = new ITelemetry() {
-            @Override
-            public Iterable<TelemetryEvent> getEvents() { return null; }
-            @Override
-            public Iterable<TelemetryEvent> getEvents(
-                    Predicate<TelemetryEvent> predicate)
-                    throws NoSuchTelemetryEventException {
-                List<TelemetryEvent> list = new ArrayList<>();
-                list.add(new CheckpointReachedTelemetryEvent(200, 0));
-                return list;
-            }
-            @Override
-            public int getDuration() { return 0; }
-        };
-
-        ITrack track = mock(ITrack.class);
-        when(track.getBestTelemetry()).thenReturn(best);
-        when(tc.getTrack()).thenReturn(track);
-        when(tc.getLastCrossed()).thenReturn(0);
-        when(tc.lastPartialTime()).thenReturn(150);
-
-        TrackPresenter tp = new TrackPresenter(view, activity);
-        tp.updateDelta();
-        verify(view).setDelta(-50);
+    @Test(expected = NoTrackCrossingException.class)
+    public void advanceCheckpointShouldThrowIfNoTrackCrossing()
+            throws NoTrackCrossingException, NoActiveTrackException {
+        Mockito.doThrow(NoTrackCrossingException.class)
+                .when(tc).advanceCheckpoint();
+        presenter.advanceCheckpoint();
     }
 
     /**
-     * Verifica che il metodo updateDirection() segnali alla vista la variazione
-     * corretta di orientamento necessaria al raggiungimento del prossimo
-     * checkpoint del Percorso attivo, in base alla posizione attuale
-     * dell'utente.
+     * Verifica che la vista venga impostata con il tempo parziale al
+     * raggiungimento di un checkpoint.
      */
     @Test
-    public void updateDirectionShouldSetCorrectOrientation()
-            throws NoSuchTelemetryException, NoTrackCrossingException, NoSuchCheckpointException {
-        TrackPresenter presenter = new TrackPresenter(view, activity);
-        setTrackCrossing(track, -1);
-        AzimuthMagneticNorth azimuth = mock(AzimuthMagneticNorth.class);
-        when(azimuth.orientation()).thenReturn(0.0f);
-        presenter.updateDirection(new GeoPoint(10, 0), azimuth);
-        verify(view).setDirection(180);
+    public void activePresenterShouldSetViewWithPartialWhenCheckpointCrossed()
+            throws NoActiveTrackException, NoSuchCheckpointException {
+        ITrack track = mock(ITrack.class);
+        when(track.name()).thenReturn("track");
+        when(track.getCheckpoints()).thenReturn(new ListAdapter<Checkpoint>
+                (new ArrayList<Checkpoint>()));
+        CheckpointCrossing crossing = mock(CheckpointCrossing.class);
+        when(crossing.partialTime()).thenReturn(300);
+        when(tc.getLastCrossed()).thenReturn(crossing);
+        when(tc.getTrack()).thenReturn(track);
+        presenter.resume();
+        verify(view, times(1)).setLastPartial(300);
+        presenter.onCheckpointCrossed(0);
+        verify(view, times(2)).setLastPartial(300);
     }
 
 }

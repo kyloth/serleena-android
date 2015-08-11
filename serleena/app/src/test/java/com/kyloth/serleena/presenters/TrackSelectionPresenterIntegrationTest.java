@@ -58,6 +58,7 @@ import com.kyloth.serleena.model.SerleenaDataSource;
 import com.kyloth.serleena.persistence.sqlite.SerleenaDatabase;
 import com.kyloth.serleena.persistence.sqlite.SerleenaSQLiteDataSource;
 import com.kyloth.serleena.model.ISerleenaDataSource;
+import com.kyloth.serleena.sensors.NoActiveTrackException;
 
 import org.robolectric.Robolectric;
 import org.robolectric.RobolectricGradleTestRunner;
@@ -177,7 +178,7 @@ public class TrackSelectionPresenterIntegrationTest {
      */
     @Test
     public void selectingTrackFromViewShouldActivateIt()
-            throws NoTrackCrossingException {
+            throws NoTrackCrossingException, NoActiveTrackException {
         TestDB.experienceQuery(db, 0, "experience1");
         TestDB.experienceQuery(db, 1, "experience2");
         TestDB.trackQuery(db, 0, "track1", 0);

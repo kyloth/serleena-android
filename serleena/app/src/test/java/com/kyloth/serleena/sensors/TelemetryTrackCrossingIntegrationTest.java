@@ -43,6 +43,7 @@ package com.kyloth.serleena.sensors;
 import android.app.Application;
 import android.database.sqlite.SQLiteDatabase;
 
+import com.kyloth.serleena.BuildConfig;
 import com.kyloth.serleena.TestDB;
 import com.kyloth.serleena.common.CheckpointReachedTelemetryEvent;
 import com.kyloth.serleena.common.GeoPoint;
@@ -58,8 +59,10 @@ import com.kyloth.serleena.persistence.sqlite.SerleenaSQLiteDataSource;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.robolectric.RobolectricGradleTestRunner;
 import org.robolectric.RobolectricTestRunner;
 import org.robolectric.RuntimeEnvironment;
+import org.robolectric.annotation.Config;
 
 import java.util.Iterator;
 import java.util.concurrent.Callable;
@@ -76,7 +79,9 @@ import static org.mockito.Mockito.mock;
  * @author Filippo Sestini <sestini.filippo@gmail.com>
  * @version 1.0.0
  */
-@RunWith(RobolectricTestRunner.class)
+@RunWith(RobolectricGradleTestRunner.class)
+@Config(constants = BuildConfig.class, emulateSdk = 19,
+        manifest = "src/main/AndroidManifest.xml")
 public class TelemetryTrackCrossingIntegrationTest {
 
     ISerleenaDataSource dataSource;
@@ -96,12 +101,10 @@ public class TelemetryTrackCrossingIntegrationTest {
 
         dataSource = new SerleenaDataSource(
                 new SerleenaSQLiteDataSource(
-                        RuntimeEnvironment.application,
-                        serleenaDb));
+                        RuntimeEnvironment.application, serleenaDb));
         track = dataSource.getExperiences().iterator()
                 .next().getTracks().iterator().next();
 
-        Application app = RuntimeEnvironment.application;
         lrm = new LocationReachedManager(mock(BackgroundLocationManager.class));
         tc = new TrackCrossing(lrm);
         tm = new TelemetryManager(tc);

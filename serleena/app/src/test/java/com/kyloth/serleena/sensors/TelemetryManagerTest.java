@@ -130,9 +130,9 @@ public class TelemetryManagerTest {
      * il primo checkpoint.
      */
     @Test
-    public void enablingTelemetryWithNoTrackShouldWork() throws
-            TrackAlreadyStartedException,
-            NoTrackCrossingException {
+    public void enablingTelemetryWithNoTrackShouldWork()
+            throws TrackAlreadyStartedException, NoTrackCrossingException,
+            NoActiveTrackException {
         assertTrue(!manager.isEnabled());
 
         when(tc.getNextCheckpoint()).thenReturn(0);
@@ -153,7 +153,8 @@ public class TelemetryManagerTest {
      */
     @Test(expected = TrackAlreadyStartedException.class)
     public void enablingTelemetryWithTrackStartedShouldThrow()
-            throws NoTrackCrossingException, TrackAlreadyStartedException {
+            throws NoTrackCrossingException, TrackAlreadyStartedException,
+            NoActiveTrackException {
         when(tc.getNextCheckpoint()).thenReturn(2);
         manager.enable();
     }
@@ -164,9 +165,11 @@ public class TelemetryManagerTest {
      */
     @Test
     public void telemetryShouldStartAtFirstCheckpointOfTrack()
-            throws TrackAlreadyStartedException, NoTrackCrossingException {
+            throws TrackAlreadyStartedException, NoTrackCrossingException,
+            NoActiveTrackException, NoSuchCheckpointException {
         ITrack track = getTrack();
         when(tc.getTrack()).thenReturn(track);
+        when(tc.getLastCrossed()).thenReturn(mock(CheckpointCrossing.class));
 
         manager.enable();
         manager.onCheckpointCrossed(0);
@@ -184,9 +187,11 @@ public class TelemetryManagerTest {
      */
     @Test
     public void checkpointEventsShouldBeAddedCorrectly()
-            throws NoTrackCrossingException, TrackAlreadyStartedException {
+            throws NoTrackCrossingException, TrackAlreadyStartedException,
+            NoActiveTrackException, NoSuchCheckpointException {
         ITrack track = getTrack();
         when(tc.getTrack()).thenReturn(track);
+        when(tc.getLastCrossed()).thenReturn(mock(CheckpointCrossing.class));
 
         manager.enable();
 
@@ -204,9 +209,11 @@ public class TelemetryManagerTest {
      */
     @Test
     public void trackEndingShouldStopAndDisableTelemetry()
-            throws NoTrackCrossingException, TrackAlreadyStartedException {
+            throws NoTrackCrossingException, TrackAlreadyStartedException,
+            NoActiveTrackException, NoSuchCheckpointException {
         ITrack track = getOneCheckpointTrack();
         when(tc.getTrack()).thenReturn(track);
+        when(tc.getLastCrossed()).thenReturn(mock(CheckpointCrossing.class));
 
         manager.enable();
 
@@ -220,9 +227,12 @@ public class TelemetryManagerTest {
      */
     @Test
     public void trackEndingShouldCreateNewTelemetry()
-            throws NoTrackCrossingException, TrackAlreadyStartedException {
+            throws NoTrackCrossingException, TrackAlreadyStartedException,
+            NoActiveTrackException, NoSuchCheckpointException {
         ITrack track = getOneCheckpointTrack();
+        CheckpointCrossing crossing = mock(CheckpointCrossing.class);
         when(tc.getTrack()).thenReturn(track);
+        when(tc.getLastCrossed()).thenReturn(crossing);
 
         manager.enable();
 
@@ -232,31 +242,16 @@ public class TelemetryManagerTest {
     }
 
     /**
-     * Verifica che ad ogni wakeup, venga programmato un aggiornamento dai
-     * sensori e acquisito un lock del processore per evitare che questo
-     * entri in sleep mode prima della ricezione dei dati.
-     */
-    /*
-    @Test
-    public void wakeupShouldAcquireLocksAndSheduleSensors() throws
-            NoTrackCrossingException {
-        manager.onWakeup();
-        verify(pm).lock("LocationTelemetryLock");
-        verify(pm).lock("HeartRateTelemetryLock");
-        verify(lm).getSingleUpdate(tm, TelemetryManager.SENSOR_TIMEOUT_SECONDS);
-        verify(hm).getSingleUpdate(tm, TelemetryManager.SENSOR_TIMEOUT_SECONDS);
-    }
-    */
-
-    /**
      * Verifica che gli eventi restituiti non siano una singola istanza, ma
      * venga restituita una copia ad ogni richiesta.
      */
     @Test
     public void eventsShouldBeReturnedAsAClone()
-            throws TrackAlreadyStartedException, NoTrackCrossingException {
+            throws TrackAlreadyStartedException, NoTrackCrossingException,
+            NoActiveTrackException, NoSuchCheckpointException {
         ITrack track = getTrack();
         when(tc.getTrack()).thenReturn(track);
+        when(tc.getLastCrossed()).thenReturn(mock(CheckpointCrossing.class));
         manager.enable();
 
         manager.onCheckpointCrossed(0);
@@ -278,7 +273,8 @@ public class TelemetryManagerTest {
      */
     @Test
     public void telemetryShouldNotStartIfNotEnabled() throws
-            NoTrackCrossingException, TrackAlreadyStartedException {
+            NoTrackCrossingException, TrackAlreadyStartedException,
+            NoActiveTrackException {
         ITrack track = getOneCheckpointTrack();
         when(tc.getTrack()).thenReturn(track);
 

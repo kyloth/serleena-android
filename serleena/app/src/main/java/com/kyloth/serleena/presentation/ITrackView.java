@@ -126,4 +126,11 @@ public interface ITrackView {
     void displayTrackEnded();
 
     void clearDelta();
+
+    /**
+     * Imposta il nome del Percorso in attraversamento.
+     *
+     * @param name Nome del Percorso
+     */
+    void setTrackName(String name);
 }

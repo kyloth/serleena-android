@@ -41,19 +41,15 @@
 
 package com.kyloth.serleena.presenters;
 
-import android.annotation.TargetApi;
 import android.os.AsyncTask;
+import android.view.ViewOutlineProvider;
 
-import com.android.internal.util.Predicate;
 import com.kyloth.serleena.common.Checkpoint;
-import com.kyloth.serleena.common.CheckpointReachedTelemetryEvent;
 import com.kyloth.serleena.common.GeoPoint;
 import com.kyloth.serleena.common.AzimuthMagneticNorth;
-import com.kyloth.serleena.common.TelemetryEvent;
-import com.kyloth.serleena.common.TelemetryEventType;
-import com.kyloth.serleena.model.ITelemetry;
 import com.kyloth.serleena.model.NoSuchTelemetryEventException;
 import com.kyloth.serleena.model.NoSuchTelemetryException;
+import com.kyloth.serleena.sensors.NoActiveTrackException;
 import com.kyloth.serleena.sensors.NoSuchCheckpointException;
 import com.kyloth.serleena.presentation.ITrackPresenter;
 import com.kyloth.serleena.presentation.ITrackView;
@@ -104,8 +100,8 @@ public class TrackPresenter implements ITrackPresenter, ITrackCrossingObserver,
     /**
      * Crea un nuovo oggetto TrackPresenter.
      *
-     * @param view Vista da associare al Presenter. Se null, viene sollevata
-     *             un'eccezione IllegalArgumentException.
+     * @param view     Vista da associare al Presenter. Se null, viene sollevata
+     *                 un'eccezione IllegalArgumentException.
      * @param activity Activity a cui il Presenter fa riferimento. Se null,
      *                 viene sollevata un'eccezione IllegalArgumentException.
      */
@@ -132,6 +128,7 @@ public class TrackPresenter implements ITrackPresenter, ITrackCrossingObserver,
                         throw new IllegalArgumentException("Illegal null " +
                                 "observer");
                 }
+
                 @Override
                 public void detachObserver(IHeadingObserver observer)
                         throws IllegalArgumentException {
@@ -139,48 +136,41 @@ public class TrackPresenter implements ITrackPresenter, ITrackCrossingObserver,
                         throw new IllegalArgumentException("Illegal null " +
                                 "observer");
                 }
+
                 @Override
-                public void notifyObservers() { }
+                public void notifyObservers() {
+                }
             };
         }
     }
 
     /**
      * Implementa IPresenter.resume().
-     *
+     * <p/>
      * Il Presenter si registra ai sensori utilizzati.
      */
     @Override
     public synchronized void resume() {
         active = true;
-
-        AsyncTask<Void, Void, Void> task =
-                new AsyncTask<Void, Void, Void>() {
-                    @Override
-                    protected Void doInBackground(Void... params) {
-                        updateCheckpoints();
-                        updateDelta();
-                        return null;
-                    }
-                };
-        task.execute();
-
-        if (tc.isTrackCrossing()) {
-            locMan.attachObserver(this, UPDATE_INTERVAL_SECONDS);
-            hMan.attachObserver(this);
-        }
+        tc.attachObserver(this);
+        locMan.attachObserver(this, UPDATE_INTERVAL_SECONDS);
+        hMan.attachObserver(this);
+        updateView();
     }
 
     /**
      * Implementa IPresenter.pause().
-     *
+     * <p/>
      * Il Presenter rimuove la registrazione ai sensori utilizzati.
      */
     @Override
     public synchronized void pause() {
+        lastKnownHeading = null;
+        lastKnownLocation = null;
         active = false;
         locMan.detachObserver(this);
         hMan.detachObserver(this);
+        tc.detachObserver(this);
     }
 
     /**
@@ -190,63 +180,14 @@ public class TrackPresenter implements ITrackPresenter, ITrackCrossingObserver,
      *            dell'utente.
      */
     @Override
-    @TargetApi(19)
-    public void onLocationUpdate(GeoPoint loc) {
+    public synchronized void onLocationUpdate(GeoPoint loc) {
         lastKnownLocation = loc;
-
-        AsyncTask<Void, Void, Void> task = new AsyncTask<Void, Void, Void>() {
-            @Override
-            protected Void doInBackground(Void... voids) {
-                try {
-                    updateDirection(lastKnownLocation, lastKnownHeading);
-                } catch (NoTrackCrossingException e) {}
-                try {
-                    updateDistance(lastKnownLocation);
-                } catch (NoTrackCrossingException ee) {}
-                return null;
-            }
-        };
-
-        task.execute();
-    }
-
-    /**
-     * Aggiorna le informazioni sulla direzione dell'utente rispetto al
-     * checkpoint da raggiiungere, mostrate dalla vista associata al presenter,
-     * in base alla posizione utente specificata.
-     *
-     * @param loc Posizione attuale dell'utente.
-     */
-    public void updateDirection(GeoPoint loc, AzimuthMagneticNorth heading)
-            throws NoTrackCrossingException {
-        Checkpoint cp =
-                tc.getTrack().getCheckpoints().get(tc.getNextCheckpoint());
-        float bearingTo = loc.bearingTo(cp);
-        float azimuthTrueNorth = heading.toTrueNorth(loc);
-        view.setDirection(bearingTo - azimuthTrueNorth);
-    }
-
-    /**
-     * Aggiorna le informazioni sulla distanza dell'utente rispetto al
-     * checkpoint da raggiiungere, mostrate dalla vista associata al presenter,
-     * in base alla posizione utente specificata.
-     *
-     * @param here Posizione attuale dell'utente.
-     */
-    public void updateDistance(GeoPoint here)
-            throws NoTrackCrossingException {
-        if (here == null)
-            throw new IllegalArgumentException("Illegal null location");
-
-        int next = tc.getNextCheckpoint();
-        Checkpoint cp = tc.getTrack().getCheckpoints().get(next);
-        int distance = Math.round(here.distanceTo(cp));
-        view.setDistance(distance);
+        updateView();
     }
 
     /**
      * Implementa ITrackPresenter.onHeadingUpdate().
-     *
+     * <p/>
      * In base al valore di orientamento ricevuto dal sensore, e alla
      * posizione dell'utente, calcola il valore in gradi che,
      * sommato algebricamente attuale, restituisce la direzione del prossimo
@@ -256,109 +197,98 @@ public class TrackPresenter implements ITrackPresenter, ITrackCrossingObserver,
      *                rotazione attorno all'asse azimuth.
      */
     @Override
-    public void onHeadingUpdate(AzimuthMagneticNorth heading) {
+    public synchronized void onHeadingUpdate(AzimuthMagneticNorth heading) {
         lastKnownHeading = heading;
-
-        AsyncTask<Void, Void, Void> task = new AsyncTask<Void, Void, Void>() {
-            @Override
-            protected Void doInBackground(Void... voids) {
-                try {
-                    updateDirection(lastKnownLocation, lastKnownHeading);
-                } catch (NoTrackCrossingException e) {}
-                return null;
-            }
-        };
-
-        task.execute();
+        updateView();
     }
 
     /**
      * Implementa ITrackPresenter.advanceCheckpoint().
      */
     @Override
-    public void advanceCheckpoint() throws NoTrackCrossingException {
+    public synchronized void advanceCheckpoint() throws
+            NoTrackCrossingException, NoActiveTrackException {
         tc.advanceCheckpoint();
     }
 
     /**
-     * Aggiorna le informazioni sull'ultimo checkpoint attraversato, mostrate
-     * dalla vista associata al presenter.
-     *
-     * Nel caso si sia raggiunto l'ultimo percorso, l'informazione viene
-     * comunicata alla vista.
-     */
-    public synchronized void updateCheckpoints() {
-        try {
-            int checkpointNumber;
-            try {
-                checkpointNumber = tc.getLastCrossed();
-            } catch (NoSuchCheckpointException e) {
-                checkpointNumber = -1;
-            }
-
-            int total = tc.getTrack().getCheckpoints().size();
-            if (checkpointNumber == total - 1)
-                view.displayTrackEnded();
-            else
-                view.setCheckpointNo(checkpointNumber + 2);
-
-            view.setLastPartial(tc.lastPartialTime());
-        } catch (NoTrackCrossingException ee) {
-            view.clearView();
-        }
-    }
-
-    /**
-     * Aggiorna la vista con la differenza tra il tempo parziale e la
-     * prestazione migliore registrata per lo stesso Percorso.
-     */
-    public synchronized void updateDelta() {
-        try {
-            final int checkpointNumber = tc.getLastCrossed();
-            ITelemetry best = tc.getTrack().getBestTelemetry();
-            Predicate<TelemetryEvent> p = new Predicate<TelemetryEvent>() {
-                @Override
-                public boolean apply(TelemetryEvent telemetryEvent) {
-                    return telemetryEvent.getType() ==
-                            TelemetryEventType.CheckpointReached &&
-                            ((CheckpointReachedTelemetryEvent) telemetryEvent)
-                                    .checkpointNumber() == checkpointNumber;
-                }
-            };
-            Iterable<TelemetryEvent> events = best.getEvents(p);
-            TelemetryEvent event = events.iterator().next();
-            view.setDelta(tc.lastPartialTime() - event.timestamp());
-        } catch (NoSuchTelemetryException|NoSuchTelemetryEventException|
-                NoTrackCrossingException|NoSuchCheckpointException e) {
-            view.clearDelta();
-        }
-    }
-
-    /**
      * Implementa ITrackCrossingObserver.onCheckpointCrossed().
-     *
+     * <p/>
      * Se il Presenter è attivo, viene programmato un aggiornamento asincrono
      * della vista.
      */
     @Override
-    public void onCheckpointCrossed(final int checkpointNumber) {
-        if (active) {
-            AsyncTask<Void, Void, Void> task =
-                    new AsyncTask<Void, Void, Void>() {
-                @Override
-                protected Void doInBackground(Void... params) {
-                    updateCheckpoints();
-                    updateDelta();
-                    return null;
-                }
-            };
-            task.execute();
-        }
+    public synchronized void onCheckpointCrossed(final int checkpointNumber) {
+        if (active)
+            updateView();
     }
 
     @Override
-    public void abortTrack() {
+    public synchronized void abortTrack() {
         tc.abort();
+    }
+
+    private void updateView() {
+        view.clearView();
+        try {
+            view.setTrackName(tc.getTrack().name());
+            try {
+                updateCheckpoints();
+                if (lastKnownLocation != null) {
+                    updateDistance(lastKnownLocation);
+                    if (lastKnownHeading != null)
+                        updateDirection(lastKnownLocation, lastKnownHeading);
+                }
+            } catch (NoTrackCrossingException e) {
+                view.displayTrackEnded();
+            }
+            try {
+                view.setLastPartial(tc.getLastCrossed().partialTime());
+                new AsyncTask<Void, Void, Integer>() {
+                        @Override
+                        protected Integer doInBackground(Void... params) {
+                            try {
+                                return tc.getLastCrossed().delta();
+                            } catch (NoSuchTelemetryException |
+                                    NoSuchTelemetryEventException |
+                                    NoSuchCheckpointException |
+                                    NoActiveTrackException e) {
+                                return null;
+                            }
+                        }
+                        @Override
+                        protected void onPostExecute(Integer delta) {
+                            if (delta != null)
+                                view.setDelta(delta);
+                        }
+                }.execute();
+            } catch (NoSuchCheckpointException e) { }
+        } catch (NoActiveTrackException e) { }
+    }
+
+    private void updateDirection(GeoPoint loc, AzimuthMagneticNorth heading)
+            throws NoTrackCrossingException, NoActiveTrackException {
+        Checkpoint cp = tc.getTrack().getCheckpoints().get(
+                tc.getNextCheckpoint());
+        float bearingTo = loc.bearingTo(cp);
+        float azimuthTrueNorth = heading.toTrueNorth(loc);
+        view.setDirection(bearingTo - azimuthTrueNorth);
+    }
+
+    private void updateDistance(GeoPoint here)
+            throws NoActiveTrackException, NoTrackCrossingException {
+        int next = tc.getNextCheckpoint();
+        Checkpoint cp = tc.getTrack().getCheckpoints().get(next);
+        int distance = Math.round(here.distanceTo(cp));
+        view.setDistance(distance);
+    }
+
+    private void updateCheckpoints()
+            throws NoActiveTrackException, NoTrackCrossingException {
+        int checkpointNumber = tc.getNextCheckpoint() + 1;
+        int total = tc.getTrack().getCheckpoints().size();
+        view.setCheckpointNo(checkpointNumber);
+        view.setTotalCheckpoints(total);
     }
 
 }

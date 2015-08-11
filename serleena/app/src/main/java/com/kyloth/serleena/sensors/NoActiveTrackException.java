@@ -30,35 +30,11 @@
 
 package com.kyloth.serleena.sensors;
 
-import android.app.AlarmManager;
-import android.content.Context;
-
-import org.junit.Before;
-import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.robolectric.RobolectricTestRunner;
-import org.robolectric.RuntimeEnvironment;
-import org.robolectric.Shadows;
-import org.robolectric.shadows.ShadowAlarmManager;
-
-@RunWith(RobolectricTestRunner.class)
-public class BackgroundLocationManagerIntegrationTest {
-    BackgroundLocationManager blm;
-    Context context;
-    ShadowAlarmManager shadowAlarmManager;
-    AlarmManager alarmManager;
-
-    @Before
-    public void initialize() {
-        context = RuntimeEnvironment.application;
-        alarmManager =
-                (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
-        shadowAlarmManager = Shadows.shadowOf(alarmManager);
-        blm = new BackgroundLocationManager(context, alarmManager);
-    }
-
-    @Test
-    public void test() {
-
-    }
+/**
+ * Segnala l'assenza di un Percorso attivo.
+ *
+ * @author Filippo Sestini <sestini.filippo@gmail.com>
+ * @version 1.0.0
+ */
+public class NoActiveTrackException extends Exception {
 }

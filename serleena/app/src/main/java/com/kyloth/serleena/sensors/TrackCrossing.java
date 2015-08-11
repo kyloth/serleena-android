@@ -90,19 +90,24 @@ public final class TrackCrossing implements ITrackCrossing,
         lastPartial = 0;
         this.track = track;
         nextCheckpointIndex = -1;
-        try {
-            myAdvanceCheckpoint();
-        } catch (NoTrackCrossingException e) {}
+        myAdvanceCheckpoint();
     }
 
     /**
      * Implementa ITrackCrossing.getLastCrossed().
      */
     @Override
-    public int getLastCrossed() throws NoSuchCheckpointException {
+    public CheckpointCrossing getLastCrossed()
+            throws NoSuchCheckpointException, NoActiveTrackException {
+        if (track == null)
+            throw new NoActiveTrackException();
         if (nextCheckpointIndex == 0)
             throw new NoSuchCheckpointException();
-        return nextCheckpointIndex - 1;
+
+        return new CheckpointCrossing(
+                nextCheckpointIndex - 1,
+                lastPartial,
+                track);
     }
 
     /**
@@ -110,10 +115,12 @@ public final class TrackCrossing implements ITrackCrossing,
      */
     @Override
     public int getNextCheckpoint()
-            throws NoTrackCrossingException {
-        if (track == null ||
-                nextCheckpointIndex == track.getCheckpoints().size())
+            throws NoTrackCrossingException, NoActiveTrackException {
+        if (track == null)
+            throw new NoActiveTrackException();
+        if (nextCheckpointIndex == track.getCheckpoints().size())
             throw new NoTrackCrossingException();
+
         return nextCheckpointIndex;
     }
 
@@ -140,52 +147,25 @@ public final class TrackCrossing implements ITrackCrossing,
      */
     @Override
     public synchronized void advanceCheckpoint()
-            throws NoTrackCrossingException {
+            throws NoTrackCrossingException, NoActiveTrackException {
         if (track == null)
+            throw new NoActiveTrackException();
+        if (nextCheckpointIndex < track.getCheckpoints().size()) {
+            myAdvanceCheckpoint();
+            for (ITrackCrossingObserver o : observers)
+                o.onCheckpointCrossed(nextCheckpointIndex - 1);
+        } else
             throw new NoTrackCrossingException();
-        locReachMan.detachObserver(
-                this,
-                track.getCheckpoints().get(nextCheckpointIndex));
-        myAdvanceCheckpoint();
-    }
-
-    private void myAdvanceCheckpoint() throws NoTrackCrossingException {
-        if (track == null)
-            throw new NoTrackCrossingException();
-
-        long now = System.currentTimeMillis() / 1000L;
-        lastPartial = (int) (now - trackStartTimestamp);
-
-        if ((nextCheckpointIndex + 1) < track.getCheckpoints().size()) {
-            nextCheckpointIndex++;
-            Checkpoint nextCheckpoint =
-                    track.getCheckpoints().get(nextCheckpointIndex);
-            locReachMan.attachObserver(this, nextCheckpoint);
-        } else {
-            nextCheckpointIndex = track.getCheckpoints().size();
-        }
-
-        notifyObservers();
-    }
-
-    /**
-     * Implementa ITrackCrossing.lastPartialTime().
-     */
-    @Override
-    public int lastPartialTime() throws NoTrackCrossingException {
-        if (track == null)
-            throw new NoTrackCrossingException();
-
-        return lastPartial;
     }
 
     /**
      * Implementa ITrackCrossing.getTrack().
      */
     @Override
-    public ITrack getTrack() throws NoTrackCrossingException {
+    public ITrack getTrack() throws NoActiveTrackException {
         if (track == null)
-            throw new NoTrackCrossingException();
+            throw new NoActiveTrackException();
+
         return track;
     }
 
@@ -213,24 +193,41 @@ public final class TrackCrossing implements ITrackCrossing,
      */
     @Override
     public synchronized void onLocationReached() {
-        try {
+        if (isTrackCrossing()) {
             myAdvanceCheckpoint();
-        } catch (NoTrackCrossingException e) { }
+            for (ITrackCrossingObserver o : observers)
+                o.onCheckpointCrossed(nextCheckpointIndex - 1);
+        }
     }
 
     /**
      * Implementa ITrackCrossing.notifyObservers().
-     *
-     * @throws NoTrackCrossingException
      */
     @Override
-    public void notifyObservers()
-            throws NoTrackCrossingException {
-        if (track == null)
-            throw new NoTrackCrossingException();
-
-        for (ITrackCrossingObserver o : observers)
-            o.onCheckpointCrossed(nextCheckpointIndex - 1);
+    public void notifyObservers() {
+        if (isTrackCrossing())
+            for (ITrackCrossingObserver o : observers)
+                o.onCheckpointCrossed(nextCheckpointIndex - 1);
     }
+
+    /**
+     * Viene sempre chiamato quando vi è un Percorso in corso, ed è quindi
+     * possibile passare a un checkpoint successivo.
+     */
+    private void myAdvanceCheckpoint() {
+        locReachMan.detachObserver(this);
+        long now = System.currentTimeMillis() / 1000L;
+        lastPartial = (int) (now - trackStartTimestamp);
+
+        if ((nextCheckpointIndex + 1) < track.getCheckpoints().size()) {
+            nextCheckpointIndex++;
+            Checkpoint nextCheckpoint =
+                    track.getCheckpoints().get(nextCheckpointIndex);
+            locReachMan.attachObserver(this, nextCheckpoint);
+        } else {
+            nextCheckpointIndex = track.getCheckpoints().size();
+        }
+    }
+
 
 }
