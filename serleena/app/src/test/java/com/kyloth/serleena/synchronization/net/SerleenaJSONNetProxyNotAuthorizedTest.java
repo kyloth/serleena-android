@@ -222,4 +222,16 @@ public class SerleenaJSONNetProxyNotAuthorizedTest {
         when(urlConnection.getContentType()).thenReturn("text/hidden");
         proxy.preAuth();
     }
+
+    /**
+     * Verifica che non sia possibile autenticarsi dopo una get
+     */
+
+    @Test(expected = RuntimeException.class)
+    public void testAuthAfterGet () throws AuthException, IOException {
+        proxy.preAuth();
+        proxy.auth();
+        proxy.get();
+        proxy.auth();
+    }
 }
