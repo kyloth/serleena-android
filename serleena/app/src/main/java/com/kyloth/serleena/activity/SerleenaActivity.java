@@ -206,7 +206,8 @@ public class SerleenaActivity extends Activity
     public void onObjectSelected(Object obj) {
         Fragment f = (Fragment) obj;
         getFragmentManager().beginTransaction()
-                .replace(R.id.main_container, f).commit();
+                .replace(R.id.main_container, f).addToBackStack("fragment")
+                .commit();
     }
 
 }
