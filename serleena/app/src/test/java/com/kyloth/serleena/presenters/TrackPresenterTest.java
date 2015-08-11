@@ -41,32 +41,16 @@
 
 package com.kyloth.serleena.presenters;
 
-import android.test.InstrumentationTestRunner;
-
 import org.junit.Test;
 import org.junit.Before;
-import org.junit.runner.RunWith;
-import org.mockito.ArgumentCaptor;
 import org.mockito.Mockito;
-import org.robolectric.RobolectricTestRunner;
-
-import static org.junit.Assert.*;
 import static org.mockito.Mockito.*;
 
 import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.List;
 
-import com.android.internal.util.Predicate;
-import com.kyloth.serleena.common.AzimuthMagneticNorth;
-import com.kyloth.serleena.common.CheckpointReachedTelemetryEvent;
-import com.kyloth.serleena.common.DirectAccessList;
-import com.kyloth.serleena.common.GeoPoint;
 import com.kyloth.serleena.common.ListAdapter;
-import com.kyloth.serleena.common.TelemetryEvent;
-import com.kyloth.serleena.model.ITelemetry;
-import com.kyloth.serleena.model.NoSuchTelemetryEventException;
 import com.kyloth.serleena.presentation.ITrackView;
+import com.kyloth.serleena.sensors.CheckpointCrossing;
 import com.kyloth.serleena.sensors.IHeadingManager;
 import com.kyloth.serleena.sensors.ILocationManager;
 import com.kyloth.serleena.sensors.ISensorManager;
@@ -198,6 +182,27 @@ public class TrackPresenterTest {
         Mockito.doThrow(NoTrackCrossingException.class)
                 .when(tc).advanceCheckpoint();
         presenter.advanceCheckpoint();
+    }
+
+    /**
+     * Verifica che la vista venga impostata con il tempo parziale al
+     * raggiungimento di un checkpoint.
+     */
+    @Test
+    public void activePresenterShouldSetViewWithPartialWhenCheckpointCrossed()
+            throws NoActiveTrackException, NoSuchCheckpointException {
+        ITrack track = mock(ITrack.class);
+        when(track.name()).thenReturn("track");
+        when(track.getCheckpoints()).thenReturn(new ListAdapter<Checkpoint>
+                (new ArrayList<Checkpoint>()));
+        CheckpointCrossing crossing = mock(CheckpointCrossing.class);
+        when(crossing.partialTime()).thenReturn(300);
+        when(tc.getLastCrossed()).thenReturn(crossing);
+        when(tc.getTrack()).thenReturn(track);
+        presenter.resume();
+        verify(view, times(1)).setLastPartial(300);
+        presenter.onCheckpointCrossed(0);
+        verify(view, times(2)).setLastPartial(300);
     }
 
 }
