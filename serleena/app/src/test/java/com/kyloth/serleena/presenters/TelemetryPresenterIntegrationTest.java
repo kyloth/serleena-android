@@ -54,6 +54,7 @@ import com.kyloth.serleena.common.NoTrackCrossingException;
 import com.kyloth.serleena.model.ITrack;
 import com.kyloth.serleena.sensors.ITelemetryManager;
 import com.kyloth.serleena.sensors.ITrackCrossing;
+import com.kyloth.serleena.sensors.NoActiveTrackException;
 import com.kyloth.serleena.view.fragments.TelemetryFragment;
 
 import org.junit.Before;
@@ -132,7 +133,7 @@ public class TelemetryPresenterIntegrationTest {
      */
     @Test
     public void viewShouldDisplayErrorIfTrackAlreadyStarted()
-            throws NoTrackCrossingException {
+            throws NoTrackCrossingException, NoActiveTrackException {
         ITrackCrossing tc = activity.getSensorManager()
                 .getTrackCrossingManager();
         ITrack track = mock(ITrack.class);
