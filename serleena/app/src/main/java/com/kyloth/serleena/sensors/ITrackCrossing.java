@@ -61,16 +61,19 @@ public interface ITrackCrossing {
     void startTrack(ITrack track);
 
     /**
-     * Restituisce l'indice dell'ultimo checkpoint attraversato.
+     * Restituisce un oggetto CheckpointCrossed rappresentante l'ultimo
+     * attraversamento effettuato.
      *
      * Se non sono ancora stati attraversati checkpoint per il Percorso
-     * attuale (o l'ultimo attraversato), viene sollevata un'eccezione
+     * attuale (o il Percorso appena terminato), viene sollevata un'eccezione
      * NoSuchCheckpointException.
      *
-     * @return Indice del checkpoint attraversato.
+     * @return Oggetto CheckpointCrossing rappresentante l'ultimo
+     * attraversamento.
      * @throws NoSuchCheckpointException
      */
-    int getLastCrossed() throws NoSuchCheckpointException;
+    CheckpointCrossing getLastCrossed()
+            throws NoSuchCheckpointException, NoActiveTrackException;
 
     /**
      * Restituisce il prossimo checkpoint da attraversare per il Percorso in
@@ -78,11 +81,9 @@ public interface ITrackCrossing {
      *
      * Se non vi è un Percorso in corso, viene sollevata un'eccezione
      * NoTrackCrossingException.
-     *
-     * @return
-     * @throws NoTrackCrossingException
      */
-    int getNextCheckpoint() throws NoTrackCrossingException;
+    int getNextCheckpoint()
+            throws NoActiveTrackException, NoTrackCrossingException;
 
     /**
      * Registra un observer agli eventi dell'oggetto.
@@ -112,7 +113,7 @@ public interface ITrackCrossing {
      *
      * @throws NoTrackCrossingException
      */
-    void notifyObservers() throws NoTrackCrossingException;
+    void notifyObservers() throws NoTrackCrossingException, NoActiveTrackException;
 
     /**
      * Causa l'avanzamento del Percorso al prossimo checkpoint.
@@ -122,35 +123,23 @@ public interface ITrackCrossing {
      *
      * @throws NoTrackCrossingException
      */
-    void advanceCheckpoint() throws NoTrackCrossingException;
-
-    /**
-     * Ottiene il tempo parziale trascorso dall'avvio del Percorso
-     * all'ultimo checkpoint attraversato.
-     *
-     * Se non vi è alcun Percorso in corso, viene sollevata un'eccezione
-     * NoTrackCrossingException.
-     *
-     * @return Tempo parziale in secondi.
-     * @throws NoTrackCrossingException
-     */
-    int lastPartialTime() throws NoTrackCrossingException;
+    void advanceCheckpoint() throws NoTrackCrossingException, NoActiveTrackException;
 
     /**
      * Restituisce il Percorso in corso o appena conclusosi.
      *
      * Se non vi è alcun Percorso in corso, viene sollevata un'eccezione
-     * NoTrackCrossingException.
+     * NoActiveTrackException.
      *
      * @return Oggetto ITrack rappresentante il Percorso.
-     * @throws NoTrackCrossingException
      */
-    ITrack getTrack() throws NoTrackCrossingException;
+    ITrack getTrack() throws NoActiveTrackException;
 
     /**
      * Restituisce lo stato del Percorso.
      *
-     * @return True se il Percorso è in attraversamento.
+     * @return True se vi è un Percorso attivo, e questo è attualmente in
+     * attraversamento. False altrimenti.
      */
     boolean isTrackCrossing();
 
