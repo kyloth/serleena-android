@@ -257,4 +257,14 @@ public class SerleenaJSONNetProxyNotAuthorizedTest {
         proxy.preAuth();
         proxy.auth();
     }
+
+    /**
+     * Verifica che se error 500 auth sollevi AuthException
+     */
+    @Test(expected = AuthException.class)
+    public void testAuthAuthExceptionOn500() throws AuthException, IOException {
+        proxy.preAuth();
+        when(urlConnection.getResponseCode()).thenReturn(500);
+        proxy.auth();
+    }
 }
