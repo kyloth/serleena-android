@@ -42,6 +42,7 @@
 package com.kyloth.serleena.presenters;
 
 import android.os.AsyncTask;
+import android.view.ViewOutlineProvider;
 
 import com.kyloth.serleena.common.Checkpoint;
 import com.kyloth.serleena.common.GeoPoint;
@@ -95,27 +96,6 @@ public class TrackPresenter implements ITrackPresenter, ITrackCrossingObserver,
     private IHeadingManager hMan;
 
     private boolean active;
-
-    private AsyncTask<Void, Void, Integer> deltaUpdate =
-            new AsyncTask<Void, Void, Integer>() {
-                @Override
-                protected Integer doInBackground(Void... params) {
-                    try {
-                        return tc.getLastCrossed().delta();
-                    } catch (NoSuchTelemetryException |
-                            NoSuchTelemetryEventException |
-                            NoSuchCheckpointException |
-                            NoActiveTrackException e) {
-                       return null;
-                    }
-                }
-
-                @Override
-                protected void onPostExecute(Integer delta) {
-                    if (delta != null)
-                        view.setDelta(delta);
-                }
-            };
 
     /**
      * Crea un nuovo oggetto TrackPresenter.
@@ -264,7 +244,24 @@ public class TrackPresenter implements ITrackPresenter, ITrackCrossingObserver,
             }
             try {
                 view.setLastPartial(tc.getLastCrossed().partialTime());
-                deltaUpdate.execute();
+                new AsyncTask<Void, Void, Integer>() {
+                        @Override
+                        protected Integer doInBackground(Void... params) {
+                            try {
+                                return tc.getLastCrossed().delta();
+                            } catch (NoSuchTelemetryException |
+                                    NoSuchTelemetryEventException |
+                                    NoSuchCheckpointException |
+                                    NoActiveTrackException e) {
+                                return null;
+                            }
+                        }
+                        @Override
+                        protected void onPostExecute(Integer delta) {
+                            if (delta != null)
+                                view.setDelta(delta);
+                        }
+                }.execute();
             } catch (NoSuchCheckpointException e) { }
         } catch (NoActiveTrackException e) { }
     }
