@@ -150,9 +150,11 @@ public final class TrackCrossing implements ITrackCrossing,
             throws NoTrackCrossingException, NoActiveTrackException {
         if (track == null)
             throw new NoActiveTrackException();
-        if (nextCheckpointIndex < track.getCheckpoints().size())
+        if (nextCheckpointIndex < track.getCheckpoints().size()) {
             myAdvanceCheckpoint();
-        else
+            for (ITrackCrossingObserver o : observers)
+                o.onCheckpointCrossed(nextCheckpointIndex - 1);
+        } else
             throw new NoTrackCrossingException();
     }
 
@@ -191,8 +193,11 @@ public final class TrackCrossing implements ITrackCrossing,
      */
     @Override
     public synchronized void onLocationReached() {
-        if (isTrackCrossing())
+        if (isTrackCrossing()) {
             myAdvanceCheckpoint();
+            for (ITrackCrossingObserver o : observers)
+                o.onCheckpointCrossed(nextCheckpointIndex - 1);
+        }
     }
 
     /**
@@ -222,9 +227,7 @@ public final class TrackCrossing implements ITrackCrossing,
         } else {
             nextCheckpointIndex = track.getCheckpoints().size();
         }
-
-        for (ITrackCrossingObserver o : observers)
-            o.onCheckpointCrossed(nextCheckpointIndex - 1);
     }
+
 
 }
