@@ -186,7 +186,7 @@ public class SerleenaJSONNetProxyNotAuthorizedTest {
     }
 
     /**
-     * Verifica che se error 500 preauth sollevi AuthException
+     * Verifica che se error 403 preauth sollevi AuthException
      */
     @Test(expected = AuthException.class)
     public void testPreauthAuthExceptionOn403() throws AuthException, IOException {
