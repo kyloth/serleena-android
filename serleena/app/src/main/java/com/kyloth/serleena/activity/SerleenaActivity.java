@@ -147,6 +147,7 @@ public class SerleenaActivity extends Activity
                             experienceSelectionFragment, this);
             new TrackSelectionPresenter(trackSelectionFragment, this, esp);
             new WeatherPresenter(weatherFragment, this);
+            new TrackPresenter(trackFragment, this);
 
             getFragmentManager().beginTransaction()
                     .add(R.id.main_container, menuFragment).commit();
