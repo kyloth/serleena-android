@@ -68,7 +68,7 @@ public class CloudJSONInboundStreamParser implements InboundStreamParser {
     }
 
     /**
-     * Dato un InboundStream contenente dati di sincronizzazione, fornisce
+     * Dato un InboundStream, lo legge e ne restituisce
      * una rappresentazione intermedia agnostica.
      *
      * @return Una collezione di IDataEntity che costituiscono una

@@ -62,7 +62,7 @@ import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 
 /**
- * Concretizza OutboundStreamBuilder in modo da poter costruire stream JSON
+ * Concretizza OutboundStreamBuilder in modo da poter costruire e scrivere stream JSON
  * nel formato che KylothCloud si attende.
  *
  * @use Viene usato da KylothCloudSynchronizer per costruire un OutboundStream nel formato idoneo ad essere passato a SerleenaJSONNetProxy per l'invio a KylothCloud
@@ -120,8 +120,7 @@ public class CloudJSONOutboundStreamBuilder implements OutboundStreamBuilder {
         return gson.toJson(root, OutboundRootEntity.class);
     }
     /**
-     * Restituisce uno CloudJSONOutboundStream con i dati da inviare al
-     * servizio remoto pronti per essere consumati da un idoneo proxy.
+     * Scrive nell'OutboundStream fornito i dati preaprati in formato JSON
      */
     @Override
     public void stream(OutboundStream s) throws IOException {

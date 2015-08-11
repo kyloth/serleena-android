@@ -183,10 +183,6 @@ public class SerleenaJSONNetProxy implements INetProxy {
         this.kylothIdSource = kylothIdSource;
     }
 
-    /**
-     * Ottieni un OutboundStream per scrivere i dati raccolti localmente.
-     *
-     */
     @Override
     public CloudJSONOutboundStream send() throws AuthException, IOException {
         if (urlConnection == null) {
@@ -217,12 +213,6 @@ public class SerleenaJSONNetProxy implements INetProxy {
         }
     }
 
-    /**
-     * Richiede i dati di sincronizzazione dal servizio remoto.
-     *
-     * @return Un InboundStream contenente i dati in forma grezza provenienti
-     *         dal servizio remoto.
-     */
     @Override
     public InboundStream get() throws AuthException, IOException {
         if (urlConnection == null) {
@@ -242,12 +232,6 @@ public class SerleenaJSONNetProxy implements INetProxy {
         }
     }
 
-    /**
-     * Richiede la preautorizzazione con il servizio remoto.
-     *
-     * @return La stringa con il token temporaneo da visualizzare che
-     *         l'utente dovra' poi confermare sull'interfaccia cloud..
-     */
     @Override
     public String preAuth() throws AuthException, IOException {
         reset();

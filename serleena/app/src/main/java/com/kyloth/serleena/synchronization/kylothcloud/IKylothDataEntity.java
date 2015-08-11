@@ -32,8 +32,5 @@ package com.kyloth.serleena.synchronization.kylothcloud;
 
 import com.kyloth.serleena.synchronization.IDataEntity;
 
-/**
- * Created by tobia on 22/07/15.
- */
 public interface IKylothDataEntity extends IDataEntity {
 }

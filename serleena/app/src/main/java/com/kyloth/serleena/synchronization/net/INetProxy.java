@@ -57,17 +57,16 @@ import java.io.IOException;
  */
 public interface INetProxy {
     /**
-     * Invia al servizio remoto un'oggetto di tipo OutboundStream
+     * Ritorna un OutboundStream in cui scrivere per inviare dati al servizio remoto.
      *
-     * @return Un OutboundStream con i dati raccolti localmente da inviare
-     *               al servizio remoto in forma grezza
+     * @return Un OutboundStream in cui scrivere i dati per il servizio remoto.
      */
     OutboundStream send() throws AuthException, IOException;
 
     /**
      * Richiede i dati di sincronizzazione dal servizio remoto.
      *
-     * @return Un InboundStream contenente i dati in forma grezza provenienti
+     * @return Un InboundStream da cui leggere i dati in forma grezza provenienti
      *         dal servizio remoto.
      */
     InboundStream get() throws IOException, AuthException;
@@ -91,5 +90,11 @@ public interface INetProxy {
      */
     void disconnect();
 
+    /**
+     * Verifica se l'ultima operazione di send() o get() e' andata a buon fine
+     * @return true se e' andata a buon fine, altrimenti false oppure solleva eccezione
+     * @throws IOException
+     * @throws AuthException
+     */
     boolean success() throws IOException, AuthException;
 }

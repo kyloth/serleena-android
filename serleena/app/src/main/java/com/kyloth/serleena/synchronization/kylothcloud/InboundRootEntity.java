@@ -33,9 +33,6 @@ package com.kyloth.serleena.synchronization.kylothcloud;
 import java.util.ArrayList;
 import java.util.Collection;
 
-/**
- * Created by tobia on 21/07/15.
- */
 public class InboundRootEntity implements IKylothDataEntity {
     public Collection<ExperienceEntity> experiences;
     public Collection<EmergencyDataEntity> emergencyData;
