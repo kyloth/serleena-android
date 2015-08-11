@@ -45,13 +45,11 @@ import com.kyloth.serleena.persistence.IPersistenceDataSource;
 import com.kyloth.serleena.synchronization.net.INetProxy;
 import com.kyloth.serleena.synchronization.net.SerleenaJSONNetProxy;
 import com.kyloth.serleena.synchronization.kylothcloud.InboundRootEntity;
-import com.kyloth.serleena.synchronization.kylothcloud.IKylothIdSource;
 import com.kyloth.serleena.synchronization.kylothcloud.LocalEnvKylothIdSource;
 import com.kyloth.serleena.synchronization.kylothcloud.inbound.CloudJSONInboundStream;
 import com.kyloth.serleena.synchronization.kylothcloud.inbound.CloudJSONInboundStreamParser;
 import com.kyloth.serleena.synchronization.kylothcloud.inbound.CloudSerleenaSQLiteInboundDumpBuilder;
 import com.kyloth.serleena.synchronization.kylothcloud.inbound.SerleenaSQLiteInboundDump;
-import com.kyloth.serleena.synchronization.kylothcloud.outbound.CloudJSONOutboundStream;
 import com.kyloth.serleena.synchronization.kylothcloud.outbound.CloudJSONOutboundStreamBuilder;
 
 import java.io.IOException;
@@ -73,7 +71,6 @@ public class KylothCloudSynchronizer implements IKylothCloudSynchronizer {
     IPersistenceDataSink sink;
     IPersistenceDataSource source;
     INetProxy proxy;
-    URL url;
 
     KylothCloudSynchronizer(INetProxy proxy, IPersistenceDataSink sink, IPersistenceDataSource source) {
         this.proxy = proxy;
@@ -87,7 +84,7 @@ public class KylothCloudSynchronizer implements IKylothCloudSynchronizer {
     /**
      * Ritorna l'istanza unica di KylothCloudSynchronizer
      */
-    public static KylothCloudSynchronizer getInstance(IPersistenceDataSink sink, IPersistenceDataSource source) {
+    public static IKylothCloudSynchronizer getInstance(IPersistenceDataSink sink, IPersistenceDataSource source) {
         try {
             return getInstance(
                     new SerleenaJSONNetProxy(
@@ -110,19 +107,15 @@ public class KylothCloudSynchronizer implements IKylothCloudSynchronizer {
     }
 
     /**
-     * Imposta l'URL del servizio remoto con cui eseguire la sincronizzazione
-     *
-     * @param url l'URL del servizio remoto
-     */
-    public void setUrl(URL url) {
-        this.url = url;
      * Esegue la preautorizzazione iniziale ottenendo
      * un token dal servizio remoto (cfr. ST).
      */
-    String preAuth()  throws AuthException, IOException {
+    @Override
+    public String preAuth()  throws AuthException, IOException {
         return proxy.preAuth();
     }
 
+    @Override
     public void auth()  throws AuthException, IOException {
         proxy.auth();
     }
@@ -166,6 +159,7 @@ public class KylothCloudSynchronizer implements IKylothCloudSynchronizer {
     /**
      * Richiede la sincronizzazione bidirezionale col servizio remoto.
      */
+    @Override
     public void sync() throws AuthException, IOException {
         send();
         get();
