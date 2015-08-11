@@ -279,15 +279,6 @@ public class TrackFragment extends Fragment implements ITrackView, View.OnClickL
     }
 
     /**
-     * Ridefinisce Fragment.onDestroy().
-     */
-    @Override
-    public void onDestroy() {
-        super.onDestroy();
-        presenter.abortTrack();
-    }
-
-    /**
      * Ridefinisce Object.toString().
      */
     @Override

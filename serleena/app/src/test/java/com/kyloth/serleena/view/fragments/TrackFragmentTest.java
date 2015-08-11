@@ -225,10 +225,4 @@ public class TrackFragmentTest {
         verify(lastPartialText).setText("");
     }
 
-    @Test
-    public void fragmentShouldAbortTrackOnDestruction() {
-        fragment.onDestroy();
-        verify(presenter).abortTrack();
-    }
-
 }
