@@ -267,4 +267,15 @@ public class SerleenaJSONNetProxyNotAuthorizedTest {
         when(urlConnection.getResponseCode()).thenReturn(500);
         proxy.auth();
     }
+
+    /**
+     * Verifica che se error 403 auth sollevi AuthException
+     */
+    @Test(expected = AuthException.class)
+    public void testAuthAuthExceptionOn403() throws AuthException, IOException {
+        proxy.preAuth();
+        when(urlConnection.getResponseCode()).thenReturn(HttpURLConnection.HTTP_FORBIDDEN);
+        proxy.auth();
+    }
+
 }
