@@ -41,11 +41,14 @@
 
 package com.kyloth.serleena.common;
 
+import android.graphics.Bitmap;
+
 import org.junit.Before;
 import org.junit.Test;
 
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.assertFalse;
+import static org.mockito.Mockito.mock;
 
 public class QuadrantTest {
 	/**
@@ -57,7 +60,7 @@ public class QuadrantTest {
 		GeoPoint ne = new GeoPoint(2, 0);
 		GeoPoint p = new GeoPoint(1, 1);
 		GeoPoint sw = new GeoPoint(0, 2);
-		Quadrant q = new Quadrant(ne, sw, null);
+		Quadrant q = new Quadrant(ne, sw, mock(Bitmap.class));
 		assertTrue(q.contains(p));
 	}
 
@@ -69,7 +72,7 @@ public class QuadrantTest {
 	public void testContainsNEEdge() {
 		GeoPoint ne = new GeoPoint(0, 0);
 		GeoPoint sw = new GeoPoint(-2, 2);
-		Quadrant q = new Quadrant(ne, sw, null);
+		Quadrant q = new Quadrant(ne, sw, mock(Bitmap.class));
 		assertTrue(q.contains(ne));
 	}
 
@@ -81,7 +84,7 @@ public class QuadrantTest {
 	public void testContainsSWEdge() {
 		GeoPoint ne = new GeoPoint(0, 0);
 		GeoPoint sw = new GeoPoint(-2, 2);
-		Quadrant q = new Quadrant(ne, sw, null);
+		Quadrant q = new Quadrant(ne, sw, mock(Bitmap.class));
 		assertTrue(q.contains(sw));
 	}
 
@@ -94,7 +97,7 @@ public class QuadrantTest {
 		GeoPoint ne = new GeoPoint(0, 0);
 		GeoPoint p = new GeoPoint(3, 3);
 		GeoPoint sw = new GeoPoint(-2, 2);
-		Quadrant q = new Quadrant(ne, sw, null);
+		Quadrant q = new Quadrant(ne, sw, mock(Bitmap.class));
 		assertFalse(q.contains(p));
 	}
 
@@ -106,7 +109,7 @@ public class QuadrantTest {
 	public void testNoNullContainsArg() {
 		GeoPoint ne = new GeoPoint(0, 0);
 		GeoPoint sw = new GeoPoint(-2, 2);
-		Quadrant q = new Quadrant(ne, sw, null);
+		Quadrant q = new Quadrant(ne, sw, mock(Bitmap.class));
 		assertTrue(q.contains(null));
 	}
 
@@ -118,7 +121,7 @@ public class QuadrantTest {
 	public void testNoNullFirstArg() {
 		GeoPoint p = new GeoPoint(1, 1);
 		GeoPoint sw = new GeoPoint(-2, 2);
-		Quadrant q = new Quadrant(null, sw, null);
+		Quadrant q = new Quadrant(null, sw, mock(Bitmap.class));
 		assertTrue(q.contains(p));
 	}
 
@@ -130,8 +133,17 @@ public class QuadrantTest {
 	public void testNoNullSecondArg() {
 		GeoPoint ne = new GeoPoint(0, 0);
 		GeoPoint p = new GeoPoint(1, 1);
-		Quadrant q = new Quadrant(ne, null, null);
+		Quadrant q = new Quadrant(ne, null, mock(Bitmap.class));
 		assertTrue(q.contains(p));
+	}
+
+	/**
+	 * Verifica che il costruttore sollevi un'eccezione
+	 * IllegalArgumentException se viene passata una bitmap null.
+	 */
+	@Test(expected = IllegalArgumentException.class)
+	public void ctorShouldThrowIfNullBitmap() {
+		new Quadrant(mock(GeoPoint.class), mock(GeoPoint.class), null);
 	}
 
 }
