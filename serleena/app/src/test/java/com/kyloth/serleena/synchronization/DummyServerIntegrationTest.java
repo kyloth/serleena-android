@@ -116,9 +116,14 @@ public class DummyServerIntegrationTest {
         // TODO: Fare altri test, in particolare gli edge case
         FileReader in = new FileReader(SAMPLES_DIR + "partial/track.json");
         BufferedReader r = new BufferedReader(in);
+        final Pattern preauthP = Pattern.compile("/token/([\\w|::]+)");
+        final Pattern authP = Pattern.compile("/users/pair/([\\w|::]+)");
+        final Pattern syncP = Pattern.compile("/data/([\\w|::]*)");
         final String kylothId = "foo";
         final String PREAUTH_TOKEN = "123456";
         final String AUTH_TOKEN = "654321";
+        final String PREAUTH_FAIL = "NACK";
+        final String AUTH_FAIL = "NACK";
 
         IKylothIdSource iKylothIdSource = new IKylothIdSource() {
             @Override
@@ -133,12 +138,9 @@ public class DummyServerIntegrationTest {
             @Override
             public void handle(String target, Request baseRequest, HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
                 String path = baseRequest.getRequestURI();
-                Pattern preauthP = Pattern.compile("/tokens/([\\w|::]+)");
                 Matcher preauthM = preauthP.matcher(path);
-                Pattern authP = Pattern.compile("/users/pair/([\\w|::]+)");
                 Matcher authM = authP.matcher(path);
                 // TODO: La ST dice che e' /data, Bronsa dice che e' diverso
-                Pattern syncP = Pattern.compile("/data/([\\w|::]*)");
                 Matcher syncM = syncP.matcher(path);
                 // TODO: Controllare bene regexp con bronsa
                 if (preauthM.matches()) {
@@ -151,14 +153,18 @@ public class DummyServerIntegrationTest {
                     counter++;
                     baseRequest.setHandled(true);
                 } else if (authM.matches()) {
-                    response.setContentType("text/plain; charset=utf-8");
-                    assertEquals(authM.group(1), PREAUTH_TOKEN);
-                    response.setStatus(HttpServletResponse.SC_OK);
-                    PrintWriter out = response.getWriter();
-                    out.println(AUTH_TOKEN);
-                    assertEquals(counter, 1);
-                    counter++;
-                    baseRequest.setHandled(true);
+                    if (request.getMethod() == "GET") {
+                        response.setContentType("text/plain; charset=utf-8");
+                        assertEquals(authM.group(1), PREAUTH_TOKEN);
+                        response.setStatus(HttpServletResponse.SC_OK);
+                        PrintWriter out = response.getWriter();
+                        out.println(AUTH_TOKEN);
+                        assertEquals(counter, 1);
+                        counter++;
+                        baseRequest.setHandled(true);
+                    } else {
+                        assertTrue(false);
+                    }
                 } else if (syncM.matches()) {
                     if (request.getMethod() == "POST") {
                         response.setContentType("text/json; charset=utf-8");
