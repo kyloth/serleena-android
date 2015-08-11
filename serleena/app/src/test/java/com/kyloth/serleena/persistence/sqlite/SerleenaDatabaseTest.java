@@ -46,6 +46,7 @@ import android.database.SQLException;
 import android.database.sqlite.SQLiteDatabase;
 
 import com.kyloth.serleena.BuildConfig;
+import com.kyloth.serleena.common.GeoPoint;
 
 import org.junit.After;
 import org.junit.Before;
@@ -61,6 +62,7 @@ import java.util.ArrayList;
 import static com.kyloth.serleena.persistence.sqlite.SerleenaDatabaseTestUtils.makeExperience;
 import static com.kyloth.serleena.persistence.sqlite.SerleenaDatabaseTestUtils.makeTelemetry;
 import static com.kyloth.serleena.persistence.sqlite.SerleenaDatabaseTestUtils.makeTrack;
+import static junit.framework.Assert.assertEquals;
 import static junit.framework.Assert.assertTrue;
 
 /**
@@ -557,6 +559,27 @@ public class SerleenaDatabaseTest {
         db.delete(SerleenaDatabase.TABLE_TRACKS, "track_id = " + id, null);
         Cursor query = db.query(SerleenaDatabase.TABLE_CHECKPOINTS, null, "checkpoint_track = " + id, null, null, null, null);
         assertTrue(query.getCount() == 0);
+    }
+
+    @Test
+    public void shouldBePossibleToAddARaster() {
+        ContentValues values = new ContentValues();
+        values.put("raster_nw_corner_latitude", 2);
+        values.put("raster_nw_corner_longitude", 0);
+        values.put("raster_se_corner_latitude", 0);
+        values.put("raster_se_corner_longitude", 2);
+        values.put("raster_path", "asdlolasdlol");
+        db.insertOrThrow(SerleenaDatabase.TABLE_RASTERS, null, values);
+
+        double latitude = 1;
+        double longitude = 1;
+        Cursor query = db.query(SerleenaDatabase.TABLE_RASTERS, null,
+                "raster_nw_corner_latitude >= " + latitude + " AND " +
+                "raster_nw_corner_longitude <= " + longitude + " AND " +
+                "raster_se_corner_latitude <= " + latitude + " AND " +
+                "raster_se_corner_longitude >= " + longitude,
+                null, null, null, null);
+        assertEquals(1, query.getCount());
     }
 
     /*
