@@ -64,6 +64,7 @@ import com.kyloth.serleena.common.TelemetryEvent;
 import com.kyloth.serleena.common.UserPoint;
 import com.kyloth.serleena.persistence.IExperienceStorage;
 import com.kyloth.serleena.persistence.IWeatherStorage;
+import com.kyloth.serleena.persistence.NoSuchQuadrantException;
 import com.kyloth.serleena.persistence.WeatherForecastEnum;
 
 import java.io.File;
@@ -347,25 +348,61 @@ public class SerleenaSQLiteDataSource implements ISerleenaSQLiteDataSource {
      * @return Oggetto IQuadrant.
      */
     @Override
-    public IQuadrant getQuadrant(GeoPoint location) {
+    public IQuadrant getQuadrant(GeoPoint location) throws NoSuchQuadrantException {
+        if (location == null)
+            throw new IllegalArgumentException("Illegal null location");
 
-        int[] ij = getIJ(location);
+        SQLiteDatabase db = dbHelper.getReadableDatabase();
 
-        assert(ij[0] < TOT_LAT_QUADRANTS);
-        assert(ij[1] < TOT_LONG_QUADRANTS);
+        String where = "`raster_nw_corner_latitude` >= " +
+                location.latitude() + " AND " +
+                "`raster_nw_corner_longitude` <= " +
+                location.longitude() + " AND " +
+                "`raster_se_corner_latitude` <= " +
+                location.latitude() + " AND " +
+                "`raster_se_corner_longitude` >= " +
+                location.longitude();
 
-        String fileName = getRasterPath(ij[0], ij[1]);
-        GeoPoint p1 = new GeoPoint((-(ij[0] * QUADRANT_LATSIZE) + 90.0),
-                (ij[1] * QUADRANT_LONGSIZE - 180.0));
-        // Vogliamo longitudine 180.0 espressa come -180.0 (=in mod 2pi)
-        GeoPoint p2 = new GeoPoint((-((ij[0]+1) * QUADRANT_LATSIZE) + 90.0),
-                (((ij[1] + 1) * QUADRANT_LONGSIZE) % 360.0) - 180.0);
+        Cursor result = db.query(SerleenaDatabase.TABLE_RASTERS,
+                new String[]{
+                    "raster_nw_corner_latitude",
+                    "raster_nw_corner_longitude",
+                    "raster_se_corner_latitude",
+                    "raster_se_corner_longitude",
+                    "raster_path"
+                },
+                where, null, null, null, null);
 
-        Bitmap raster = null;
-        File file = new File(context.getFilesDir(), fileName);
-        if (file.exists())
-            raster = BitmapFactory.decodeFile(file.getAbsolutePath());
-        return new Quadrant(p1, p2, raster);
+        int nwLatIndex =
+                result.getColumnIndexOrThrow("raster_nw_corner_latitude");
+        int nwLonIndex =
+                result.getColumnIndexOrThrow("raster_nw_corner_longitude");
+        int seLatIndex =
+                result.getColumnIndexOrThrow("raster_se_corner_latitude");
+        int seLonIndex =
+                result.getColumnIndexOrThrow("raster_se_corner_longitude");
+        int pathIndex =
+                result.getColumnIndexOrThrow("raster_path");
+
+        if (result.moveToNext()) {
+            double nwLat = result.getDouble(nwLatIndex);
+            double nwLon = result.getDouble(nwLonIndex);
+            double seLat = result.getDouble(seLatIndex);
+            double seLon = result.getDouble(seLonIndex);
+            String fileName = result.getString(pathIndex);
+
+            File file = new File(context.getFilesDir(), fileName);
+            if (file.exists()) {
+                Bitmap raster =
+                        BitmapFactory.decodeFile(file.getAbsolutePath());
+                return new Quadrant(
+                        new GeoPoint(nwLat, nwLon),
+                        new GeoPoint(seLat, seLon),
+                        raster);
+            }
+        }
+
+        throw new NoSuchQuadrantException();
     }
 
     /**
