@@ -59,38 +59,40 @@ import com.kyloth.serleena.model.NoSuchTelemetryException;
  */
 public class CheckpointCrossing {
 
-    private int number;
+    private int index;
     private int partial;
     private ITrack track;
 
     /**
      * Crea un nuovo oggetto CheckpointCrossing.
      *
-     * @param number Numero del checkpoint attraversato.
+     * @param checkpointIndex Indice del checkpoint attraversato.
      * @param partialTime Tempo parziale.
      * @param track Percorso a cui si riferisce il checkpoint.
      */
-    public CheckpointCrossing(int number, int partialTime, ITrack track) {
-        if (number < 1)
+    public CheckpointCrossing(int checkpointIndex,
+                              int partialTime,
+                              ITrack track) {
+        if (checkpointIndex < 0)
             throw new IllegalArgumentException("Illegal checkpoint number");
         if (partialTime < 0)
             throw new IllegalArgumentException("Illegal negative time");
         if (track == null)
             throw new IllegalArgumentException("Illegal null track");
 
-        this.number = number;
+        this.index = checkpointIndex;
         this.partial = partialTime;
         this.track = track;
     }
 
     /**
-     * Restituisce il numero di checkpoint a cui la prestazione rappresentata
+     * Restituisce l'indice del checkpoint a cui la prestazione rappresentata
      * dall'istanza di riferisce.
      *
-     * @return Numero intero positivo indicante il numero del checkpoint.
+     * @return Indice in base 0 indicante il checkpoint.
      */
-    public int checkPointNumber() {
-        return number;
+    public int checkPointIndex() {
+        return index;
     }
 
     /**
@@ -130,7 +132,7 @@ public class CheckpointCrossing {
                 return telemetryEvent.getType() ==
                         TelemetryEventType.CheckpointReached &&
                         ((CheckpointReachedTelemetryEvent) telemetryEvent)
-                                .checkpointNumber() == number;
+                                .checkpointNumber() == index + 1;
             }
         };
         Iterable<TelemetryEvent> events = best.getEvents(p);
