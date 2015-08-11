@@ -51,6 +51,7 @@ import com.kyloth.serleena.R;
 import com.kyloth.serleena.presentation.ITrackPresenter;
 import com.kyloth.serleena.presentation.ITrackView;
 import com.kyloth.serleena.common.NoTrackCrossingException;
+import com.kyloth.serleena.sensors.NoActiveTrackException;
 import com.kyloth.serleena.view.widgets.CompassWidget;
 
 
@@ -65,7 +66,7 @@ import com.kyloth.serleena.view.widgets.CompassWidget;
  * @version 1.0.0
  * @see android.app.Fragment
  */
-public class TrackFragment extends Fragment implements ITrackView {
+public class TrackFragment extends Fragment implements ITrackView, View.OnClickListener {
 
     private ITrackPresenter presenter;
     private TextView trackNameText;
@@ -111,6 +112,8 @@ public class TrackFragment extends Fragment implements ITrackView {
         distanceText = (TextView) v.findViewById(R.id.distance_text);
         deltaText = (TextView) v.findViewById(R.id.delta_text);
         lastPartialText = (TextView) v.findViewById(R.id.last_partial_text);
+
+        orientationWidget.setOnClickListener(this);
 
         return v;
     }
@@ -292,4 +295,10 @@ public class TrackFragment extends Fragment implements ITrackView {
         return "Percorso";
     }
 
+    @Override
+    public void onClick(View v) {
+        try {
+            presenter.advanceCheckpoint();
+        } catch (NoTrackCrossingException|NoActiveTrackException e) { }
+    }
 }
