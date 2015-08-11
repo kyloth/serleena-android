@@ -318,8 +318,8 @@ public class TrackCrossingTest {
 
     @Test
     public void shouldRegisterToSensorWhenNewTrackStarted() {
-        tc.startTrack(mock(ITrack.class));
-        verify(locReaMan).attachObserver(tc, any(GeoPoint.class));
+        tc.startTrack(oneCheckpointTrack);
+        verify(locReaMan).attachObserver(eq(tc), any(GeoPoint.class));
     }
 
 }
