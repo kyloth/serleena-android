@@ -60,13 +60,14 @@ public class Quadrant extends Region implements IQuadrant {
      *
      * @param northWest
      * @param southEast
-     * @param raster L'immagine raster della mappa per il quadrante. Puo'
-     *               essere null.
-     * @throws IllegalArgumentException E' lanciata quando northEast o
-     *               southEast sono null
+     * @param raster L'immagine raster della mappa per il quadrante.
      */
-    public Quadrant(GeoPoint northWest, GeoPoint southEast, Bitmap raster) throws IllegalArgumentException {
+    public Quadrant(GeoPoint northWest, GeoPoint southEast, Bitmap raster) {
         super(northWest, southEast);
+
+        if (raster == null)
+            throw new IllegalArgumentException("Illegal null raster");
+
         this.raster = raster;
     }
 
@@ -77,4 +78,5 @@ public class Quadrant extends Region implements IQuadrant {
     public Bitmap getRaster() {
         return raster;
     }
+
 }
