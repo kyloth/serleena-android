@@ -247,4 +247,14 @@ public class SerleenaJSONNetProxyNotAuthorizedTest {
         proxy.auth();
     }
 
+    /**
+     * Verifica che se contentType != text/plain auth sollevi IOException
+     */
+
+    @Test(expected = IOException.class)
+    public void testAuthExceptionOnBadContentType() throws AuthException, IOException {
+        when(urlConnection.getContentType()).thenReturn("text/hidden");
+        proxy.preAuth();
+        proxy.auth();
+    }
 }
