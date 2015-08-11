@@ -67,7 +67,7 @@ import java.net.URL;
  * @use Viene usato dall'Activity come unico entry point per le operazioni di sincronizzazione, dopo avergli fornito un dataSource e un dumpLoader (che possono e tipicamente sono la stesso oggetto)e l'URL del servizio remoto. Si faccia riferimento ai diagrammi di sequenza della ST per i dettagli della procedura di sincronizzazione.
  * @field instance la singola istanza
  */
-public class KylothCloudSynchronizer {
+public class KylothCloudSynchronizer implements IKylothCloudSynchronizer {
     static KylothCloudSynchronizer instance;
     private final static String DEFAULT_URL = "http://localhost:8080";
     IPersistenceDataSink sink;
@@ -116,9 +116,6 @@ public class KylothCloudSynchronizer {
      */
     public void setUrl(URL url) {
         this.url = url;
-    }
-
-    /**
      * Esegue la preautorizzazione iniziale ottenendo
      * un token dal servizio remoto (cfr. ST).
      */

@@ -191,8 +191,6 @@ public class DummyServerIntegrationTest {
         KylothCloudSynchronizer s = KylothCloudSynchronizer.getInstance(
                 new SerleenaJSONNetProxy(iKylothIdSource, url),
                 sink, source);
-
-        s.setUrl(url);
         server.setHandler(h);
         server.start();
         String token = s.preAuth();
