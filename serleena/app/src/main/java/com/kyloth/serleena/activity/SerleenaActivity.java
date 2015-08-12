@@ -152,11 +152,11 @@ public class SerleenaActivity extends Activity
             menuFragment.attachObserver(this);
 
             new CompassPresenter(compassFragment, this);
-            new MapPresenter(mapFragment, this);
             new ContactsPresenter(contactsFragment, this);
             ExperienceSelectionPresenter esp =
                     new ExperienceSelectionPresenter(
                             experienceSelectionFragment, this);
+            new MapPresenter(mapFragment, this, esp);
             new TrackSelectionPresenter(trackSelectionFragment, this, esp);
             new WeatherPresenter(weatherFragment, this);
             new TrackPresenter(trackFragment, this);
