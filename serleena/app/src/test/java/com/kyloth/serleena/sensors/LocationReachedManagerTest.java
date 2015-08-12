@@ -67,7 +67,6 @@ import com.kyloth.serleena.common.GeoPoint;
  * @author Gabriele Pozzan <gabriele.pozzan@studenti.unipd.it>
  * @version 1.0.0
  */
-
 @RunWith(RobolectricTestRunner.class)
 public class LocationReachedManagerTest {
 
@@ -177,6 +176,22 @@ public class LocationReachedManagerTest {
         manager.attachObserver(o1, mock(GeoPoint.class));
         verify(bkgrLocMan, times(2)).attachObserver(manager,
                 LocationReachedManager.LOCATION_UPDATE_INTERVAL);
+    }
+
+    /**
+     * Verifica che le richieste sulla posizione soddisfatte siano rimosse
+     * prima di segnalare eventuali Observer.
+     */
+    @Test
+    public void managerShouldNotifyObserverOnlyAfterProcessingRequests() {
+        GeoPoint point = mock(GeoPoint.class);
+        manager.attachObserver(new ILocationReachedObserver() {
+            @Override
+            public void onLocationReached() {
+                verify(bkgrLocMan).detachObserver(manager);
+            }
+        }, point);
+        manager.onLocationUpdate(point);
     }
 
 }
