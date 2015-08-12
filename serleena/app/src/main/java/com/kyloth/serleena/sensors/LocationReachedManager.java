@@ -58,7 +58,6 @@ class LocationReachedManager
         implements ILocationReachedManager, ILocationObserver {
 
     public static final int LOCATION_RADIUS = 50;
-    public static final int LOCATION_UPDATE_INTERVAL = 60;
 
     private final List<LocationReachedRequest> requests;
     private final IBackgroundLocationManager bkgrLocMan;
@@ -100,7 +99,7 @@ class LocationReachedManager
 
         requests.add(new LocationReachedRequest(observer, location));
         if (requests.size() == 1)
-            bkgrLocMan.attachObserver(this, LOCATION_UPDATE_INTERVAL);
+            bkgrLocMan.attachObserver(this);
     }
 
     /**
