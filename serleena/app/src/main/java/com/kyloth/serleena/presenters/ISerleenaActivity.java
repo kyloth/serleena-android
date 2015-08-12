@@ -42,6 +42,7 @@
 package com.kyloth.serleena.presenters;
 
 import com.kyloth.serleena.model.ISerleenaDataSource;
+import com.kyloth.serleena.persistence.IPersistenceDataSink;
 import com.kyloth.serleena.sensors.ISensorManager;
 
 /**
@@ -67,5 +68,13 @@ public interface ISerleenaActivity {
      * @return Gestore dei sensori dell'applicazione.
      */
     ISensorManager getSensorManager();
+
+    /**
+     * Restituisce il datasink dell'applicazione, dietro interfaccia
+     * IPersistenceDataSink.
+     *
+     * @return Datasink dell'applicazione.
+     */
+    IPersistenceDataSink getDataSink();
 
 }
