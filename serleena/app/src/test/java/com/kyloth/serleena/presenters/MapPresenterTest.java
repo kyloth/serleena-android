@@ -53,6 +53,7 @@ import org.robolectric.RobolectricTestRunner;
 import com.kyloth.serleena.common.LocationNotAvailableException;
 import com.kyloth.serleena.model.ISerleenaDataSource;
 import com.kyloth.serleena.model.IExperience;
+import com.kyloth.serleena.presentation.IExperienceActivationSource;
 import com.kyloth.serleena.presentation.IMapView;
 import com.kyloth.serleena.common.NoActiveExperienceException;
 import com.kyloth.serleena.common.GeoPoint;
@@ -75,9 +76,7 @@ public class MapPresenterTest {
     ISerleenaActivity activity;
     ISensorManager sm;
     ILocationManager locMan;
-
-    @Rule
-    public ExpectedException exception = ExpectedException.none();
+    private IExperienceActivationSource expActSource;
 
     /**
      * Inizializza i campi dati necessari alla conduzione dei test.
@@ -92,8 +91,9 @@ public class MapPresenterTest {
         activity = mock(ISerleenaActivity.class);
         when(activity.getSensorManager()).thenReturn(sm);
         when(activity.getDataSource()).thenReturn(mock(ISerleenaDataSource.class));
+        expActSource = mock(IExperienceActivationSource.class);
 
-        mp = new MapPresenter(view, activity);
+        mp = new MapPresenter(view, activity, expActSource);
     }
 
     /**
@@ -102,7 +102,7 @@ public class MapPresenterTest {
      */
     @Test(expected = IllegalArgumentException.class)
     public void constructorShouldThrowExceptionWhenNullArgument1() {
-        new MapPresenter(null, activity);
+        new MapPresenter(null, activity, expActSource);
     }
 
     /**
@@ -111,7 +111,16 @@ public class MapPresenterTest {
      */
     @Test(expected = IllegalArgumentException.class)
     public void constructorShouldThrowExceptionWhenNullArgument2() {
-        new MapPresenter(view, null);
+        new MapPresenter(view, null, expActSource);
+    }
+
+    /**
+     * Verifica che il costruttore lanci un'eccezione se invocato con
+     * parametri null.
+     */
+    @Test(expected = IllegalArgumentException.class)
+    public void constructorShouldThrowExceptionWhenNullArgument3() {
+        new MapPresenter(view, activity, null);
     }
 
     /**
@@ -121,7 +130,7 @@ public class MapPresenterTest {
     @Test(expected = NoActiveExperienceException.class)
     public void newUserPointShouldThrowExceptionWhenNoActiveExperience()
             throws NoActiveExperienceException, LocationNotAvailableException {
-        new MapPresenter(view, activity).newUserPoint();
+        new MapPresenter(view, activity, expActSource).newUserPoint();
     }
 
     /**
@@ -150,8 +159,8 @@ public class MapPresenterTest {
      */
     @Test(expected = IllegalArgumentException.class)
     public void setActiveExperienceShouldThrowWhenNullExperience() {
-        MapPresenter mp = new MapPresenter(view, activity);
-        mp.setActiveExperience(null);
+        MapPresenter mp = new MapPresenter(view, activity, expActSource);
+        mp.onExperienceActivated(null);
     }
 
     /**
@@ -159,8 +168,8 @@ public class MapPresenterTest {
      */
     @Test
     public void settingActiveExperienceShouldClearView() {
-        MapPresenter mp = new MapPresenter(view, activity);
-        mp.setActiveExperience(mock(IExperience.class));
+        MapPresenter mp = new MapPresenter(view, activity, expActSource);
+        mp.onExperienceActivated(mock(IExperience.class));
         verify(view).clear();
     }
 
