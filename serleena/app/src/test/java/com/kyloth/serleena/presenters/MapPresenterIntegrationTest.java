@@ -41,21 +41,28 @@
 package com.kyloth.serleena.presenters;
 
 import android.app.Application;
+import android.app.Fragment;
+import android.app.ListFragment;
 import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
 import android.os.Bundle;
+import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ListAdapter;
 
 import com.kyloth.serleena.BuildConfig;
 import com.kyloth.serleena.R;
 import com.kyloth.serleena.TestDB;
 import com.kyloth.serleena.activity.SerleenaActivity;
 import com.kyloth.serleena.common.GeoPoint;
+import com.kyloth.serleena.common.IQuadrant;
 import com.kyloth.serleena.common.LocationNotAvailableException;
 import com.kyloth.serleena.common.NoActiveExperienceException;
 import com.kyloth.serleena.common.UserPoint;
@@ -69,8 +76,10 @@ import com.kyloth.serleena.view.fragments.MapFragment;
 import com.kyloth.serleena.view.widgets.MapWidget;
 import com.jayway.awaitility.Awaitility;
 
+import java.util.Iterator;
 import java.util.concurrent.Callable;
 
+import org.eclipse.jetty.server.Authentication;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -83,6 +92,7 @@ import org.robolectric.annotation.Config;
 import org.robolectric.shadows.ShadowLocationManager;
 
 import static junit.framework.Assert.assertEquals;
+import static junit.framework.Assert.assertTrue;
 import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.eq;
 import static org.mockito.Mockito.mock;
@@ -98,22 +108,7 @@ import static org.mockito.Mockito.when;
         manifest = "src/main/AndroidManifest.xml")
 public class MapPresenterIntegrationTest {
 
-    private static class MyMapWidget extends MapWidget {
-        private GeoPoint latestPosition;
-
-        public MyMapWidget(Context context) {
-            super(context);
-        }
-
-        @Override
-        public void setUserPosition(GeoPoint userPosition) {
-            super.setUserPosition(userPosition);
-            latestPosition = userPosition;
-        }
-        public GeoPoint latestPosition() {
-            return latestPosition;
-        }
-    }
+    private SQLiteDatabase db;
 
     private static class CustomDatasourceActivity extends SerleenaActivity {
         private SerleenaDataSource dataSource;
@@ -128,51 +123,33 @@ public class MapPresenterIntegrationTest {
         }
     }
 
-    MapFragment fragment;
-    CustomDatasourceActivity activity;
-    MapPresenter presenter;
-    MyMapWidget mapWidget;
-    Application app;
-    LocationManager lm;
-    ShadowLocationManager slm;
-    SerleenaDataSource dataSource;
+    private MapFragment fragment;
+    private CustomDatasourceActivity activity;
+    private MapWidget mapWidget;
+    private Application app;
+    private LocationManager lm;
+    private ShadowLocationManager slm;
+    private SerleenaDataSource dataSource;
+    private IRasterSource rasterSource;
 
     @Before
     public void initialize() {
         app = RuntimeEnvironment.application;
         lm = (LocationManager) app.getSystemService(Context.LOCATION_SERVICE);
         slm = Shadows.shadowOf(lm);
-        LayoutInflater inflater = mock(LayoutInflater.class);
-        ViewGroup vg = mock(ViewGroup.class);
-        View v = mock(View.class);
-        mapWidget = new MyMapWidget(app);
-
-        when(inflater.inflate(
-                        Matchers.eq(R.layout.fragment_map),
-                        eq(vg),
-                        any(Boolean.class))
-        ).thenReturn(v);
-        when(v.findViewById(R.id.map_widget)).thenReturn(mapWidget);
-        fragment = new MapFragment();
-        fragment.onCreateView(inflater, vg, Bundle.EMPTY);
 
         SerleenaDatabase serleenaDb = TestDB.getEmptyDatabase();
-        SQLiteDatabase db = serleenaDb.getWritableDatabase();
-        TestDB.experienceQuery(db, 1, "exp");
+        db = serleenaDb.getWritableDatabase();
+        TestDB.experienceQuery(db, 0, "experience");
 
+        rasterSource = mock(IRasterSource.class);
         dataSource = new SerleenaDataSource(
                 new SerleenaSQLiteDataSource(
-                        RuntimeEnvironment.application,
-                        serleenaDb,
-                        mock(IRasterSource.class)));
+                        RuntimeEnvironment.application, serleenaDb, rasterSource));
 
         activity = Robolectric.buildActivity(CustomDatasourceActivity.class)
                 .create().start().visible().get();
         activity.setDataSource(dataSource);
-        presenter = new MapPresenter(fragment, activity);
-        presenter.setActiveExperience(
-                dataSource.getExperiences().iterator().next());
-        fragment.attachPresenter(presenter);
     }
 
     /**
@@ -182,10 +159,14 @@ public class MapPresenterIntegrationTest {
     @Test
     public void userGestureShouldAddNewUserPointToExperience()
             throws NoActiveExperienceException, LocationNotAvailableException {
+        activateExperienceByName(
+                (ListFragment) switchToFragmentInExperienceFragment(
+                        "Imposta Esperienza"),
+                "experience");
+        gotoFragment();
+
         ShadowLocationManager slm = Shadows.shadowOf(lm);
         Location expectedLocation = createLocation(12.0, 20.0);
-
-        fragment.onResume();
 
         slm.simulateLocation(expectedLocation);
         mapWidget.callOnClick();
@@ -211,12 +192,16 @@ public class MapPresenterIntegrationTest {
      */
     @Test
     public void presenterShouldSetMapWithLatestLocationUpdate() {
-        fragment.onResume();
+        TestDB.quadrantQuery(db, 30, 0, 0, 30, "asdlol");
+        when(rasterSource.getRaster("asdlol")).thenReturn(mock(Bitmap.class));
+
+        gotoFragment();
+
         Location expectedLocation = createLocation(12.0, 20.0);
         for (LocationListener listener : slm.getRequestLocationUpdateListeners())
             listener.onLocationChanged(expectedLocation);
 
-        GeoPoint latest = mapWidget.latestPosition();
+        GeoPoint latest = mapWidget.getUserPosition();
         assertEquals(latest.latitude(), 12.0);
         assertEquals(latest.longitude(), 20.0);
 
@@ -224,9 +209,102 @@ public class MapPresenterIntegrationTest {
         for (LocationListener listener : slm.getRequestLocationUpdateListeners())
             listener.onLocationChanged(expectedLocation);
 
-        latest = mapWidget.latestPosition();
+        latest = mapWidget.getUserPosition();
         assertEquals(latest.latitude(), 15.0);
         assertEquals(latest.longitude(), 10.0);
+    }
+
+    /**
+     * Verifica che la vista mostri correttamente il quadrante relativo alla
+     * posizione corrente.
+     */
+    @Test
+    public void viewShouldShowQuadrantForCurrentLocation() {
+        TestDB.quadrantQuery(db, 5, 0, 0, 5, "asdlol");
+        final Bitmap raster = mock(Bitmap.class);
+        when(rasterSource.getRaster("asdlol")).thenReturn(raster);
+
+        TestDB.quadrantQuery(db, 10, 5, 5, 10, "lolasd");
+        final Bitmap raster2 = mock(Bitmap.class);
+        when(rasterSource.getRaster("lolasd")).thenReturn(raster2);
+
+        gotoFragment();
+
+        Location expectedLocation = createLocation(2.5, 2.5);
+        for (LocationListener listener : slm.getRequestLocationUpdateListeners())
+            listener.onLocationChanged(expectedLocation);
+
+        Awaitility.await().until(new Callable<Boolean>() {
+            @Override
+            public Boolean call() throws Exception {
+                IQuadrant quadrant = mapWidget.getQuadrant();
+                return quadrant != null && quadrant.getRaster() == raster;
+            }
+        });
+
+        expectedLocation = createLocation(7.5, 7.5);
+        for (LocationListener listener : slm.getRequestLocationUpdateListeners())
+            listener.onLocationChanged(expectedLocation);
+
+        Awaitility.await().until(new Callable<Boolean>() {
+            @Override
+            public Boolean call() throws Exception {
+                IQuadrant quadrant = mapWidget.getQuadrant();
+                return quadrant != null && quadrant.getRaster() == raster2;
+            }
+        });
+    }
+
+    /**
+     * Verifica che la vista mostri i punti utente associati all'Esperienza
+     * attiva che ricadono entro il perimetro del quadrante.
+     */
+    @Test
+    public void viewShouldShowUserPointForCurrentQuadrant() {
+        TestDB.userPointQuery(db, 0, 1, 1, 0);
+        TestDB.userPointQuery(db, 1, 2, 2, 0);
+        TestDB.userPointQuery(db, 2, 6, 6, 0);
+        TestDB.userPointQuery(db, 3, 7, 7, 0);
+        TestDB.quadrantQuery(db, 5, 0, 0, 5, "asdlol");
+        when(rasterSource.getRaster("asdlol")).thenReturn(mock(Bitmap.class));
+
+        activateExperienceByName(
+                (ListFragment) switchToFragmentInExperienceFragment(
+                        "Imposta Esperienza"),
+                "experience");
+        gotoFragment();
+
+        Location expectedLocation = createLocation(2.5, 2.5);
+        for (LocationListener listener : slm.getRequestLocationUpdateListeners())
+            listener.onLocationChanged(expectedLocation);
+
+        Awaitility.await().until(new Callable<Boolean>() {
+            @Override
+            public Boolean call() throws Exception {
+                return mapWidget.getQuadrant() != null;
+            }
+        });
+
+        for (LocationListener listener : slm.getRequestLocationUpdateListeners())
+            listener.onLocationChanged(expectedLocation);
+
+        Awaitility.await().until(new Callable<Boolean>() {
+            @Override
+            public Boolean call() throws Exception {
+                return mapWidget.getUserPoints() != null;
+            }
+        });
+
+        Iterator<UserPoint> iterator = mapWidget.getUserPoints().iterator();
+        UserPoint p1 = iterator.next();
+        UserPoint p2 = iterator.next();
+        assertTrue(!iterator.hasNext());
+
+        boolean b1 = p1.latitude() == 1 && p1.longitude() == 1 &&
+                p2.latitude() == 2 && p2.longitude() == 2;
+        boolean b2 = p1.latitude() == 2 && p1.longitude() == 2 &&
+                p2.latitude() == 1 && p2.longitude() == 1;
+        assertTrue(b1 || b2);
     }
 
     private Location createLocation(double latitude, double longitude) {
@@ -235,6 +313,51 @@ public class MapPresenterIntegrationTest {
         location.setLongitude(longitude);
         location.setTime(System.currentTimeMillis());
         return location;
+    }
+
+    private void activateExperienceByName(
+            ListFragment experienceSelectionFragment,
+            String experienceName) {
+        ListAdapter adapter = experienceSelectionFragment.getListAdapter();
+        for (int i = 0; i < adapter.getCount(); i++) {
+            IExperience exp = (IExperience) adapter.getItem(i);
+            if (exp.getName().equals(experienceName)) {
+                experienceSelectionFragment.onListItemClick(null, null, i, 0);
+                return;
+            }
+        }
+        throw new RuntimeException();
+    }
+
+    private Fragment switchToFragmentInExperienceFragment(String string) {
+        activity.getFragmentManager().findFragmentById(R.id.main_container)
+                .onPause();
+        activity.onKeyDown(KeyEvent.KEYCODE_MENU, null);
+        ListFragment menuFragment =
+                (ListFragment) activity.getFragmentManager()
+                        .findFragmentById(R.id.main_container);
+        menuFragment.onResume();
+        ListAdapter adapter = menuFragment.getListAdapter();
+        ListFragment expFragment = null;
+        for (int i = 0; i < adapter.getCount(); i++)
+            if (adapter.getItem(i).toString().equals("Esperienza"))
+                expFragment = (ListFragment) adapter.getItem(i);
+        activity.onObjectSelected(expFragment);
+        expFragment.onResume();
+        adapter = expFragment.getListAdapter();
+        Fragment frag = null;
+        for (int i = 0; i < adapter.getCount(); i++)
+            if (adapter.getItem(i).toString().equals(string))
+                frag = (Fragment) adapter.getItem(i);
+        activity.onObjectSelected(frag);
+        frag.onResume();
+        return frag;
+    }
+
+    private void gotoFragment() {
+        fragment = (MapFragment) switchToFragmentInExperienceFragment("Mappa");
+        mapWidget =
+                (MapWidget) fragment.getView().findViewById(R.id.map_widget);
     }
 
 }
