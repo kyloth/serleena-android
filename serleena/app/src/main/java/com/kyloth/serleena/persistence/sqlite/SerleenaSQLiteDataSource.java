@@ -48,8 +48,6 @@ import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 
 import com.kyloth.serleena.common.Checkpoint;
 import com.kyloth.serleena.common.CheckpointReachedTelemetryEvent;
@@ -67,13 +65,10 @@ import com.kyloth.serleena.persistence.IWeatherStorage;
 import com.kyloth.serleena.persistence.NoSuchQuadrantException;
 import com.kyloth.serleena.persistence.WeatherForecastEnum;
 
-import java.io.File;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
-
-import static java.lang.Math.floor;
 
 /**
  * Classe concreta contenente l’implementazione del data source per l’accesso al
@@ -94,10 +89,13 @@ public class SerleenaSQLiteDataSource implements ISerleenaSQLiteDataSource {
 
     private SerleenaDatabase dbHelper;
     private Context context;
+    private IRasterSource rasterSource;
 
-    public SerleenaSQLiteDataSource(Context context, SerleenaDatabase dbHelper) {
+    public SerleenaSQLiteDataSource(Context context, SerleenaDatabase dbHelper,
+                                 IRasterSource rasterSource) {
         this.dbHelper = dbHelper;
         this.context = context;
+        this.rasterSource = rasterSource;
     }
 
     /**
@@ -391,18 +389,12 @@ public class SerleenaSQLiteDataSource implements ISerleenaSQLiteDataSource {
             double seLon = result.getDouble(seLonIndex);
             String fileName = result.getString(uuidIndex);
 
-            File file = new File(context.getFilesDir(), fileName);
-            if (file.exists()) {
-                Bitmap raster =
-                        BitmapFactory.decodeFile(file.getAbsolutePath());
-                return new Quadrant(
-                        new GeoPoint(nwLat, nwLon),
-                        new GeoPoint(seLat, seLon),
-                        raster);
-            }
-        }
-
-        throw new NoSuchQuadrantException();
+            return new Quadrant(
+                    new GeoPoint(nwLat, nwLon),
+                    new GeoPoint(seLat, seLon),
+                    rasterSource.getRaster(fileName));
+        } else
+            throw new NoSuchQuadrantException();
     }
 
     /**
