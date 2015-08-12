@@ -160,6 +160,9 @@ public class MapWidget extends ImageView {
         }
     }
 
+    /**
+     * Implementa IMapView.clear()
+     */
     public void clear() {
         quadrant = null;
         userPosition = null;
