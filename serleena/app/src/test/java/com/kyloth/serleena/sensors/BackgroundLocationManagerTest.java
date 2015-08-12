@@ -116,34 +116,29 @@ public class BackgroundLocationManagerTest {
     }
 
     /**
-     * Verifica che attachObserver() comporti la registrazione di un'allarme
-     * con l'intervallo minimo tra tutti gli observer.
+     * Verifica che la registrazione del primo observer comporti la
+     * registrazione di un allarme.
      */
     @Test
-    public void managerShouldRegisterToAlarmManagerWithRightInterval() {
-        manager.attachObserver(mock(ILocationObserver.class), 60);
-        verify(alarmManager).setInexactRepeating(
+    public void managerShouldRegisterToAlarmManagerOnFirstObserver() {
+        manager.attachObserver(mock(ILocationObserver.class));
+        verify(alarmManager, times(1)).setInexactRepeating(
                 any(Integer.class),
                 any(Long.class),
                 eq(60000L),
-                any(PendingIntent.class)
-        );
-        manager.attachObserver(mock(ILocationObserver.class), 40);
-        verify(alarmManager).cancel(any(PendingIntent.class));
-        verify(alarmManager).setInexactRepeating(
+                any(PendingIntent.class));
+        manager.attachObserver(mock(ILocationObserver.class));
+        verify(alarmManager, times(1)).setInexactRepeating(
                 any(Integer.class),
                 any(Long.class),
-                eq(40000L),
-                any(PendingIntent.class)
-        );
-        manager.attachObserver(mock(ILocationObserver.class), 20);
-        verify(alarmManager, times(2)).cancel(any(PendingIntent.class));
-        verify(alarmManager).setInexactRepeating(
+                eq(60000L),
+                any(PendingIntent.class));
+        manager.attachObserver(mock(ILocationObserver.class));
+        verify(alarmManager, times(1)).setInexactRepeating(
                 any(Integer.class),
                 any(Long.class),
-                eq(20000L),
-                any(PendingIntent.class)
-        );
+                eq(60000L),
+                any(PendingIntent.class));
     }
 
     /**
@@ -156,13 +151,13 @@ public class BackgroundLocationManagerTest {
         ILocationObserver o2 = mock(ILocationObserver.class);
         ILocationObserver o3 = mock(ILocationObserver.class);
 
-        managerWithContextMock.attachObserver(o1, 60);
+        managerWithContextMock.attachObserver(o1);
         verify(contextMock, times(1)).registerReceiver(
                 eq(managerWithContextMock), any(IntentFilter.class));
-        managerWithContextMock.attachObserver(o2, 40);
+        managerWithContextMock.attachObserver(o2);
         verify(contextMock, times(1)).registerReceiver(
                 eq(managerWithContextMock), any(IntentFilter.class));
-        managerWithContextMock.attachObserver(o3, 20);
+        managerWithContextMock.attachObserver(o3);
         verify(contextMock, times(1)).registerReceiver(
                 eq(managerWithContextMock), any(IntentFilter.class));
         managerWithContextMock.detachObserver(o1);
@@ -184,7 +179,7 @@ public class BackgroundLocationManagerTest {
      */
     @Test(expected = IllegalArgumentException.class)
     public void attachObserverShouldThrowWhenNullArgument() {
-        manager.attachObserver(null, 20);
+        manager.attachObserver(null);
     }
 
     /**
@@ -194,24 +189,6 @@ public class BackgroundLocationManagerTest {
     @Test(expected = IllegalArgumentException.class)
     public void detachObserverShouldThrowWhenNullArgument() {
         manager.detachObserver(null);
-    }
-
-    /**
-     * Verifica che attachObserver() sollevi un'eccezione quando viene
-     * passato un intervallo pari a 0.
-     */
-    @Test(expected = IllegalArgumentException.class)
-    public void attachObserverShouldThrowWhenNullInterval() {
-        manager.attachObserver(mock(ILocationObserver.class), 0);
-    }
-
-    /**
-     * Verifica che attachObserver() sollevi un'eccezione quando viene
-     * passato un intervallo negativo.
-     */
-    @Test(expected = IllegalArgumentException.class)
-    public void attachObserverShouldThrowWhenNegativeInterval() {
-        manager.attachObserver(mock(ILocationObserver.class), -20);
     }
 
     /**
@@ -229,9 +206,9 @@ public class BackgroundLocationManagerTest {
         b.putDouble("longitude", 50d);
         manager.onReceiveResult(0, b);
 
-        manager.attachObserver(o1, 60);
-        manager.attachObserver(o2, 60);
-        manager.attachObserver(o3, 60);
+        manager.attachObserver(o1);
+        manager.attachObserver(o2);
+        manager.attachObserver(o3);
 
         manager.notifyObservers();
         verify(o1).onLocationUpdate(any(GeoPoint.class));
@@ -246,7 +223,7 @@ public class BackgroundLocationManagerTest {
     @Test
     public void onReceiveResultShouldNotifyObserversWithReceivedGeoPoint() {
         ILocationObserver o = mock(ILocationObserver.class);
-        manager.attachObserver(o, 60);
+        manager.attachObserver(o);
 
         Bundle b = new Bundle();
         b.putDouble("latitude", 40d);
@@ -266,9 +243,9 @@ public class BackgroundLocationManagerTest {
         ILocationObserver o2 = mock(ILocationObserver.class);
         ILocationObserver o3 = mock(ILocationObserver.class);
 
-        manager.attachObserver(o1, 60);
-        manager.attachObserver(o2, 60);
-        manager.attachObserver(o3, 60);
+        manager.attachObserver(o1);
+        manager.attachObserver(o2);
+        manager.attachObserver(o3);
 
         manager.notifyObservers();
         verify(o1, never()).onLocationUpdate(any(GeoPoint.class));
