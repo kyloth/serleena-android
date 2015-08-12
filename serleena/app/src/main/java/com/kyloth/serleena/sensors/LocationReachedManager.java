@@ -129,7 +129,7 @@ class LocationReachedManager
     }
 
     @Override
-    public void detachObserver(ILocationReachedObserver observer) {
+    public synchronized void detachObserver(ILocationReachedObserver observer) {
         if (observer == null)
             throw new IllegalArgumentException("Illegal null observer");
         List<LocationReachedRequest> toRemove = new ArrayList<>();
