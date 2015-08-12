@@ -81,12 +81,6 @@ import java.util.GregorianCalendar;
  * @version 1.0.0
  */
 public class SerleenaSQLiteDataSource implements ISerleenaSQLiteDataSource {
-    final static int QUADRANT_LATSIZE = 10;
-    final static int QUADRANT_LONGSIZE = 10;
-    final static int TOT_LAT_QUADRANTS = 180 / QUADRANT_LATSIZE;
-    final static int TOT_LONG_QUADRANTS = 360 / QUADRANT_LONGSIZE;
-    final static String RASTER_PATH = "raster/";
-
     private SerleenaDatabase dbHelper;
     private Context context;
     private IRasterSource rasterSource;
@@ -96,38 +90,6 @@ public class SerleenaSQLiteDataSource implements ISerleenaSQLiteDataSource {
         this.dbHelper = dbHelper;
         this.context = context;
         this.rasterSource = rasterSource;
-    }
-
-    /**
-     * Ritorna il percorso del file per il quadrante i,j-esimo.
-     *
-     * @return Il path
-     */
-    public static String getRasterPath(int i, int j) {
-        return RASTER_PATH + i + "_" + j;
-    }
-
-    /**
-     * Ritorna la coppia i,j che identifica il quadrante a cui appartiene un punto.
-     *
-     * @param p Il punto geografico
-     * @return Un array int [2] di due punti i,j che identifica il quadrante.
-     */
-    public static int[] getIJ(GeoPoint p) {
-        int ij[] = new int[2];
-        if (p.latitude() == -90.0) {
-            ij[0] = TOT_LAT_QUADRANTS - 1;
-        } else {
-            ij[0] = (int) (floor(-(p.latitude() - 90.0) / QUADRANT_LATSIZE));
-        }
-        if(ij[0] >= TOT_LAT_QUADRANTS) {
-            throw new IllegalArgumentException(ij[0]+" "+ij[1]);
-        };
-        ij[1] = (int)(floor((p.longitude() + 180.0) / QUADRANT_LONGSIZE) %  TOT_LONG_QUADRANTS);
-        if(ij[1] >= TOT_LONG_QUADRANTS) {
-            throw new IllegalArgumentException(ij[0]+" "+ij[1]);
-        };
-        return ij;
     }
 
     /**

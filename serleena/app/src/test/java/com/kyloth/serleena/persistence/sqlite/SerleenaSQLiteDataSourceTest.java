@@ -40,7 +40,9 @@
 package com.kyloth.serleena.persistence.sqlite;
 
 import android.content.ContentValues;
+import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
+import android.graphics.Bitmap;
 
 import com.kyloth.serleena.BuildConfig;
 import com.kyloth.serleena.common.EmergencyContact;
@@ -50,6 +52,7 @@ import com.kyloth.serleena.common.Quadrant;
 import com.kyloth.serleena.common.TelemetryEvent;
 import com.kyloth.serleena.persistence.IExperienceStorage;
 import com.kyloth.serleena.persistence.ITelemetryStorage;
+import com.kyloth.serleena.persistence.NoSuchQuadrantException;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -58,12 +61,16 @@ import org.robolectric.RobolectricGradleTestRunner;
 import org.robolectric.RuntimeEnvironment;
 import org.robolectric.annotation.Config;
 
+import java.io.File;
 import java.net.URISyntaxException;
 import java.util.GregorianCalendar;
 
 import static com.kyloth.serleena.persistence.sqlite.SerleenaDatabaseTestUtils.makeExperience;
 import static com.kyloth.serleena.persistence.sqlite.SerleenaDatabaseTestUtils.makeTrack;
+import static junit.framework.Assert.assertEquals;
 import static junit.framework.Assert.assertTrue;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
 
 /**
  * Suite di test per SerleenaSQLiteDataSource
@@ -77,75 +84,61 @@ public class SerleenaSQLiteDataSourceTest {
 
     SerleenaSQLiteDataSource sds;
     SQLiteDatabase db;
+    private IRasterSource rasterSource;
 
     /**
-     * Verifica che il path dei raster sia != null, != ""
+     * Verifica che il costruttore sollevi un'eccezione
+     * IllegalArgumentException se vengono passati parametri null.
      */
-    @Test
-    public void testGetRasterPathWellFormed() {
-        assertTrue(sds.getRasterPath(0, 0) != null);
-        assertTrue(sds.getRasterPath(0, 0).length() != 0);
+    @Test(expected = IllegalArgumentException.class)
+    public void ctorShouldThrowIfArgumentIsNull1() {
+        new SerleenaSQLiteDataSource(null, mock(SerleenaDatabase.class),
+                mock(IRasterSource.class));
     }
 
     /**
-     * Verifica che il path dei raster cambi al cambiare di I,J
+     * Verifica che il costruttore sollevi un'eccezione
+     * IllegalArgumentException se vengono passati parametri null.
      */
-    @Test
-    public void testGetRasterPathAreDifferent() {
-        assertTrue(sds.getRasterPath(0, 0) != sds.getRasterPath(1, 1));
+    @Test(expected = IllegalArgumentException.class)
+    public void ctorShouldThrowIfArgumentIsNull2() {
+        new SerleenaSQLiteDataSource(mock(Context.class), null,
+                mock(IRasterSource.class));
     }
 
     /**
-     * Controlla che l'output di getIJ sia all'interno del range corretto.
+     * Verifica che il costruttore sollevi un'eccezione
+     * IllegalArgumentException se vengono passati parametri null.
      */
-    @Test
-    public void testGetIJRange() {
-        for (int x = -180; x < 180; x++) {
-            for (int y = -90; y < 90; y++) {
-                int[] ij = sds.getIJ(new GeoPoint(y, x));
-                assertTrue(0 <= ij[0]);
-                assertTrue(0 <= ij[1]);
-                assertTrue(ij[0] <= SerleenaSQLiteDataSource.TOT_LAT_QUADRANTS);
-                assertTrue(ij[1] <= SerleenaSQLiteDataSource.TOT_LONG_QUADRANTS);
-            }
-        }
-    }
-
-    /**
-     * Controlla che l'output di getIJ sia corretto alle estremita' del range
-     */
-    @Test
-    public void testGetIJTopBottom() {
-        int[] ij = sds.getIJ(new GeoPoint(+90, -180));
-        assertTrue(0 == ij[0]);
-        assertTrue(0 == ij[1]);
-        GeoPoint p = new GeoPoint(-90.0 + SerleenaSQLiteDataSource.QUADRANT_LATSIZE / 2.0,
-                                  180.0 - SerleenaSQLiteDataSource.QUADRANT_LONGSIZE / 2.0);
-        ij = sds.getIJ(p);
-        assertTrue(ij[0] == SerleenaSQLiteDataSource.TOT_LAT_QUADRANTS - 1);
-        assertTrue(ij[1] == SerleenaSQLiteDataSource.TOT_LONG_QUADRANTS - 1);
-
-        GeoPoint p2 = new GeoPoint(-90.0,
-                180.0 - SerleenaSQLiteDataSource.QUADRANT_LONGSIZE / 2.0);
-        ij = sds.getIJ(p2);
-        assertTrue(ij[0] == SerleenaSQLiteDataSource.TOT_LAT_QUADRANTS - 1);
-        assertTrue(ij[1] == SerleenaSQLiteDataSource.TOT_LONG_QUADRANTS - 1);
+    @Test(expected = IllegalArgumentException.class)
+    public void ctorShouldThrowIfArgumentIsNull3() {
+        new SerleenaSQLiteDataSource(
+                mock(Context.class), mock(SerleenaDatabase.class), null);
     }
 
     /**
      * Controlla che per un dato punto il quadrante sia quello atteso.
      */
     @Test
-    public void testGetQuadrantMidPoint() {
-        GeoPoint p = new GeoPoint(+90.0 - SerleenaSQLiteDataSource.QUADRANT_LATSIZE / 2.0,
-                                  -180.0 + SerleenaSQLiteDataSource.QUADRANT_LONGSIZE / 2.0);
-        Quadrant q = (Quadrant) sds.getQuadrant(p);
-        GeoPoint first = q.getNorthWestPoint();
-        GeoPoint second = q.getSouthEastPoint();
-        assertTrue(first.latitude() == +90.0);
-        assertTrue(first.longitude() == -180.0);
-        assertTrue(second.latitude() == +90.0 - SerleenaSQLiteDataSource.QUADRANT_LATSIZE);
-        assertTrue(second.longitude() == -180.0 + SerleenaSQLiteDataSource.QUADRANT_LONGSIZE);
+    public void testGetQuadrant() throws NoSuchQuadrantException {
+        Bitmap raster = putQuadrant(2, 0, 0, 2, "asdlol");
+
+        IQuadrant quadrant = sds.getQuadrant(new GeoPoint(1, 1));
+        assertEquals(2.0, quadrant.getNorthWestPoint().latitude());
+        assertEquals(0.0, quadrant.getNorthWestPoint().longitude());
+        assertEquals(0.0, quadrant.getSouthEastPoint().latitude());
+        assertEquals(2.0, quadrant.getSouthEastPoint().longitude());
+        assertEquals(raster, quadrant.getRaster());
+    }
+
+    /**
+     * Verifica che la richiesta di un quadrante non presente nel database
+     * sollevi un'eccezione NoSuchQuadrantException.
+     */
+    @Test(expected = NoSuchQuadrantException.class)
+    public void queryingNonexistentQuadrantShouldThrow()
+            throws NoSuchQuadrantException {
+        sds.getQuadrant(new GeoPoint(1, 1));
     }
 
     /**
@@ -153,58 +146,32 @@ public class SerleenaSQLiteDataSourceTest {
      * uno tra i due possibili corretti.
      */
     @Test
-    public void testGetQuadrantEdgePoint() {
-        GeoPoint p = new GeoPoint(+90.0 - SerleenaSQLiteDataSource.QUADRANT_LATSIZE,
-                                  -180.0 + SerleenaSQLiteDataSource.QUADRANT_LONGSIZE);
-        Quadrant q = (Quadrant) sds.getQuadrant(p);
-        GeoPoint first = q.getNorthWestPoint();
-        GeoPoint second = q.getSouthEastPoint();
-        assertTrue(first.latitude() == +90.0
-                   && second.latitude() == +90.0 - SerleenaSQLiteDataSource.QUADRANT_LATSIZE ||
-                   first.latitude() == +90.0 - SerleenaSQLiteDataSource.QUADRANT_LATSIZE
-                   && second.latitude() == +90.0 - 2 * SerleenaSQLiteDataSource.QUADRANT_LATSIZE);
-        assertTrue(first.longitude() == -180.0
-                   && second.longitude() == -180.0 + SerleenaSQLiteDataSource.QUADRANT_LONGSIZE ||
-                   first.longitude() == -180.0 + SerleenaSQLiteDataSource.QUADRANT_LONGSIZE
-                   && second.longitude() == -180.0 + 2 * SerleenaSQLiteDataSource.QUADRANT_LONGSIZE);
+    public void testGetQuadrantEdgePoint()
+            throws NoSuchQuadrantException {
+        Bitmap b1 = putQuadrant(5, 0, 0, 5, "asd");
+        Bitmap b2 = putQuadrant(10, 5, 5, 10, "lol");
+        Bitmap b3 = putQuadrant(10, 0, 5, 5, "qwe");
+        Bitmap b4 = putQuadrant(5, 5, 0, 10, "rty");
+        IQuadrant quadrant = sds.getQuadrant(new GeoPoint(5, 5));
+        assertTrue(
+                quadrant.getRaster() == b1 ||
+                quadrant.getRaster() == b2 ||
+                quadrant.getRaster() == b3 ||
+                quadrant.getRaster() == b4);
     }
 
-    /**
-     * Controlla che l'output di getQuadrant sia all'interno del range corretto.
-     */
-    @Test
-    public void testGetQuadrantRange() {
-        for (int x = -180; x < 180; x++) {
-            for (int y = -90; y <= 90; y++) {
-                IQuadrant quad = sds.getQuadrant(new GeoPoint(y, x));
-                assertTrue(quad.getNorthWestPoint().latitude() >= -90);
-                assertTrue(quad.getNorthWestPoint().latitude() <= +90);
-                assertTrue(quad.getNorthWestPoint().longitude() >= -180);
-                assertTrue(quad.getNorthWestPoint().longitude() < 180);
-                assertTrue(quad.getSouthEastPoint().latitude() >= -90);
-                assertTrue(quad.getSouthEastPoint().latitude() <= +90);
-                assertTrue(quad.getSouthEastPoint().longitude() >= -180);
-                assertTrue(quad.getSouthEastPoint().longitude() < 180);
-            }
-        }
-    }
-
-    /**
-     * Controlla che l'output di getQuadrant abbia n<=s e w<=e
-     */
-    @Test
-    public void testGetQuadrantSWGreaterThanNE() {
-        for (int x = -180; x < 180; x++) {
-            for (int y = -90; y <= 90; y++) {
-                IQuadrant quad = sds.getQuadrant(new GeoPoint(y, x));
-                // Polo nord = 90' latitudine; Polo sud = -90'
-                assertTrue(quad.getNorthWestPoint().latitude() > quad.getSouthEastPoint().latitude());
-                assertTrue(quad.getNorthWestPoint().longitude() < quad.getSouthEastPoint().longitude() ||
-                                quad.getNorthWestPoint().longitude() > quad.getSouthEastPoint().longitude() &&
-                                quad.getNorthWestPoint().longitude() < quad.getSouthEastPoint().longitude() + 360.0
-                );
-            }
-        }
+    private Bitmap putQuadrant(double nwLat, double nwLon, double seLat,
+                             double seLon, String uuid) {
+        ContentValues values = new ContentValues();
+        values.put("raster_nw_corner_latitude", nwLat);
+        values.put("raster_nw_corner_longitude", nwLon);
+        values.put("raster_se_corner_latitude", seLat);
+        values.put("raster_se_corner_longitude", seLon);
+        values.put("raster_uuid", uuid);
+        db.insertOrThrow(SerleenaDatabase.TABLE_RASTERS, null, values);
+        Bitmap raster = mock(Bitmap.class);
+        when(rasterSource.getRaster(uuid)).thenReturn(raster);
+        return raster;
     }
 
     /**
@@ -474,7 +441,9 @@ public class SerleenaSQLiteDataSourceTest {
     public void setup() throws URISyntaxException {
         SerleenaDatabase sh = new SerleenaDatabase(RuntimeEnvironment.application, null, null, 1);
         db = sh.getWritableDatabase();
-        sds = new SerleenaSQLiteDataSource(RuntimeEnvironment.application, sh);
+        rasterSource = mock(IRasterSource.class);
+        sds = new SerleenaSQLiteDataSource(RuntimeEnvironment.application, sh,
+                rasterSource);
     }
 }
 
