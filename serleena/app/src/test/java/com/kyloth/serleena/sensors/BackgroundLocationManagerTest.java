@@ -92,9 +92,9 @@ public class BackgroundLocationManagerTest {
         contextMock = mock(Context.class);
         context = RuntimeEnvironment.application;
         alarmManager = mock(AlarmManager.class);
-        manager = new BackgroundLocationManager(context, alarmManager);
-        managerWithContextMock = new BackgroundLocationManager(contextMock,
-                alarmManager);
+        manager = new BackgroundLocationManager(context, alarmManager, 60);
+        managerWithContextMock =
+                new BackgroundLocationManager(contextMock, alarmManager, 60);
     }
 
     /**
@@ -103,7 +103,7 @@ public class BackgroundLocationManagerTest {
      */
     @Test(expected = IllegalArgumentException.class)
     public void ctorShouldThrowWhenNullArgument1() {
-        new BackgroundLocationManager(null, alarmManager);
+        new BackgroundLocationManager(null, alarmManager, 60);
     }
 
     /**
@@ -112,7 +112,33 @@ public class BackgroundLocationManagerTest {
      */
     @Test(expected = IllegalArgumentException.class)
     public void ctorShouldThrowWhenNullArgument2() {
-        new BackgroundLocationManager(context, null);
+        new BackgroundLocationManager(context, null, 60);
+    }
+
+    /**
+     * Verifica che il costruttore sollevi un'eccezione
+     * IllegalArgumentException se viene passaato un iintervallo di
+     * aggiornamento < 60.
+     */
+    @Test(expected = IllegalArgumentException.class)
+    public void ctorShouldThrowIfIntervalBelowSixty() {
+        new BackgroundLocationManager(context, alarmManager, 59);
+    }
+
+    /**
+     * Verifica che venga usato l'intervallo di aggiornamento passato per
+     * parametro al costruttore nella creazione degli allarmi.
+     */
+    @Test
+    public void managerShouldRegisterAlarmWithPassedInterval() {
+        BackgroundLocationManager blm =
+                new BackgroundLocationManager(context, alarmManager, 70);
+        blm.attachObserver(mock(ILocationObserver.class));
+        verify(alarmManager).setInexactRepeating(
+                any(Integer.class),
+                any(Long.class),
+                eq(70000L),
+                any(PendingIntent.class));
     }
 
     /**
