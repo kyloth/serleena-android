@@ -45,5 +45,5 @@ package com.kyloth.serleena.synchronization;
  *
  * @author Tobia Tesan <tobia.tesan@gmail.com>
  */
-public interface InboundDump {
+public interface InboundDump extends Iterable <String> {
 }

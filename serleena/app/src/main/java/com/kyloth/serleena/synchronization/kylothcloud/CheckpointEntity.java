@@ -29,24 +29,23 @@
 
 
 /**
- * Name: InboundDumpBuilder.java
- * Package: com.kyloth.serleena.synchronization
- * Author: Tobia Tesan
+ * Name: CheckPointEntity.java
+ * Package: com.hitchikers.serleena.synchronization
+ * Author: Tobia Tesan <tobia.tesan@gmail.com>
  *
  * History:
- * Version  Programmer        Changes
- * 0.0.1    Tobia Tesan       Creazione file
+ * Version    Programmer   Changes
+ * 1.0        Tobia Tesan  Creazione del file
  */
-package com.kyloth.serleena.synchronization;
+
+package com.kyloth.serleena.synchronization.kylothcloud;
+
+import com.kyloth.serleena.common.GeoPoint;
 
 /**
- * @usa KylothCloudSynchronizer ne usa una istanza per costruire, a partire dalla rappresentazione intermedia fornita da un InboundStreamParser, un dump idoneo ad essere caricato in un dumpLoader fornito dall'Activity (che coincidera' tipicamente con il database dell'applicazione)
- * @author Tobia Tesan <tobia.tesan@gmail.com>
+ * Struct rappresentante un checkpoint
  */
-public interface InboundDumpBuilder {
-    /**
-     * Restituisce un InboundDump idoneo a essere caricato nel database
-     * con i dati finora inseriti.
-     */
-    InboundDump build();
+public class CheckpointEntity implements IKylothDataEntity {
+    public GeoPoint point;
+    public int id;
 }

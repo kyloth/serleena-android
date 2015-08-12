@@ -28,25 +28,40 @@
 ///////////////////////////////////////////////////////////////////////////////
 
 
-/**
- * Name: InboundDumpBuilder.java
- * Package: com.kyloth.serleena.synchronization
- * Author: Tobia Tesan
- *
- * History:
- * Version  Programmer        Changes
- * 0.0.1    Tobia Tesan       Creazione file
- */
-package com.kyloth.serleena.synchronization;
+package com.kyloth.serleena.synchronization.kylothcloud;
+
+import java.math.BigInteger;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
 
 /**
- * @usa KylothCloudSynchronizer ne usa una istanza per costruire, a partire dalla rappresentazione intermedia fornita da un InboundStreamParser, un dump idoneo ad essere caricato in un dumpLoader fornito dall'Activity (che coincidera' tipicamente con il database dell'applicazione)
- * @author Tobia Tesan <tobia.tesan@gmail.com>
+ * Implementa IKylothIdSource per scopi di sviluppo ricavando un id 
+ * "sufficientemente" univoco.
+ *
+ * Ricava un id dall'hash di 
+ * (user.name + user.home + user.dir + 
+ *  os.name + os.arch + os.version).
+ * In produzione deve essere sostituito con un opportuna chiamata all'hardware.
+ * 
  */
-public interface InboundDumpBuilder {
-    /**
-     * Restituisce un InboundDump idoneo a essere caricato nel database
-     * con i dati finora inseriti.
-     */
-    InboundDump build();
+public class LocalEnvKylothIdSource implements IKylothIdSource {
+    @Override
+    public String getKylothId() {
+        String uname = System.getProperty("user.name");
+        String uhome = System.getProperty("user.home");
+        String udir  = System.getProperty("user.dir");
+        String oname = System.getProperty("os.name");
+        String oarch = System.getProperty("os.arch");
+        String ov = System.getProperty("os.version");
+        String hashable = uname + uhome + udir + oname + oarch + ov;
+        MessageDigest md = null;
+        try {
+            md = MessageDigest.getInstance("MD5");
+        } catch (NoSuchAlgorithmException e) {
+            e.printStackTrace();
+        }
+        md.update(hashable.getBytes(), 0, hashable.length());
+        String digest = new BigInteger(1, md.digest()).toString(16);
+        return digest;
+    }
 }

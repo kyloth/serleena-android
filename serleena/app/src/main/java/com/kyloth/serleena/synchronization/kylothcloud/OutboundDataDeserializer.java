@@ -28,20 +28,35 @@
 ///////////////////////////////////////////////////////////////////////////////
 
 
-/**
- * Name: RasterDataEntity.java
- * Package: com.hitchikers.serleena.synchronization
- * Author: Tobia Tesan <tobia.tesan@gmail.com>
- *
- * History:
- * Version    Programmer   Changes
- * 1.0        Tobia Tesan  Creazione del file
- */
+package com.kyloth.serleena.synchronization.kylothcloud;
 
-package com.kyloth.serleena.synchronization;
+import com.google.gson.JsonArray;
+import com.google.gson.JsonDeserializationContext;
+import com.google.gson.JsonDeserializer;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonParseException;
 
-/**
- * Struct rappresentante ua mappa raster
- */
-public class RasterDataEntity implements IDataEntity {
+import java.lang.reflect.Type;
+
+import java.util.ArrayList;
+
+class OutboundDataDeserializer implements JsonDeserializer<OutboundDataEntity> {
+
+    @Override
+    public OutboundDataEntity deserialize(JsonElement json, Type typeOfT, JsonDeserializationContext context) throws JsonParseException {
+        OutboundDataEntity ode = new OutboundDataEntity();
+        ode.experience = json.getAsJsonObject().get("experience").getAsString();
+        ode.userPoints = new ArrayList<UserPointEntity>();
+        JsonArray userPoints = json.getAsJsonObject().get("userPoints").getAsJsonArray();
+        for (JsonElement up : userPoints) {
+            ode.userPoints.add(new UserPointDeserializer().deserialize(up, UserPointEntity.class, context));
+        }
+        ode.telemetryData = new ArrayList<TelemetryEntity>();
+        JsonArray telemetryData = json.getAsJsonObject().get("telemetryData").getAsJsonArray();
+        for (JsonElement t : telemetryData) {
+            ode.telemetryData.add(new TelemetryEntityDeserializer().deserialize(t, TelemetryEntity.class, context));
+        }
+
+        return ode;
+    }
 }

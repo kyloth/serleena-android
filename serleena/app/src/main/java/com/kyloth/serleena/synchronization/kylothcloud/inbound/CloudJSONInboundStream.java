@@ -29,7 +29,7 @@
 
 
 /**
- * Name: SerleenaSQLiteInboundDumpBuilder.java
+ * Name: CloudJSONInboundStream.java
  * Package: com.kyloth.serleena.synchronization
  * Author: Tobia Tesan
  *
@@ -37,60 +37,29 @@
  * Version  Programmer        Changes
  * 0.0.1    Tobia Tesan       Creazione file
  */
-package com.kyloth.serleena.synchronization;
+package com.kyloth.serleena.synchronization.kylothcloud.inbound;
+
+import com.kyloth.serleena.synchronization.InboundStream;
+
+import java.io.BufferedInputStream;
+import java.io.InputStream;
 
 /**
- * Concretizza InboundDumpBuilder in modo da restituire un InboundDump
- * compatibile con il formato del database interno dell'orologio.
- *
- * @use Viene usato da KylothCloudSynchronizer per trasformare una collezione di IDataEntity provenienti da un InboundStreamParser in un dump idoneo a essere caricato nel database dell'orologio.
- * @author Tobia Tesan <tobia.tesan@gmail.com>
- * @version 0.1
+ * Concretizza InboundStream, contiene uno stream JSON proveniente da
+ * KylothCloud.
  */
-public class SerleenaSQLiteInboundDumpBuilder implements InboundDumpBuilder {
-	/**
-	 * Aggiunge al'InboundDump in preparazione un
-	 * Tracciamento.
-	 *
-	 * @param telemetry Il Tracciamento da aggiungere
-	 */
-	@Override
-	public void addTelemetry(IDataEntity telemetry) {
-		// TODO
-	}
-
-	/**
-	 * Aggiunge una cella di dati meteo.
-	 */
-	@Override
-	public void addWeather(IDataEntity weatherCell) {
-		// TODO
-	}
-
-	/**
-	 * Aggiunge un'Esperienza.
-	 */
-	@Override
-	public void addExperience(IDataEntity experience) {
-		// TODO
-	}
-
-	/**
-	 * Aggiunge le informazioni per un quadrante di
-	 * mappa.
-	 */
-	@Override
-	public void addMapQuadrant(IDataEntity mapQuadrant) {
-		// TODO
-	}
-
-	/**
-	 * Restituisce un InboundDump idoneo a essere caricato nel database
-	 * interno con i dati finora inseriti.
-	 */
-	@Override
-	public InboundDump build() {
-		// TODO
-		return null;
-	}
+public class CloudJSONInboundStream extends BufferedInputStream implements InboundStream {
+    /**
+     * Constructs a new {@code BufferedInputStream}, providing {@code in} with a buffer
+     * of 8192 bytes.
+     * <p/>
+     * <p><strong>Warning:</strong> passing a null source creates a closed
+     * {@code BufferedInputStream}. All read operations on such a stream will
+     * fail with an IOException.
+     *
+     * @param in the {@code InputStream} the buffer reads from.
+     */
+    public CloudJSONInboundStream(InputStream in) {
+        super(in);
+    }
 }

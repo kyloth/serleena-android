@@ -28,32 +28,30 @@
 ///////////////////////////////////////////////////////////////////////////////
 
 
-/**
- * Name: ExperienceEntity.java
- * Package: com.hitchikers.serleena.synchronization
- * Author: Tobia Tesan <tobia.tesan@gmail.com>
- *
- * History:
- * Version    Programmer   Changes
- * 1.0        Tobia Tesan  Creazione del file
- */
+package com.kyloth.serleena.synchronization.kylothcloud;
 
-package com.kyloth.serleena.synchronization;
+import com.google.gson.JsonArray;
+import com.google.gson.JsonPrimitive;
+import com.google.gson.JsonSerializationContext;
+import com.google.gson.JsonSerializer;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
 
-import com.kyloth.serleena.common.IQuadrant;
-import com.kyloth.serleena.common.UserPoint;
+import java.lang.reflect.Type;
 
-import java.util.Collection;
+import java.util.Iterator;
 
-/**
- * Struct rappresentante un'esperienza
- */
-public class ExperienceEntity implements IDataEntity {
-	Collection<TrackEntity> tracks;
-	String name;
-	RasterDataEntity rasterData;
-	IQuadrant region;
-	Collection<UserPoint> userPoints;
-	// TODO: Il nostro UserPoint non ha un ID, il loro si'. Chi vince?
-	// TODO: Loro ci passano PointsOfInterest. Continuiamo a ignorarli? Cfr. SHANDROID-288
+class TelemetryEntitySerializer implements JsonSerializer<TelemetryEntity> {
+    @Override
+    public JsonElement serialize(TelemetryEntity te, Type typeOfTe, JsonSerializationContext context) {
+        JsonObject telemetry = new JsonObject();
+        JsonArray events = new JsonArray();
+        Iterator<Long> i_events = te.events.iterator();
+        while(i_events.hasNext()) {
+            JsonPrimitive j = new JsonPrimitive(i_events.next());
+            events.add(j);
+        }
+        telemetry.add("events", events);
+        return telemetry;
+    }
 }

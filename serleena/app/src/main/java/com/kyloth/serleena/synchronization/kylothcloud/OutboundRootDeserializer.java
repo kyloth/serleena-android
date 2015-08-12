@@ -28,25 +28,29 @@
 ///////////////////////////////////////////////////////////////////////////////
 
 
-/**
- * Name: InboundDumpBuilder.java
- * Package: com.kyloth.serleena.synchronization
- * Author: Tobia Tesan
- *
- * History:
- * Version  Programmer        Changes
- * 0.0.1    Tobia Tesan       Creazione file
- */
-package com.kyloth.serleena.synchronization;
+package com.kyloth.serleena.synchronization.kylothcloud;
 
-/**
- * @usa KylothCloudSynchronizer ne usa una istanza per costruire, a partire dalla rappresentazione intermedia fornita da un InboundStreamParser, un dump idoneo ad essere caricato in un dumpLoader fornito dall'Activity (che coincidera' tipicamente con il database dell'applicazione)
- * @author Tobia Tesan <tobia.tesan@gmail.com>
- */
-public interface InboundDumpBuilder {
-    /**
-     * Restituisce un InboundDump idoneo a essere caricato nel database
-     * con i dati finora inseriti.
-     */
-    InboundDump build();
+import com.google.gson.JsonArray;
+import com.google.gson.JsonDeserializationContext;
+import com.google.gson.JsonDeserializer;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonParseException;
+
+import java.lang.reflect.Type;
+
+import java.util.ArrayList;
+
+class OutboundRootDeserializer implements JsonDeserializer<OutboundRootEntity> {
+
+    @Override
+    public OutboundRootEntity deserialize(JsonElement json, Type typeOfT, JsonDeserializationContext context) throws JsonParseException {
+        OutboundRootEntity ore = new OutboundRootEntity();
+        ore.data = new ArrayList<OutboundDataEntity>();
+        JsonArray data = json.getAsJsonArray();
+        for (JsonElement d : data) {
+            ore.data.add(new OutboundDataDeserializer().deserialize(d, OutboundDataEntity.class, context));
+        }
+
+        return ore;
+    }
 }

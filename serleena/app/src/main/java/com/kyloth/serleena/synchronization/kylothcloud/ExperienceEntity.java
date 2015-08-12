@@ -29,24 +29,35 @@
 
 
 /**
- * Name: InboundDumpBuilder.java
- * Package: com.kyloth.serleena.synchronization
- * Author: Tobia Tesan
+ * Name: ExperienceEntity.java
+ * Package: com.hitchikers.serleena.synchronization
+ * Author: Tobia Tesan <tobia.tesan@gmail.com>
  *
  * History:
- * Version  Programmer        Changes
- * 0.0.1    Tobia Tesan       Creazione file
+ * Version    Programmer   Changes
+ * 1.0        Tobia Tesan  Creazione del file
  */
-package com.kyloth.serleena.synchronization;
+
+package com.kyloth.serleena.synchronization.kylothcloud;
+
+import com.kyloth.serleena.common.IRegion;
+
+import java.util.Collection;
+import java.util.LinkedList;
 
 /**
- * @usa KylothCloudSynchronizer ne usa una istanza per costruire, a partire dalla rappresentazione intermedia fornita da un InboundStreamParser, un dump idoneo ad essere caricato in un dumpLoader fornito dall'Activity (che coincidera' tipicamente con il database dell'applicazione)
- * @author Tobia Tesan <tobia.tesan@gmail.com>
+ * Struct rappresentante un'esperienza
  */
-public interface InboundDumpBuilder {
-    /**
-     * Restituisce un InboundDump idoneo a essere caricato nel database
-     * con i dati finora inseriti.
-     */
-    InboundDump build();
+public class ExperienceEntity implements IKylothDataEntity {
+    public Collection<TrackEntity> tracks;
+    public String name;
+    public Collection<RasterDataEntity> rasterData;
+    public IRegion region;
+    public Collection<UserPointEntity> userPoints;
+    public ExperienceEntity() {
+        tracks = new LinkedList<TrackEntity>();
+        userPoints = new LinkedList<UserPointEntity>();
+    }
+    // TODO: Il nostro UserPoint non ha un ID, il loro si'. Chi vince?
+    // TODO: Loro ci passano PointsOfInterest. Continuiamo a ignorarli? Cfr. SHANDROID-288
 }

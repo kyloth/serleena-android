@@ -29,24 +29,21 @@
 
 
 /**
- * Name: InboundDumpBuilder.java
- * Package: com.kyloth.serleena.synchronization
- * Author: Tobia Tesan
+ * Name: SerleenaConnectionFactory.java
+ * Package: com.kyloth.serleena.synchronization.net
+ * Author: Matteo Lisotto
  *
  * History:
  * Version  Programmer        Changes
- * 0.0.1    Tobia Tesan       Creazione file
+ * 0.0.1    Matteo Lisotto    Creazione file
  */
-package com.kyloth.serleena.synchronization;
 
-/**
- * @usa KylothCloudSynchronizer ne usa una istanza per costruire, a partire dalla rappresentazione intermedia fornita da un InboundStreamParser, un dump idoneo ad essere caricato in un dumpLoader fornito dall'Activity (che coincidera' tipicamente con il database dell'applicazione)
- * @author Tobia Tesan <tobia.tesan@gmail.com>
- */
-public interface InboundDumpBuilder {
-    /**
-     * Restituisce un InboundDump idoneo a essere caricato nel database
-     * con i dati finora inseriti.
-     */
-    InboundDump build();
+package com.kyloth.serleena.synchronization.net;
+
+import java.io.IOException;
+import java.net.HttpURLConnection;
+import java.net.URL;
+
+public interface SerleenaConnectionFactory {
+    HttpURLConnection createURLConnection (URL url) throws IOException;
 }

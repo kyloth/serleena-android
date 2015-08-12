@@ -28,25 +28,11 @@
 ///////////////////////////////////////////////////////////////////////////////
 
 
-/**
- * Name: InboundDumpBuilder.java
- * Package: com.kyloth.serleena.synchronization
- * Author: Tobia Tesan
- *
- * History:
- * Version  Programmer        Changes
- * 0.0.1    Tobia Tesan       Creazione file
- */
-package com.kyloth.serleena.synchronization;
+package com.kyloth.serleena.synchronization.kylothcloud;
 
-/**
- * @usa KylothCloudSynchronizer ne usa una istanza per costruire, a partire dalla rappresentazione intermedia fornita da un InboundStreamParser, un dump idoneo ad essere caricato in un dumpLoader fornito dall'Activity (che coincidera' tipicamente con il database dell'applicazione)
- * @author Tobia Tesan <tobia.tesan@gmail.com>
- */
-public interface InboundDumpBuilder {
-    /**
-     * Restituisce un InboundDump idoneo a essere caricato nel database
-     * con i dati finora inseriti.
-     */
-    InboundDump build();
+import com.kyloth.serleena.common.GeoPoint;
+
+public class UserPointEntity implements IKylothDataEntity {
+    public GeoPoint point;
+    public String name;
 }

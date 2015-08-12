@@ -39,8 +39,11 @@
  */
 package com.kyloth.serleena.synchronization.net;
 
-import com.kyloth.serleena.synchronization.OutboundStream;
+import com.kyloth.serleena.synchronization.AuthException;
 import com.kyloth.serleena.synchronization.InboundStream;
+import com.kyloth.serleena.synchronization.OutboundStream;
+
+import java.io.IOException;
 
 /**
  * Fornisce un'interfaccia ad alto livello verso il
@@ -53,33 +56,45 @@ import com.kyloth.serleena.synchronization.InboundStream;
  * @version 0.0.1
  */
 public interface INetProxy {
-	/**
-	 * Invia al servizio remoto un'oggetto di tipo OutboundStream
-	 *
-	 * @param stream Un OutboundStream con i dati raccolti localmente da inviare
-	 *               al servizio remoto in forma grezza
-	 */
-	void send(OutboundStream stream);
+    /**
+     * Ritorna un OutboundStream in cui scrivere per inviare dati al servizio remoto.
+     *
+     * @return Un OutboundStream in cui scrivere i dati per il servizio remoto.
+     */
+    OutboundStream send() throws AuthException, IOException;
 
-	/**
-	 * Richiede i dati di sincronizzazione dal servizio remoto.
-	 *
-	 * @return Un InboundStream contenente i dati in forma grezza provenienti
-	 *         dal servizio remoto.
-	 */
-	InboundStream get();
+    /**
+     * Richiede i dati di sincronizzazione dal servizio remoto.
+     *
+     * @return Un InboundStream da cui leggere i dati in forma grezza provenienti
+     *         dal servizio remoto.
+     */
+    InboundStream get() throws IOException, AuthException;
 
-	/**
-	 * Richiede la preautorizzazione con il servizio remoto.
-	 *
-	 * @return La stringa con il token temporaneo da visualizzare che
-	 *         l'utente dovra' poi confermare sull'interfaccia cloud..
-	 */
-	String preAuth();
+    /**
+     * Richiede la preautorizzazione con il servizio remoto.
+     *
+     * @return La stringa con il token temporaneo da visualizzare che
+     *         l'utente dovra' poi confermare sull'interfaccia cloud..
+     */
+    String preAuth() throws IOException, AuthException;
 
-	/**
-	 * Richiede di eseguire la procedura di autorizzazione permanente contro
-	 * il servizio remoto.
-	 */
-	void auth();
+    /**
+     * Richiede di eseguire la procedura di autorizzazione permanente contro
+     * il servizio remoto.
+     */
+    void auth() throws IOException, AuthException;
+
+    /**
+     * Disconnette dal servizio remoto
+     */
+    void disconnect();
+
+    /**
+     * Verifica se l'ultima operazione di send() o get() e' andata a buon fine
+     * @return true se e' andata a buon fine, altrimenti false oppure solleva eccezione
+     * @throws IOException
+     * @throws AuthException
+     */
+    boolean success() throws IOException, AuthException;
 }

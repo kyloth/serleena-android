@@ -28,25 +28,37 @@
 ///////////////////////////////////////////////////////////////////////////////
 
 
-/**
- * Name: InboundDumpBuilder.java
- * Package: com.kyloth.serleena.synchronization
- * Author: Tobia Tesan
- *
- * History:
- * Version  Programmer        Changes
- * 0.0.1    Tobia Tesan       Creazione file
- */
-package com.kyloth.serleena.synchronization;
+package com.kyloth.serleena.synchronization.kylothcloud;
 
-/**
- * @usa KylothCloudSynchronizer ne usa una istanza per costruire, a partire dalla rappresentazione intermedia fornita da un InboundStreamParser, un dump idoneo ad essere caricato in un dumpLoader fornito dall'Activity (che coincidera' tipicamente con il database dell'applicazione)
- * @author Tobia Tesan <tobia.tesan@gmail.com>
- */
-public interface InboundDumpBuilder {
-    /**
-     * Restituisce un InboundDump idoneo a essere caricato nel database
-     * con i dati finora inseriti.
-     */
-    InboundDump build();
+import com.google.gson.JsonArray;
+import com.google.gson.JsonSerializationContext;
+import com.google.gson.JsonSerializer;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
+
+import java.lang.reflect.Type;
+
+import java.util.Iterator;
+
+class OutboundDataSerializer implements JsonSerializer<OutboundDataEntity> {
+    @Override
+    public JsonElement serialize(OutboundDataEntity or, Type typeOfOr, JsonSerializationContext context) {
+        JsonObject outboundData = new JsonObject();
+        outboundData.addProperty("experience", or.experience);
+        JsonArray userPoints = new JsonArray();
+        Iterator<UserPointEntity> i_userpoints = or.userPoints.iterator();
+        while(i_userpoints.hasNext()) {
+            userPoints.add(new UserPointSerializer().serialize(i_userpoints.next(), UserPointEntity.class, context));
+        }
+        outboundData.add("userPoints", userPoints);
+        JsonArray telemetryData = new JsonArray();
+        Iterator<TelemetryEntity> i_telemetry = or.telemetryData.iterator();
+        while(i_telemetry.hasNext()) {
+            telemetryData.add(new TelemetryEntitySerializer().serialize(i_telemetry.next(), TelemetryEntity.class, context));
+        }
+        outboundData.add("telemetryData", telemetryData);
+
+        return outboundData;
+    }
+
 }

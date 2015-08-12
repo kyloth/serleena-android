@@ -28,25 +28,25 @@
 ///////////////////////////////////////////////////////////////////////////////
 
 
-/**
- * Name: InboundDumpBuilder.java
- * Package: com.kyloth.serleena.synchronization
- * Author: Tobia Tesan
- *
- * History:
- * Version  Programmer        Changes
- * 0.0.1    Tobia Tesan       Creazione file
- */
-package com.kyloth.serleena.synchronization;
+package com.kyloth.serleena.synchronization.kylothcloud;
 
-/**
- * @usa KylothCloudSynchronizer ne usa una istanza per costruire, a partire dalla rappresentazione intermedia fornita da un InboundStreamParser, un dump idoneo ad essere caricato in un dumpLoader fornito dall'Activity (che coincidera' tipicamente con il database dell'applicazione)
- * @author Tobia Tesan <tobia.tesan@gmail.com>
- */
-public interface InboundDumpBuilder {
-    /**
-     * Restituisce un InboundDump idoneo a essere caricato nel database
-     * con i dati finora inseriti.
-     */
-    InboundDump build();
+import com.google.gson.JsonDeserializationContext;
+import com.google.gson.JsonDeserializer;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonParseException;
+import com.kyloth.serleena.common.GeoPoint;
+
+import java.lang.reflect.Type;
+
+public class CheckpointEntityDeserializer implements JsonDeserializer<CheckpointEntity> {
+    @Override
+    public CheckpointEntity deserialize(JsonElement json, Type typeOfC, JsonDeserializationContext context) throws JsonParseException {
+        CheckpointEntity ce = new CheckpointEntity();
+        double latitude = json.getAsJsonObject().get("latitude").getAsDouble();
+        double longitude = json.getAsJsonObject().get("longitude").getAsDouble();
+        ce.point = new GeoPoint(latitude, longitude);
+        ce.id = json.getAsJsonObject().get("id").getAsInt();
+        return ce;
+    }
+
 }

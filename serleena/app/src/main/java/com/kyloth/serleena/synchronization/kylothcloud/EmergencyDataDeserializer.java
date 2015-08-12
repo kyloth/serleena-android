@@ -28,25 +28,30 @@
 ///////////////////////////////////////////////////////////////////////////////
 
 
-/**
- * Name: InboundDumpBuilder.java
- * Package: com.kyloth.serleena.synchronization
- * Author: Tobia Tesan
- *
- * History:
- * Version  Programmer        Changes
- * 0.0.1    Tobia Tesan       Creazione file
- */
-package com.kyloth.serleena.synchronization;
+package com.kyloth.serleena.synchronization.kylothcloud;
 
-/**
- * @usa KylothCloudSynchronizer ne usa una istanza per costruire, a partire dalla rappresentazione intermedia fornita da un InboundStreamParser, un dump idoneo ad essere caricato in un dumpLoader fornito dall'Activity (che coincidera' tipicamente con il database dell'applicazione)
- * @author Tobia Tesan <tobia.tesan@gmail.com>
- */
-public interface InboundDumpBuilder {
-    /**
-     * Restituisce un InboundDump idoneo a essere caricato nel database
-     * con i dati finora inseriti.
-     */
-    InboundDump build();
+import com.google.gson.JsonDeserializationContext;
+import com.google.gson.JsonDeserializer;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
+import com.google.gson.JsonParseException;
+import com.kyloth.serleena.common.GeoPoint;
+import com.kyloth.serleena.common.Quadrant;
+
+import java.lang.reflect.Type;
+
+public class EmergencyDataDeserializer implements JsonDeserializer<EmergencyDataEntity> {
+    @Override
+    public EmergencyDataEntity deserialize(JsonElement json, Type typeOfEd, JsonDeserializationContext context) throws JsonParseException {
+        EmergencyDataEntity ede = new EmergencyDataEntity();
+        JsonObject boundingRect = json.getAsJsonObject().get("boundingRect").getAsJsonObject();
+        JsonObject topLeft = boundingRect.getAsJsonObject("topLeft");
+        JsonObject bottomRight = boundingRect.getAsJsonObject("bottomRight");
+        GeoPoint tl = new GeoPoint(topLeft.getAsJsonObject().get("latitude").getAsDouble(), topLeft.get("longitude").getAsDouble());
+        GeoPoint br = new GeoPoint(bottomRight.getAsJsonObject().get("latitude").getAsDouble(), bottomRight.get("longitude").getAsDouble());
+        ede.rect = new Quadrant(tl, br, null);
+        ede.name = json.getAsJsonObject().get("name").getAsString();
+        ede.number = json.getAsJsonObject().get("number").getAsString();
+        return ede;
+    }
 }

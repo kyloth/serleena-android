@@ -29,7 +29,7 @@
 
 
 /**
- * Name: CheckPointEntity.java
+ * Name: RasterDataEntity.java
  * Package: com.hitchikers.serleena.synchronization
  * Author: Tobia Tesan <tobia.tesan@gmail.com>
  *
@@ -38,14 +38,10 @@
  * 1.0        Tobia Tesan  Creazione del file
  */
 
-package com.kyloth.serleena.synchronization;
-
-import com.kyloth.serleena.common.GeoPoint;
+package com.kyloth.serleena.synchronization.kylothcloud;
 
 /**
- * Struct rappresentante un checkpoint
+ * Struct rappresentante ua mappa raster
  */
-public class CheckpointEntity implements IDataEntity {
-	GeoPoint point;
-	int id;
+public class RasterDataEntity implements IKylothDataEntity {
 }

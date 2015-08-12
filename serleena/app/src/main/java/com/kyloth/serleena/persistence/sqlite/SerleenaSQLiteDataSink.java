@@ -29,24 +29,56 @@
 
 
 /**
- * Name: InboundDumpBuilder.java
- * Package: com.kyloth.serleena.synchronization
+ * Name: ISerleenaSQLiteDataSink.java
+ * Package: com.kyloth.serleena.persistence.sqlite
  * Author: Tobia Tesan
  *
  * History:
- * Version  Programmer        Changes
- * 0.0.1    Tobia Tesan       Creazione file
+ * Version  Programmer       Changes
+ * 1.0.0    Tobia Tesan      Creazione file e scrittura di codice
+ *                                          e documentazione in Javadoc.
  */
-package com.kyloth.serleena.synchronization;
 
-/**
- * @usa KylothCloudSynchronizer ne usa una istanza per costruire, a partire dalla rappresentazione intermedia fornita da un InboundStreamParser, un dump idoneo ad essere caricato in un dumpLoader fornito dall'Activity (che coincidera' tipicamente con il database dell'applicazione)
- * @author Tobia Tesan <tobia.tesan@gmail.com>
- */
-public interface InboundDumpBuilder {
+package com.kyloth.serleena.persistence.sqlite;
+
+import android.content.Context;
+import android.database.sqlite.SQLiteDatabase;
+
+import com.kyloth.serleena.synchronization.InboundDump;
+import com.kyloth.serleena.synchronization.kylothcloud.inbound.SerleenaSQLiteInboundDump;
+
+public class SerleenaSQLiteDataSink implements ISerleenaSQLiteDataSink {
+    private SerleenaDatabase dbHelper;
+    private Context context;
+
+    public SerleenaSQLiteDataSink(Context context, SerleenaDatabase dbHelper) {
+        this.dbHelper = dbHelper;
+        this.context = context;
+    }
+
     /**
-     * Restituisce un InboundDump idoneo a essere caricato nel database
-     * con i dati finora inseriti.
+     * Carica un dump di dati proveniente dall'esterno.
+     *
+     * @param dump
      */
-    InboundDump build();
+    @Override
+    public void load(InboundDump dump) {
+        if (dump instanceof SerleenaSQLiteInboundDump) {
+            SQLiteDatabase a = dbHelper.getWritableDatabase();
+            for (String instr : dump) {
+                a.execSQL(instr);
+            }
+            // TODO: Esegui il dump riga per riga
+        } else {
+            throw new IllegalArgumentException();
+        }
+    }
+
+    /**
+     * Svuota completamente i dati.
+     */
+    @Override
+    public void flush() {
+        // TODO: Svuota il database
+    }
 }

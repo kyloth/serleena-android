@@ -29,7 +29,7 @@
 
 
 /**
- * Name: SerleenaJSONOutboundStream.java
+ * Name: JSONOutboundStream.java
  * Package: com.kyloth.serleena.synchronization
  * Author: Tobia Tesan
  *
@@ -40,9 +40,10 @@
 package com.kyloth.serleena.synchronization;
 
 /**
- * Concretizza outboundStream, contiene uno stream JSON idoneo per l'invio a
- * KylothCloud.
+ * Interfaccia che rappresenta uno stream testuale
+ * in formato JSON in uscita.
+ *
+ * @author Tobia Tesan <tobia.tesan@gmail.com>
  */
-public class SerleenaJSONOutboundStream implements OutboundStream {
-	// TODO
+public interface JSONOutboundStream extends OutboundStream {
 }

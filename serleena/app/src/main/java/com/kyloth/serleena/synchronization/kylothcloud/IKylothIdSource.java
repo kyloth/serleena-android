@@ -28,24 +28,15 @@
 ///////////////////////////////////////////////////////////////////////////////
 
 
-/**
- * Name: EmergencyDataEntity.java
- * Package: com.hitchikers.serleena.presentation
- * Author: Tobia Tesan <tobia.tesan@gmail.com>
- *
- * History:
- * Version    Programmer   Changes
- * 1.0        Tobia Tesan  Creazione del file
- */
-package com.kyloth.serleena.synchronization;
-
-import com.kyloth.serleena.common.IQuadrant;
+package com.kyloth.serleena.synchronization.kylothcloud;
 
 /**
- * Created by tobia on 21/07/15.
+ * Restituisce il token KylothId che identifica univocamente l'orologio,
+ * richiesto dal protocollo di sincronizzazione
  */
-public class EmergencyDataEntity implements IDataEntity {
-	IQuadrant rect;
-	String name;
-	int number;
+public interface IKylothIdSource {
+    /*
+     * @return il KylothId
+     */
+    public String getKylothId();
 }

@@ -39,7 +39,22 @@
  */
 package com.kyloth.serleena.synchronization;
 
-import com.kyloth.serleena.model.ISerleenaDataSource;
+import com.kyloth.serleena.persistence.IExperienceStorage;
+import com.kyloth.serleena.persistence.IPersistenceDataSink;
+import com.kyloth.serleena.persistence.IPersistenceDataSource;
+import com.kyloth.serleena.synchronization.net.INetProxy;
+import com.kyloth.serleena.synchronization.net.SerleenaJSONNetProxy;
+import com.kyloth.serleena.synchronization.kylothcloud.InboundRootEntity;
+import com.kyloth.serleena.synchronization.kylothcloud.LocalEnvKylothIdSource;
+import com.kyloth.serleena.synchronization.kylothcloud.inbound.CloudJSONInboundStream;
+import com.kyloth.serleena.synchronization.kylothcloud.inbound.CloudJSONInboundStreamParser;
+import com.kyloth.serleena.synchronization.kylothcloud.inbound.CloudSerleenaSQLiteInboundDumpBuilder;
+import com.kyloth.serleena.synchronization.kylothcloud.inbound.SerleenaSQLiteInboundDump;
+import com.kyloth.serleena.synchronization.kylothcloud.outbound.CloudJSONOutboundStreamBuilder;
+
+import java.io.IOException;
+import java.net.MalformedURLException;
+import java.net.URL;
 
 /**
  * Funge da facade per il sottosistema di sincronizzazione.
@@ -50,52 +65,103 @@ import com.kyloth.serleena.model.ISerleenaDataSource;
  * @use Viene usato dall'Activity come unico entry point per le operazioni di sincronizzazione, dopo avergli fornito un dataSource e un dumpLoader (che possono e tipicamente sono la stesso oggetto)e l'URL del servizio remoto. Si faccia riferimento ai diagrammi di sequenza della ST per i dettagli della procedura di sincronizzazione.
  * @field instance la singola istanza
  */
-public class KylothCloudSynchronizer {
+public class KylothCloudSynchronizer implements IKylothCloudSynchronizer {
     static KylothCloudSynchronizer instance;
+    private final static String DEFAULT_URL = "http://localhost:8080";
+    IPersistenceDataSink sink;
+    IPersistenceDataSource source;
+    INetProxy proxy;
 
+    KylothCloudSynchronizer(INetProxy proxy, IPersistenceDataSink sink, IPersistenceDataSource source) {
+        this.proxy = proxy;
+        this.sink = sink;
+        this.source = source;
+    }
+
+    static void __reset() {
+        instance = null;
+    }
     /**
      * Ritorna l'istanza unica di KylothCloudSynchronizer
      */
-    public static KylothCloudSynchronizer getInstance() {
-        //TODO
-        return instance;
+    public static IKylothCloudSynchronizer getInstance(IPersistenceDataSink sink, IPersistenceDataSource source) {
+        try {
+            return getInstance(
+                    new SerleenaJSONNetProxy(
+                            new LocalEnvKylothIdSource(),
+                            new URL(DEFAULT_URL)
+                    ),
+                    sink,
+                    source
+            );
+        } catch (MalformedURLException e) {
+            throw new RuntimeException(e);
+        }
     }
 
-    /**
-     * Imposta l'URL del servizio remoto con cui eseguire la sincronizzazione
-     *
-     * @param url l'URL del servizio remoto
-     */
-    public void setUrl(String url) {
-        //TODO
+    public static KylothCloudSynchronizer getInstance(INetProxy proxy, IPersistenceDataSink sink, IPersistenceDataSource source) {
+        if (instance == null) {
+            instance = new KylothCloudSynchronizer(proxy, sink, source);
+        }
+        return instance;
     }
 
     /**
      * Esegue la preautorizzazione iniziale ottenendo
      * un token dal servizio remoto (cfr. ST).
      */
-    public void preAuth() {
-        //TODO
+    @Override
+    public String preAuth()  throws AuthException, IOException {
+        return proxy.preAuth();
+    }
+
+    @Override
+    public void auth()  throws AuthException, IOException {
+        proxy.auth();
+    }
+
+    private void get() throws AuthException, IOException {
+        if (proxy == null) {
+            throw new RuntimeException("No INetProxy?");
+        }
+        CloudJSONInboundStream in = (CloudJSONInboundStream) proxy.get();
+        CloudJSONInboundStreamParser sjisp = new CloudJSONInboundStreamParser(in);
+        InboundRootEntity root = sjisp.parse();
+        if (root == null) {
+            throw new IOException("Got null while deserializing?");
+        }
+        CloudSerleenaSQLiteInboundDumpBuilder builder = new CloudSerleenaSQLiteInboundDumpBuilder(root);
+        SerleenaSQLiteInboundDump dump = builder.build();
+        sink.load(dump);
+        if (!proxy.success()) {
+            throw new IOException("Unknown network error");
+        }
+        proxy.disconnect();
+    }
+
+    private void send() throws AuthException, IOException {
+        if (proxy == null) {
+            throw new RuntimeException("No INetProxy?");
+        }
+        CloudJSONOutboundStreamBuilder b = new CloudJSONOutboundStreamBuilder();
+        for (IExperienceStorage exp : source.getExperiences()) {
+            b.addExperience(exp);
+        }
+
+        OutboundStream s = proxy.send();
+        b.stream(s);
+        if (!proxy.success()) {
+            throw new IOException("Unknown network error");
+        }
+        proxy.disconnect();
     }
 
     /**
      * Richiede la sincronizzazione bidirezionale col servizio remoto.
      */
-    public void sync() {
-        //TODO
-    }
-
-    /**
-     * Imposta un datasource da cui prelevare i dati per la sincronizzazione verso il cloud
-     */
-    public void setDataSource(ISerleenaDataSource dataSource) {
-        //TODO
-    }
-
-    /**
-     * Imposta un DumpLoader in cui caricare i dati ricevuti dal cloud.
-     */
-    public void setDumpLoader(ISerleenaDumpLoader dumpLoader) {
-        //TODO
+    @Override
+    public void sync() throws AuthException, IOException {
+        send();
+        get();
     }
 }

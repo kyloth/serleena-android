@@ -29,7 +29,7 @@
 
 
 /**
- * Name: SerleenaJSONInboundStreamParser.java
+ * Name: CloudJSONInboundStreamParser.java
  * Package: com.kyloth.serleena.synchronization
  * Author: Tobia Tesan
  *
@@ -37,7 +37,18 @@
  * Version  Programmer        Changes
  * 0.0.1    Tobia Tesan       Creazione file
  */
-package com.kyloth.serleena.synchronization;
+package com.kyloth.serleena.synchronization.kylothcloud.inbound;
+
+
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+import com.google.gson.stream.JsonReader;
+import com.kyloth.serleena.synchronization.InboundStream;
+import com.kyloth.serleena.synchronization.InboundStreamParser;
+import com.kyloth.serleena.synchronization.kylothcloud.InboundRootEntity;
+import com.kyloth.serleena.synchronization.kylothcloud.RootEntityDeserializer;
+
+import java.io.InputStreamReader;
 
 /**
  * Concretizza InboundStreamParser in modo da poter consumare
@@ -46,19 +57,33 @@ package com.kyloth.serleena.synchronization;
  * @use Viene usato da KylothCloudSynchronizer per trasformare i dati in arrivo da KylothCloud, raccolti in un InboundStream da un INetProxy, in un formato intermedio somministrabile a un InboundDumpBuilder.
  * @author Tobia Tesan <tobia.tesan@gmail.com>
  */
-public class SerleenaJSONInboundStreamParser implements InboundStreamParser {
-	/**
-	 * Dato un InboundStream contenente dati di sincronizzazione, fornisce
-	 * una rappresentazione intermedia agnostica.
-	 *
-	 * @param stream Un InboundStream contenente dati di sincronizzazione
-	 *               in arrivo dal servizio remoto
-	 * @return Una collezione di IDataEntity che costituiscono una
-	 * rappresentazione agnostica dei dati forniti dal servizio.
-	 */
-	@Override
-	public Iterable<IDataEntity> parse(InboundStream stream) {
-		// TODO
-		return null;
-	}
+public class CloudJSONInboundStreamParser implements InboundStreamParser {
+    CloudJSONInboundStream stream;
+    public CloudJSONInboundStreamParser(InboundStream stream) {
+        if (stream instanceof CloudJSONInboundStream) {
+            this.stream = (CloudJSONInboundStream) stream;
+        } else {
+            throw new IllegalArgumentException();
+        }
+    }
+
+    /**
+     * Dato un InboundStream, lo legge e ne restituisce
+     * una rappresentazione intermedia agnostica.
+     *
+     * @return Una collezione di IDataEntity che costituiscono una
+     * rappresentazione agnostica dei dati forniti dal servizio.
+     */
+    @Override
+    public InboundRootEntity parse() {
+        if (stream instanceof CloudJSONInboundStream) {
+            Gson gson = new GsonBuilder().registerTypeAdapter(InboundRootEntity.class, new RootEntityDeserializer()).create();
+            InputStreamReader reader = new InputStreamReader(stream);
+            JsonReader jsr = new JsonReader(reader);
+            InboundRootEntity root = gson.fromJson(jsr, InboundRootEntity.class);
+            return root;
+        } else {
+            throw new RuntimeException();
+        }
+    }
 }

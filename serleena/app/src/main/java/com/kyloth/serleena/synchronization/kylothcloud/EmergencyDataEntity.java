@@ -29,28 +29,23 @@
 
 
 /**
- * Name: WeatherDataEntity.java
- * Package: com.hitchikers.serleena.synchronization
+ * Name: EmergencyDataEntity.java
+ * Package: com.hitchikers.serleena.presentation
  * Author: Tobia Tesan <tobia.tesan@gmail.com>
  *
  * History:
  * Version    Programmer   Changes
  * 1.0        Tobia Tesan  Creazione del file
  */
+package com.kyloth.serleena.synchronization.kylothcloud;
 
-package com.kyloth.serleena.synchronization;
-
-import com.kyloth.serleena.common.IQuadrant;
-import com.kyloth.serleena.persistence.WeatherForecastEnum;
-
-import java.util.Date;
+import com.kyloth.serleena.common.IRegion;
 
 /**
- * Struct rappresentante una previsione metereologica
+ * Created by tobia on 21/07/15.
  */
-public class WeatherDataEntity implements IDataEntity {
-	WeatherForecastEnum forecast;
-	IQuadrant boundingRect;
-	float temperature;
-	Date date;
+public class EmergencyDataEntity implements IKylothDataEntity {
+    public IRegion rect;
+    public String name;
+    public String number;
 }

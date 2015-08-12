@@ -29,24 +29,24 @@
 
 
 /**
- * Name: InboundDumpBuilder.java
- * Package: com.kyloth.serleena.synchronization
+ * Name: ISerleenaSQLiteDataSink.java
+ * Package: com.kyloth.serleena.persistence.sqlite
  * Author: Tobia Tesan
  *
  * History:
- * Version  Programmer        Changes
- * 0.0.1    Tobia Tesan       Creazione file
+ * Version  Programmer       Changes
+ * 1.0.0    Tobia Tesan      Creazione file e scrittura di codice
+ *                                          e documentazione in Javadoc.
  */
-package com.kyloth.serleena.synchronization;
+
+package com.kyloth.serleena.persistence.sqlite;
+
+import com.kyloth.serleena.persistence.IPersistenceDataSink;
 
 /**
- * @usa KylothCloudSynchronizer ne usa una istanza per costruire, a partire dalla rappresentazione intermedia fornita da un InboundStreamParser, un dump idoneo ad essere caricato in un dumpLoader fornito dall'Activity (che coincidera' tipicamente con il database dell'applicazione)
- * @author Tobia Tesan <tobia.tesan@gmail.com>
+ * Marker interface riservata alle implementazioni di IPersistenceDataSink con il database
+ * SQLite di serleena
  */
-public interface InboundDumpBuilder {
-    /**
-     * Restituisce un InboundDump idoneo a essere caricato nel database
-     * con i dati finora inseriti.
-     */
-    InboundDump build();
+public interface ISerleenaSQLiteDataSink extends IPersistenceDataSink {
+
 }

@@ -29,24 +29,36 @@
 
 
 /**
- * Name: InboundDumpBuilder.java
- * Package: com.kyloth.serleena.synchronization
- * Author: Tobia Tesan
+ * Name: WeatherDataEntity.java
+ * Package: com.hitchikers.serleena.synchronization
+ * Author: Tobia Tesan <tobia.tesan@gmail.com>
  *
  * History:
- * Version  Programmer        Changes
- * 0.0.1    Tobia Tesan       Creazione file
+ * Version    Programmer   Changes
+ * 1.0        Tobia Tesan  Creazione del file
  */
-package com.kyloth.serleena.synchronization;
+
+package com.kyloth.serleena.synchronization.kylothcloud;
+
+import com.kyloth.serleena.common.Region;
+import com.kyloth.serleena.persistence.WeatherForecastEnum;
 
 /**
- * @usa KylothCloudSynchronizer ne usa una istanza per costruire, a partire dalla rappresentazione intermedia fornita da un InboundStreamParser, un dump idoneo ad essere caricato in un dumpLoader fornito dall'Activity (che coincidera' tipicamente con il database dell'applicazione)
- * @author Tobia Tesan <tobia.tesan@gmail.com>
+ * Struct rappresentante una previsione metereologica
  */
-public interface InboundDumpBuilder {
-    /**
-     * Restituisce un InboundDump idoneo a essere caricato nel database
-     * con i dati finora inseriti.
-     */
-    InboundDump build();
+public class WeatherDataEntity implements IKylothDataEntity {
+    public static class ForecastTuple {
+        public WeatherForecastEnum forecast;
+        public float temperature;
+    }
+    public ForecastTuple morning;
+    public ForecastTuple afternoon;
+    public ForecastTuple night;
+    public Region boundingRect;
+    public long date;
+    public WeatherDataEntity () {
+        morning = new ForecastTuple();
+        afternoon = new ForecastTuple();
+        night = new ForecastTuple();
+    }
 }

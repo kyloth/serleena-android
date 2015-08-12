@@ -28,24 +28,10 @@
 ///////////////////////////////////////////////////////////////////////////////
 
 
-/**
- * Name: TelemetryEntity.java
- * Package: com.hitchikers.serleena.synchronization
- * Author: Tobia Tesan <tobia.tesan@gmail.com>
- *
- * History:
- * Version    Programmer   Changes
- * 1.0        Tobia Tesan  Creazione del file
- */
-
-package com.kyloth.serleena.synchronization;
+package com.kyloth.serleena.synchronization.kylothcloud;
 
 import java.util.Collection;
 
-/**
- * Struct rappresentante una telemetria
- */
-public class TelemetryEntity {
-	Collection<EventEntity> events;
-	int id;
+public class OutboundRootEntity implements IKylothDataEntity {
+    public Collection<OutboundDataEntity> data;
 }

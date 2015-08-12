@@ -28,25 +28,25 @@
 ///////////////////////////////////////////////////////////////////////////////
 
 
-/**
- * Name: InboundDumpBuilder.java
- * Package: com.kyloth.serleena.synchronization
- * Author: Tobia Tesan
- *
- * History:
- * Version  Programmer        Changes
- * 0.0.1    Tobia Tesan       Creazione file
- */
-package com.kyloth.serleena.synchronization;
+package com.kyloth.serleena.synchronization.kylothcloud.outbound;
 
-/**
- * @usa KylothCloudSynchronizer ne usa una istanza per costruire, a partire dalla rappresentazione intermedia fornita da un InboundStreamParser, un dump idoneo ad essere caricato in un dumpLoader fornito dall'Activity (che coincidera' tipicamente con il database dell'applicazione)
- * @author Tobia Tesan <tobia.tesan@gmail.com>
- */
-public interface InboundDumpBuilder {
+import java.io.FilterWriter;
+import java.io.IOException;
+import java.io.Writer;
+import java.net.URLEncoder;
+
+class URLEncodedWriter extends FilterWriter {
     /**
-     * Restituisce un InboundDump idoneo a essere caricato nel database
-     * con i dati finora inseriti.
+     * Constructs a new FilterWriter on the Writer {@code out}. All writes are
+     * now filtered through this writer.
+     *
+     * @param out the target Writer to filter writes on.
      */
-    InboundDump build();
+    protected URLEncodedWriter(Writer out) {
+        super(out);
+    }
+
+    public void write(int c) throws IOException {
+        out.write(URLEncoder.encode(String.valueOf((char)c), "UTF-8"));
+    }
 }

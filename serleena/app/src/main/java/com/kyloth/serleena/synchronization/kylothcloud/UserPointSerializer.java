@@ -28,25 +28,27 @@
 ///////////////////////////////////////////////////////////////////////////////
 
 
-/**
- * Name: InboundDumpBuilder.java
- * Package: com.kyloth.serleena.synchronization
- * Author: Tobia Tesan
- *
- * History:
- * Version  Programmer        Changes
- * 0.0.1    Tobia Tesan       Creazione file
- */
-package com.kyloth.serleena.synchronization;
+package com.kyloth.serleena.synchronization.kylothcloud;
 
-/**
- * @usa KylothCloudSynchronizer ne usa una istanza per costruire, a partire dalla rappresentazione intermedia fornita da un InboundStreamParser, un dump idoneo ad essere caricato in un dumpLoader fornito dall'Activity (che coincidera' tipicamente con il database dell'applicazione)
- * @author Tobia Tesan <tobia.tesan@gmail.com>
- */
-public interface InboundDumpBuilder {
-    /**
-     * Restituisce un InboundDump idoneo a essere caricato nel database
-     * con i dati finora inseriti.
-     */
-    InboundDump build();
+import com.google.gson.JsonSerializationContext;
+import com.google.gson.JsonSerializer;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
+
+import java.lang.reflect.Type;
+
+import com.kyloth.serleena.common.GeoPoint;
+
+class UserPointSerializer implements JsonSerializer<UserPointEntity> {
+    @Override
+    public JsonElement serialize(UserPointEntity up, Type typeOfUp, JsonSerializationContext context) {
+        JsonObject userPoint = new JsonObject();
+        GeoPoint point = up.point;
+        userPoint.addProperty("latitude", point.latitude());
+        userPoint.addProperty("longitude", point.longitude());
+        userPoint.addProperty("name", up.name);
+
+        return userPoint;
+    }
+
 }

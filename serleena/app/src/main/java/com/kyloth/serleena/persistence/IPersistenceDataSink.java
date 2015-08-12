@@ -29,7 +29,7 @@
 
 
 /**
- * Name: SerleenaJSONOutboundStreamBuilder.java
+ * Name: IPersistenceDataSink.java
  * Package: com.kyloth.serleena.synchronization
  * Author: Tobia Tesan
  *
@@ -37,50 +37,25 @@
  * Version  Programmer        Changes
  * 0.0.1    Tobia Tesan       Creazione file
  */
-package com.kyloth.serleena.synchronization;
+package com.kyloth.serleena.persistence;
 
-import com.kyloth.serleena.persistence.IExperienceStorage;
-import com.kyloth.serleena.persistence.ITelemetryStorage;
+import com.kyloth.serleena.synchronization.InboundDump;
 
 /**
- * Concretizza OutboundStreamBuilder in modo da poter costruire stream JSON
- * nel formato che KylothCloud si attende.
- *
- * @use Viene usato da KylothCloudSynchronizer per costruire un OutboundStream nel formato idoneo ad essere passato a SerleenaJSONNetProxy per l'invio a KylothCloud
- * @author Tobia Tesan <tobia.tesan@gmail.com>
+ * Interfaccia implementata da un oggetto in grado di prendere un
+ * InboundDump e salvarlo nella memoria permanente del dispositivo,
+ * e.g. un database.
  */
-public class SerleenaJSONOutboundStreamBuilder implements OutboundStreamBuilder {
-	/**
-	 * Aggiunge un Tracciamento all'OutboundStream da costruire.
-	 *
-	 * @param t Un Tracciamento raccolto sul dispositivo che si vuole
-	 *          inviare al servizio remoto.
-	 */
-	@Override
-	public void addTelemetry(ITelemetryStorage t) {
-		// TODO
-	}
+public interface IPersistenceDataSink {
+    /**
+     * Carica un dump di dati proveniente dall'esterno.
+     *
+     * @param dump
+     */
+    void load(InboundDump dump);
 
-	/**
-	 * Aggiunge un'Esperienza (e di conseguenza i suoi Punti Utente
-	 * e eventuali altri dati raccolti localmente) all'OutboundStream
-	 * da costruire.
-	 *
-	 * @param e Un'Esperienza le cui componenti raccolte sul dispositivo
-	 *          si vogliono  inviare al servizio remoto.
-	 */
-	@Override
-	public void addExperience(IExperienceStorage e) {
-		// TODO
-	}
-
-	/**
-	 * Restituisce uno SerleenaJSONOutboundStream con i dati da inviare al
-	 * servizio remoto pronti per essere consumati da un idoneo proxy.
-	 */
-	@Override
-	public SerleenaJSONOutboundStream build() {
-		// TODO
-		return null;
-	}
+    /**
+     * Svuota completamente i dati.
+     */
+    void flush();
 }

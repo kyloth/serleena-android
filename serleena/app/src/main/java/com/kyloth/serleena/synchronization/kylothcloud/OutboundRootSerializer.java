@@ -28,21 +28,27 @@
 ///////////////////////////////////////////////////////////////////////////////
 
 
-/**
- * Name: SerleenaSQLiteInboundDump.java
- * Package: com.kyloth.serleena.synchronization
- * Author: Tobia Tesan
- *
- * History:
- * Version  Programmer        Changes
- * 0.0.1    Tobia Tesan       Creazione file
- */
-package com.kyloth.serleena.synchronization;
+package com.kyloth.serleena.synchronization.kylothcloud;
 
-/**
- * Concretizza InboundDump, contiene un dump SQLite leggibile da
- * ISerleenaDumpLoader
- */
-public class SerleenaSQLiteInboundDump implements InboundDump {
-	// TODO
+import com.google.gson.JsonArray;
+import com.google.gson.JsonSerializationContext;
+import com.google.gson.JsonSerializer;
+import com.google.gson.JsonElement;
+
+import java.lang.reflect.Type;
+
+import java.util.Iterator;
+
+class OutboundRootSerializer implements JsonSerializer<OutboundRootEntity> {
+    @Override
+    public JsonElement serialize(OutboundRootEntity or, Type typeOfOr, JsonSerializationContext context) {
+        JsonArray outboundRoot = new JsonArray();
+        Iterator<OutboundDataEntity> i_data = or.data.iterator();
+        while(i_data.hasNext()) {
+            outboundRoot.add(new OutboundDataSerializer().serialize(i_data.next(), OutboundDataEntity.class, context));
+        }
+
+        return outboundRoot;
+    }
+
 }

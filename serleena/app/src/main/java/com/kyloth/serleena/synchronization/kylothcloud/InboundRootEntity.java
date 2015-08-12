@@ -28,25 +28,18 @@
 ///////////////////////////////////////////////////////////////////////////////
 
 
-/**
- * Name: TrackEntity.java
- * Package: com.hitchikers.serleena.synchronization
- * Author: Tobia Tesan <tobia.tesan@gmail.com>
- *
- * History:
- * Version    Programmer   Changes
- * 1.0        Tobia Tesan  Creazione del file
- */
+package com.kyloth.serleena.synchronization.kylothcloud;
 
-package com.kyloth.serleena.synchronization;
-
+import java.util.ArrayList;
 import java.util.Collection;
 
-/**
- * Struct rappresentante un percorso
- */
-public class TrackEntity implements IDataEntity {
-	String name;
-	Collection<CheckpointEntity> checkpoints;
-	TelemetryEntity bestTelemetry;
+public class InboundRootEntity implements IKylothDataEntity {
+    public Collection<ExperienceEntity> experiences;
+    public Collection<EmergencyDataEntity> emergencyData;
+    public Collection<WeatherDataEntity> weatherData;
+    public InboundRootEntity() {
+        experiences = new ArrayList<ExperienceEntity>();
+        emergencyData = new ArrayList<EmergencyDataEntity>();
+        weatherData  = new ArrayList<WeatherDataEntity>();
+    }
 }
