@@ -68,8 +68,10 @@ import java.util.List;
 import static junit.framework.Assert.assertEquals;
 import static junit.framework.Assert.assertNotNull;
 import static junit.framework.Assert.assertTrue;
+import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.eq;
 import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 
 /**
@@ -186,6 +188,30 @@ public class LocationServiceTest {
         List<LocationListener> listeners =
                 slm.getRequestLocationUpdateListeners();
         assertEquals(listeners.size(), 0);
+    }
+
+    /**
+     * Verifica che il servizio notifichi la posizione utente ai receiver una
+     * sola volta, indipendentemente da quante chiamate a onLocationChanged()
+     * vengono fatte.
+     */
+    @Test
+    public void serviceShouldNotifyOnlyOnce() {
+        ServiceResultReceiver receiver = mock(ServiceResultReceiver.class);
+
+        Intent intent = new Intent();
+        intent.putExtra("receiverTag", receiver);
+        service.onStartCommand(intent, 0, 0);
+
+        service.onLocationChanged(mock(Location.class));
+        verify(receiver, times(1))
+                .send(any(Integer.class), any(Bundle.class));
+        service.onLocationChanged(mock(Location.class));
+        verify(receiver, times(1))
+                .send(any(Integer.class), any(Bundle.class));
+        service.onLocationChanged(mock(Location.class));
+        verify(receiver, times(1))
+                .send(any(Integer.class), any(Bundle.class));
     }
 
 }
