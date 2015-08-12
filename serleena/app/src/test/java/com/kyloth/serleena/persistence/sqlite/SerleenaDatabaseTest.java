@@ -568,7 +568,7 @@ public class SerleenaDatabaseTest {
         values.put("raster_nw_corner_longitude", 0);
         values.put("raster_se_corner_latitude", 0);
         values.put("raster_se_corner_longitude", 2);
-        values.put("raster_path", "asdlolasdlol");
+        values.put("raster_uuid", "asdlolasdlol");
         db.insertOrThrow(SerleenaDatabase.TABLE_RASTERS, null, values);
 
         double latitude = 1;
