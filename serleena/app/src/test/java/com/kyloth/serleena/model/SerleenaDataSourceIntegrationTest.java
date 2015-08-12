@@ -43,13 +43,16 @@ package com.kyloth.serleena.model;
 
 import android.content.ContentValues;
 import android.database.sqlite.SQLiteDatabase;
+import android.graphics.Bitmap;
 
 import com.kyloth.serleena.BuildConfig;
 import com.kyloth.serleena.TestDB;
 import com.kyloth.serleena.common.EmergencyContact;
 import com.kyloth.serleena.common.GeoPoint;
+import com.kyloth.serleena.common.IQuadrant;
 import com.kyloth.serleena.common.NoSuchWeatherForecastException;
 import com.kyloth.serleena.common.Quadrant;
+import com.kyloth.serleena.persistence.NoSuchQuadrantException;
 import com.kyloth.serleena.persistence.WeatherForecastEnum;
 import com.kyloth.serleena.persistence.sqlite.IRasterSource;
 import com.kyloth.serleena.persistence.sqlite.SerleenaDatabase;
@@ -72,6 +75,7 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
 
 /**
  * Contiene test di integrazione per le classi di persistenza.
@@ -88,6 +92,7 @@ public class SerleenaDataSourceIntegrationTest {
     SerleenaDatabase serleenaDB;
     SerleenaSQLiteDataSource serleenaSQLDS;
     SerleenaDataSource dataSource;
+    private IRasterSource rasterSource;
 
     /**
      * Inizializza i campi dati necessari alla conduzione dei test.
@@ -108,12 +113,20 @@ public class SerleenaDataSourceIntegrationTest {
         ContentValues values_2;
         values_2 = new ContentValues();
         values_2.put("experience_name", "foo");
+        ContentValues values = new ContentValues();
+        values.put("raster_nw_corner_latitude", 5);
+        values.put("raster_nw_corner_longitude", 0);
+        values.put("raster_se_corner_latitude", 0);
+        values.put("raster_se_corner_longitude", 5);
+        values.put("raster_uuid", "asdlol");
+        db.insertOrThrow(SerleenaDatabase.TABLE_RASTERS, null, values);
         // TODO: Sostituire con fixture
         db.insertOrThrow(SerleenaDatabase.TABLE_EXPERIENCES, null, values_2);
+        rasterSource = mock(IRasterSource.class);
         serleenaSQLDS = new SerleenaSQLiteDataSource(
                 RuntimeEnvironment.application,
                 serleenaDB,
-                mock(IRasterSource.class));
+                rasterSource);
         dataSource = new SerleenaDataSource(serleenaSQLDS);
     }
 
@@ -165,14 +178,21 @@ public class SerleenaDataSourceIntegrationTest {
      * relativi ai GeoPoint forniti come input (senza sollevare eccezioni).
      */
     @Test
-    public void testGetQuadrant() {
-        GeoPoint normal_point = new GeoPoint(10, 10);
-        GeoPoint min_point = new GeoPoint(90.0, -180.0);
-        GeoPoint max_point = new GeoPoint(-90.0 + 10 / 2.0,
-                                          180.0 - 10 / 2.0);
-        Quadrant quadrant = (Quadrant) dataSource.getQuadrant(normal_point);
-        Quadrant max_limit_quadrant = (Quadrant) dataSource.getQuadrant(min_point);
-        Quadrant min_limit_quadrant = (Quadrant) dataSource.getQuadrant(max_point);
+    public void testGetQuadrant() throws NoSuchQuadrantException {
+        Bitmap raster = mock(Bitmap.class);
+        when(rasterSource.getRaster("asdlol")).thenReturn(raster);
+
+        IQuadrant quadrant = dataSource.getQuadrant(new GeoPoint(5, 5));
+        assertEquals(raster, quadrant.getRaster());
+    }
+
+    /**
+     * Verifica che la richiesta di un quadrante non presente in database
+     * sollevi un'eccezione NoSuchQuadrantException.
+     */
+    @Test(expected = NoSuchQuadrantException.class)
+    public void testGetQuadrantThrows() throws NoSuchQuadrantException {
+        dataSource.getQuadrant(new GeoPoint(10, 10));
     }
 
     /**
