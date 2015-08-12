@@ -111,6 +111,7 @@ public class LocationService extends Service implements LocationListener {
         return super.onStartCommand(intent, flags, startId);
     }
 
+    private boolean received = false;
     /**
      * Implementa LocationListener.onLocationChanged().
      *
@@ -121,17 +122,20 @@ public class LocationService extends Service implements LocationListener {
      * @param location Posizione rilevata e notificata dal LocationManager.
      */
     @Override
-    public void onLocationChanged(Location location) {
-        lm.removeUpdates(this);
-        for (Intent intent : intents) {
-            ResultReceiver rec = intent.getParcelableExtra("receiverTag");
-            Bundle b = new Bundle();
-            b.putDouble("latitude", location.getLatitude());
-            b.putDouble("longitude", location.getLongitude());
-            rec.send(0, b);
+    public synchronized void onLocationChanged(Location location) {
+        if (!received) {
+            received = true;
+            lm.removeUpdates(this);
+            for (Intent intent : intents) {
+                ResultReceiver rec = intent.getParcelableExtra("receiverTag");
+                Bundle b = new Bundle();
+                b.putDouble("latitude", location.getLatitude());
+                b.putDouble("longitude", location.getLongitude());
+                rec.send(0, b);
+            }
+            timeout.removeCallbacks(runnable);
+            this.stopSelf();
         }
-        timeout.removeCallbacks(runnable);
-        this.stopSelf();
     }
 
     @Override
