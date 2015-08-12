@@ -61,7 +61,7 @@ import java.util.Map;
  * @author Filippo Sestini <sestini.filippo@gmail.com>
  * @version 1.0.0
  */
-final class CachedSQLiteDataSource implements ISerleenaSQLiteDataSource {
+public class CachedSQLiteDataSource implements ISerleenaSQLiteDataSource {
 
     private final ISerleenaSQLiteDataSource dataSource;
     private IQuadrant quadrant;
