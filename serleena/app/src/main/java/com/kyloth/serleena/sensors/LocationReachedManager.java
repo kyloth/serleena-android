@@ -151,7 +151,7 @@ class LocationReachedManager
      * @param loc Valore di tipo GeoPoint che indica la posizione
      */
     @Override
-    public void onLocationUpdate(GeoPoint loc) {
+    public synchronized void onLocationUpdate(GeoPoint loc) {
         List<LocationReachedRequest> toRemove = new ArrayList<>();
 
         for (LocationReachedRequest request : requests)
