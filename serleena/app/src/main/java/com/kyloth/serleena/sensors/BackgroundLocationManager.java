@@ -112,8 +112,7 @@ public class BackgroundLocationManager extends WakefulBroadcastReceiver
         if (!observers.containsKey(observer)) {
             this.observers.put(observer, interval);
             if (observers.size() == 1)
-                context.registerReceiver(this, new IntentFilter("SERLEENA_ALARM"));
-            restart();
+                acquireResources();
         }
     }
 
@@ -131,12 +130,8 @@ public class BackgroundLocationManager extends WakefulBroadcastReceiver
         if (observer == null)
             throw new IllegalArgumentException("Illegal null observer");
 
-        if (observers.size() == 1 && this.observers.containsKey(observer)) {
-            am.cancel(pendingIntent);
-            pendingIntent = null;
-            context.stopService(new Intent(context, LocationService.class));
-            context.unregisterReceiver(this);
-        }
+        if (observers.size() == 1 && this.observers.containsKey(observer))
+            releaseResources();
 
         this.observers.remove(observer);
     }
@@ -189,12 +184,9 @@ public class BackgroundLocationManager extends WakefulBroadcastReceiver
         notifyObservers();
     }
 
-    private void restart() {
-        int minInterval = Integer.MAX_VALUE;
-        for (int interval : observers.values())
-            if (interval < minInterval)
-                minInterval = interval;
-        int alarmType = AlarmManager.RTC_WAKEUP;
+    private void acquireResources() {
+        context.registerReceiver(this, new IntentFilter("SERLEENA_ALARM"));
+
         Intent intentToFire = new Intent("SERLEENA_ALARM");
 
         if (pendingIntent != null)
@@ -207,7 +199,14 @@ public class BackgroundLocationManager extends WakefulBroadcastReceiver
                 PendingIntent.FLAG_CANCEL_CURRENT);
 
         am.setInexactRepeating(
-                alarmType, 10, minInterval * 1000, pendingIntent);
+                AlarmManager.RTC_WAKEUP, 10, 60000, pendingIntent);
+    }
+
+    private void releaseResources() {
+        am.cancel(pendingIntent);
+        pendingIntent = null;
+        context.stopService(new Intent(context, LocationService.class));
+        context.unregisterReceiver(this);
     }
 
 }
