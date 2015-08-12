@@ -51,6 +51,7 @@ import static org.mockito.Mockito.*;
 import org.robolectric.RobolectricTestRunner;
 
 import com.kyloth.serleena.common.LocationNotAvailableException;
+import com.kyloth.serleena.common.UserPoint;
 import com.kyloth.serleena.model.ISerleenaDataSource;
 import com.kyloth.serleena.model.IExperience;
 import com.kyloth.serleena.presentation.IExperienceActivationSource;
@@ -167,9 +168,9 @@ public class MapPresenterTest {
      * Verifica che setActiveExperience() pulisca la vista.
      */
     @Test
-    public void settingActiveExperienceShouldClearView() {
+    public void resumingShouldClearView() {
         MapPresenter mp = new MapPresenter(view, activity, expActSource);
-        mp.onExperienceActivated(mock(IExperience.class));
+        mp.resume();
         verify(view).clear();
     }
 
