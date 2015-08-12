@@ -67,7 +67,8 @@ public class AzimuthMagneticNorth {
     /**
      * Restituisce il valore di orientamento rappresentato dall'istanza.
      *
-     * @return Gradi di rotazione attorno all'asse azimuth.
+     * @return Gradi di rotazione attorno all'asse azimuth. Posizionati
+     * esattamente verso Ovest si ottiene una rotazione pari a 90°.
      */
     public float orientation() {
         if (azimuth == null) {
@@ -79,7 +80,7 @@ public class AzimuthMagneticNorth {
 
             azimuth = (float) Math.toDegrees(values[0]); // Azimuth
         }
-        return azimuth;
+        return -azimuth;
     }
 
     /**
@@ -102,7 +103,7 @@ public class AzimuthMagneticNorth {
                         0, System.currentTimeMillis());
 
         float declination = geoField.getDeclination();
-        return orientation() - declination;
+        return orientation() + declination;
     }
 
     /**

@@ -67,7 +67,7 @@ public class AzimuthMagneticNorthTest {
         SensorManager.getRotationMatrix(R, null, accelerometerValues,
                 magneticFieldValues);
         SensorManager.getOrientation(R, values);
-        float expected = (float) Math.toDegrees(values[0]);
+        float expected = -(float) Math.toDegrees(values[0]);
 
         AzimuthMagneticNorth az = new AzimuthMagneticNorth(
                 accelerometerValues, magneticFieldValues);
@@ -75,7 +75,7 @@ public class AzimuthMagneticNorthTest {
 
         GeoPoint loc = new GeoPoint(34, -118);
         float result = az.toTrueNorth(loc);
-        assertEquals(expected - 12, result, 0.5);
+        assertEquals(expected + 12, result, 0.5);
     }
 
     @Test

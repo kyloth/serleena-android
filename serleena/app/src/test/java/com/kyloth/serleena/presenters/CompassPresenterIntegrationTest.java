@@ -124,7 +124,7 @@ public class CompassPresenterIntegrationTest {
         SensorManager.getRotationMatrix(R, null, accelerometerValues,
                 magneticFieldValues);
         SensorManager.getOrientation(R, values);
-        float expected = (float) Math.toDegrees(values[0]);
+        float expected = - (float) Math.toDegrees(values[0]);
 
         SensorEvent accEvent = createSensorEvent(accelerometerValues);
         when(accEvent.sensor.getType()).thenReturn(Sensor.TYPE_ACCELEROMETER);

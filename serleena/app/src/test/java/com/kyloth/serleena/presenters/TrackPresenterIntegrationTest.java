@@ -357,15 +357,15 @@ public class TrackPresenterIntegrationTest {
         presenter.onHeadingUpdate(amn);
 
         simulateLocation(0, 0);
-        assertEquals(39.7, orientationWidget.getOrientation(), 0.1);
+        assertEquals(50.6, orientationWidget.getOrientation(), 0.1);
         simulateLocation(blm, 1, 1);
 
         simulateLocation(2, 4);
-        assertEquals(-48.6, orientationWidget.getOrientation(), 0.1);
+        assertEquals(-41.6, orientationWidget.getOrientation(), 0.1);
         simulateLocation(blm, 3, 3);
 
         simulateLocation(0, 4);
-        assertEquals(85.8, orientationWidget.getOrientation(), 0.1);
+        assertEquals(94.1, orientationWidget.getOrientation(), 0.1);
     }
 
     private void simulateLocation(BackgroundLocationManager blm,
