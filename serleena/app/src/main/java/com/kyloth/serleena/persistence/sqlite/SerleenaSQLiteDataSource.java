@@ -87,6 +87,13 @@ public class SerleenaSQLiteDataSource implements ISerleenaSQLiteDataSource {
 
     public SerleenaSQLiteDataSource(Context context, SerleenaDatabase dbHelper,
                                  IRasterSource rasterSource) {
+        if (context == null)
+            throw new IllegalArgumentException("Illegal null context");
+        if (dbHelper == null)
+            throw new IllegalArgumentException("Illegal null database");
+        if (rasterSource == null)
+            throw new IllegalArgumentException("Illegal null raster source");
+
         this.dbHelper = dbHelper;
         this.context = context;
         this.rasterSource = rasterSource;
