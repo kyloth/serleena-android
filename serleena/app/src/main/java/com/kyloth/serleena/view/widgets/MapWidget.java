@@ -115,6 +115,15 @@ public class MapWidget extends ImageView {
     }
 
     /**
+     * Restituisce la posizione utente visualizzata dal widget.
+     *
+     * @return Posizione utente visualizzata.
+     */
+    public GeoPoint getUserPosition() {
+        return userPosition;
+    }
+
+    /**
      * Imposta la lista di punti utente da visualizzare.
      *
      * @param ups Punti utente da visualizzare.
