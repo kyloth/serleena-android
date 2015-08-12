@@ -149,33 +149,26 @@ public class LocationReachedManagerTest {
     }
 
     @Test
-    public void backgroungLocationManagerShouldBeRegisteredToCorrectly() {
+    public void shouldRegisterToBackgroundLocationManagercorrectly() {
         ILocationReachedObserver o1 = mock(ILocationReachedObserver.class);
         ILocationReachedObserver o2 = mock(ILocationReachedObserver.class);
         ILocationReachedObserver o3 = mock(ILocationReachedObserver.class);
 
         manager.attachObserver(o1, mock(GeoPoint.class));
-        verify(bkgrLocMan, times(1)).attachObserver(manager,
-                LocationReachedManager.LOCATION_UPDATE_INTERVAL);
+        verify(bkgrLocMan, times(1)).attachObserver(manager);
         manager.attachObserver(o2, mock(GeoPoint.class));
-        verify(bkgrLocMan, times(1)).attachObserver(manager,
-                LocationReachedManager.LOCATION_UPDATE_INTERVAL);
+        verify(bkgrLocMan, times(1)).attachObserver(manager);
         manager.attachObserver(o3, mock(GeoPoint.class));
-        verify(bkgrLocMan, times(1)).attachObserver(manager,
-                LocationReachedManager.LOCATION_UPDATE_INTERVAL);
+        verify(bkgrLocMan, times(1)).attachObserver(manager);
         manager.detachObserver(o3);
-        verify(bkgrLocMan, times(1)).attachObserver(manager,
-                LocationReachedManager.LOCATION_UPDATE_INTERVAL);
+        verify(bkgrLocMan, times(1)).attachObserver(manager);
         manager.detachObserver(o2);
-        verify(bkgrLocMan, times(1)).attachObserver(manager,
-                LocationReachedManager.LOCATION_UPDATE_INTERVAL);
+        verify(bkgrLocMan, times(1)).attachObserver(manager);
         manager.detachObserver(o1);
-        verify(bkgrLocMan, times(1)).attachObserver(manager,
-                LocationReachedManager.LOCATION_UPDATE_INTERVAL);
+        verify(bkgrLocMan, times(1)).attachObserver(manager);
         verify(bkgrLocMan, times(1)).detachObserver(manager);
         manager.attachObserver(o1, mock(GeoPoint.class));
-        verify(bkgrLocMan, times(2)).attachObserver(manager,
-                LocationReachedManager.LOCATION_UPDATE_INTERVAL);
+        verify(bkgrLocMan, times(2)).attachObserver(manager);
     }
 
     /**
