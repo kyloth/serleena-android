@@ -49,7 +49,6 @@ import android.view.KeyEvent;
 import com.kyloth.serleena.R;
 import com.kyloth.serleena.common.GeoPoint;
 import com.kyloth.serleena.model.*;
-import com.kyloth.serleena.persistence.sqlite.SQLiteDataSourceFactory;
 import com.kyloth.serleena.presentation.*;
 import com.kyloth.serleena.presenters.*;
 import com.kyloth.serleena.sensors.*;
@@ -96,8 +95,6 @@ public class SerleenaActivity extends Activity
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_serleena);
 
-        SQLiteDataSourceFactory factory = SQLiteDataSourceFactory.getInstance();
-        dataSource = new SerleenaDataSource(factory.createDataSource(this));
         sensorManager = SerleenaSensorManager.getInstance(this);
 
         if (findViewById(R.id.main_container) != null) {

@@ -58,7 +58,6 @@ import java.util.Map;
  * Realizza il pattern Decorator offrendo un meccanismo di caching per
  * oggetti di interfaccia ISerleenaSQLiteDataSource.
  *
- * @use Viene utilizzato da SQLiteDataSourceFactory nella creazione e restituzione di oggetti ISerleenaSQLiteDataSource.
  * @author Filippo Sestini <sestini.filippo@gmail.com>
  * @version 1.0.0
  */
