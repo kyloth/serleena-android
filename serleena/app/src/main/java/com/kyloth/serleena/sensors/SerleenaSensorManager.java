@@ -106,8 +106,8 @@ public class SerleenaSensorManager implements ISensorManager {
                         context.getSystemService(Context.LOCATION_SERVICE);
         AlarmManager androidAlarmManager =
                 (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
-        IBackgroundLocationManager bkgrLocMan = new BackgroundLocationManager(
-                context, androidAlarmManager);
+        IBackgroundLocationManager bkgrLocMan =
+                new BackgroundLocationManager(context, androidAlarmManager, 60);
         SensorManager sm =(SensorManager) context.getSystemService
                 (Context.SENSOR_SERVICE);
 

@@ -54,10 +54,8 @@ public interface IBackgroundLocationManager {
      * Registra un observer all'oggetto.
      *
      * @param observer Observer da registrare.
-     * @param interval Intervallo minimo in secondi ogni quanto si vuole
-     *                 ricevere gli aggiornamenti.
      */
-    void attachObserver(ILocationObserver observer, int interval);
+    void attachObserver(ILocationObserver observer);
 
     /**
      * Cancella la registrazione di un observer.

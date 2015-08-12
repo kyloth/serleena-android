@@ -57,8 +57,7 @@ import java.util.Map;
 class LocationReachedManager
         implements ILocationReachedManager, ILocationObserver {
 
-    public static final int LOCATION_RADIUS = 100;
-    public static final int LOCATION_UPDATE_INTERVAL = 60;
+    public static final int LOCATION_RADIUS = 50;
 
     private final List<LocationReachedRequest> requests;
     private final IBackgroundLocationManager bkgrLocMan;
@@ -100,7 +99,7 @@ class LocationReachedManager
 
         requests.add(new LocationReachedRequest(observer, location));
         if (requests.size() == 1)
-            bkgrLocMan.attachObserver(this, LOCATION_UPDATE_INTERVAL);
+            bkgrLocMan.attachObserver(this);
     }
 
     /**
@@ -129,7 +128,7 @@ class LocationReachedManager
     }
 
     @Override
-    public void detachObserver(ILocationReachedObserver observer) {
+    public synchronized void detachObserver(ILocationReachedObserver observer) {
         if (observer == null)
             throw new IllegalArgumentException("Illegal null observer");
         List<LocationReachedRequest> toRemove = new ArrayList<>();
@@ -151,20 +150,21 @@ class LocationReachedManager
      * @param loc Valore di tipo GeoPoint che indica la posizione
      */
     @Override
-    public void onLocationUpdate(GeoPoint loc) {
+    public synchronized void onLocationUpdate(GeoPoint loc) {
         List<LocationReachedRequest> toRemove = new ArrayList<>();
 
         for (LocationReachedRequest request : requests)
             if (request.location().distanceTo(loc) < LOCATION_RADIUS)
                 toRemove.add(request);
 
-        for (LocationReachedRequest request : toRemove) {
-            request.observer().onLocationReached();
+        for (LocationReachedRequest request : toRemove)
             requests.remove(request);
-        }
 
         if (requests.size() == 0)
             bkgrLocMan.detachObserver(this);
+
+        for (LocationReachedRequest request : toRemove)
+            request.observer().onLocationReached();
     }
 
 }

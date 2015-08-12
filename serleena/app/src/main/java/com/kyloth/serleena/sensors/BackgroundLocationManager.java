@@ -52,7 +52,9 @@ import android.support.v4.content.WakefulBroadcastReceiver;
 
 import com.kyloth.serleena.common.GeoPoint;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Random;
 
@@ -68,28 +70,37 @@ public class BackgroundLocationManager extends WakefulBroadcastReceiver
     private ServiceResultReceiver myResultReceiver;
     private AlarmManager am;
     private Context context;
-    private Map<ILocationObserver, Integer> observers;
+    private List<ILocationObserver> observers;
 
     private PendingIntent pendingIntent;
     private GeoPoint location;
+    private int updateInterval;
 
     /**
      * Crea un nuovo oggetto BackgroundLocationManager.
      *
      * @param context Contesto dal quale creare l'oggetto.
      * @param am Gestore degli allarmi di Android.
+     * @param updateInterval Intervallo ogni quanto il gestore deve
+     *         svegliare il sistema e richiedere
+     *         aggiornamenti sulla posizione, in
+     *         secondi.
      */
-    public BackgroundLocationManager(Context context, AlarmManager am) {
+    public BackgroundLocationManager(Context context, AlarmManager am, int
+                                     updateInterval) {
         if (context == null)
             throw new IllegalArgumentException("Illegal null context");
         if (am == null)
             throw new IllegalArgumentException("Illegal null alarm manager");
+        if (updateInterval < 60)
+            throw new IllegalArgumentException("Illegal interval");
 
+        this.updateInterval = updateInterval;
         myResultReceiver = new ServiceResultReceiver(new Handler());
         myResultReceiver.setReceiver(this);
         this.am = am;
         this.context = context;
-        this.observers = new HashMap<>();
+        this.observers = new ArrayList<>();
     }
 
     /**
@@ -102,18 +113,14 @@ public class BackgroundLocationManager extends WakefulBroadcastReceiver
      *                 un'eccezione IllegalArgumentException.
      */
     @Override
-    public synchronized void attachObserver(ILocationObserver observer,
-                                            int interval) {
+    public synchronized void attachObserver(ILocationObserver observer) {
         if (observer == null)
             throw new IllegalArgumentException("Illegal null observer");
-        if (interval <= 0)
-            throw new IllegalArgumentException("Illegal interval");
 
-        if (!observers.containsKey(observer)) {
-            this.observers.put(observer, interval);
+        if (!observers.contains(observer)) {
+            this.observers.add(observer);
             if (observers.size() == 1)
-                context.registerReceiver(this, new IntentFilter("SERLEENA_ALARM"));
-            restart();
+                acquireResources();
         }
     }
 
@@ -131,12 +138,8 @@ public class BackgroundLocationManager extends WakefulBroadcastReceiver
         if (observer == null)
             throw new IllegalArgumentException("Illegal null observer");
 
-        if (observers.size() == 1 && this.observers.containsKey(observer)) {
-            am.cancel(pendingIntent);
-            pendingIntent = null;
-            context.stopService(new Intent(context, LocationService.class));
-            context.unregisterReceiver(this);
-        }
+        if (observers.size() == 1 && this.observers.contains(observer))
+            releaseResources();
 
         this.observers.remove(observer);
     }
@@ -146,8 +149,9 @@ public class BackgroundLocationManager extends WakefulBroadcastReceiver
      */
     @Override
     public void notifyObservers() {
+        List<ILocationObserver> copy = new ArrayList<>(this.observers);
         if (location != null)
-            for (ILocationObserver o : this.observers.keySet())
+            for (ILocationObserver o : copy)
                 o.onLocationUpdate(location);
     }
 
@@ -189,12 +193,9 @@ public class BackgroundLocationManager extends WakefulBroadcastReceiver
         notifyObservers();
     }
 
-    private void restart() {
-        int minInterval = Integer.MAX_VALUE;
-        for (int interval : observers.values())
-            if (interval < minInterval)
-                minInterval = interval;
-        int alarmType = AlarmManager.RTC_WAKEUP;
+    private void acquireResources() {
+        context.registerReceiver(this, new IntentFilter("SERLEENA_ALARM"));
+
         Intent intentToFire = new Intent("SERLEENA_ALARM");
 
         if (pendingIntent != null)
@@ -207,7 +208,14 @@ public class BackgroundLocationManager extends WakefulBroadcastReceiver
                 PendingIntent.FLAG_CANCEL_CURRENT);
 
         am.setInexactRepeating(
-                alarmType, 10, minInterval * 1000, pendingIntent);
+                AlarmManager.RTC_WAKEUP, 0, updateInterval*1000, pendingIntent);
+    }
+
+    private void releaseResources() {
+        am.cancel(pendingIntent);
+        pendingIntent = null;
+        context.stopService(new Intent(context, LocationService.class));
+        context.unregisterReceiver(this);
     }
 
 }
