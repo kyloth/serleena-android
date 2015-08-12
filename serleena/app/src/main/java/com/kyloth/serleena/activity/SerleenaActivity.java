@@ -40,14 +40,12 @@
  */
 package com.kyloth.serleena.activity;
 
-import android.app.AlarmManager;
 import android.app.Fragment;
 import android.os.Bundle;
 import android.app.Activity;
 import android.view.KeyEvent;
 
 import com.kyloth.serleena.R;
-import com.kyloth.serleena.common.GeoPoint;
 import com.kyloth.serleena.model.*;
 import com.kyloth.serleena.persistence.IPersistenceDataSink;
 import com.kyloth.serleena.persistence.sqlite.CachedSQLiteDataSource;
@@ -60,8 +58,6 @@ import com.kyloth.serleena.sensors.*;
 import com.kyloth.serleena.view.fragments.*;
 
 import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
 
 /**
  * Classe che implementa ISerleenaActivity.
