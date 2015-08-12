@@ -207,6 +207,14 @@ public class SerleenaActivity extends Activity
     }
 
     /**
+     * Implementa ISerleenaActivity.getDataSink().
+     */
+    @Override
+    public IPersistenceDataSink getDataSink() {
+        return dataSink;
+    }
+
+    /**
      * Implementa IObjectListObserver.onObjectSelected().
      *
      * @param obj Oggetto selezionato.
