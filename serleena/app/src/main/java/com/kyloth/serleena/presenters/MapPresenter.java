@@ -57,6 +57,9 @@ import com.kyloth.serleena.presentation.IMapView;
 import com.kyloth.serleena.sensors.ILocationManager;
 import com.kyloth.serleena.sensors.ILocationObserver;
 
+import java.util.ArrayList;
+import java.util.List;
+
 /**
  * Concretizza IMapPresenter.
  *
@@ -80,6 +83,7 @@ public class MapPresenter
     private IExperience activeExperience;
     private GeoPoint currentPosition;
     private ILocationManager locMan;
+    private IQuadrant currentQuadrant;
 
     /**
      * Crea un oggetto MapPresenter.
@@ -129,22 +133,15 @@ public class MapPresenter
         if (currentPosition == null)
             throw new LocationNotAvailableException();
 
-        AsyncTask<Void, Void, Iterable<UserPoint>> task =
-                new AsyncTask<Void,Void,Iterable<UserPoint>>() {
+        new AsyncTask<Void, Void, Void>() {
             @Override
-            protected Iterable<UserPoint> doInBackground(Void... params) {
+            protected Void doInBackground(Void... params) {
                 activeExperience.addUserPoints(new UserPoint(
                         currentPosition.latitude(),
                         currentPosition.longitude()));
-                return activeExperience.getUserPoints();
+                return null;
             }
-            @Override
-            protected void onPostExecute(Iterable<UserPoint> userPoints) {
-                super.onPostExecute(userPoints);
-                view.displayUP(userPoints);
-            }
-        };
-        task.execute();
+        }.execute();
     }
 
     /**
@@ -187,28 +184,10 @@ public class MapPresenter
 
         currentPosition = loc;
         view.setUserLocation(loc);
-        final ISerleenaDataSource ds = activity.getDataSource();
 
-        AsyncTask<Void, Void, IQuadrant> quadrantAsyncTask =
-                new AsyncTask<Void, Void, IQuadrant>() {
-            @Override
-            protected IQuadrant doInBackground(Void... params) {
-                try {
-                    return ds.getQuadrant(loc);
-                } catch (NoSuchQuadrantException e) {
-                    return null;
-                }
-            }
-            @Override
-            protected void onPostExecute(IQuadrant quadrant) {
-                if (quadrant != null)
-                    view.displayQuadrant(quadrant);
-                else
-                    view.clear();
-            }
-        };
-
-        quadrantAsyncTask.execute();
+        updateQuadrant(loc);
+        if (activeExperience != null)
+            updateUserPoints();
     }
 
     /**
@@ -225,6 +204,51 @@ public class MapPresenter
         if (experience == null)
             throw new IllegalArgumentException("Illegal null experience");
         this.activeExperience = experience;
+    }
+
+    public void displayUserPoints(Iterable<UserPoint> points) {
+        if (currentQuadrant != null) {
+            List<UserPoint> list = new ArrayList<>();
+            for (UserPoint point : points)
+                if (currentQuadrant.contains(point))
+                    list.add(point);
+            view.displayUP(list);
+        }
+    }
+
+    private void updateUserPoints() {
+        new AsyncTask<Void, Void, Iterable<UserPoint>>() {
+            @Override
+            protected Iterable<UserPoint> doInBackground(Void... params) {
+                return activeExperience.getUserPoints();
+            }
+            @Override
+            protected void onPostExecute(Iterable<UserPoint> userPoints) {
+                displayUserPoints(userPoints);
+            }
+        }.execute();
+    }
+
+    private void updateQuadrant(final GeoPoint loc) {
+        final ISerleenaDataSource ds = activity.getDataSource();
+        new AsyncTask<Void, Void, Void>() {
+            @Override
+            protected Void doInBackground(Void... params) {
+                try {
+                    currentQuadrant = ds.getQuadrant(loc);
+                } catch (NoSuchQuadrantException e) {
+                    currentQuadrant = null;
+                }
+                return null;
+            }
+            @Override
+            protected void onPostExecute(Void v) {
+                if (currentQuadrant != null)
+                    view.displayQuadrant(currentQuadrant);
+                else
+                    view.clear();
+            }
+        }.execute();
     }
 
 }
