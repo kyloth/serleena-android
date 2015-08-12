@@ -49,8 +49,10 @@ import android.view.KeyEvent;
 import com.kyloth.serleena.R;
 import com.kyloth.serleena.common.GeoPoint;
 import com.kyloth.serleena.model.*;
+import com.kyloth.serleena.persistence.IPersistenceDataSink;
 import com.kyloth.serleena.persistence.sqlite.CachedSQLiteDataSource;
 import com.kyloth.serleena.persistence.sqlite.SerleenaDatabase;
+import com.kyloth.serleena.persistence.sqlite.SerleenaSQLiteDataSink;
 import com.kyloth.serleena.persistence.sqlite.SerleenaSQLiteDataSource;
 import com.kyloth.serleena.presentation.*;
 import com.kyloth.serleena.presenters.*;
@@ -89,6 +91,7 @@ public class SerleenaActivity extends Activity
     private TrackSelectionFragment trackSelectionFragment;
     private ObjectListFragment menuFragment;
     private ObjectListFragment experienceFragment;
+    private IPersistenceDataSink dataSink;
 
     /**
      * Ridefinisce Activity.onCreate().
@@ -104,6 +107,7 @@ public class SerleenaActivity extends Activity
         dataSource = new SerleenaDataSource(
                 new CachedSQLiteDataSource(
                         new SerleenaSQLiteDataSource(this, serleenaDatabase)));
+        dataSink = new SerleenaSQLiteDataSink(this, serleenaDatabase);
 
         if (findViewById(R.id.main_container) != null) {
             if (savedInstanceState != null)
