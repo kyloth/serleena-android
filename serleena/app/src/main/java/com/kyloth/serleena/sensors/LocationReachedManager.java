@@ -57,7 +57,7 @@ import java.util.Map;
 class LocationReachedManager
         implements ILocationReachedManager, ILocationObserver {
 
-    public static final int LOCATION_RADIUS = 100;
+    public static final int LOCATION_RADIUS = 50;
     public static final int LOCATION_UPDATE_INTERVAL = 60;
 
     private final List<LocationReachedRequest> requests;
