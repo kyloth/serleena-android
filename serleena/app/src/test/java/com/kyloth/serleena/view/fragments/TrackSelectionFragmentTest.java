@@ -47,6 +47,7 @@ import android.app.FragmentManager;
 
 import com.kyloth.serleena.BuildConfig;
 import com.kyloth.serleena.model.ITrack;
+import com.kyloth.serleena.persistence.IPersistenceDataSink;
 import com.kyloth.serleena.presentation.ITrackSelectionPresenter;
 import com.kyloth.serleena.presenters.ISerleenaActivity;
 import com.kyloth.serleena.model.ISerleenaDataSource;
@@ -83,6 +84,7 @@ public class TrackSelectionFragmentTest {
         public ISensorManager getSensorManager() {
             return null;
         }
+        public IPersistenceDataSink getDataSink() { return null; }
     }
 
     private Activity activity;

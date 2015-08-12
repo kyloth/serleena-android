@@ -54,6 +54,7 @@ import com.kyloth.serleena.view.fragments.ContactsFragment;
 import com.kyloth.serleena.view.fragments.ExperienceSelectionFragment;
 import com.kyloth.serleena.view.fragments.MapFragment;
 import com.kyloth.serleena.view.fragments.ObjectListFragment;
+import com.kyloth.serleena.view.fragments.SyncFragment;
 import com.kyloth.serleena.view.fragments.TelemetryFragment;
 import com.kyloth.serleena.view.fragments.TrackFragment;
 import com.kyloth.serleena.view.fragments.TrackSelectionFragment;
@@ -209,7 +210,7 @@ public class SerleenaActivityTest {
             ListAdapter listAdapter =
                     ((ObjectListFragment) fragment).getListAdapter();
 
-            if (listAdapter.getCount() != 4)
+            if (listAdapter.getCount() != 5)
                 return false;
 
             List<Fragment> fragmentsInMenu = new ArrayList<>();
@@ -217,9 +218,9 @@ public class SerleenaActivityTest {
                 fragmentsInMenu.add((Fragment) listAdapter.getItem(i));
 
             return containsFragment(
-                    fragmentsInMenu,
-                    CompassFragment.class,
-                    "Bussola") &&
+                            fragmentsInMenu,
+                            CompassFragment.class,
+                            "Bussola") &&
                     containsFragment(
                             fragmentsInMenu,
                             ObjectListFragment.class,
@@ -228,6 +229,10 @@ public class SerleenaActivityTest {
                             fragmentsInMenu,
                             WeatherFragment.class,
                             "Meteo") &&
+                    containsFragment(
+                            fragmentsInMenu,
+                            SyncFragment.class,
+                            "Sincronizza") &&
                     containsFragment(
                             fragmentsInMenu,
                             ContactsFragment.class,

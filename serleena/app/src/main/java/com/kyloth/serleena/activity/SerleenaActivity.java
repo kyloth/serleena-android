@@ -49,7 +49,11 @@ import android.view.KeyEvent;
 import com.kyloth.serleena.R;
 import com.kyloth.serleena.common.GeoPoint;
 import com.kyloth.serleena.model.*;
-import com.kyloth.serleena.persistence.sqlite.SQLiteDataSourceFactory;
+import com.kyloth.serleena.persistence.IPersistenceDataSink;
+import com.kyloth.serleena.persistence.sqlite.CachedSQLiteDataSource;
+import com.kyloth.serleena.persistence.sqlite.SerleenaDatabase;
+import com.kyloth.serleena.persistence.sqlite.SerleenaSQLiteDataSink;
+import com.kyloth.serleena.persistence.sqlite.SerleenaSQLiteDataSource;
 import com.kyloth.serleena.presentation.*;
 import com.kyloth.serleena.presenters.*;
 import com.kyloth.serleena.sensors.*;
@@ -87,6 +91,8 @@ public class SerleenaActivity extends Activity
     private TrackSelectionFragment trackSelectionFragment;
     private ObjectListFragment menuFragment;
     private ObjectListFragment experienceFragment;
+    private IPersistenceDataSink dataSink;
+    private SyncFragment syncFragment;
 
     /**
      * Ridefinisce Activity.onCreate().
@@ -96,9 +102,13 @@ public class SerleenaActivity extends Activity
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_serleena);
 
-        SQLiteDataSourceFactory factory = SQLiteDataSourceFactory.getInstance();
-        dataSource = new SerleenaDataSource(factory.createDataSource(this));
         sensorManager = SerleenaSensorManager.getInstance(this);
+
+        SerleenaDatabase serleenaDatabase = new SerleenaDatabase(this, 1);
+        dataSource = new SerleenaDataSource(
+                new CachedSQLiteDataSource(
+                        new SerleenaSQLiteDataSource(this, serleenaDatabase)));
+        dataSink = new SerleenaSQLiteDataSink(this, serleenaDatabase);
 
         if (findViewById(R.id.main_container) != null) {
             if (savedInstanceState != null)
@@ -112,6 +122,7 @@ public class SerleenaActivity extends Activity
             telemetryFragment = new TelemetryFragment();
             weatherFragment = new WeatherFragment();
             mapFragment = new MapFragment();
+            syncFragment = new SyncFragment();
             experienceFragment = new ObjectListFragment() {
                 @Override
                 public String toString() {
@@ -135,6 +146,7 @@ public class SerleenaActivity extends Activity
             menuList.add(weatherFragment);
             menuList.add(contactsFragment);
             menuList.add(compassFragment);
+            menuList.add(syncFragment);
 
             menuFragment.setList(menuList);
             menuFragment.attachObserver(this);
@@ -149,6 +161,7 @@ public class SerleenaActivity extends Activity
             new WeatherPresenter(weatherFragment, this);
             new TrackPresenter(trackFragment, this);
             new TelemetryPresenter(telemetryFragment, this);
+            new SyncPresenter(syncFragment, this);
 
             getFragmentManager().beginTransaction()
                     .add(R.id.main_container, menuFragment).commit();
@@ -195,6 +208,14 @@ public class SerleenaActivity extends Activity
     @Override
     public ISensorManager getSensorManager() {
         return sensorManager;
+    }
+
+    /**
+     * Implementa ISerleenaActivity.getDataSink().
+     */
+    @Override
+    public IPersistenceDataSink getDataSink() {
+        return dataSink;
     }
 
     /**

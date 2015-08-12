@@ -49,6 +49,7 @@ import android.widget.ListView;
 
 import com.kyloth.serleena.BuildConfig;
 import com.kyloth.serleena.model.IExperience;
+import com.kyloth.serleena.persistence.IPersistenceDataSink;
 import com.kyloth.serleena.presentation.IExperienceSelectionPresenter;
 import com.kyloth.serleena.presenters.ISerleenaActivity;
 import com.kyloth.serleena.model.ISerleenaDataSource;
@@ -92,6 +93,7 @@ public class ExperienceSelectionFragmentTest {
         public ISensorManager getSensorManager() {
             return null;
         }
+        public IPersistenceDataSink getDataSink() { return null; }
     }
 
     private Activity activity;
