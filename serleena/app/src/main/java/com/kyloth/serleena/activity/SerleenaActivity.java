@@ -51,6 +51,7 @@ import com.kyloth.serleena.persistence.IPersistenceDataSink;
 import com.kyloth.serleena.persistence.sqlite.CachedSQLiteDataSource;
 import com.kyloth.serleena.persistence.sqlite.SerleenaDatabase;
 import com.kyloth.serleena.persistence.sqlite.SerleenaSQLiteDataSink;
+import com.kyloth.serleena.persistence.sqlite.FilesystemRasterSource;
 import com.kyloth.serleena.persistence.sqlite.SerleenaSQLiteDataSource;
 import com.kyloth.serleena.presentation.*;
 import com.kyloth.serleena.presenters.*;
@@ -103,7 +104,10 @@ public class SerleenaActivity extends Activity
         SerleenaDatabase serleenaDatabase = new SerleenaDatabase(this, 1);
         dataSource = new SerleenaDataSource(
                 new CachedSQLiteDataSource(
-                        new SerleenaSQLiteDataSource(this, serleenaDatabase)));
+                        new SerleenaSQLiteDataSource(
+                                this, new SerleenaDatabase(this, 1),
+                                new FilesystemRasterSource(
+                                        this.getFilesDir()))));
         dataSink = new SerleenaSQLiteDataSink(this, serleenaDatabase);
 
         if (findViewById(R.id.main_container) != null) {
