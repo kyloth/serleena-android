@@ -41,6 +41,7 @@ import com.kyloth.serleena.common.UserPoint;
 import com.kyloth.serleena.model.ISerleenaDataSource;
 import com.kyloth.serleena.persistence.IExperienceStorage;
 import com.kyloth.serleena.persistence.IWeatherStorage;
+import com.kyloth.serleena.persistence.NoSuchQuadrantException;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -170,7 +171,8 @@ public class CachedSQLiteDataSourceTest {
      * all'interno dello stesso quadrante.
      */
     @Test
-    public void testThatQuadrantGetsCachedForSameArea() {
+    public void testThatQuadrantGetsCachedForSameArea()
+            throws NoSuchQuadrantException {
         IQuadrant q1 = mock(IQuadrant.class);
         IQuadrant q2 = mock(IQuadrant.class);
         GeoPoint gp = mock(GeoPoint.class);
@@ -191,7 +193,8 @@ public class CachedSQLiteDataSourceTest {
      * IQuadrant appropriati, ignorando i valori cachati.
      */
     @Test
-    public void testThatDifferentAreasGetDifferentQuadrants() {
+    public void testThatDifferentAreasGetDifferentQuadrants()
+            throws NoSuchQuadrantException {
         IQuadrant q1 = mock(IQuadrant.class);
         IQuadrant q2 = mock(IQuadrant.class);
         GeoPoint gp1 = mock(GeoPoint.class);
