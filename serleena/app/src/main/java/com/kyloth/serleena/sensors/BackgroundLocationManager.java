@@ -149,8 +149,9 @@ public class BackgroundLocationManager extends WakefulBroadcastReceiver
      */
     @Override
     public void notifyObservers() {
+        List<ILocationObserver> copy = new ArrayList<>(this.observers);
         if (location != null)
-            for (ILocationObserver o : this.observers)
+            for (ILocationObserver o : copy)
                 o.onLocationUpdate(location);
     }
 
