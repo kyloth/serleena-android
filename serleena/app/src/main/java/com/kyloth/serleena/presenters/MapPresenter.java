@@ -49,6 +49,7 @@ import com.kyloth.serleena.common.NoActiveExperienceException;
 import com.kyloth.serleena.common.UserPoint;
 import com.kyloth.serleena.model.IExperience;
 import com.kyloth.serleena.model.ISerleenaDataSource;
+import com.kyloth.serleena.persistence.NoSuchQuadrantException;
 import com.kyloth.serleena.presentation.IMapPresenter;
 import com.kyloth.serleena.presentation.IMapView;
 import com.kyloth.serleena.sensors.ILocationManager;
@@ -181,12 +182,18 @@ public class MapPresenter implements IMapPresenter, ILocationObserver {
                 new AsyncTask<Void, Void, IQuadrant>() {
             @Override
             protected IQuadrant doInBackground(Void... params) {
-                return ds.getQuadrant(loc);
+                try {
+                    return ds.getQuadrant(loc);
+                } catch (NoSuchQuadrantException e) {
+                    return null;
+                }
             }
             @Override
             protected void onPostExecute(IQuadrant quadrant) {
-                super.onPostExecute(quadrant);
-                view.displayQuadrant(quadrant);
+                if (quadrant != null)
+                    view.displayQuadrant(quadrant);
+                else
+                    view.clear();
             }
         };
 
