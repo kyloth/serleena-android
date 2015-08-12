@@ -37,6 +37,7 @@ import org.robolectric.RobolectricGradleTestRunner;
 import org.robolectric.RuntimeEnvironment;
 import org.robolectric.annotation.Config;
 
+import android.content.ContentValues;
 import android.database.sqlite.SQLiteDatabase;
 
 import com.kyloth.serleena.persistence.WeatherForecastEnum;
@@ -116,6 +117,18 @@ public class TestDB {
                        "(" + String.valueOf(id) + ", '" + name + "', '" + value + "', " +
                        String.valueOf(nwLat) + ", " + String.valueOf(nwLon) + ", " + String.valueOf(seLat) + ", " + String.valueOf(seLon) + ")";
         db.execSQL(query);
+    }
+
+    public static void quadrantQuery(SQLiteDatabase db, double nwLat,
+                                     double nwLon, double seLat, double seLon,
+                                     String uuid) {
+        ContentValues values = new ContentValues();
+        values.put("raster_nw_corner_latitude", nwLat);
+        values.put("raster_nw_corner_longitude", nwLon);
+        values.put("raster_se_corner_latitude", seLat);
+        values.put("raster_se_corner_longitude", seLon);
+        values.put("raster_uuid", uuid);
+        db.insertOrThrow(SerleenaDatabase.TABLE_RASTERS, null, values);
     }
 
     public static void forecastQuery(
