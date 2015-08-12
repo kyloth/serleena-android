@@ -50,6 +50,7 @@ import static org.mockito.Mockito.*;
 import org.mockito.ArgumentCaptor;
 import static org.junit.Assert.*;
 
+import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -100,21 +101,37 @@ public class ContactsPresenterTest {
         presenter = new ContactsPresenter(view, activity);
     }
 
+    /**
+     * Verifica che il costruttore sollevi un'eccezione IllegalArgumentException
+     * se vengono passati parametri null.
+     */
     @Test(expected = IllegalArgumentException.class)
     public void ctorShouldThrowIfNullArguments1() {
         new ContactsPresenter(null, activity);
     }
 
+    /**
+     * Verifica che il costruttore sollevi un'eccezione IllegalArgumentException
+     * se vengono passati parametri null.
+     */
     @Test(expected = IllegalArgumentException.class)
     public void ctorShouldThrowIfNullArguments2() {
         new ContactsPresenter(view, null);
     }
 
+    /**
+     * Verifica che il costruttore sollevi un'eccezione IllegalArgumentException
+     * se vengono passati parametri null.
+     */
     @Test(expected = IllegalArgumentException.class)
     public void ctorShouldThrowIfNullArguments3() {
         new ContactsPresenter(null, null);
     }
 
+    /**
+     * Verifica che il presenter si registri agli eventi del sensore di
+     * posizione durante resume().
+     */
     @Test
     public void shouldRegisterItselfToSensorsOnResume() {
         presenter.resume();
@@ -123,18 +140,21 @@ public class ContactsPresenterTest {
                 ContactsPresenter.UPDATE_INTERVAL_SECONDS);
     }
 
+    /**
+     * Verifica che il presenter si deregistri agli eventi del sensore di
+     * posizione durante pause().
+     */
     @Test
     public void shouldUnregisterItselfToSensorsOnPause() {
         presenter.pause();
         verify(locMan).detachObserver(presenter);
     }
 
-    @Test
-    public void viewShouldBeClearedOnResumeIfNoContactsToBeShown() {
-        presenter.resume();
-        verify(view).clearView();
-    }
-
+    /**
+     * Verifica che i contatti vengano mostrati dal presenter sulla vista
+     * secondo un buffer circolare, mostrando in modo sequenziale dal primo
+     * all'ultimo, e successivamente di nuovo il primo.
+     */
     @Test
     public void presenterShouldSetViewWithContactsLikeACircularBuffer() {
         EmergencyContact ec1 = mock(EmergencyContact.class);
@@ -156,22 +176,61 @@ public class ContactsPresenterTest {
         verify(view, times(2)).displayContact("Name1", "Value1");
     }
 
+    /**
+     * Verifica che displayContacts() sollevi un'eccezione
+     * IllegalArgumentException se chiamato con parametro null.
+     */
     @Test(expected = IllegalArgumentException.class)
     public void displayContactsShouldThrowWhenNullArguments() {
         presenter.displayContacts(null);
     }
 
+    /**
+     * Verifica che la richiesta di avanzare al prossimo contatto non sollevi
+     * eccezioni se non vi sono contatti da visualizzare.
+     */
     @Test
     public void nextContactShouldNotThrowIfNoContacts() {
         presenter.nextContact();
     }
 
+    /**
+     * Verifica che la vista venga pulita se la lista di contatti di
+     * emergenza passa da una posizione geografica con un elenco di contatti
+     * non vuoto a una con zero contatti.
+     */
     @Test
-    public void displayContactsShouldClearViewIfEmptyList() {
+    public void displayContactsShouldClearViewIfContactListBecomesEmpty() {
+        List<EmergencyContact> list = new ArrayList<>();
+        list.add(mock(EmergencyContact.class));
+        presenter.displayContacts(new ListAdapter<EmergencyContact>(list));
         presenter.displayContacts(
                 new ListAdapter<EmergencyContact>(
                         new ArrayList<EmergencyContact>()));
         verify(view).clearView();
+    }
+
+    /**
+     * Verifica che la vista non venga modificata se viene richiesto
+     * ripetutamente di visualizzare la stessa lista di contatti.
+     */
+    @Test
+    public void gettingSameContactListShouldNotChangeView() {
+        List<EmergencyContact> contacts = new ArrayList<>();
+        EmergencyContact contact = mock(EmergencyContact.class);
+        when(contact.name()).thenReturn("");
+        when(contact.value()).thenReturn("");
+        contacts.add(mock(EmergencyContact.class));
+
+        presenter.displayContacts(new ListAdapter<EmergencyContact>(contacts));
+        verify(view, times(0)).clearView();
+        verify(view, times(1)).displayContact(
+                any(String.class), any(String.class));
+
+        presenter.displayContacts(new ListAdapter<EmergencyContact>(contacts));
+        verify(view, times(0)).clearView();
+        verify(view, times(1)).displayContact(
+                any(String.class), any(String.class));
     }
 
 }
