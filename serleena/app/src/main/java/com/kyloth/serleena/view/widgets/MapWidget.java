@@ -80,7 +80,6 @@ public class MapWidget extends ImageView {
      */
     public MapWidget(Context context) {
         super(context);
-        init(context);
     }
 
     /**
@@ -88,7 +87,6 @@ public class MapWidget extends ImageView {
      */
     public MapWidget(Context context,AttributeSet attrs) {
         super(context, attrs);
-        init(context);
     }
 
     /**
@@ -96,44 +94,6 @@ public class MapWidget extends ImageView {
      */
     public MapWidget(Context context, AttributeSet attrs, int defStyle) {
         super(context, attrs, defStyle);
-        init(context);
-    }
-
-    /**
-     * TODO: Inizializzazione a dei valori dimostrativi. Eliminare!
-     */
-    public void init(Context context) {
-        this.setQuadrant(new IQuadrant() {
-            @Override
-            public Bitmap getRaster() {
-                Resources res = getResources();
-                Bitmap bitmap = BitmapFactory.decodeResource(res, R.drawable
-                        .roadmap_240);
-                return bitmap;
-            }
-
-            @Override
-            public GeoPoint getNorthWestPoint() {
-                return new GeoPoint(30, 30);
-            }
-
-            @Override
-            public GeoPoint getSouthEastPoint() {
-                return new GeoPoint(10, 10);
-            }
-
-            @Override
-            public boolean contains(GeoPoint p) throws IllegalArgumentException {
-                return true;
-            }
-        });
-        ArrayList<UserPoint> ups = new ArrayList<>();
-        ups.add(new UserPoint(11, 20));
-        ups.add(new UserPoint(21, 14));
-        ups.add(new UserPoint(10, 10));
-        ups.add(new UserPoint(30, 30));
-        this.setUserPosition(new GeoPoint(20, 20));
-        this.setUserPoints(ups);
     }
 
     /**
