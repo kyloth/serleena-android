@@ -156,6 +156,7 @@ public class MapPresenter
     @Override
     public synchronized void resume() {
         locMan.attachObserver(this, UPDATE_INTERVAL_SECONDS);
+        view.clear();
     }
 
     /**
@@ -224,7 +225,6 @@ public class MapPresenter
         if (experience == null)
             throw new IllegalArgumentException("Illegal null experience");
         this.activeExperience = experience;
-        view.clear();
     }
 
 }
