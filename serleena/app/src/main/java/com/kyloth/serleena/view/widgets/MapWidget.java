@@ -170,6 +170,13 @@ public class MapWidget extends ImageView {
         invalidate();
     }
 
+    /**
+     * Restituisce l'oggetto IQuadrant mostrato dal widget.
+     */
+    public IQuadrant getQuadrant() {
+        return quadrant;
+    }
+
     private void drawUserPoint(UserPoint up, Canvas canvas) {
         Paint red = new Paint();
         red.setColor(Color.RED);
