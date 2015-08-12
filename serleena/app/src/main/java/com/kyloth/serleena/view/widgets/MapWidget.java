@@ -133,6 +133,15 @@ public class MapWidget extends ImageView {
     }
 
     /**
+     * Restituisce i Punti Utente visualizzati dal widget.
+     *
+     * @return Insieme enumerabile di Punti Utente.
+     */
+    public Iterable<UserPoint> getUserPoints() {
+        return upList;
+    }
+
+    /**
      * Ridefinisce ImageView.onDraw().
      */
     @Override
