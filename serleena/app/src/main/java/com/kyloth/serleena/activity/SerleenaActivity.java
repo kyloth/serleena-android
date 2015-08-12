@@ -92,6 +92,7 @@ public class SerleenaActivity extends Activity
     private ObjectListFragment menuFragment;
     private ObjectListFragment experienceFragment;
     private IPersistenceDataSink dataSink;
+    private SyncFragment syncFragment;
 
     /**
      * Ridefinisce Activity.onCreate().
@@ -121,6 +122,7 @@ public class SerleenaActivity extends Activity
             telemetryFragment = new TelemetryFragment();
             weatherFragment = new WeatherFragment();
             mapFragment = new MapFragment();
+            syncFragment = new SyncFragment();
             experienceFragment = new ObjectListFragment() {
                 @Override
                 public String toString() {
@@ -144,6 +146,7 @@ public class SerleenaActivity extends Activity
             menuList.add(weatherFragment);
             menuList.add(contactsFragment);
             menuList.add(compassFragment);
+            menuList.add(syncFragment);
 
             menuFragment.setList(menuList);
             menuFragment.attachObserver(this);
