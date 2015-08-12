@@ -26,7 +26,35 @@
     "name": "Experience_1",
     "id": "f87ca70b-046a-48b8-8bf4-1407d94b11fc",
     "rasterData": [
-        "b64"
+        {
+            "boundingRect": {
+                "topLeft": {
+                    "latitude": 45.279016870887816,
+                    "longitude": 11.650586999999973
+                },
+                "bottomRight":
+                {
+                    "latitude": 45.275977000000005,
+                    "longitude": 11.659226999999973
+                }
+            },
+            "image": "iVBORw0KGgoAAAANSUhEUgAAAPAAAADwCAIAAACxN37FAAABJ0lEQVR42u3XwQnDMAwF0JxzKOlAXbC75tABjCssMJ4grcJ7GKPz5yPsbQMAAAAAAAAAAAAAAAAAAAAAAAAAAAAutrejD3OQCYWtVc5BJtyh0DY093lyrLdMKL+h11eHTPApBAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAfuTzfvZhDjKhsGjw3o5oc5zz8YpbJtQudPY4am1DU172OO/c0zKh9oaej43c1jKh9qdwVjkHmQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAMAf+AIrnplnW4V/mgAAAABJRU5ErkJggg=="
+        },
+        {
+            "boundingRect": {
+                "topLeft": {
+                    "latitude": 45.282056578923154,
+                    "longitude": 11.650586999999973
+                },
+                "bottomRight":
+                {
+                    "latitude": 45.279016870887816,
+                    "longitude": 11.659226999999973
+                }
+            },
+            "image": "iVBORw0KGgoAAAANSUhEUgAAAPAAAADwCAIAAACxN37FAAAB6UlEQVR42u3cMQqDQBBAUWsLiWWa3MQL5qgBixwgbIZMWIK1KWZ5DxFb18+wNjtNAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAACdpzRowVNCKRtMgaBA0aBpBWwQEDZoGQYOg0TQIGgQNmgZBI2jQNAgaBA2aRtAgaNA0CBoEjaZB0CBo0DQIGkGDpkHQIGjQNIIGQYOmQdAgaAQNmgZBg6BB0wgaBA2aBkGDoNE0CBoEDZoGQSNo0DQIGgQNmkbQIGjQNAgaBI2mQdAgaNA0CBpBg6ZB0CBo0DSCBkGDpkHQIGg0DYIGQYOmQdAIGjQNggZBg6YRNAgaNA2CBkGjaRA0CBo0DYJG0KBp+KN92dpHfxA0tYfx/LpEzXkJmvJBZ8eRdZ/Qmqaq7DjvfUILmtoT+ncnLWhG+ynUNGMOb4uAoEHTIGgQNJoGQYOgQdCgaQQNggZNg6BB0GgaBA2CBk2DoBE0aBoEfb7b9ZFnNjzv6+HwBgRd8i2i6bgi6H3Z4sGX1XTtCR0dR82HE/0QdOEtR94jaxNa0OVfITcbuYfuJ/qh6aoTOgdzbqBtOQStAAQNmgZBg6DRtEVA0PD1BtdBPnphQCSyAAAAAElFTkSuQmCC"
+        }
+
     ],
     "boundingRect": {
         "topLeft": {
