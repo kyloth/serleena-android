@@ -158,13 +158,14 @@ class LocationReachedManager
             if (request.location().distanceTo(loc) < LOCATION_RADIUS)
                 toRemove.add(request);
 
-        for (LocationReachedRequest request : toRemove) {
-            request.observer().onLocationReached();
+        for (LocationReachedRequest request : toRemove)
             requests.remove(request);
-        }
 
         if (requests.size() == 0)
             bkgrLocMan.detachObserver(this);
+
+        for (LocationReachedRequest request : toRemove)
+            request.observer().onLocationReached();
     }
 
 }
