@@ -74,19 +74,28 @@ public class BackgroundLocationManager extends WakefulBroadcastReceiver
 
     private PendingIntent pendingIntent;
     private GeoPoint location;
+    private int updateInterval;
 
     /**
      * Crea un nuovo oggetto BackgroundLocationManager.
      *
      * @param context Contesto dal quale creare l'oggetto.
      * @param am Gestore degli allarmi di Android.
+     * @param updateInterval Intervallo ogni quanto il gestore deve
+     *         svegliare il sistema e richiedere
+     *         aggiornamenti sulla posizione, in
+     *         secondi.
      */
-    public BackgroundLocationManager(Context context, AlarmManager am) {
+    public BackgroundLocationManager(Context context, AlarmManager am, int
+                                     updateInterval) {
         if (context == null)
             throw new IllegalArgumentException("Illegal null context");
         if (am == null)
             throw new IllegalArgumentException("Illegal null alarm manager");
+        if (updateInterval < 60)
+            throw new IllegalArgumentException("Illegal interval");
 
+        this.updateInterval = updateInterval;
         myResultReceiver = new ServiceResultReceiver(new Handler());
         myResultReceiver.setReceiver(this);
         this.am = am;
@@ -198,7 +207,7 @@ public class BackgroundLocationManager extends WakefulBroadcastReceiver
                 PendingIntent.FLAG_CANCEL_CURRENT);
 
         am.setInexactRepeating(
-                AlarmManager.RTC_WAKEUP, 10, 60000, pendingIntent);
+                AlarmManager.RTC_WAKEUP, 0, updateInterval*1000, pendingIntent);
     }
 
     private void releaseResources() {
