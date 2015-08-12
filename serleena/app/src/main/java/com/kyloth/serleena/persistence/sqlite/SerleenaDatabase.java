@@ -152,7 +152,7 @@ public class SerleenaDatabase extends SQLiteOpenHelper {
                     "raster_nw_corner_longitude REAL NOT NULL, " +
                     "raster_se_corner_latitude REAL NOT NULL, " +
                     "raster_se_corner_longitude REAL NOT NULL, " +
-                    "raster_path TEXT NOT NULL)";
+                    "raster_uuid TEXT NOT NULL)";
 
     /**
      * Crea un oggetto SerleenaDatabase associato al database predefinito dalla

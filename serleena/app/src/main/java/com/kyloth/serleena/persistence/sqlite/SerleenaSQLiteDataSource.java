@@ -369,7 +369,7 @@ public class SerleenaSQLiteDataSource implements ISerleenaSQLiteDataSource {
                     "raster_nw_corner_longitude",
                     "raster_se_corner_latitude",
                     "raster_se_corner_longitude",
-                    "raster_path"
+                    "raster_uuid"
                 },
                 where, null, null, null, null);
 
@@ -381,15 +381,15 @@ public class SerleenaSQLiteDataSource implements ISerleenaSQLiteDataSource {
                 result.getColumnIndexOrThrow("raster_se_corner_latitude");
         int seLonIndex =
                 result.getColumnIndexOrThrow("raster_se_corner_longitude");
-        int pathIndex =
-                result.getColumnIndexOrThrow("raster_path");
+        int uuidIndex =
+                result.getColumnIndexOrThrow("raster_uuid");
 
         if (result.moveToNext()) {
             double nwLat = result.getDouble(nwLatIndex);
             double nwLon = result.getDouble(nwLonIndex);
             double seLat = result.getDouble(seLatIndex);
             double seLon = result.getDouble(seLonIndex);
-            String fileName = result.getString(pathIndex);
+            String fileName = result.getString(uuidIndex);
 
             File file = new File(context.getFilesDir(), fileName);
             if (file.exists()) {
