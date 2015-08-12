@@ -168,4 +168,16 @@ public class SyncFragment extends Fragment implements ISyncView {
         presenter.pause();
     }
 
+    /**
+     * Ridefinisce Object.toString().
+     *
+     * Restituisce il nome della vista.
+     *
+     * @return Nome della vista.
+     */
+    @Override
+    public String toString() {
+        return "Sincronizza";
+    }
+
 }
