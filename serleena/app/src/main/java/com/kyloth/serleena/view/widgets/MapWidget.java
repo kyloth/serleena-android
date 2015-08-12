@@ -149,12 +149,10 @@ public class MapWidget extends ImageView {
         super.onDraw(canvas);
 
         if(quadrant != null) {
-            if (quadrant.getRaster() != null)
-                canvas.drawBitmap(quadrant.getRaster(), 0, 0, null);
+            canvas.drawBitmap(quadrant.getRaster(), 0, 0, null);
 
             for (UserPoint up : upList)
-                if (quadrant.contains(up))
-                    drawUserPoint(up, canvas);
+                drawUserPoint(up, canvas);
 
             drawUserPosition(userPosition, canvas);
         }
