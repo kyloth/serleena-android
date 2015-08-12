@@ -64,6 +64,7 @@ import com.kyloth.serleena.common.GeoPoint;
 import com.kyloth.serleena.model.IExperience;
 import com.kyloth.serleena.model.ITrack;
 import com.kyloth.serleena.model.SerleenaDataSource;
+import com.kyloth.serleena.persistence.sqlite.IRasterSource;
 import com.kyloth.serleena.persistence.sqlite.SerleenaDatabase;
 import com.kyloth.serleena.persistence.sqlite.SerleenaSQLiteDataSource;
 import com.kyloth.serleena.sensors.BackgroundLocationManager;
@@ -84,6 +85,7 @@ import org.robolectric.shadows.ShadowLocationManager;
 import java.util.concurrent.Callable;
 
 import static junit.framework.Assert.assertEquals;
+import static org.mockito.Mockito.mock;
 
 /**
  * Contiene i test di integrazione per la classe TrackPresenter e sue
@@ -119,7 +121,9 @@ public class TrackPresenterIntegrationTest {
         db = serleenaDb.getWritableDatabase();
         dataSource = new SerleenaDataSource(
                 new SerleenaSQLiteDataSource(
-                        RuntimeEnvironment.application, serleenaDb));
+                        RuntimeEnvironment.application,
+                        serleenaDb,
+                        mock(IRasterSource.class)));
         TestDB.experienceQuery(db, 0, "experience1");
         TestDB.trackQuery(db, 0, "Track 1", 0);
         // (1, 1), (3, 3), (0, 5), (3, 7)

@@ -39,6 +39,7 @@ import com.kyloth.serleena.common.NoSuchWeatherForecastException;
 import com.kyloth.serleena.persistence.IExperienceStorage;
 import com.kyloth.serleena.persistence.IWeatherStorage;
 import com.kyloth.serleena.persistence.WeatherForecastEnum;
+import com.kyloth.serleena.persistence.sqlite.IRasterSource;
 import com.kyloth.serleena.persistence.sqlite.SerleenaDatabase;
 import com.kyloth.serleena.persistence.sqlite.SerleenaSQLiteDataSink;
 import com.kyloth.serleena.persistence.sqlite.SerleenaSQLiteDataSource;
@@ -61,6 +62,8 @@ import java.util.Calendar;
 import java.util.GregorianCalendar;
 import java.util.LinkedList;
 import java.util.Date;
+
+import static org.mockito.Mockito.mock;
 
 /**
  * Verifica che sia possibile passare delle strutture al dump builder e richiamarle
@@ -141,6 +144,7 @@ public class DumpBuilderIntegrationTest {
     public void setup() throws URISyntaxException {
         SerleenaDatabase sh = new SerleenaDatabase(RuntimeEnvironment.application, null, null, 1);
         sink = new SerleenaSQLiteDataSink(RuntimeEnvironment.application, sh);
-        src =  new SerleenaSQLiteDataSource(RuntimeEnvironment.application, sh);
+        src =  new SerleenaSQLiteDataSource(
+                RuntimeEnvironment.application, sh, mock(IRasterSource.class));
     }
 }

@@ -59,6 +59,7 @@ import com.kyloth.serleena.activity.SerleenaActivity;
 import com.kyloth.serleena.model.ISerleenaDataSource;
 import com.kyloth.serleena.model.SerleenaDataSource;
 import com.kyloth.serleena.persistence.WeatherForecastEnum;
+import com.kyloth.serleena.persistence.sqlite.IRasterSource;
 import com.kyloth.serleena.persistence.sqlite.SerleenaDatabase;
 import com.kyloth.serleena.persistence.sqlite.SerleenaSQLiteDataSource;
 import com.kyloth.serleena.view.fragments.WeatherFragment;
@@ -83,6 +84,7 @@ import java.util.Random;
 import java.util.concurrent.Callable;
 
 import static junit.framework.Assert.assertEquals;
+import static org.mockito.Mockito.mock;
 
 @RunWith(RobolectricGradleTestRunner.class)
 @Config(constants = BuildConfig.class, emulateSdk = 19,
@@ -145,7 +147,10 @@ public class WeatherPresenterIntegrationTest {
         db = serleenaDatabase.getWritableDatabase();
         activity.setDataSource(
                 new SerleenaDataSource(
-                        new SerleenaSQLiteDataSource(app, serleenaDatabase)));
+                        new SerleenaSQLiteDataSource(
+                                app,
+                                serleenaDatabase,
+                                mock(IRasterSource.class))));
 
         ListFragment menu = (ListFragment) activity.getFragmentManager()
                 .findFragmentById(R.id.main_container);

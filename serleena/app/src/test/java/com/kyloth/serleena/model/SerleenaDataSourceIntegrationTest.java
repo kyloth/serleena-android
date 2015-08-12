@@ -51,6 +51,7 @@ import com.kyloth.serleena.common.GeoPoint;
 import com.kyloth.serleena.common.NoSuchWeatherForecastException;
 import com.kyloth.serleena.common.Quadrant;
 import com.kyloth.serleena.persistence.WeatherForecastEnum;
+import com.kyloth.serleena.persistence.sqlite.IRasterSource;
 import com.kyloth.serleena.persistence.sqlite.SerleenaDatabase;
 import com.kyloth.serleena.persistence.sqlite.SerleenaSQLiteDataSource;
 import com.kyloth.serleena.persistence.sqlite.TestFixtures;
@@ -70,6 +71,7 @@ import java.util.Iterator;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
+import static org.mockito.Mockito.mock;
 
 /**
  * Contiene test di integrazione per le classi di persistenza.
@@ -108,7 +110,10 @@ public class SerleenaDataSourceIntegrationTest {
         values_2.put("experience_name", "foo");
         // TODO: Sostituire con fixture
         db.insertOrThrow(SerleenaDatabase.TABLE_EXPERIENCES, null, values_2);
-        serleenaSQLDS = new SerleenaSQLiteDataSource(RuntimeEnvironment.application, serleenaDB);
+        serleenaSQLDS = new SerleenaSQLiteDataSource(
+                RuntimeEnvironment.application,
+                serleenaDB,
+                mock(IRasterSource.class));
         dataSource = new SerleenaDataSource(serleenaSQLDS);
     }
 
@@ -216,8 +221,11 @@ public class SerleenaDataSourceIntegrationTest {
         TestDB.checkPointEventQuery(db, 3, 600, 2, 1);
         // TODO: Cos'e'? Come fa a funzionare?
 
-        SerleenaDataSource dataSource = new SerleenaDataSource(new
-                SerleenaSQLiteDataSource(RuntimeEnvironment.application, serleenaDb));
+        SerleenaDataSource dataSource = new SerleenaDataSource(
+                new SerleenaSQLiteDataSource(
+                        RuntimeEnvironment.application,
+                        serleenaDb,
+                        mock(IRasterSource.class)));
         ITrack track1 = dataSource.getExperiences().iterator().next()
                 .getTracks().iterator().next();
         ITrack track2 = dataSource.getExperiences().iterator().next()

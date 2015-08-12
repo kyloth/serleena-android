@@ -59,6 +59,7 @@ import java.util.Iterator;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
+import static org.mockito.Mockito.mock;
 
 /**
  * Contiene test per la classe SQLiteDAOExperience.
@@ -117,7 +118,10 @@ public class SQLiteDAOExperienceTest {
                 TestFixtures.pack(TestFixtures.EXPERIENCES_FIXTURE_EXPERIENCE_1_USERPOINT_1)
         );
 
-        serleenaSQLDS = new SerleenaSQLiteDataSource(RuntimeEnvironment.application, serleenaDB);
+        serleenaSQLDS = new SerleenaSQLiteDataSource(
+                RuntimeEnvironment.application,
+                serleenaDB,
+                mock(IRasterSource.class));
     }
 
     /**

@@ -40,6 +40,7 @@ import com.kyloth.serleena.model.IExperience;
 import com.kyloth.serleena.model.ITelemetry;
 import com.kyloth.serleena.model.ITrack;
 import com.kyloth.serleena.model.SerleenaDataSource;
+import com.kyloth.serleena.persistence.sqlite.IRasterSource;
 import com.kyloth.serleena.persistence.sqlite.SerleenaDatabase;
 import com.kyloth.serleena.persistence.sqlite.SerleenaSQLiteDataSource;
 
@@ -56,6 +57,7 @@ import java.util.List;
 
 import static junit.framework.Assert.assertEquals;
 import static junit.framework.Assert.assertTrue;
+import static org.mockito.Mockito.mock;
 
 @RunWith(RobolectricGradleTestRunner.class)
 @Config(constants = BuildConfig.class, emulateSdk = 19)
@@ -123,7 +125,9 @@ public class PersistenceModelIntegrationTest {
         serleenaDb.onUpgrade(db, 1, 2);
 
         SerleenaSQLiteDataSource sqlDataSource = new SerleenaSQLiteDataSource(
-                RuntimeEnvironment.application, serleenaDb);
+                RuntimeEnvironment.application,
+                serleenaDb,
+                mock(IRasterSource.class));
         dataSource = new SerleenaDataSource(sqlDataSource);
     }
 

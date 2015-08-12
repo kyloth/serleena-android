@@ -61,6 +61,7 @@ import com.kyloth.serleena.common.NoActiveExperienceException;
 import com.kyloth.serleena.common.UserPoint;
 import com.kyloth.serleena.model.IExperience;
 import com.kyloth.serleena.model.SerleenaDataSource;
+import com.kyloth.serleena.persistence.sqlite.IRasterSource;
 import com.kyloth.serleena.persistence.sqlite.SerleenaDatabase;
 import com.kyloth.serleena.persistence.sqlite.SerleenaSQLiteDataSource;
 import com.kyloth.serleena.presenters.MapPresenter;
@@ -161,7 +162,9 @@ public class MapPresenterIntegrationTest {
 
         dataSource = new SerleenaDataSource(
                 new SerleenaSQLiteDataSource(
-                        RuntimeEnvironment.application, serleenaDb));
+                        RuntimeEnvironment.application,
+                        serleenaDb,
+                        mock(IRasterSource.class)));
 
         activity = Robolectric.buildActivity(CustomDatasourceActivity.class)
                 .create().start().visible().get();

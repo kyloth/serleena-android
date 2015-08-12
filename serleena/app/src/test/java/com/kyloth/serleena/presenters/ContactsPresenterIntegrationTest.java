@@ -54,6 +54,7 @@ import org.junit.Test;
 import org.junit.Before;
 import org.junit.runner.RunWith;
 import static org.junit.Assert.*;
+import static org.mockito.Mockito.mock;
 
 import org.robolectric.Robolectric;
 import org.robolectric.RobolectricGradleTestRunner;
@@ -67,6 +68,7 @@ import com.kyloth.serleena.R;
 import com.kyloth.serleena.TestDB;
 import com.kyloth.serleena.activity.SerleenaActivity;
 import com.kyloth.serleena.model.SerleenaDataSource;
+import com.kyloth.serleena.persistence.sqlite.IRasterSource;
 import com.kyloth.serleena.persistence.sqlite.SerleenaDatabase;
 import com.kyloth.serleena.persistence.sqlite.SerleenaSQLiteDataSource;
 import com.kyloth.serleena.view.fragments.ContactsFragment;
@@ -116,7 +118,9 @@ public class ContactsPresenterIntegrationTest {
 
         SerleenaDataSource dataSource = new SerleenaDataSource(
                 new SerleenaSQLiteDataSource(
-                        RuntimeEnvironment.application, serleenaDb));
+                        RuntimeEnvironment.application,
+                        serleenaDb,
+                        mock(IRasterSource.class)));
 
         activity = Robolectric.buildActivity(TestSerleenaActivity.class)
                 .create().start().visible().get();
