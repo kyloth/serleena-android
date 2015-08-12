@@ -50,6 +50,8 @@ import com.kyloth.serleena.common.UserPoint;
 import com.kyloth.serleena.model.IExperience;
 import com.kyloth.serleena.model.ISerleenaDataSource;
 import com.kyloth.serleena.persistence.NoSuchQuadrantException;
+import com.kyloth.serleena.presentation.IExperienceActivationObserver;
+import com.kyloth.serleena.presentation.IExperienceActivationSource;
 import com.kyloth.serleena.presentation.IMapPresenter;
 import com.kyloth.serleena.presentation.IMapView;
 import com.kyloth.serleena.sensors.ILocationManager;
@@ -67,7 +69,9 @@ import com.kyloth.serleena.sensors.ILocationObserver;
  * @author Filippo Sestini <sestini.filippo@gmail.com>
  * @version 1.0.0
  */
-public class MapPresenter implements IMapPresenter, ILocationObserver {
+public class MapPresenter
+        implements IMapPresenter, ILocationObserver,
+        IExperienceActivationObserver {
 
     private static final int UPDATE_INTERVAL_SECONDS = 30;
 
@@ -90,16 +94,22 @@ public class MapPresenter implements IMapPresenter, ILocationObserver {
      *                 viene sollevata un'eccezione IllegalArgumentException.
      * @throws java.lang.IllegalArgumentException
      */
-    public MapPresenter(IMapView view, ISerleenaActivity activity)
+    public MapPresenter(IMapView view, ISerleenaActivity activity,
+                        IExperienceActivationSource experienceActivationSource)
             throws IllegalArgumentException {
         if (view == null)
             throw new IllegalArgumentException("Illegal null view");
         if (activity == null)
             throw new IllegalArgumentException("Illegal null activity");
+        if (experienceActivationSource == null)
+            throw new IllegalArgumentException(
+                    "Illegal null experience source");
 
         this.activity = activity;
         this.view = view;
+
         locMan = activity.getSensorManager().getLocationSource();
+        experienceActivationSource.attachObserver(this);
         view.attachPresenter(this);
     }
 
@@ -201,17 +211,16 @@ public class MapPresenter implements IMapPresenter, ILocationObserver {
     }
 
     /**
-     * Segnala al presenter l'esperienza correntemente attiva.
+     * Implementa IExperienceActivationObserver.onExperienceActivated()
      *
-     * All'attivazione di una nuova esperienza, l'activity segnala al
-     * presenter in modo che esso possa aggiornare la vista con gli elementi
-     * di mappa corretti.
+     * Segnala al presenter l'esperienza correntemente attiva.
      *
      * @param experience Esperienza appena attivata. Se null,
      *                   viene sollevata un'eccezione IllegalArgumentException.
      * @throws IllegalArgumentException
      */
-    public synchronized void setActiveExperience(IExperience experience) {
+    @Override
+    public void onExperienceActivated(IExperience experience) {
         if (experience == null)
             throw new IllegalArgumentException("Illegal null experience");
         this.activeExperience = experience;
