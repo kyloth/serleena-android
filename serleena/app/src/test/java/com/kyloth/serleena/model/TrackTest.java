@@ -195,4 +195,13 @@ public class TrackTest {
         assertEquals("name", track.name());
     }
 
+    /**
+     * Verifica che il metodo toString() restituisca il nome del Percorso.
+     */
+    @Test
+    public void toStringShouldReturnNameOfTheTrack() {
+        when(trackStorage.name()).thenReturn("track");
+        assertEquals("track", track.toString());
+    }
+
 }

@@ -116,4 +116,16 @@ final class Experience implements IExperience {
         return storage.getName();
     }
 
+    /**
+     * Ridefinisce Object.toString().
+     *
+     * Restituisce il nome dell'Esperienza.
+     *
+     * @return Nome dell'Esperienza.
+     */
+    @Override
+    public String toString() {
+        return getName();
+    }
+
 }
