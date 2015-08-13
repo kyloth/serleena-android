@@ -108,12 +108,11 @@ public class TelemetryPresenter implements ITelemetryPresenter {
     /**
      * Implementa IPresenter.resume().
      *
-     * Non effettua operazioni, in quanto non vi sono particolari contenuti
-     * da presentare, e non vengono utilizzate risorse da rilasciare.
+     * Reimposta la vista con lo stato attuale del Tracciamento.
      */
     @Override
     public void resume() {
-
+        view.setTelemetryEnabled(telMan.isEnabled());
     }
 
     /**
