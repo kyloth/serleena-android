@@ -86,8 +86,6 @@ import java.util.GregorianCalendar;
  */
 public class SerleenaSQLiteDataSource implements ISerleenaSQLiteDataSource {
     private SerleenaDatabase dbHelper;
-    private Context context;
-    private IRasterSource rasterSource;
 
     public SerleenaSQLiteDataSource(Context context, SerleenaDatabase dbHelper,
                                  IRasterSource rasterSource) {
@@ -99,8 +97,6 @@ public class SerleenaSQLiteDataSource implements ISerleenaSQLiteDataSource {
             throw new IllegalArgumentException("Illegal null raster source");
 
         this.dbHelper = dbHelper;
-        this.context = context;
-        this.rasterSource = rasterSource;
     }
 
     /**
