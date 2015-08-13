@@ -217,10 +217,10 @@ public class CachedSQLiteDataSource implements ISerleenaSQLiteDataSource {
      * @return Dati cachati dall'oggetto ISerleenaSQLiteDataSource sottostante.
      */
     @Override
-    public IQuadrant getQuadrant(GeoPoint location)
+    public IQuadrant getQuadrant(GeoPoint location, SQLiteDAOExperience exp)
             throws NoSuchQuadrantException {
         if (quadrant == null || !quadrant.contains(location))
-            quadrant = dataSource.getQuadrant(location);
+            quadrant = dataSource.getQuadrant(location, exp);
         return quadrant;
     }
 
