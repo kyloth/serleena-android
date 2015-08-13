@@ -44,6 +44,8 @@ package com.kyloth.serleena.model;
 import android.content.ContentValues;
 import android.database.sqlite.SQLiteDatabase;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.util.Base64;
 
 import com.kyloth.serleena.BuildConfig;
 import com.kyloth.serleena.TestDB;
@@ -99,10 +101,9 @@ public class SerleenaDataSourceIntegrationTest {
 
     @Before
     public void initialize() {
-        serleenaDB = new SerleenaDatabase(RuntimeEnvironment.application, "sample.db", null, 1);
+        serleenaDB = new SerleenaDatabase(RuntimeEnvironment.application, 1);
         db = serleenaDB.getWritableDatabase();
-        serleenaDB.onConfigure(db);
-        serleenaDB.onUpgrade(db, 1, 2);
+        serleenaDB.onUpgrade(db, 1, 1);
         ContentValues contacts_1 = TestFixtures.pack(TestFixtures.CONTACTS_FIXTURE_1);
         db.insertOrThrow(SerleenaDatabase.TABLE_CONTACTS, null, contacts_1);
         ContentValues contacts_2 = TestFixtures.pack(TestFixtures.CONTACTS_FIXTURE_2);
@@ -115,15 +116,6 @@ public class SerleenaDataSourceIntegrationTest {
         db.insertOrThrow(SerleenaDatabase.TABLE_RASTERS, null, values);
         serleenaSQLDS = new SerleenaSQLiteDataSource(serleenaDB);
         dataSource = new SerleenaDataSource(serleenaSQLDS);
-    }
-
-    /**
-     * Chiude il database per permettere il funzionamento dei test successivi.
-     */
-
-    @After
-    public void cleanUp() {
-        serleenaDB.close();
     }
 
     /**
@@ -158,27 +150,6 @@ public class SerleenaDataSourceIntegrationTest {
         Iterable<EmergencyContact> void_contacts = dataSource.getContacts(TestFixtures.CONTACTS_FIXTURE_POINT_INSIDE_NEITHER);
         Iterator<EmergencyContact> i_void_contacts = void_contacts.iterator();
         assertFalse(i_void_contacts.hasNext());
-    }
-
-    /**
-     * Verifica che il metodo getQuadrant restituisca correttamente i quadranti
-     * relativi ai GeoPoint forniti come input (senza sollevare eccezioni).
-     */
-    @Test
-    public void testGetQuadrant() throws NoSuchQuadrantException {
-        Bitmap raster = mock(Bitmap.class);
-        assertTrue(false);
-        IQuadrant quadrant = dataSource.getQuadrant(new GeoPoint(5, 5));
-        assertEquals(raster, quadrant.getRaster());
-    }
-
-    /**
-     * Verifica che la richiesta di un quadrante non presente in database
-     * sollevi un'eccezione NoSuchQuadrantException.
-     */
-    @Test(expected = NoSuchQuadrantException.class)
-    public void testGetQuadrantThrows() throws NoSuchQuadrantException {
-        dataSource.getQuadrant(new GeoPoint(10, 10));
     }
 
     /**
@@ -234,6 +205,31 @@ public class SerleenaDataSourceIntegrationTest {
         ITrack track2 = dataSource.getExperiences().iterator().next()
                 .getTracks().iterator().next();
         assertTrue(track1.equals(track2));
+    }
+
+    private void putQuadrant(double nwLat, double nwLon, double seLat,
+                             double seLon, String base64, long expId) {
+        ContentValues values = new ContentValues();
+        values.put("raster_nw_corner_latitude", nwLat);
+        values.put("raster_nw_corner_longitude", nwLon);
+        values.put("raster_se_corner_latitude", seLat);
+        values.put("raster_se_corner_longitude", seLon);
+        values.put("raster_base64", base64);
+        values.put("raster_experience", expId);
+        db.insertOrThrow(SerleenaDatabase.TABLE_RASTERS, null, values);
+    }
+
+    public boolean bitmapEquals(Bitmap first, Bitmap second) {
+        if (first.getWidth() == second.getWidth() &&
+                first.getHeight() == second.getHeight() &&
+                first.getConfig().equals(second.getConfig())) {
+            boolean b = true;
+            for (int i = 0; i < first.getWidth() && b; i++)
+                for (int j = 0; j < first.getHeight() && b; j++)
+                    b = b && (first.getPixel(i, j) == second.getPixel(i, j));
+            return b;
+        }
+        return false;
     }
 
 }

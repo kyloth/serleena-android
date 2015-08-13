@@ -39,7 +39,10 @@ import org.robolectric.annotation.Config;
 
 import android.content.ContentValues;
 import android.database.sqlite.SQLiteDatabase;
+import android.graphics.Bitmap;
 
+import com.kyloth.serleena.common.IQuadrant;
+import com.kyloth.serleena.common.Region;
 import com.kyloth.serleena.persistence.WeatherForecastEnum;
 import com.kyloth.serleena.persistence.sqlite.SerleenaDatabase;
 
@@ -119,19 +122,6 @@ public class TestDB {
         db.execSQL(query);
     }
 
-    public static void quadrantQuery(SQLiteDatabase db, double nwLat,
-                                     double nwLon, double seLat, double seLon,
-                                     String uuid) {
-        ContentValues values = new ContentValues();
-        values.put("raster_nw_corner_latitude", nwLat);
-        values.put("raster_nw_corner_longitude", nwLon);
-        values.put("raster_se_corner_latitude", seLat);
-        values.put("raster_se_corner_longitude", seLon);
-        // TODO: deve linkare a un'esperienza valida, e' FK
-        // values.put("raster_uuid", uuid);
-        db.insertOrThrow(SerleenaDatabase.TABLE_RASTERS, null, values);
-    }
-
     public static void forecastQuery(
             SQLiteDatabase db,
             int id,
@@ -195,4 +185,36 @@ public class TestDB {
         serleenaDB.onUpgrade(db, 1, 2);
         return serleenaDB;
     }
+
+    public static boolean bitmapEquals(Bitmap first, Bitmap second) {
+        if (first.getWidth() == second.getWidth() &&
+                first.getHeight() == second.getHeight() &&
+                first.getConfig().equals(second.getConfig())) {
+            boolean b = true;
+            for (int i = 0; i < first.getWidth() && b; i++)
+                for (int j = 0; j < first.getHeight() && b; j++)
+                    b = b && (first.getPixel(i, j) == second.getPixel(i, j));
+            return b;
+        }
+        return false;
+    }
+
+    public static void quadrantQuery(
+            SQLiteDatabase db, double nwLat, double nwLon, double seLat,
+            double seLon, String base64, long expId) {
+        ContentValues values = new ContentValues();
+        values.put("raster_nw_corner_latitude", nwLat);
+        values.put("raster_nw_corner_longitude", nwLon);
+        values.put("raster_se_corner_latitude", seLat);
+        values.put("raster_se_corner_longitude", seLon);
+        values.put("raster_base64", base64);
+        values.put("raster_experience", expId);
+        db.insertOrThrow(SerleenaDatabase.TABLE_RASTERS, null, values);
+    }
+
+    public static boolean quadrantHasRegion(IQuadrant quadrant, Region region) {
+        return quadrant.getNorthWestPoint().equals(region.getNorthWestPoint())&&
+                quadrant.getSouthEastPoint().equals(region.getSouthEastPoint());
+    }
+
 }

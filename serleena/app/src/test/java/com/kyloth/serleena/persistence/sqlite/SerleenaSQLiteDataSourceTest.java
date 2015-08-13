@@ -39,16 +39,21 @@
  */
 package com.kyloth.serleena.persistence.sqlite;
 
+import android.app.Application;
 import android.content.ContentValues;
 import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.util.Base64;
 
 import com.kyloth.serleena.BuildConfig;
+import com.kyloth.serleena.TestDB;
 import com.kyloth.serleena.common.EmergencyContact;
 import com.kyloth.serleena.common.GeoPoint;
 import com.kyloth.serleena.common.IQuadrant;
 import com.kyloth.serleena.common.Quadrant;
+import com.kyloth.serleena.common.Region;
 import com.kyloth.serleena.common.TelemetryEvent;
 import com.kyloth.serleena.persistence.IExperienceStorage;
 import com.kyloth.serleena.persistence.ITelemetryStorage;
@@ -82,9 +87,22 @@ import static org.mockito.Mockito.when;
 @Config(constants = BuildConfig.class, emulateSdk = 19)
 public class SerleenaSQLiteDataSourceTest {
 
-    SerleenaSQLiteDataSource sds;
-    SQLiteDatabase db;
-    private IRasterSource rasterSource;
+    private SerleenaSQLiteDataSource sds;
+    private SQLiteDatabase db;
+    private Bitmap testBitmap;
+    private String testBase64;
+
+    @Before
+    public void setup() throws URISyntaxException {
+        Application app = RuntimeEnvironment.application;
+        SerleenaDatabase sh = new SerleenaDatabase(app, null, null, 1);
+        db = sh.getWritableDatabase();
+        sds = new SerleenaSQLiteDataSource(sh);
+
+        testBase64 = "asdfghjklqwertyuiopzxcvbnm";
+        byte[] data = Base64.decode(testBase64, Base64.DEFAULT);
+        testBitmap = BitmapFactory.decodeByteArray(data, 0, data.length);
+    }
 
     /**
      * Verifica che il costruttore sollevi un'eccezione
@@ -100,15 +118,21 @@ public class SerleenaSQLiteDataSourceTest {
      */
     @Test
     public void testGetQuadrant() throws NoSuchQuadrantException {
-        Bitmap raster = putQuadrant(2, 0, 0, 2, "asdlol");
+        ContentValues exp = new ContentValues();
+        exp.put("experience_name", "experience");
+        long expId =
+                db.insertOrThrow(SerleenaDatabase.TABLE_EXPERIENCES, null, exp);
+        SQLiteDAOExperience expp = new SQLiteDAOExperience(
+                "experience", (int)expId, sds);
 
-        assertTrue(false);
-        IQuadrant quadrant = sds.getQuadrant(new GeoPoint(1, 1));
+        TestDB.quadrantQuery(db, 2, 0, 0, 2, testBase64, expId);
+
+        IQuadrant quadrant = sds.getQuadrant(new GeoPoint(1, 1), expp);
         assertEquals(2.0, quadrant.getNorthWestPoint().latitude());
         assertEquals(0.0, quadrant.getNorthWestPoint().longitude());
         assertEquals(0.0, quadrant.getSouthEastPoint().latitude());
         assertEquals(2.0, quadrant.getSouthEastPoint().longitude());
-        assertEquals(raster, quadrant.getRaster());
+        assertTrue(TestDB.bitmapEquals(testBitmap, quadrant.getRaster()));
     }
 
     /**
@@ -118,41 +142,42 @@ public class SerleenaSQLiteDataSourceTest {
     @Test(expected = NoSuchQuadrantException.class)
     public void queryingNonexistentQuadrantShouldThrow()
             throws NoSuchQuadrantException {
-        sds.getQuadrant(new GeoPoint(1, 1));
+        ContentValues exp = new ContentValues();
+        exp.put("experience_name", "experience");
+        long expId =
+                db.insertOrThrow(SerleenaDatabase.TABLE_EXPERIENCES, null, exp);
+        SQLiteDAOExperience expp = new SQLiteDAOExperience(
+                "experience", (int)expId, sds);
+        sds.getQuadrant(new GeoPoint(1, 1), expp);
     }
 
     /**
-     * Controlla che per un dato punto al margine di un quadrante il quadrante sia
-     * uno tra i due possibili corretti.
+     * Controlla che per un dato punto al margine di un quadrante il quadrante
+     * sia uno tra i due possibili corretti.
      */
     @Test
     public void testGetQuadrantEdgePoint()
             throws NoSuchQuadrantException {
-        assertTrue(false);
-        Bitmap b1 = putQuadrant(5, 0, 0, 5, "asd");
-        Bitmap b2 = putQuadrant(10, 5, 5, 10, "lol");
-        Bitmap b3 = putQuadrant(10, 0, 5, 5, "qwe");
-        Bitmap b4 = putQuadrant(5, 5, 0, 10, "rty");
-        IQuadrant quadrant = sds.getQuadrant(new GeoPoint(5, 5));
+        ContentValues exp = new ContentValues();
+        exp.put("experience_name", "experience");
+        long expId =
+                db.insertOrThrow(SerleenaDatabase.TABLE_EXPERIENCES, null, exp);
+        SQLiteDAOExperience expp = new SQLiteDAOExperience(
+                "experience", (int)expId, sds);
+        TestDB.quadrantQuery(db, 5, 0, 0, 5, "asd", expId);
+        TestDB.quadrantQuery(db, 10, 5, 5, 10, "lol", expId);
+        TestDB.quadrantQuery(db, 10, 0, 5, 5, "qwe", expId);
+        TestDB.quadrantQuery(db, 5, 5, 0, 10, "rty", expId);
+        IQuadrant quadrant = sds.getQuadrant(new GeoPoint(5, 5), expp);
         assertTrue(
-                quadrant.getRaster() == b1 ||
-                quadrant.getRaster() == b2 ||
-                quadrant.getRaster() == b3 ||
-                quadrant.getRaster() == b4);
-    }
-
-    private Bitmap putQuadrant(double nwLat, double nwLon, double seLat,
-                             double seLon, String uuid) {
-        ContentValues values = new ContentValues();
-        values.put("raster_nw_corner_latitude", nwLat);
-        values.put("raster_nw_corner_longitude", nwLon);
-        values.put("raster_se_corner_latitude", seLat);
-        values.put("raster_se_corner_longitude", seLon);
-        values.put("raster_uuid", uuid);
-        db.insertOrThrow(SerleenaDatabase.TABLE_RASTERS, null, values);
-        Bitmap raster = mock(Bitmap.class);
-        when(rasterSource.getRaster(uuid)).thenReturn(raster);
-        return raster;
+                TestDB.quadrantHasRegion(quadrant,
+                        new Region(new GeoPoint(5, 0), new GeoPoint(0, 5))) ||
+                TestDB.quadrantHasRegion(quadrant,
+                        new Region(new GeoPoint(10, 5), new GeoPoint(5, 10))) ||
+                TestDB.quadrantHasRegion(quadrant,
+                        new Region(new GeoPoint(10, 0), new GeoPoint(5, 5))) ||
+                TestDB.quadrantHasRegion(quadrant,
+                        new Region(new GeoPoint(5, 5), new GeoPoint(0, 10))));
     }
 
     /**
@@ -418,12 +443,5 @@ public class SerleenaSQLiteDataSourceTest {
         assertTrue(i == 0);
     }
 
-    @Before
-    public void setup() throws URISyntaxException {
-        SerleenaDatabase sh = new SerleenaDatabase(RuntimeEnvironment.application, null, null, 1);
-        db = sh.getWritableDatabase();
-        rasterSource = mock(IRasterSource.class);
-        sds = new SerleenaSQLiteDataSource(sh);
-    }
 }
 

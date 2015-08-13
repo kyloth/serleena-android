@@ -65,6 +65,7 @@ import com.kyloth.serleena.common.GeoPoint;
 import com.kyloth.serleena.common.IQuadrant;
 import com.kyloth.serleena.common.LocationNotAvailableException;
 import com.kyloth.serleena.common.NoActiveExperienceException;
+import com.kyloth.serleena.common.Region;
 import com.kyloth.serleena.common.UserPoint;
 import com.kyloth.serleena.model.IExperience;
 import com.kyloth.serleena.model.SerleenaDataSource;
@@ -130,7 +131,6 @@ public class MapPresenterIntegrationTest {
     private LocationManager lm;
     private ShadowLocationManager slm;
     private SerleenaDataSource dataSource;
-    private IRasterSource rasterSource;
 
     @Before
     public void initialize() {
@@ -142,7 +142,6 @@ public class MapPresenterIntegrationTest {
         db = serleenaDb.getWritableDatabase();
         TestDB.experienceQuery(db, 0, "experience");
 
-        rasterSource = mock(IRasterSource.class);
         dataSource = new SerleenaDataSource(new SerleenaSQLiteDataSource(serleenaDb));
 
         activity = Robolectric.buildActivity(CustomDatasourceActivity.class)
@@ -190,8 +189,7 @@ public class MapPresenterIntegrationTest {
      */
     @Test
     public void presenterShouldSetMapWithLatestLocationUpdate() {
-        TestDB.quadrantQuery(db, 30, 0, 0, 30, "asdlol");
-        when(rasterSource.getRaster("asdlol")).thenReturn(mock(Bitmap.class));
+        TestDB.quadrantQuery(db, 30, 0, 0, 30, "asdlol", 0);
 
         gotoFragment();
 
@@ -213,19 +211,19 @@ public class MapPresenterIntegrationTest {
     }
 
     /**
-     * Verifica che la vista mostri correttamente il quadrante relativo alla
-     * posizione corrente.
+     * Verifica che la vista mostri i quadranti associati alla sola
+     * esperienza attiva.
      */
     @Test
-    public void viewShouldShowQuadrantForCurrentLocation() {
-        TestDB.quadrantQuery(db, 5, 0, 0, 5, "asdlol");
-        final Bitmap raster = mock(Bitmap.class);
-        when(rasterSource.getRaster("asdlol")).thenReturn(raster);
+    public void viewShouldShowQuadrantAccordingToActiveExperience() {
+        TestDB.experienceQuery(db, 1, "experience2");
+        TestDB.quadrantQuery(db, 3, 1, 1, 3, "asdlol", 0);
+        TestDB.quadrantQuery(db, 5, 0, 0, 5, "lolasd", 1);
 
-        TestDB.quadrantQuery(db, 10, 5, 5, 10, "lolasd");
-        final Bitmap raster2 = mock(Bitmap.class);
-        when(rasterSource.getRaster("lolasd")).thenReturn(raster2);
-
+        activateExperienceByName(
+                (ListFragment) switchToFragmentInExperienceFragment(
+                        "Imposta Esperienza"),
+                "experience");
         gotoFragment();
 
         Location expectedLocation = createLocation(2.5, 2.5);
@@ -236,7 +234,56 @@ public class MapPresenterIntegrationTest {
             @Override
             public Boolean call() throws Exception {
                 IQuadrant quadrant = mapWidget.getQuadrant();
-                return quadrant != null && quadrant.getRaster() == raster;
+                return quadrant != null && TestDB.quadrantHasRegion(quadrant,
+                        new Region(new GeoPoint(3, 1), new GeoPoint(1, 3)));
+            }
+        });
+
+        activateExperienceByName(
+                (ListFragment) switchToFragmentInExperienceFragment(
+                        "Imposta Esperienza"),
+                "experience2");
+        gotoFragment();
+
+        expectedLocation = createLocation(2.5, 2.5);
+        for (LocationListener listener : slm.getRequestLocationUpdateListeners())
+            listener.onLocationChanged(expectedLocation);
+
+        Awaitility.await().until(new Callable<Boolean>() {
+            @Override
+            public Boolean call() throws Exception {
+                IQuadrant quadrant = mapWidget.getQuadrant();
+                return quadrant != null && TestDB.quadrantHasRegion(quadrant,
+                        new Region(new GeoPoint(5, 0), new GeoPoint(0, 5)));
+            }
+        });
+    }
+
+    /**
+     * Verifica che la vista mostri correttamente il quadrante relativo alla
+     * posizione corrente e all'Esperienza attiva al momento.
+     */
+    @Test
+    public void viewShouldShowQuadrantForCurrentLocation() {
+        TestDB.quadrantQuery(db, 5, 0, 0, 5, "asdlol", 0);
+        TestDB.quadrantQuery(db, 10, 5, 5, 10, "lolasd", 0);
+
+        activateExperienceByName(
+                (ListFragment) switchToFragmentInExperienceFragment(
+                        "Imposta Esperienza"),
+                "experience");
+        gotoFragment();
+
+        Location expectedLocation = createLocation(2.5, 2.5);
+        for (LocationListener listener : slm.getRequestLocationUpdateListeners())
+            listener.onLocationChanged(expectedLocation);
+
+        Awaitility.await().until(new Callable<Boolean>() {
+            @Override
+            public Boolean call() throws Exception {
+                IQuadrant quadrant = mapWidget.getQuadrant();
+                return quadrant != null && TestDB.quadrantHasRegion(quadrant,
+                        new Region(new GeoPoint(5, 0), new GeoPoint(0, 5)));
             }
         });
 
@@ -248,7 +295,8 @@ public class MapPresenterIntegrationTest {
             @Override
             public Boolean call() throws Exception {
                 IQuadrant quadrant = mapWidget.getQuadrant();
-                return quadrant != null && quadrant.getRaster() == raster2;
+                return quadrant != null && TestDB.quadrantHasRegion(quadrant,
+                        new Region(new GeoPoint(10, 5), new GeoPoint (5, 10)));
             }
         });
     }
@@ -263,8 +311,7 @@ public class MapPresenterIntegrationTest {
         TestDB.userPointQuery(db, 1, 2, 2, 0);
         TestDB.userPointQuery(db, 2, 6, 6, 0);
         TestDB.userPointQuery(db, 3, 7, 7, 0);
-        TestDB.quadrantQuery(db, 5, 0, 0, 5, "asdlol");
-        when(rasterSource.getRaster("asdlol")).thenReturn(mock(Bitmap.class));
+        TestDB.quadrantQuery(db, 5, 0, 0, 5, "asdlol", 0);
 
         activateExperienceByName(
                 (ListFragment) switchToFragmentInExperienceFragment(
