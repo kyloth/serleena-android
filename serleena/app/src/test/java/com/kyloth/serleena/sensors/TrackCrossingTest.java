@@ -115,9 +115,9 @@ public class TrackCrossingTest {
         tc.attachObserver(o2);
         tc.attachObserver(o3);
         tc.notifyObservers();
-        verify(o1).onCheckpointCrossed(any(Integer.class));
-        verify(o2).onCheckpointCrossed(any(Integer.class));
-        verify(o3).onCheckpointCrossed(any(Integer.class));
+        verify(o1).onCheckpointCrossed();
+        verify(o2).onCheckpointCrossed();
+        verify(o3).onCheckpointCrossed();
     }
 
     /**
@@ -134,22 +134,22 @@ public class TrackCrossingTest {
 
         assertTrue(tc.getNextCheckpoint() == 0);
         tc.onLocationReached();
-        verify(observer).onCheckpointCrossed(0);
+        verify(observer).onCheckpointCrossed();
         assertTrue(tc.getLastCrossed().checkPointIndex() == 0);
 
         assertTrue(tc.getNextCheckpoint() == 1);
         tc.onLocationReached();
-        verify(observer).onCheckpointCrossed(1);
+        verify(observer).onCheckpointCrossed();
         assertTrue(tc.getLastCrossed().checkPointIndex() == 1);
 
         assertTrue(tc.getNextCheckpoint() == 2);
         tc.onLocationReached();
-        verify(observer).onCheckpointCrossed(2);
+        verify(observer).onCheckpointCrossed();
         assertTrue(tc.getLastCrossed().checkPointIndex() == 2);
 
         assertTrue(tc.getNextCheckpoint() == 3);
         tc.onLocationReached();
-        verify(observer).onCheckpointCrossed(3);
+        verify(observer).onCheckpointCrossed();
         assertTrue(tc.getLastCrossed().checkPointIndex() == 3);
     }
 

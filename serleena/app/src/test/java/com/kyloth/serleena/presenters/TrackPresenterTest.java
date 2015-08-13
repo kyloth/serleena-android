@@ -201,7 +201,7 @@ public class TrackPresenterTest {
         when(tc.getTrack()).thenReturn(track);
         presenter.resume();
         verify(view, times(1)).setLastPartial(300);
-        presenter.onCheckpointCrossed(0);
+        presenter.onCheckpointCrossed();
         verify(view, times(2)).setLastPartial(300);
     }
 

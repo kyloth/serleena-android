@@ -172,7 +172,7 @@ public class TelemetryManagerTest {
         when(tc.getLastCrossed()).thenReturn(mock(CheckpointCrossing.class));
 
         manager.enable();
-        manager.onCheckpointCrossed(0);
+        manager.onCheckpointCrossed();
 
         CheckpointReachedTelemetryEvent crte =
                 (CheckpointReachedTelemetryEvent)
@@ -195,11 +195,11 @@ public class TelemetryManagerTest {
 
         manager.enable();
 
-        manager.onCheckpointCrossed(0);
+        manager.onCheckpointCrossed();
         assertPresenceOfEvent(manager, 0);
-        manager.onCheckpointCrossed(1);
+        manager.onCheckpointCrossed();
         assertPresenceOfEvent(manager, 1);
-        manager.onCheckpointCrossed(2);
+        manager.onCheckpointCrossed();
         assertPresenceOfEvent(manager, 2);
     }
 
@@ -217,7 +217,7 @@ public class TelemetryManagerTest {
 
         manager.enable();
 
-        manager.onCheckpointCrossed(0);
+        manager.onCheckpointCrossed();
         assertTrue(!manager.isEnabled());
     }
 
@@ -236,7 +236,7 @@ public class TelemetryManagerTest {
 
         manager.enable();
 
-        manager.onCheckpointCrossed(0);
+        manager.onCheckpointCrossed();
         Iterable<TelemetryEvent> events = manager.getEvents();
         verify(track).createTelemetry(events);
     }
@@ -254,9 +254,9 @@ public class TelemetryManagerTest {
         when(tc.getLastCrossed()).thenReturn(mock(CheckpointCrossing.class));
         manager.enable();
 
-        manager.onCheckpointCrossed(0);
+        manager.onCheckpointCrossed();
         Iterable<TelemetryEvent> events1 = manager.getEvents();
-        manager.onCheckpointCrossed(1);
+        manager.onCheckpointCrossed();
         Iterable<TelemetryEvent> events2 = manager.getEvents();
         assertTrue(events1 != events2);
 
@@ -278,7 +278,7 @@ public class TelemetryManagerTest {
         ITrack track = getOneCheckpointTrack();
         when(tc.getTrack()).thenReturn(track);
 
-        manager.onCheckpointCrossed(0);
+        manager.onCheckpointCrossed();
         verify(tc, never()).getTrack();
         assertTrue(!manager.getEvents().iterator().hasNext());
     }
