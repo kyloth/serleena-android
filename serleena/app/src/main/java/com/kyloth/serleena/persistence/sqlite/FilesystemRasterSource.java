@@ -44,7 +44,7 @@ public class FilesystemRasterSource implements IRasterSource {
 
     @Override
     public Bitmap getRaster(String uuid) throws NoSuchRasterException {
-        File file = new File(sourceDir, uuid + ".jpg");
+        File file = new File(sourceDir, uuid + ".png");
         if (file.exists()) {
             Bitmap raster = BitmapFactory.decodeFile(file.getAbsolutePath());
             if (raster != null)
