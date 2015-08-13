@@ -140,24 +140,22 @@ class TelemetryManager
      */
     @Override
     public void onCheckpointCrossed() {
-        int checkpointIndex = 0;
-        try {
-            checkpointIndex = tc.getLastCrossed().checkPointIndex();
-            if (enabled) {
+        if (enabled) {
+            int checkpointIndex = 0;
+            try {
+                checkpointIndex = tc.getLastCrossed().checkPointIndex();
                 if (checkpointIndex == 0)
                     start();
-                try {
-                    events.add(new CheckpointReachedTelemetryEvent(
-                            tc.getLastCrossed().partialTime(), checkpointIndex+1));
+                events.add(new CheckpointReachedTelemetryEvent(
+                        tc.getLastCrossed().partialTime(), checkpointIndex+1));
 
-                    int total = tc.getTrack().getCheckpoints().size();
-                    if (checkpointIndex == total - 1) {
-                        enabled = false;
-                        tc.getTrack().createTelemetry(getEvents());
-                    }
-                } catch (NoSuchCheckpointException | NoActiveTrackException e) { }
-            }
-        } catch (NoSuchCheckpointException|NoActiveTrackException e) { }
+                int total = tc.getTrack().getCheckpoints().size();
+                if (checkpointIndex == total - 1) {
+                    enabled = false;
+                    tc.getTrack().createTelemetry(getEvents());
+                }
+            } catch (NoSuchCheckpointException|NoActiveTrackException e) { }
+        }
     }
 
 }
