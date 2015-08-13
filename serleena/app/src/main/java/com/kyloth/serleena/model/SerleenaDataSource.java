@@ -107,18 +107,6 @@ public class SerleenaDataSource implements ISerleenaDataSource {
     }
 
     /**
-     * Implementa ISerleenaDataSource.getQuadrant().
-     *
-     * @param point Posizione geografica il cui quadrante si vuole ottenere.
-     * @return Quadrante contenente il punto geografico specificato.
-     */
-    @Override
-    public IQuadrant getQuadrant(GeoPoint point)
-            throws NoSuchQuadrantException {
-        return dataSource.getQuadrant(point);
-    }
-
-    /**
      * Implementa ISerleenaDataSource.getContacts().
      *
      * @param loc Posizione geografica delle cui vicinanze si vogliono

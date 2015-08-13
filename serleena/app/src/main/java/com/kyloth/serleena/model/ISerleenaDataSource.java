@@ -80,13 +80,6 @@ public interface ISerleenaDataSource {
             throws NoSuchWeatherForecastException;
 
     /**
-     * Restituisce il quadrante di afferenza per una dato punto geografico.
-     *
-     * @version 1.0
-     */
-    IQuadrant getQuadrant(GeoPoint point) throws NoSuchQuadrantException;
-
-    /**
      * Restituisce i contatti di emergenza che hanno giurisdizione su un dato
      * punto geografico.
      *
