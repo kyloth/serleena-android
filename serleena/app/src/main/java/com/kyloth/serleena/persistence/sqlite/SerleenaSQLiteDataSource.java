@@ -74,6 +74,8 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
 
+import static java.lang.Math.floor;
+
 /**
  * Classe concreta contenente l’implementazione del data source per l’accesso al
  * database SQLite dell’applicazione.
@@ -87,15 +89,9 @@ import java.util.GregorianCalendar;
 public class SerleenaSQLiteDataSource implements ISerleenaSQLiteDataSource {
     private SerleenaDatabase dbHelper;
 
-    public SerleenaSQLiteDataSource(Context context, SerleenaDatabase dbHelper,
-                                 IRasterSource rasterSource) {
-        if (context == null)
-            throw new IllegalArgumentException("Illegal null context");
+    public SerleenaSQLiteDataSource(SerleenaDatabase dbHelper) {
         if (dbHelper == null)
             throw new IllegalArgumentException("Illegal null database");
-        if (rasterSource == null)
-            throw new IllegalArgumentException("Illegal null raster source");
-
         this.dbHelper = dbHelper;
     }
 
