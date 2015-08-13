@@ -303,29 +303,27 @@ public class SerleenaSQLiteDataSource implements ISerleenaSQLiteDataSource {
         return list;
     }
 
-    /**
-     * Restituisce il quadrante i cui limiti comprendono la posizione
-     * geografica specificata.
-     *
-     * @param location Posizione geografica che ricade nei limiti del quadrante.
-     * @return Oggetto IQuadrant.
-     */
     @Override
-    public IQuadrant getQuadrant(GeoPoint location)
+    public IQuadrant getQuadrant(GeoPoint location, SQLiteDAOExperience exp)
             throws NoSuchQuadrantException {
         if (location == null)
             throw new IllegalArgumentException("Illegal null location");
+        if (exp == null)
+            throw new IllegalArgumentException("Illegal null experience");
 
         SQLiteDatabase db = dbHelper.getReadableDatabase();
 
-        String where = "`raster_nw_corner_latitude` >= " +
+        String where =
+                "`raster_nw_corner_latitude` >= " +
                 location.latitude() + " AND " +
                 "`raster_nw_corner_longitude` <= " +
                 location.longitude() + " AND " +
                 "`raster_se_corner_latitude` <= " +
                 location.latitude() + " AND " +
                 "`raster_se_corner_longitude` >= " +
-                location.longitude();
+                location.longitude() + " AND " +
+                "`raster_experience` = " +
+                exp.id();
 
         Cursor result = db.query(SerleenaDatabase.TABLE_RASTERS,
                 new String[]{
