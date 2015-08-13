@@ -173,4 +173,16 @@ class Track implements ITrack {
         return storage.hashCode();
     }
 
+    /**
+     * Ridefinisce Object.toString()
+     *
+     * Restituisce il nome del Percorso.
+     *
+     * @return Nome del Percorso.
+     */
+    @Override
+    public String toString() {
+        return name();
+    }
+
 }
