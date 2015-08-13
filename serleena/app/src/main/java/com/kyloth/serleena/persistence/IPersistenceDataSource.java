@@ -82,14 +82,6 @@ public interface IPersistenceDataSource {
             throws NoSuchWeatherForecastException;
 
     /**
-     * Restituisce il quadrante che contiene il punto geografico specificato.
-     *
-     * @param location Posizione geografica che ricade nei limiti del quadrante.
-     * @return Oggetto IQuadrant relativo alla posizione specificata.
-     */
-    IQuadrant getQuadrant(GeoPoint location) throws NoSuchQuadrantException;
-
-    /**
      * Restituisce i contatti di emergenza di autorità locali al punto
      * geografico specificato.
      *
