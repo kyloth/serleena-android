@@ -44,6 +44,8 @@ package com.kyloth.serleena.model;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import static org.junit.Assert.*;
+import static org.mockito.Mockito.mock;
+
 import org.junit.Before;
 import org.robolectric.RobolectricGradleTestRunner;
 import org.robolectric.RuntimeEnvironment;
@@ -55,6 +57,7 @@ import java.util.Iterator;
 
 import com.kyloth.serleena.BuildConfig;
 import com.kyloth.serleena.TestDB;
+import com.kyloth.serleena.persistence.sqlite.IRasterSource;
 import com.kyloth.serleena.persistence.sqlite.SerleenaSQLiteDataSource;
 import com.kyloth.serleena.persistence.sqlite.SerleenaDatabase;
 import com.kyloth.serleena.common.UserPoint;
@@ -82,7 +85,8 @@ public class ExperienceIntegrationTest {
         db = serleenaDB.getWritableDatabase();
         dataSource = new SerleenaDataSource(
                 new SerleenaSQLiteDataSource(
-                        RuntimeEnvironment.application, serleenaDB));
+                        RuntimeEnvironment.application, serleenaDB,
+                        mock(IRasterSource.class)));
         TestDB.experienceQuery(db, 0, "experience");
     }
 
