@@ -185,9 +185,10 @@ public class MapPresenter
         currentPosition = loc;
         view.setUserLocation(loc);
 
-        updateQuadrant(loc);
-        if (activeExperience != null)
+        if (activeExperience != null) {
+            updateQuadrant(loc);
             updateUserPoints();
+        }
     }
 
     /**
@@ -230,12 +231,11 @@ public class MapPresenter
     }
 
     private void updateQuadrant(final GeoPoint loc) {
-        final ISerleenaDataSource ds = activity.getDataSource();
         new AsyncTask<Void, Void, Void>() {
             @Override
             protected Void doInBackground(Void... params) {
                 try {
-                    currentQuadrant = ds.getQuadrant(loc);
+                    currentQuadrant = activeExperience.getQuadrant(loc);
                 } catch (NoSuchQuadrantException e) {
                     currentQuadrant = null;
                 }
