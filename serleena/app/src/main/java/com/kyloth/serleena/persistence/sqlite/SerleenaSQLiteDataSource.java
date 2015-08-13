@@ -48,6 +48,9 @@ import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.util.Base64;
 
 import com.kyloth.serleena.common.Checkpoint;
 import com.kyloth.serleena.common.CheckpointReachedTelemetryEvent;
@@ -65,6 +68,7 @@ import com.kyloth.serleena.persistence.IWeatherStorage;
 import com.kyloth.serleena.persistence.NoSuchQuadrantException;
 import com.kyloth.serleena.persistence.WeatherForecastEnum;
 
+import java.io.FileOutputStream;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
@@ -288,7 +292,7 @@ public class SerleenaSQLiteDataSource implements ISerleenaSQLiteDataSource {
     public Iterable<IExperienceStorage> getExperiences() {
         SQLiteDatabase db = dbHelper.getReadableDatabase();
         Cursor result = db.query(SerleenaDatabase.TABLE_EXPERIENCES,
-                new String[] { "experience_id", "experience_name" }, null,
+                new String[]{"experience_id", "experience_name"}, null,
                 null, null, null, null);
 
         int idIndex = result.getColumnIndexOrThrow("experience_id");
@@ -315,7 +319,8 @@ public class SerleenaSQLiteDataSource implements ISerleenaSQLiteDataSource {
      * @return Oggetto IQuadrant.
      */
     @Override
-    public IQuadrant getQuadrant(GeoPoint location) throws NoSuchQuadrantException {
+    public IQuadrant getQuadrant(GeoPoint location)
+            throws NoSuchQuadrantException {
         if (location == null)
             throw new IllegalArgumentException("Illegal null location");
 
@@ -336,7 +341,6 @@ public class SerleenaSQLiteDataSource implements ISerleenaSQLiteDataSource {
                     "raster_nw_corner_longitude",
                     "raster_se_corner_latitude",
                     "raster_se_corner_longitude",
-                    "raster_experience",
                     "raster_base64"
                 },
                 where, null, null, null, null);
@@ -351,21 +355,19 @@ public class SerleenaSQLiteDataSource implements ISerleenaSQLiteDataSource {
                 result.getColumnIndexOrThrow("raster_se_corner_longitude");
         int base64Index =
                 result.getColumnIndexOrThrow("raster_base64");
-        // TODO: Raster experience?
 
         if (result.moveToNext()) {
             double nwLat = result.getDouble(nwLatIndex);
             double nwLon = result.getDouble(nwLonIndex);
             double seLat = result.getDouble(seLatIndex);
             double seLon = result.getDouble(seLonIndex);
-            String base64 = result.getString(base64Index);
-            byte[] decodedString = android.util.Base64.decode(base64, android.util.Base64.DEFAULT);
-            // TODO: Unpack raster
+            byte[] data = Base64.decode(
+                    result.getString(base64Index), Base64.DEFAULT);
 
             return new Quadrant(
                     new GeoPoint(nwLat, nwLon),
                     new GeoPoint(seLat, seLon),
-                    rasterSource.getRaster(""));
+                    BitmapFactory.decodeByteArray(data, 0, data.length));
         } else
             throw new NoSuchQuadrantException();
     }
@@ -529,4 +531,5 @@ public class SerleenaSQLiteDataSource implements ISerleenaSQLiteDataSource {
             throw new NoSuchWeatherForecastException();
         }
     }
+
 }
