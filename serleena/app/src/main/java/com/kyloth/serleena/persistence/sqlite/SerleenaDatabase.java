@@ -147,12 +147,14 @@ public class SerleenaDatabase extends SQLiteOpenHelper {
 
     private static final String CREATE_TABLE_RASTERS =
             "CREATE TABLE " + TABLE_RASTERS + " (" +
-                    "raster_id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, " +
+                    "raster_experience INTEGER, " +
                     "raster_nw_corner_latitude REAL NOT NULL, " +
                     "raster_nw_corner_longitude REAL NOT NULL, " +
                     "raster_se_corner_latitude REAL NOT NULL, " +
                     "raster_se_corner_longitude REAL NOT NULL, " +
-                    "raster_uuid TEXT NOT NULL)";
+                    "raster_base64 TEXT NOT NULL, " +
+                    "FOREIGN KEY(raster_experience) REFERENCES " + TABLE_EXPERIENCES +
+                    "(experience_id) ON DELETE CASCADE)";
 
     /**
      * Crea un oggetto SerleenaDatabase associato al database predefinito dalla

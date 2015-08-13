@@ -110,18 +110,10 @@ public class SerleenaDataSourceIntegrationTest {
         db.insertOrThrow(SerleenaDatabase.TABLE_CONTACTS, null, contacts_2);
         ContentValues weather_1 = TestFixtures.pack(TestFixtures.WEATHER_FIXTURE);
         db.insertOrThrow(SerleenaDatabase.TABLE_WEATHER_FORECASTS, null, weather_1);
-        ContentValues values_2;
-        values_2 = new ContentValues();
-        values_2.put("experience_name", "foo");
-        ContentValues values = new ContentValues();
-        values.put("raster_nw_corner_latitude", 5);
-        values.put("raster_nw_corner_longitude", 0);
-        values.put("raster_se_corner_latitude", 0);
-        values.put("raster_se_corner_longitude", 5);
-        values.put("raster_uuid", "asdlol");
+        ContentValues exp = TestFixtures.pack(TestFixtures.EXPERIENCES_FIXTURE_EXPERIENCE_1);
+        db.insertOrThrow(SerleenaDatabase.TABLE_EXPERIENCES, null, exp);
+        ContentValues values = TestFixtures.pack(TestFixtures.RASTER_FIXTURE);
         db.insertOrThrow(SerleenaDatabase.TABLE_RASTERS, null, values);
-        // TODO: Sostituire con fixture
-        db.insertOrThrow(SerleenaDatabase.TABLE_EXPERIENCES, null, values_2);
         rasterSource = mock(IRasterSource.class);
         serleenaSQLDS = new SerleenaSQLiteDataSource(
                 RuntimeEnvironment.application,
@@ -219,7 +211,7 @@ public class SerleenaDataSourceIntegrationTest {
         Iterable<IExperience> experiences = dataSource.getExperiences();
         Iterator<IExperience> i_experiences = experiences.iterator();
         Experience experience = (Experience) i_experiences.next();
-        assertTrue(experience.getName().equals("foo"));
+        assertTrue(experience.getName().equals(TestFixtures.EXPERIENCES_FIXTURE_EXPERIENCE_1_NAME));
     }
 
     /**

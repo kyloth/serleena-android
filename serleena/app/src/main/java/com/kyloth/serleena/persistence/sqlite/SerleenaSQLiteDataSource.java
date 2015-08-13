@@ -336,7 +336,8 @@ public class SerleenaSQLiteDataSource implements ISerleenaSQLiteDataSource {
                     "raster_nw_corner_longitude",
                     "raster_se_corner_latitude",
                     "raster_se_corner_longitude",
-                    "raster_uuid"
+                    "raster_experience",
+                    "raster_base64"
                 },
                 where, null, null, null, null);
 
@@ -348,20 +349,23 @@ public class SerleenaSQLiteDataSource implements ISerleenaSQLiteDataSource {
                 result.getColumnIndexOrThrow("raster_se_corner_latitude");
         int seLonIndex =
                 result.getColumnIndexOrThrow("raster_se_corner_longitude");
-        int uuidIndex =
-                result.getColumnIndexOrThrow("raster_uuid");
+        int base64Index =
+                result.getColumnIndexOrThrow("raster_base64");
+        // TODO: Raster experience?
 
         if (result.moveToNext()) {
             double nwLat = result.getDouble(nwLatIndex);
             double nwLon = result.getDouble(nwLonIndex);
             double seLat = result.getDouble(seLatIndex);
             double seLon = result.getDouble(seLonIndex);
-            String fileName = result.getString(uuidIndex);
+            String base64 = result.getString(base64Index);
+            byte[] decodedString = android.util.Base64.decode(base64, android.util.Base64.DEFAULT);
+            // TODO: Unpack raster
 
             return new Quadrant(
                     new GeoPoint(nwLat, nwLon),
                     new GeoPoint(seLat, seLon),
-                    rasterSource.getRaster(fileName));
+                    rasterSource.getRaster(""));
         } else
             throw new NoSuchQuadrantException();
     }

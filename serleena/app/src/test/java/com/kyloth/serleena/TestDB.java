@@ -127,7 +127,8 @@ public class TestDB {
         values.put("raster_nw_corner_longitude", nwLon);
         values.put("raster_se_corner_latitude", seLat);
         values.put("raster_se_corner_longitude", seLon);
-        values.put("raster_uuid", uuid);
+        // TODO: deve linkare a un'esperienza valida, e' FK
+        // values.put("raster_uuid", uuid);
         db.insertOrThrow(SerleenaDatabase.TABLE_RASTERS, null, values);
     }
 

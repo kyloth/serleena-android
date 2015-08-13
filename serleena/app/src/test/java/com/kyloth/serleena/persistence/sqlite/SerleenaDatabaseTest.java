@@ -563,12 +563,9 @@ public class SerleenaDatabaseTest {
 
     @Test
     public void shouldBePossibleToAddARaster() {
-        ContentValues values = new ContentValues();
-        values.put("raster_nw_corner_latitude", 2);
-        values.put("raster_nw_corner_longitude", 0);
-        values.put("raster_se_corner_latitude", 0);
-        values.put("raster_se_corner_longitude", 2);
-        values.put("raster_uuid", "asdlolasdlol");
+        ContentValues values = TestFixtures.pack(TestFixtures.EXPERIENCES_FIXTURE_EXPERIENCE_1);
+        db.insertOrThrow(SerleenaDatabase.TABLE_EXPERIENCES, null, values);
+        values = TestFixtures.pack(TestFixtures.RASTER_FIXTURE);
         db.insertOrThrow(SerleenaDatabase.TABLE_RASTERS, null, values);
 
         double latitude = 1;
@@ -577,7 +574,8 @@ public class SerleenaDatabaseTest {
                 "raster_nw_corner_latitude >= " + latitude + " AND " +
                 "raster_nw_corner_longitude <= " + longitude + " AND " +
                 "raster_se_corner_latitude <= " + latitude + " AND " +
-                "raster_se_corner_longitude >= " + longitude,
+                "raster_se_corner_longitude >= " + longitude + " AND " +
+                "raster_experience = " + TestFixtures.EXPERIENCES_FIXTURE_EXPERIENCE_1_ID,
                 null, null, null, null);
         assertEquals(1, query.getCount());
     }
