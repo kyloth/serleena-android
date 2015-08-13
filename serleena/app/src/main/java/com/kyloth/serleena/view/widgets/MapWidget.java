@@ -48,6 +48,7 @@ import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
+import android.graphics.drawable.BitmapDrawable;
 import android.util.AttributeSet;
 import android.widget.ImageView;
 
@@ -103,6 +104,8 @@ public class MapWidget extends ImageView {
      */
     public void setQuadrant(IQuadrant q) {
         quadrant = q;
+        this.setBackground(new BitmapDrawable(getResources(), q.getRaster()));
+        invalidate();
     }
 
     /**
@@ -149,12 +152,14 @@ public class MapWidget extends ImageView {
         super.onDraw(canvas);
 
         if(quadrant != null) {
-            canvas.drawBitmap(quadrant.getRaster(), 0, 0, null);
+            //canvas.drawBitmap(quadrant.getRaster(), 0, 0, null);
 
-            for (UserPoint up : upList)
-                drawUserPoint(up, canvas);
+            if (upList != null)
+                for (UserPoint up : upList)
+                    drawUserPoint(up, canvas);
 
-            drawUserPosition(userPosition, canvas);
+            if (userPosition != null)
+                drawUserPosition(userPosition, canvas);
         }
     }
 
