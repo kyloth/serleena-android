@@ -210,7 +210,8 @@ public class TrackFragmentTest {
 
     @Test
     public void clearingDeltaShouldClearItsElementInTheView() {
-        fragment.clearDelta();
+        fragment.clearStats();
+        verify(lastPartialText).setText("");
         verify(deltaText).setText("");
     }
 
