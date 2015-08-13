@@ -41,9 +41,12 @@
 
 package com.kyloth.serleena.persistence.sqlite;
 
+import com.kyloth.serleena.common.GeoPoint;
+import com.kyloth.serleena.common.IQuadrant;
 import com.kyloth.serleena.common.TelemetryEvent;
 import com.kyloth.serleena.common.UserPoint;
 import com.kyloth.serleena.persistence.IPersistenceDataSource;
+import com.kyloth.serleena.persistence.NoSuchQuadrantException;
 
 /**
  * Descrive l’interfaccia di un Data Access Object per accesso a basso livello
@@ -99,4 +102,18 @@ interface ISerleenaSQLiteDataSource extends IPersistenceDataSource {
     void createTelemetry(Iterable<TelemetryEvent> events,
                          SQLiteDAOTrack track);
 
+    /**
+     * Restituisce uno dei quadranti presenti nel database per una specifica
+     * posizione geografica e un'Esperienza.
+     *
+     * Se il quadrante non è presente nel database, viene sollevata
+     * un'eccezione NoSuchQuadrantException.
+     *
+     * @param location Posizione geografica contenuta dal quadrante.
+     * @param experience Esperienza a cui è associato il quadrante.
+     * @return Oggetto IQuadrant.
+     * @throws NoSuchQuadrantException
+     */
+    IQuadrant getQuadrant(GeoPoint location, SQLiteDAOExperience experience)
+            throws NoSuchQuadrantException;
 }
