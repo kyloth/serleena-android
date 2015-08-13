@@ -117,15 +117,9 @@ public interface ITrackView {
     void setTotalCheckpoints(int n);
 
     /**
-     * Informa la vista se il Tracciamento e' abilitato o meno.
-     *
-     * @since 1.0
+     * Imposta la vista che mostrare che il Percorso è concluso.
      */
-    void telemetryEnabled(boolean b);
-
     void displayTrackEnded();
-
-    void clearDelta();
 
     /**
      * Imposta il nome del Percorso in attraversamento.
@@ -133,4 +127,14 @@ public interface ITrackView {
      * @param name Nome del Percorso
      */
     void setTrackName(String name);
+
+    /**
+     * Pulisce la vista dai dati sui checkpoint del Percorso in esecuzione.
+     */
+    void clearCheckpoints();
+
+    /**
+     * Pulisce la vista dai tempi relativi all'ultimo checkpoint attraversato.
+     */
+    void clearStats();
 }

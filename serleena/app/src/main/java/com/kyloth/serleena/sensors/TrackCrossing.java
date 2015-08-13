@@ -153,7 +153,7 @@ public final class TrackCrossing implements ITrackCrossing,
         if (nextCheckpointIndex < track.getCheckpoints().size()) {
             myAdvanceCheckpoint();
             for (ITrackCrossingObserver o : observers)
-                o.onCheckpointCrossed(nextCheckpointIndex - 1);
+                o.onCheckpointCrossed();
         } else
             throw new NoTrackCrossingException();
     }
@@ -196,7 +196,7 @@ public final class TrackCrossing implements ITrackCrossing,
         if (isTrackCrossing()) {
             myAdvanceCheckpoint();
             for (ITrackCrossingObserver o : observers)
-                o.onCheckpointCrossed(nextCheckpointIndex - 1);
+                o.onCheckpointCrossed();
         }
     }
 
@@ -207,7 +207,7 @@ public final class TrackCrossing implements ITrackCrossing,
     public void notifyObservers() {
         if (isTrackCrossing())
             for (ITrackCrossingObserver o : observers)
-                o.onCheckpointCrossed(nextCheckpointIndex - 1);
+                o.onCheckpointCrossed();
     }
 
     /**

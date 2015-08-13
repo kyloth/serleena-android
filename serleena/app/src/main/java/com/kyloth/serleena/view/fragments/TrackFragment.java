@@ -137,14 +137,10 @@ public class TrackFragment extends Fragment implements ITrackView, View.OnClickL
     @Override
     public void clearView() {
         trackNameText.setText("NESSUN PERCORSO ATTIVO");
-        nextCheckpointText.setText("");
         distanceText.setText("");
         orientationWidget.setOrientation(0);
-        deltaText.setText("");
-        lastPartialText.setText("");
-
-        totalCheckpoints = 0;
-        nextCheckpoint = 0;
+        clearStats();
+        clearCheckpoints();
     }
 
     /**
@@ -227,27 +223,11 @@ public class TrackFragment extends Fragment implements ITrackView, View.OnClickL
     }
 
     /**
-     * ITrackView.telemetryEnabled().
-     */
-    @Override
-    public void telemetryEnabled(boolean b) {
-
-    }
-
-    /**
      * ITrackView.displayTrackEnded().
      */
     @Override
     public void displayTrackEnded() {
         nextCheckpointText.setText("FINE");
-    }
-
-    /**
-     * Implementa ITrackView.clearDelta().
-     */
-    @Override
-    public void clearDelta() {
-        deltaText.setText("");
     }
 
     /**
@@ -258,6 +238,19 @@ public class TrackFragment extends Fragment implements ITrackView, View.OnClickL
     @Override
     public void setTrackName(String name) {
         trackNameText.setText(name);
+    }
+
+    @Override
+    public void clearCheckpoints() {
+        totalCheckpoints = 0;
+        nextCheckpoint = 0;
+        nextCheckpointText.setText("");
+    }
+
+    @Override
+    public void clearStats() {
+        lastPartialText.setText("");
+        deltaText.setText("");
     }
 
     /**

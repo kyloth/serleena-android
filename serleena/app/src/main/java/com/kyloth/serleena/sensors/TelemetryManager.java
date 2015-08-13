@@ -137,26 +137,25 @@ class TelemetryManager
 
     /**
      * Implementa ITrackCrossedObserver.onCheckpointCrossed().
-     *
-     * @param checkpointNumber Indice del checkpoint appena attraversato.
      */
     @Override
-    public void onCheckpointCrossed(int checkpointNumber) {
+    public void onCheckpointCrossed() {
         if (enabled) {
-            if (checkpointNumber == 0)
-                start();
+            int checkpointIndex = 0;
             try {
+                checkpointIndex = tc.getLastCrossed().checkPointIndex();
+                if (checkpointIndex == 0)
+                    start();
                 events.add(new CheckpointReachedTelemetryEvent(
-                        tc.getLastCrossed().partialTime(), checkpointNumber));
+                        tc.getLastCrossed().partialTime(), checkpointIndex+1));
 
                 int total = tc.getTrack().getCheckpoints().size();
-                if (checkpointNumber == total - 1) {
+                if (checkpointIndex == total - 1) {
                     enabled = false;
                     tc.getTrack().createTelemetry(getEvents());
                 }
-            } catch (NoSuchCheckpointException | NoActiveTrackException e) { }
+            } catch (NoSuchCheckpointException|NoActiveTrackException e) { }
         }
-
     }
 
 }

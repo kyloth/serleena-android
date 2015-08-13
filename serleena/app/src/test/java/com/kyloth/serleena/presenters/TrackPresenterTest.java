@@ -143,6 +143,7 @@ public class TrackPresenterTest {
             throws SensorNotAvailableException, NoTrackCrossingException,
             NoSuchTelemetryException, NoSuchCheckpointException, NoActiveTrackException {
         Mockito.doThrow(NoActiveTrackException.class).when(tc).getTrack();
+        Mockito.doThrow(NoActiveTrackException.class).when(tc).getLastCrossed();
         presenter.resume();
         verify(locMan).attachObserver(
                 presenter, TrackPresenter.UPDATE_INTERVAL_SECONDS);
@@ -154,9 +155,10 @@ public class TrackPresenterTest {
      * Presenter.
      */
     @Test
-    public void resumingWithNoTrackShouldClearView()
-            throws NoActiveTrackException {
+    public void resumingShouldClearView()
+            throws NoActiveTrackException, NoSuchCheckpointException {
         Mockito.doThrow(NoActiveTrackException.class).when(tc).getTrack();
+        Mockito.doThrow(NoActiveTrackException.class).when(tc).getLastCrossed();
         presenter.resume();
         verify(view).clearView();
     }
@@ -201,7 +203,7 @@ public class TrackPresenterTest {
         when(tc.getTrack()).thenReturn(track);
         presenter.resume();
         verify(view, times(1)).setLastPartial(300);
-        presenter.onCheckpointCrossed(0);
+        presenter.onCheckpointCrossed();
         verify(view, times(2)).setLastPartial(300);
     }
 

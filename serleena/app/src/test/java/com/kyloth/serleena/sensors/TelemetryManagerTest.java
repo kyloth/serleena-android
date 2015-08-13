@@ -172,12 +172,12 @@ public class TelemetryManagerTest {
         when(tc.getLastCrossed()).thenReturn(mock(CheckpointCrossing.class));
 
         manager.enable();
-        manager.onCheckpointCrossed(0);
+        manager.onCheckpointCrossed();
 
         CheckpointReachedTelemetryEvent crte =
                 (CheckpointReachedTelemetryEvent)
                         manager.getEvents().iterator().next();
-        assertTrue(crte.checkpointNumber() == 0);
+        assertTrue(crte.checkpointNumber() == 1);
         assertTrue(crte.timestamp() >= 0);
     }
 
@@ -191,16 +191,23 @@ public class TelemetryManagerTest {
             NoActiveTrackException, NoSuchCheckpointException {
         ITrack track = getTrack();
         when(tc.getTrack()).thenReturn(track);
-        when(tc.getLastCrossed()).thenReturn(mock(CheckpointCrossing.class));
 
         manager.enable();
 
-        manager.onCheckpointCrossed(0);
-        assertPresenceOfEvent(manager, 0);
-        manager.onCheckpointCrossed(1);
+        CheckpointCrossing crossing = mock(CheckpointCrossing.class);
+        when(tc.getLastCrossed()).thenReturn(crossing);
+
+        when(crossing.checkPointIndex()).thenReturn(0);
+        manager.onCheckpointCrossed();
         assertPresenceOfEvent(manager, 1);
-        manager.onCheckpointCrossed(2);
+
+        when(crossing.checkPointIndex()).thenReturn(1);
+        manager.onCheckpointCrossed();
         assertPresenceOfEvent(manager, 2);
+
+        when(crossing.checkPointIndex()).thenReturn(2);
+        manager.onCheckpointCrossed();
+        assertPresenceOfEvent(manager, 3);
     }
 
     /**
@@ -217,7 +224,7 @@ public class TelemetryManagerTest {
 
         manager.enable();
 
-        manager.onCheckpointCrossed(0);
+        manager.onCheckpointCrossed();
         assertTrue(!manager.isEnabled());
     }
 
@@ -236,7 +243,7 @@ public class TelemetryManagerTest {
 
         manager.enable();
 
-        manager.onCheckpointCrossed(0);
+        manager.onCheckpointCrossed();
         Iterable<TelemetryEvent> events = manager.getEvents();
         verify(track).createTelemetry(events);
     }
@@ -251,12 +258,14 @@ public class TelemetryManagerTest {
             NoActiveTrackException, NoSuchCheckpointException {
         ITrack track = getTrack();
         when(tc.getTrack()).thenReturn(track);
-        when(tc.getLastCrossed()).thenReturn(mock(CheckpointCrossing.class));
+        CheckpointCrossing crossing = mock(CheckpointCrossing.class);
+        when(tc.getLastCrossed()).thenReturn(crossing);
         manager.enable();
 
-        manager.onCheckpointCrossed(0);
+        manager.onCheckpointCrossed();
         Iterable<TelemetryEvent> events1 = manager.getEvents();
-        manager.onCheckpointCrossed(1);
+        when(crossing.checkPointIndex()).thenReturn(1);
+        manager.onCheckpointCrossed();
         Iterable<TelemetryEvent> events2 = manager.getEvents();
         assertTrue(events1 != events2);
 
@@ -278,7 +287,7 @@ public class TelemetryManagerTest {
         ITrack track = getOneCheckpointTrack();
         when(tc.getTrack()).thenReturn(track);
 
-        manager.onCheckpointCrossed(0);
+        manager.onCheckpointCrossed();
         verify(tc, never()).getTrack();
         assertTrue(!manager.getEvents().iterator().hasNext());
     }

@@ -338,7 +338,7 @@ public class TrackPresenterIntegrationTest {
      * Percorso.
      */
     @Test
-    public void viewShouldShowCorrectDirectionTowardsNextCheckpoint() {
+    public void viewShouldShowCorrectHeadingTowardsNextCheckpoint() {
         ListFragment trackSelectionFragment =
                 (ListFragment) switchToFragmentInExperienceFragment(
                         "Imposta Percorso");

@@ -115,16 +115,6 @@ public class TelemetryFragmentTest {
     }
 
     /**
-     * Verifica che la distruzione del Fragment interrompa il Tracciamento,
-     * che altrimenti continuerebbe anche dopo il termine dell'applicazione.
-     */
-    @Test
-    public void destroyingFragmentShouldDisableTelemetry() {
-        fragment.onDestroy();
-        verify(presenter).disableTelemetry();
-    }
-
-    /**
      * Verifica che inoltrata al presenter la richiesta di
      * abilitare/disabilitare il tracciamento, iin base all'interazione
      * dell'utente con la vista.

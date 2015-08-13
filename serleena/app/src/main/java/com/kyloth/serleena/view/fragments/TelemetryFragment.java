@@ -131,12 +131,16 @@ public class TelemetryFragment extends Fragment
     }
 
     /**
-     * Ridefinisce Fragment.onDestroy().
+     * Implementa ITelemetryView.setTelemetryEnabled().
      */
     @Override
-    public void onDestroy() {
-        super.onDestroy();
-        presenter.disableTelemetry();
+    public void setTelemetryEnabled(boolean enabled) {
+        if (status != null) {
+            if (enabled)
+                status.setText("ON");
+            else
+                status.setText("OFF");
+        }
     }
 
     /**

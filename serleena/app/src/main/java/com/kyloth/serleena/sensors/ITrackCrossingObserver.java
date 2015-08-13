@@ -54,6 +54,6 @@ public interface ITrackCrossingObserver {
      * Segnala l'avvenuto attraversamento di un checkpoint, nel Percorso in
      * corso.
      */
-    void onCheckpointCrossed(int checkpointNumber);
+    void onCheckpointCrossed();
 
 }

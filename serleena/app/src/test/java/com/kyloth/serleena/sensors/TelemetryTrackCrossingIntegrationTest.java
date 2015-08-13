@@ -135,8 +135,8 @@ public class TelemetryTrackCrossingIntegrationTest {
                 (CheckpointReachedTelemetryEvent) iterator.next();
         CheckpointReachedTelemetryEvent e2 =
                 (CheckpointReachedTelemetryEvent) iterator.next();
-        assertTrue((e1.checkpointNumber() == 0 && e2.checkpointNumber() == 1) ||
-                   (e1.checkpointNumber() == 1 && e2.checkpointNumber() == 0));
+        assertTrue((e1.checkpointNumber() == 1 && e2.checkpointNumber() == 2) ||
+                   (e1.checkpointNumber() == 2 && e2.checkpointNumber() == 1));
     }
 
 }

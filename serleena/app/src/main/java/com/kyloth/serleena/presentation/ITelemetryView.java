@@ -58,4 +58,8 @@ public interface ITelemetryView {
      */
     void attachPresenter(ITelemetryPresenter presenter);
 
+    /**
+     * Imposta lo stato del Tracciamento sulla vista.
+     */
+    void setTelemetryEnabled(boolean enabled);
 }
