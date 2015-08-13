@@ -52,12 +52,9 @@ import java.util.ArrayList;
  * Concretizza ITelemetryManager
  *
  * @use Viene istanziato da SerleenaSensorManager e restituito al codice client dietro interfaccia
- * @field wkMan : IWakeupManager Gestore dei wakeup
  * @field events : ArrayList<TelemetryEvent> Lista di eventi campionati al momento
- * @field pm : IPowerManager Gestore dei lock sul processore
  * @field enabled : boolean Valore indicante se il campionamento è abilitato
- * @field startTimestamp : long Istante, in UNIX time, di avvio del Tracciamento al momento avviato
- * @field uuid : String UUID dell'oggetto in quanto IWakeupObserver
+ * @field tc : ITrackCrossing Oggetto ITrackCrossing da cui ottenere eventi sull'attraversamento dei checkpoint.
  * @author Filippo Sestini <sestini.filippo@gmail.com>
  */
 class TelemetryManager

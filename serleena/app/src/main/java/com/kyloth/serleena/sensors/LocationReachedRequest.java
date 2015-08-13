@@ -28,28 +28,73 @@
 ///////////////////////////////////////////////////////////////////////////////
 
 
+/**
+ * Name: LocationReachedRequest.java
+ * Package: com.kyloth.serleena.sensors
+ * Author: Filippo Sestini
+ *
+ * History:
+ * Version  Programmer        Changes
+ * 1.0.0    Filippo Sestini   Creazione file e scrittura
+ *                            codice e documentazione Javadoc
+ */
+
 package com.kyloth.serleena.sensors;
 
 import com.kyloth.serleena.common.GeoPoint;
 
+/**
+ * Rappresenta una richiesta, fatta ad un oggetto LocationReachedManager, di
+ * essere notificati al raggiungimento di una particolare posizione geografica.
+ *
+ * La classe rappresenta questa richiesta incapsulando l'oggetto
+ * ILocationObserver che ha richiesto l'aggiornamento, e la posizione geografica
+ * al raggiungimento della quale questo vuole essere notificato.
+ *
+ * @use Viene utilizzato da LocationReachedManager per memorizzare e organizzare gli Observer registrati ad esso.
+ * @field observer ILocationReachedObserver Observer a cui la richiesta si riferisce.
+ * @field location GeoPoint Posizione geografica a cui la richiesta si riferisce.
+ * @author Filippo Sestini <sestini.filippo@gmail,com>
+ * @version 1.0.0
+ */
 public class LocationReachedRequest {
+
     private ILocationReachedObserver observer;
     private GeoPoint location;
 
+    /**
+     * Crea un nuovo oggetto LocationReachedRequest.
+     *
+     * @param observer Observer a cui si riferisce la richiesta.
+     * @param location Posizione geografica a cui si riferisce la richiesta.
+     */
     public LocationReachedRequest(
             ILocationReachedObserver observer, GeoPoint location) {
         this.observer = observer;
         this.location = location;
     }
 
+    /**
+     * Restituisce l'Observer a cui si riferisce la richiesta.
+     *
+     * @return Observer a cui si riferisce la richiesta.
+     */
     public ILocationReachedObserver observer() {
         return observer;
     }
 
+    /**
+     * Restituisce la posizione geografica a cui si riferisce la richiesta.
+     *
+     * @return Posizione geografica a cui si riferisce la richiesta.
+     */
     public GeoPoint location() {
         return location;
     }
 
+    /**
+     * Ridefinisce Object.equals().
+     */
     public boolean equals(Object o) {
         if (o != null && o instanceof LocationReachedRequest) {
             LocationReachedRequest other = (LocationReachedRequest) o;
@@ -59,6 +104,9 @@ public class LocationReachedRequest {
         return false;
     }
 
+    /**
+     * Ridefinisce Object.hashCode()
+     */
     public int hashCode() {
         return (int)(location.latitude() + location.longitude());
     }

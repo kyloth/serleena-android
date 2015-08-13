@@ -31,7 +31,11 @@
 package com.kyloth.serleena.sensors;
 
 /**
- * Created by fsestini on 6/6/15.
+ * Segnala l'assenza di un Checkpoint secondo i pararmetri richiesti.
+ *
+ * @use Viene sollevata da TrackCrossing quando si tenta di ottenere dati sull'ultimo checkpoint attraversato durante un Percorso quando non sono ancora stati attraversati checkpoint per quel Percorso.
+ * @author Filippo Sestini <sestini.filippo@gmail.com>
+ * @version 1.0.0
  */
 public class NoSuchCheckpointException extends Exception {
 

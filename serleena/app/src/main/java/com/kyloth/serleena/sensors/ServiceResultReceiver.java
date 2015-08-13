@@ -49,6 +49,7 @@ import android.os.ResultReceiver;
  * Rappresenta un meccanismo di callback che permette a un Servizio di
  * comunicare dei risultati ad un osservatore.
  *
+ * @use Utilizzato da BackgroundLocationManager per ottenere i risultati dal LocationService.
  * @author Filippo Sestini <sestini.filippo@gmail.com>
  * @version 1.0.0
  */

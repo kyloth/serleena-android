@@ -61,6 +61,14 @@ import java.util.Random;
 /**
  * Implementa IBackgroundLocationManager.
  *
+ * @use Viene utilizzato da LocationReachedManager, dietro interfaccia, per ricevere aggiornamenti sulla posizione utente in background, anche se il dispositivo è il sleep mode.
+ * @field myResultReceiver : ServiceResultReceiver Oggetto utilizzato per ricevere risultati da un servizio.
+ * @field am : AlarmManager Gestore degli allarmi di Android.
+ * @field context : Context Contesto dell'applicazione.
+ * @field pendingIntent : PendingIntent Oggetto rappresentante un allarme schedulato.
+ * @field location : GeoPoint Ultima posizione utente rilevata.
+ * @field updateInterval : int Intervallo di aggiornamento della posizione.
+ * @field observers : List<ILocationObserver> Observers collegati all'istanza.
  * @author Filippo Sestini <sestini.filippo@gmail.com>
  * @version 1.0.0
  */

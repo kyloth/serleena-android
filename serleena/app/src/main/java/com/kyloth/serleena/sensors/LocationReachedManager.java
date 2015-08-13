@@ -51,6 +51,9 @@ import java.util.Map;
 /**
  * Concretizza ILocationReachedManager
  *
+ * @use Viene utilizzato da TrackCrossing, sotto interfaccia, per ottenere informazioni sul raggiungimento da parte dell'utente di un determinato checkpoint.
+ * @field requests List<LocationReachedRequest> Lista di richieste fatte al gestore, memorizzate come coppia (observer, posizione geografica).
+ * @field bkgrLocMan IBackgroundLocationManager Oggetto IBackgroundLocationManager da cui ottenere aggiornamenti in background sulla posizione.
  * @author Filippo Sestini <sestini.filippo@gmail,com>
  * @version 1.0.0
  */

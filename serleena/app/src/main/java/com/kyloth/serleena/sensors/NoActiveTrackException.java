@@ -28,13 +28,26 @@
 ///////////////////////////////////////////////////////////////////////////////
 
 
+/**
+ * Name: NoActiveTrackException.java
+ * Package: com.kyloth.serleena.sensors
+ * Author: Filippo Sestini
+ *
+ * History:
+ * Version  Programmer        Changes
+ * 1.0.0    Filippo Sestini   Creazione file e scrittura
+ *                            codice e documentazione Javadoc
+ */
+
 package com.kyloth.serleena.sensors;
 
 /**
  * Segnala l'assenza di un Percorso attivo.
  *
+ * @use Viene sollevata da TrackCrossing in metodi il cui risultato richiederebbe la presenza di un Percorso attivo.
  * @author Filippo Sestini <sestini.filippo@gmail.com>
  * @version 1.0.0
  */
 public class NoActiveTrackException extends Exception {
+
 }

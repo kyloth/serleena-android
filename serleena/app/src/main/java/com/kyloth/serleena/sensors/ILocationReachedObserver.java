@@ -45,7 +45,9 @@ package com.kyloth.serleena.sensors;
  * Interfaccia che verrà implementata da un oggetto in grado
  * di osservare un oggetto di tipo ILocationReachedManager.
  *
- * @use Viene implementata da TrackPresenter, per rilevare il raggiungimento da parte dell'utente dei checkpoint del Percorso.
+ * Insieme a ILocationReachedManager, realizza il pattern Observer.
+ *
+ * @use Viene implementata da TrackCrossing, per rilevare il raggiungimento da parte dell'utente dei checkpoint del Percorso.
  * @author Gabriele Pozzan <gabriele.pozzan@studenti.unipd.it>
  * @version 1.0.0
  */

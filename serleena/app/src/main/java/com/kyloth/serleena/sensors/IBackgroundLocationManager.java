@@ -45,6 +45,9 @@ package com.kyloth.serleena.sensors;
  * Rappresenta l'interfaccia di un oggetto in grado di fornire dati sulla
  * posizione utente in background, anche quando il dispositivo è in sleep mode.
  *
+ * Insieme a ILocationObserver, realizza il pattern Observer.
+ *
+ * @use Viene passato come parametro al costruttore di LocationReachedManager, attraverso il quale questo ottiene aggiornamenti in background sulla posizione.
  * @author Filippo Sestini <sestini.filippo@gmail.com>
  * @version 1.0.0
  */

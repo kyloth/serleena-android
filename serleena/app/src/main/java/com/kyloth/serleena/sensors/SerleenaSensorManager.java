@@ -60,7 +60,7 @@ import java.util.HashMap;
  * @field locMan : ILocationManager Gestore del sensore di posizione
  * @field hman : IHeadingManager Gestore dell'orientamento
  * @field locReaMan : ILocationReachedManager Gestore di raggiungimento di posizione
- * @field wMan : IWakeupManager Gestore dei wakeup
+ * @field tc : ITrackCrossing Gestore degli attraversamenti di Percorso
  * @field telMan : ITelemetryManager Gestore dei Tracciamenti
  * @author Filippo Sestini <sestini.filippo@gmail.com>
  * @version 1.0.0

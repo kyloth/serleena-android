@@ -58,6 +58,7 @@ public interface ISensorManager {
      * @return Oggetto di tipo ILocationManager.
      */
     ILocationManager getLocationSource();
+
     /**
      * Restituisce un Manager per ottenere dati sull'orientamento
      * dell'Escursionista rispetto ai punti cardinali.

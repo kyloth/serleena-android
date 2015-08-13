@@ -50,6 +50,14 @@ import java.util.ArrayList;
 /**
  * Implementa ITrackCrossing
  *
+ * @use Viene usato da TrackPresenter e TelemetryManager per ottenere informazioni e aggiornamenti sull'attraversamento di un Percorso.
+ * @field locReachMan : ILocationReachedManager
+ * @field track : ITrack
+ * @field nextCheckpointIndex : int
+ * @field observers : ArrayList<ITrackCrossingObserver>
+ * @field trackStartTimestamp : long
+ * @field lastPartial : int
+
  * @author Filippo Sestini <sestini.filippo@gmail.com>
  * @version 1.0.0
  */

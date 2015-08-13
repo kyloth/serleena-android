@@ -48,6 +48,9 @@ import com.kyloth.serleena.model.ITrack;
  * Interfaccia di un oggetto che offre servizi per l'attraversamento di
  * Percorsi, rappresentati da una serie di checkpoint.
  *
+ * Insieme a ITrackCrossingObserver, realizza il pattern Observer.
+ *
+ * @use Viene implementata da TrackCrossing, che si occupa di gestire l'attraversamento del Percorso da parte dell'utente. Viene poi riferito da TrackPresenter e TelemetryManager, che lo utilizzano rispettivamente per mostrare informazioni sul Percorso e gestire il Tracciamento.
  * @author Filippo Sestini <sestini.filippo@gmail.com>
  * @version 1.0.0
  */

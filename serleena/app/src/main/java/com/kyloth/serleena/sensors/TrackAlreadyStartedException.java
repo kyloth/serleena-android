@@ -28,10 +28,26 @@
 ///////////////////////////////////////////////////////////////////////////////
 
 
+/**
+ * Name: TrackAlreadyStartedException.java
+ * Package: com.kyloth.serleena.sensors
+ * Author: Filippo Sestini
+ *
+ * History:
+ * Version  Programmer        Changes
+ * 1.0.0    Filippo Sestini   Creazione file e scrittura
+ *                            codice e documentazione Javadoc
+ */
+
 package com.kyloth.serleena.sensors;
 
 /**
- * Created by fsestini on 6/6/15.
+ * Segnala l'impossibilità di portare a termine un'azione perchè il Percorso
+ * attivo è già iniziato, ovvero è già stato raggiunto il suo primo checkpoint.
+ *
+ * @use Viene sollevata da TelemetryManager quando non è possibile attivare il Tracciamento per un Percorso già iniziato.
+ * @author Filippo Sestini <sestini.filippo@gmail.com>
+ * @version 1.0.0
  */
 public class TrackAlreadyStartedException extends Exception {
 

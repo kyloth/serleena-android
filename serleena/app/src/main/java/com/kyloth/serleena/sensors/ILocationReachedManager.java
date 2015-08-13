@@ -48,11 +48,14 @@ import com.kyloth.serleena.common.GeoPoint;
  * in base alla posizione dell'Escursionista, il raggiungimento di un punto
  * geografico definito.
  *
- * @use Viene utilizzata da SerleenaSensorManager per restituire ai client il gestore di raggiungimento di posizione, e dal client per accedere ai servizi offerti dal sensore. È utilizzato in particolare da TrackPresenter.
+ * Insieme a ILocationReachedObserver, realizza il pattern Observer.
+ *
+ * @use Viene utilizzata da TrackCrossing per ottenere informazioni sul raggiungimento dell'utente di una particolare posizione, e gestire così l'attraversamento dei Percorsi.
  * @author Gabriele Pozzan <gabriele.pozzan@studenti.unipd.it>
  * @version 1.0.0
  */
 public interface ILocationReachedManager {
+
     /**
      * Metodo che permette di registrare un oggetto che verrà notificato
      * al raggiungimento del punto geografico "location".
@@ -70,7 +73,9 @@ public interface ILocationReachedManager {
 
     /**
      * Annulla la registrazione di un observer precedentemente registrato
-     * all'oggetto LocationReachedManager.
+     * all'oggetto LocationReachedManager per una particolare posizione.
+     * Eventuali altre registrazioni dello stesso observer per altre posizioni
+     * sono preservate.
      *
      * @param observer Oggetto da deregistrare ILocationReachedManager. Se null,
      *                 viene sollevata un'eccezione IllegalArgumentException.
@@ -81,5 +86,12 @@ public interface ILocationReachedManager {
                         GeoPoint location)
             throws IllegalArgumentException;
 
+    /**
+     * Annulla tutte le registrazioni di un observer precedentemente registrato
+     * all'oggetto LocationReachedManager.
+     *
+     * @param observer Oggetto da deregistrare ILocationReachedManager. Se null,
+     *                 viene sollevata un'eccezione IllegalArgumentException.
+     */
     void detachObserver(ILocationReachedObserver observer);
 }

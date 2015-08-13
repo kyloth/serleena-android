@@ -58,6 +58,13 @@ import java.util.Stack;
  * Servizio incaricato di ricavare informazioni sulla posizione utente in
  * background, evitando che il dispositivo entri in sleep mode.
  *
+ * @use Viene creato da BackgroundLocationManager per ottenere la posizione attuale dell'utente e mantenere sveglio il dispositivo fintanto che questa non viene rilevata.
+ * @field pm : PowerManager Gestore energetico di Android.
+ * @field lm : LocationManager Gestore della posizione di Android.
+ * @field intents : Stack<Intent> Insieme di oggetti Intent rappresentanti quanti hanno richiesto al Servizio la posizione.
+ * @field wl : PowerManager.WakeLock Identifica un blocco acquisito sul processore per evitare che vada in sleep mode.
+ * @field timeout : Handler Oggetto Handler utilizzato per arrestare il servizio al termine di un timeout.
+ * @field runnable : Runnable Operazione da eseguire al termine del timeout.
  * @author Filippo Sestini <sestini.filippo@gmail.com>
  * @version 1.0.0
  */
@@ -138,6 +145,11 @@ public class LocationService extends Service implements LocationListener {
         }
     }
 
+    /**
+     * Ridefinisce Service.onDestroy().
+     *
+     * Rilascia le risorse utilizzare dal Servizio.
+     */
     @Override
     public void onDestroy() {
         super.onDestroy();

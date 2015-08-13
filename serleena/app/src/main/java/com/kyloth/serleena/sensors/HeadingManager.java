@@ -58,13 +58,14 @@ import java.util.List;
  * Concretizza IHeadingManager utilizzando le API di gestione della
  * sensoristica di Android.
  *
- * @use Viene istanziato da SerleenaSensorManager e restituito al codice client dietro interfaccia.
+ * @use Viene istanziato da SerleenaSensorManager e restituito al codice client dietro interfaccia. Viene poi utilizzato da TrackPresenter e CompassPresenter per ottenere informazioni sull'orientamento dell'utente.
  * @field accelerometerValues : float[] Valori ottenuti dall'accelerometro del dispositivo
  * @field magneticFieldValues : float[] Valori ottenuti dal sensore di campo magnetico del dispositivo
- * @field latestOrientation : double Ultimo valore di orientamento disponibile
+ * @field latestOrientation : AzimuthMagneticNorth Ultimo valore di orientamento disponibile
  * @field observers : List<IHeadingObserver> Lista degli observers registrati agli eventi del manager
  * @field magnetometer : Sensor Instanza della classe di Android Sensor associato al magnetometro del dispositivo
  * @field accelerometer : Sensor Instanza della classe di Android Sensor associato all'accelerometro del dispositivo
+ * @field sm : SensorManager Gestore dei sensori di Android.
  * @author Filippo Sestini
  * @version 1.0.0
  */

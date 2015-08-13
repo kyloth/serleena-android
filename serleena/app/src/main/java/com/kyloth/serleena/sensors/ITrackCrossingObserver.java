@@ -45,6 +45,9 @@ package com.kyloth.serleena.sensors;
  * Rappresenta l'interfaccia di un oggetto in ascolto di eventi di
  * attraversamento di checkpoint da un ITrackCrossing.
  *
+ * Insieme a ITrackCrossing, realizza il pattern Observer.
+ *
+ * @use Viene implementata da TrackPresenter e TelemetryManager per ottenere informazioni sull'attraversamento del Percorso.
  * @author Filippo Sestini <sestini.filippo@gmail.com>
  * @version 1.0.0
  */

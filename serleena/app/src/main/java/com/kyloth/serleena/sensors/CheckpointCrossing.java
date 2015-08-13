@@ -54,6 +54,10 @@ import com.kyloth.serleena.model.NoSuchTelemetryException;
  * Rappresenta dettagli su una prestazione relativa all'attraversameno di un
  * checkpoint durarnte un'esperienza.
  *
+ * @use Oggetti di tipo CheckpointCrossing vengono restituiti da TrackCrossing per fornire informazioni sull'ultimo checkpoint attraversato dall'utente, e vengono consumati da TrackPresenter e TelemetryManager rispettivamente per visualizzare tali informazioni e produrne un Tracciamento.
+ * @field index : int Indice in base zero del checkpoint a cui si riferisce l'istanza.
+ * @field partial : int Tempo parziale, in secondi.
+ * @field track : ITrack Percorso a cui si riferisce l'istanza.
  * @author Filippo Sestini <sestini.filippo@gmail.com>
  * @version 1.0.0
  */
