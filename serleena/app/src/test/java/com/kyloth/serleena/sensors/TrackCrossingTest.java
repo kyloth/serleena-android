@@ -134,22 +134,22 @@ public class TrackCrossingTest {
 
         assertTrue(tc.getNextCheckpoint() == 0);
         tc.onLocationReached();
-        verify(observer).onCheckpointCrossed();
+        verify(observer, times(1)).onCheckpointCrossed();
         assertTrue(tc.getLastCrossed().checkPointIndex() == 0);
 
         assertTrue(tc.getNextCheckpoint() == 1);
         tc.onLocationReached();
-        verify(observer).onCheckpointCrossed();
+        verify(observer, times(2)).onCheckpointCrossed();
         assertTrue(tc.getLastCrossed().checkPointIndex() == 1);
 
         assertTrue(tc.getNextCheckpoint() == 2);
         tc.onLocationReached();
-        verify(observer).onCheckpointCrossed();
+        verify(observer, times(3)).onCheckpointCrossed();
         assertTrue(tc.getLastCrossed().checkPointIndex() == 2);
 
         assertTrue(tc.getNextCheckpoint() == 3);
         tc.onLocationReached();
-        verify(observer).onCheckpointCrossed();
+        verify(observer, times(4)).onCheckpointCrossed();
         assertTrue(tc.getLastCrossed().checkPointIndex() == 3);
     }
 

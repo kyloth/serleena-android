@@ -177,7 +177,7 @@ public class TelemetryManagerTest {
         CheckpointReachedTelemetryEvent crte =
                 (CheckpointReachedTelemetryEvent)
                         manager.getEvents().iterator().next();
-        assertTrue(crte.checkpointNumber() == 0);
+        assertTrue(crte.checkpointNumber() == 1);
         assertTrue(crte.timestamp() >= 0);
     }
 
@@ -191,16 +191,23 @@ public class TelemetryManagerTest {
             NoActiveTrackException, NoSuchCheckpointException {
         ITrack track = getTrack();
         when(tc.getTrack()).thenReturn(track);
-        when(tc.getLastCrossed()).thenReturn(mock(CheckpointCrossing.class));
 
         manager.enable();
 
-        manager.onCheckpointCrossed();
-        assertPresenceOfEvent(manager, 0);
+        CheckpointCrossing crossing = mock(CheckpointCrossing.class);
+        when(tc.getLastCrossed()).thenReturn(crossing);
+
+        when(crossing.checkPointIndex()).thenReturn(0);
         manager.onCheckpointCrossed();
         assertPresenceOfEvent(manager, 1);
+
+        when(crossing.checkPointIndex()).thenReturn(1);
         manager.onCheckpointCrossed();
         assertPresenceOfEvent(manager, 2);
+
+        when(crossing.checkPointIndex()).thenReturn(2);
+        manager.onCheckpointCrossed();
+        assertPresenceOfEvent(manager, 3);
     }
 
     /**
@@ -251,11 +258,13 @@ public class TelemetryManagerTest {
             NoActiveTrackException, NoSuchCheckpointException {
         ITrack track = getTrack();
         when(tc.getTrack()).thenReturn(track);
-        when(tc.getLastCrossed()).thenReturn(mock(CheckpointCrossing.class));
+        CheckpointCrossing crossing = mock(CheckpointCrossing.class);
+        when(tc.getLastCrossed()).thenReturn(crossing);
         manager.enable();
 
         manager.onCheckpointCrossed();
         Iterable<TelemetryEvent> events1 = manager.getEvents();
+        when(crossing.checkPointIndex()).thenReturn(1);
         manager.onCheckpointCrossed();
         Iterable<TelemetryEvent> events2 = manager.getEvents();
         assertTrue(events1 != events2);
