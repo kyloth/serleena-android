@@ -218,7 +218,7 @@ public class TrackPresenter implements ITrackPresenter, ITrackCrossingObserver,
      * della vista.
      */
     @Override
-    public synchronized void onCheckpointCrossed(final int checkpointNumber) {
+    public synchronized void onCheckpointCrossed() {
         if (active)
             updateView();
     }
