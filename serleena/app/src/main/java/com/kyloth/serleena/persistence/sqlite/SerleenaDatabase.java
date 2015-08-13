@@ -147,7 +147,7 @@ public class SerleenaDatabase extends SQLiteOpenHelper {
 
     private static final String CREATE_TABLE_RASTERS =
             "CREATE TABLE " + TABLE_RASTERS + " (" +
-                    "raster_experience INTEGER, " +
+                    "raster_experience INTEGER NOT NULL, " +
                     "raster_nw_corner_latitude REAL NOT NULL, " +
                     "raster_nw_corner_longitude REAL NOT NULL, " +
                     "raster_se_corner_latitude REAL NOT NULL, " +
