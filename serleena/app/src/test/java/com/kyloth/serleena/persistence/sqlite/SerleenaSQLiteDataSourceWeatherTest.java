@@ -149,10 +149,7 @@ public class SerleenaSQLiteDataSourceWeatherTest {
     public void setup() throws URISyntaxException {
         SerleenaDatabase sh = new SerleenaDatabase(RuntimeEnvironment.application, null, null, 1);
         db = sh.getWritableDatabase();
-        sds = new SerleenaSQLiteDataSource(
-                RuntimeEnvironment.application,
-                sh,
-                mock(IRasterSource.class));
+        sds = new SerleenaSQLiteDataSource(sh);
         ContentValues values = TestFixtures.pack(TestFixtures.WEATHER_FIXTURE);
         db.insertOrThrow(SerleenaDatabase.TABLE_WEATHER_FORECASTS, null, values);
     }

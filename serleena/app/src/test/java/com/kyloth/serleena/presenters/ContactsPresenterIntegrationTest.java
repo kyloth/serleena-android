@@ -117,10 +117,7 @@ public class ContactsPresenterIntegrationTest {
         db = serleenaDb.getWritableDatabase();
 
         SerleenaDataSource dataSource = new SerleenaDataSource(
-                new SerleenaSQLiteDataSource(
-                        RuntimeEnvironment.application,
-                        serleenaDb,
-                        mock(IRasterSource.class)));
+                new SerleenaSQLiteDataSource(serleenaDb));
 
         activity = Robolectric.buildActivity(TestSerleenaActivity.class)
                 .create().start().visible().get();

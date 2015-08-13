@@ -95,10 +95,7 @@ public class WeatherForecastTest {
         serleenaDB.onUpgrade(db, 1, 2);
         ContentValues values = TestFixtures.pack(TestFixtures.WEATHER_FIXTURE);
         db.insertOrThrow(SerleenaDatabase.TABLE_WEATHER_FORECASTS, null, values);
-        serleenaSQLDS = new SerleenaSQLiteDataSource(
-                RuntimeEnvironment.application,
-                serleenaDB,
-                mock(IRasterSource.class));
+        serleenaSQLDS = new SerleenaSQLiteDataSource(serleenaDB);
         dataSource = new SerleenaDataSource(serleenaSQLDS);
     }
 

@@ -83,10 +83,7 @@ public class ExperienceIntegrationTest {
     public void initialize() {
         serleenaDB = new SerleenaDatabase(RuntimeEnvironment.application, 1);
         db = serleenaDB.getWritableDatabase();
-        dataSource = new SerleenaDataSource(
-                new SerleenaSQLiteDataSource(
-                        RuntimeEnvironment.application, serleenaDB,
-                        mock(IRasterSource.class)));
+        dataSource = new SerleenaDataSource(new SerleenaSQLiteDataSource(serleenaDB));
         TestDB.experienceQuery(db, 0, "experience");
     }
 

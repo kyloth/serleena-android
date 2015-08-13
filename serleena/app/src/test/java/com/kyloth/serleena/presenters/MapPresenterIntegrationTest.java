@@ -143,9 +143,7 @@ public class MapPresenterIntegrationTest {
         TestDB.experienceQuery(db, 0, "experience");
 
         rasterSource = mock(IRasterSource.class);
-        dataSource = new SerleenaDataSource(
-                new SerleenaSQLiteDataSource(
-                        RuntimeEnvironment.application, serleenaDb, rasterSource));
+        dataSource = new SerleenaDataSource(new SerleenaSQLiteDataSource(serleenaDb));
 
         activity = Robolectric.buildActivity(CustomDatasourceActivity.class)
                 .create().start().visible().get();

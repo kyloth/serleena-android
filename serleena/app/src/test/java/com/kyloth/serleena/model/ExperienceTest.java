@@ -94,10 +94,7 @@ public class ExperienceTest {
                                     "VALUES (2, 'Experience_2')";
         db.execSQL(insertExperience_1);
         db.execSQL(insertExperience_2);
-        serleenaSQLDS = new SerleenaSQLiteDataSource(
-                RuntimeEnvironment.application,
-                serleenaDB,
-                mock(IRasterSource.class));
+        serleenaSQLDS = new SerleenaSQLiteDataSource(serleenaDB);
         dataSource = new SerleenaDataSource(serleenaSQLDS);
     }
 

@@ -91,29 +91,8 @@ public class SerleenaSQLiteDataSourceTest {
      * IllegalArgumentException se vengono passati parametri null.
      */
     @Test(expected = IllegalArgumentException.class)
-    public void ctorShouldThrowIfArgumentIsNull1() {
-        new SerleenaSQLiteDataSource(null, mock(SerleenaDatabase.class),
-                mock(IRasterSource.class));
-    }
-
-    /**
-     * Verifica che il costruttore sollevi un'eccezione
-     * IllegalArgumentException se vengono passati parametri null.
-     */
-    @Test(expected = IllegalArgumentException.class)
-    public void ctorShouldThrowIfArgumentIsNull2() {
-        new SerleenaSQLiteDataSource(mock(Context.class), null,
-                mock(IRasterSource.class));
-    }
-
-    /**
-     * Verifica che il costruttore sollevi un'eccezione
-     * IllegalArgumentException se vengono passati parametri null.
-     */
-    @Test(expected = IllegalArgumentException.class)
-    public void ctorShouldThrowIfArgumentIsNull3() {
-        new SerleenaSQLiteDataSource(
-                mock(Context.class), mock(SerleenaDatabase.class), null);
+    public void ctorShouldThrowIfArgumentIsNull() {
+        new SerleenaSQLiteDataSource(null);
     }
 
     /**
@@ -123,6 +102,7 @@ public class SerleenaSQLiteDataSourceTest {
     public void testGetQuadrant() throws NoSuchQuadrantException {
         Bitmap raster = putQuadrant(2, 0, 0, 2, "asdlol");
 
+        assertTrue(false);
         IQuadrant quadrant = sds.getQuadrant(new GeoPoint(1, 1));
         assertEquals(2.0, quadrant.getNorthWestPoint().latitude());
         assertEquals(0.0, quadrant.getNorthWestPoint().longitude());
@@ -148,6 +128,7 @@ public class SerleenaSQLiteDataSourceTest {
     @Test
     public void testGetQuadrantEdgePoint()
             throws NoSuchQuadrantException {
+        assertTrue(false);
         Bitmap b1 = putQuadrant(5, 0, 0, 5, "asd");
         Bitmap b2 = putQuadrant(10, 5, 5, 10, "lol");
         Bitmap b3 = putQuadrant(10, 0, 5, 5, "qwe");
@@ -442,8 +423,7 @@ public class SerleenaSQLiteDataSourceTest {
         SerleenaDatabase sh = new SerleenaDatabase(RuntimeEnvironment.application, null, null, 1);
         db = sh.getWritableDatabase();
         rasterSource = mock(IRasterSource.class);
-        sds = new SerleenaSQLiteDataSource(RuntimeEnvironment.application, sh,
-                rasterSource);
+        sds = new SerleenaSQLiteDataSource(sh);
     }
 }
 

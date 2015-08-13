@@ -100,11 +100,7 @@ public class TelemetryTrackCrossingIntegrationTest {
         TestDB.checkpointQuery(db, 1, 1, 1, 1, 1);
         TestDB.checkpointQuery(db, 2, 2, 2, 2, 1);
 
-        dataSource = new SerleenaDataSource(
-                new SerleenaSQLiteDataSource(
-                        RuntimeEnvironment.application,
-                        serleenaDb,
-                        mock(IRasterSource.class)));
+        dataSource = new SerleenaDataSource(new SerleenaSQLiteDataSource(serleenaDb));
         track = dataSource.getExperiences().iterator()
                 .next().getTracks().iterator().next();
 

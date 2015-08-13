@@ -148,9 +148,7 @@ public class WeatherPresenterIntegrationTest {
         activity.setDataSource(
                 new SerleenaDataSource(
                         new SerleenaSQLiteDataSource(
-                                app,
-                                serleenaDatabase,
-                                mock(IRasterSource.class))));
+                                serleenaDatabase)));
 
         ListFragment menu = (ListFragment) activity.getFragmentManager()
                 .findFragmentById(R.id.main_container);

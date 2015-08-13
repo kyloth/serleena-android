@@ -119,11 +119,7 @@ public class TrackPresenterIntegrationTest {
 
         SerleenaDatabase serleenaDb = TestDB.getEmptyDatabase();
         db = serleenaDb.getWritableDatabase();
-        dataSource = new SerleenaDataSource(
-                new SerleenaSQLiteDataSource(
-                        RuntimeEnvironment.application,
-                        serleenaDb,
-                        mock(IRasterSource.class)));
+        dataSource = new SerleenaDataSource(new SerleenaSQLiteDataSource(serleenaDb));
         TestDB.experienceQuery(db, 0, "experience1");
         TestDB.trackQuery(db, 0, "Track 1", 0);
         // (1, 1), (3, 3), (0, 5), (3, 7)

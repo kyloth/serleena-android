@@ -118,10 +118,7 @@ public class SQLiteDAOExperienceTest {
                 TestFixtures.pack(TestFixtures.EXPERIENCES_FIXTURE_EXPERIENCE_1_USERPOINT_1)
         );
 
-        serleenaSQLDS = new SerleenaSQLiteDataSource(
-                RuntimeEnvironment.application,
-                serleenaDB,
-                mock(IRasterSource.class));
+        serleenaSQLDS = new SerleenaSQLiteDataSource(serleenaDB);
     }
 
     /**

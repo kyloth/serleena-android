@@ -92,7 +92,6 @@ public class SerleenaDataSourceIntegrationTest {
     SerleenaDatabase serleenaDB;
     SerleenaSQLiteDataSource serleenaSQLDS;
     SerleenaDataSource dataSource;
-    private IRasterSource rasterSource;
 
     /**
      * Inizializza i campi dati necessari alla conduzione dei test.
@@ -114,11 +113,7 @@ public class SerleenaDataSourceIntegrationTest {
         db.insertOrThrow(SerleenaDatabase.TABLE_EXPERIENCES, null, exp);
         ContentValues values = TestFixtures.pack(TestFixtures.RASTER_FIXTURE);
         db.insertOrThrow(SerleenaDatabase.TABLE_RASTERS, null, values);
-        rasterSource = mock(IRasterSource.class);
-        serleenaSQLDS = new SerleenaSQLiteDataSource(
-                RuntimeEnvironment.application,
-                serleenaDB,
-                rasterSource);
+        serleenaSQLDS = new SerleenaSQLiteDataSource(serleenaDB);
         dataSource = new SerleenaDataSource(serleenaSQLDS);
     }
 
@@ -172,8 +167,7 @@ public class SerleenaDataSourceIntegrationTest {
     @Test
     public void testGetQuadrant() throws NoSuchQuadrantException {
         Bitmap raster = mock(Bitmap.class);
-        when(rasterSource.getRaster("asdlol")).thenReturn(raster);
-
+        assertTrue(false);
         IQuadrant quadrant = dataSource.getQuadrant(new GeoPoint(5, 5));
         assertEquals(raster, quadrant.getRaster());
     }
@@ -234,10 +228,7 @@ public class SerleenaDataSourceIntegrationTest {
         // TODO: Cos'e'? Come fa a funzionare?
 
         SerleenaDataSource dataSource = new SerleenaDataSource(
-                new SerleenaSQLiteDataSource(
-                        RuntimeEnvironment.application,
-                        serleenaDb,
-                        mock(IRasterSource.class)));
+                new SerleenaSQLiteDataSource(serleenaDb));
         ITrack track1 = dataSource.getExperiences().iterator().next()
                 .getTracks().iterator().next();
         ITrack track2 = dataSource.getExperiences().iterator().next()

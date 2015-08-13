@@ -127,11 +127,7 @@ public class ExperienceSelectionFragmentIntegrationTest {
     public void initialize() {
         SerleenaDatabase serleenaDB = TestDB.getEmptyDatabase();
         db = serleenaDB.getWritableDatabase();
-        dataSource = new SerleenaDataSource(
-                new SerleenaSQLiteDataSource(
-                        RuntimeEnvironment.application,
-                        serleenaDB,
-                        mock(IRasterSource.class)));
+        dataSource = new SerleenaDataSource(new SerleenaSQLiteDataSource(serleenaDB));
     }
 
     public void setup() {

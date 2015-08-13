@@ -76,8 +76,7 @@ public class DumpBuilderTest {
         Foo f = new Foo(4096);
 
         CloudJSONOutboundStreamBuilder b = new CloudJSONOutboundStreamBuilder();
-        SerleenaSQLiteDataSource source = new SerleenaSQLiteDataSource(
-                RuntimeEnvironment.application, sh, mock(IRasterSource.class));
+        SerleenaSQLiteDataSource source = new SerleenaSQLiteDataSource(sh);
         for (IExperienceStorage exp : source.getExperiences()) {
             b.addExperience(exp);
         }

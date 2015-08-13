@@ -124,10 +124,8 @@ public class PersistenceModelIntegrationTest {
         serleenaDb.onConfigure(db);
         serleenaDb.onUpgrade(db, 1, 2);
 
-        SerleenaSQLiteDataSource sqlDataSource = new SerleenaSQLiteDataSource(
-                RuntimeEnvironment.application,
-                serleenaDb,
-                mock(IRasterSource.class));
+        SerleenaSQLiteDataSource sqlDataSource =
+                new SerleenaSQLiteDataSource(serleenaDb);
         dataSource = new SerleenaDataSource(sqlDataSource);
     }
 

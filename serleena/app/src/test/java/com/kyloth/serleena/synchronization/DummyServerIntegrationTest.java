@@ -217,8 +217,7 @@ public class DummyServerIntegrationTest {
         JSON_OUTPUT = "{\"data\":[{\"experience\":\"Experience_1\"}]}";
         url = new URL("http://localhost:8081");
         sink = new SerleenaSQLiteDataSink(RuntimeEnvironment.application, sh);
-        source = new SerleenaSQLiteDataSource(
-                RuntimeEnvironment.application, sh, mock(IRasterSource.class));
+        source = new SerleenaSQLiteDataSource(sh);
 
     }
 
