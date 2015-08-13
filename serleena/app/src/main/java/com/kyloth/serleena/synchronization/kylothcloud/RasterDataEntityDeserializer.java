@@ -30,29 +30,32 @@
 
 package com.kyloth.serleena.synchronization.kylothcloud;
 
+import com.google.gson.JsonArray;
 import com.google.gson.JsonDeserializationContext;
 import com.google.gson.JsonDeserializer;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParseException;
 import com.kyloth.serleena.common.GeoPoint;
-import com.kyloth.serleena.common.Quadrant;
 import com.kyloth.serleena.common.Region;
 
 import java.lang.reflect.Type;
+import java.util.ArrayList;
 
-public class EmergencyDataDeserializer implements JsonDeserializer<EmergencyDataEntity> {
+/**
+ * Created by tobia on 13/08/15.
+ */
+public class RasterDataEntityDeserializer implements JsonDeserializer<RasterDataEntity> {
     @Override
-    public EmergencyDataEntity deserialize(JsonElement json, Type typeOfEd, JsonDeserializationContext context) throws JsonParseException {
-        EmergencyDataEntity ede = new EmergencyDataEntity();
+    public RasterDataEntity deserialize(JsonElement json, Type typeOfR, JsonDeserializationContext context) throws JsonParseException {
+        RasterDataEntity res = new RasterDataEntity();
         JsonObject boundingRect = json.getAsJsonObject().get("boundingRect").getAsJsonObject();
-        JsonObject topLeft = boundingRect.getAsJsonObject("topLeft");
-        JsonObject bottomRight = boundingRect.getAsJsonObject("bottomRight");
-        GeoPoint tl = new GeoPoint(topLeft.getAsJsonObject().get("latitude").getAsDouble(), topLeft.get("longitude").getAsDouble());
-        GeoPoint br = new GeoPoint(bottomRight.getAsJsonObject().get("latitude").getAsDouble(), bottomRight.get("longitude").getAsDouble());
-        ede.rect = new Region(tl, br);
-        ede.name = json.getAsJsonObject().get("name").getAsString();
-        ede.number = json.getAsJsonObject().get("number").getAsString();
-        return ede;
+        final float nwLatitude = boundingRect.getAsJsonObject().get("topLeft").getAsJsonObject().get("latitude").getAsFloat();
+        final float nwLongitude = boundingRect.getAsJsonObject().get("topLeft").getAsJsonObject().get("longitude").getAsFloat();
+        final float seLatitude = boundingRect.getAsJsonObject().get("bottomRight").getAsJsonObject().get("latitude").getAsFloat();
+        final float seLongitude = boundingRect.getAsJsonObject().get("bottomRight").getAsJsonObject().get("longitude").getAsFloat();
+        res.boundingRect = new Region(new GeoPoint(nwLatitude, nwLongitude), new GeoPoint(seLatitude, seLongitude));
+        res.base64Raster = json.getAsJsonObject().get("image").getAsString();
+        return res;
     }
 }

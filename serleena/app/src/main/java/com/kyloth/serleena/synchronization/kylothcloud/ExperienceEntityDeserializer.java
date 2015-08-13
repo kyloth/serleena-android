@@ -89,10 +89,9 @@ class ExperienceEntityDeserializer implements JsonDeserializer<ExperienceEntity>
         Iterator<JsonElement> i = json.getAsJsonObject().get("rasterData").getAsJsonArray().iterator();
 
         ee.rasterData = new ArrayList<RasterDataEntity>();
+        RasterDataEntityDeserializer s = new RasterDataEntityDeserializer();
         while(i.hasNext()) {
-            // TODO
-            String a = i.next().getAsString();
-            ee.rasterData.add(new RasterDataEntity());
+            ee.rasterData.add(s.deserialize(i.next(), RasterDataEntity.class, context));
         }
 
         ee.userPoints = new ArrayList<UserPointEntity>();

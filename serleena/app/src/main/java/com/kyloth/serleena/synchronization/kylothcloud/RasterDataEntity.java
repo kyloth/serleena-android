@@ -40,8 +40,12 @@
 
 package com.kyloth.serleena.synchronization.kylothcloud;
 
+import com.kyloth.serleena.common.IRegion;
+
 /**
  * Struct rappresentante ua mappa raster
  */
 public class RasterDataEntity implements IKylothDataEntity {
+    public IRegion boundingRect;
+    public String base64Raster;
 }
