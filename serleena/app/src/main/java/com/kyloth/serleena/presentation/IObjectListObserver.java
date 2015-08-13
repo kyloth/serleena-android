@@ -37,11 +37,18 @@
  * Version   Programmer         Changes
  * 1.0.0     Filippo Sestini    Creazione file e scrittura javadoc
  */
+
 package com.kyloth.serleena.presentation;
 
 /**
  * Interfaccia di un oggetto in grado di ricevere eventi da una vista
- * che visualizza una lista di oggetti.
+ * che visualizza una lista di oggetti selezionabili dall'utente.
+ *
+ * Insieme a IObjectListView, realizza il pattern Observer.
+ *
+ * @use Viene implementato dall'activity SerleenaActivity, per essere notificata della selezione, da parte dell'utente, di una voce di menù nelle schermate del menù principale e della Schermata Esperienza.
+ * @author Filippo Sestini <sestini.filippo@gmail.com>
+ * @version 1.0.0
  */
 public interface IObjectListObserver {
 

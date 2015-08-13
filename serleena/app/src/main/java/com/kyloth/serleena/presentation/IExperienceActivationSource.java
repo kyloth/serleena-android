@@ -44,6 +44,9 @@ package com.kyloth.serleena.presentation;
  * Rappresenta l'interfaccia di un oggetto che solleva eventi riguardo
  * l'attivazione di Esperienze, segnalati a degli eventuali observer.
  *
+ * Realizza il pattern Observer insieme a IExperienceActivationObserver.
+ *
+ * @use Viene implementata da ExperienceSelectionFragment, che si occupa di gestire l'attivazione delle Esperienze e segnalarlo agli osservatori, quali MapPresenter e TrackSelectionPresenter, che implementano l'interfaccia IExperienceActivationObserver.
  * @author Filippo Sestini <sestini.filippo@gmail.com>
  * @version 1.0.0
  */

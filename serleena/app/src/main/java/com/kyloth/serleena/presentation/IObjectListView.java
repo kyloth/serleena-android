@@ -43,6 +43,9 @@ package com.kyloth.serleena.presentation;
 /**
  * Rappresenta l'interfaccia di una vista che mostra una lista di oggetti.
  *
+ * Insieme a IObjectListObserver, realizza il pattern Observer.
+ *
+ * @use Viene implementata dalle schermate Menu Principale e Esperienza, in quanto costituite da una lista di voci selezionabili dall'utente.
  * @author Filippo Sestini <sestini.filippo@gmail.com>
  * @version 1.0.0
  */

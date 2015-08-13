@@ -44,7 +44,7 @@ import com.kyloth.serleena.common.LocationNotAvailableException;
 import com.kyloth.serleena.common.NoActiveExperienceException;
 
 /**
- * IMapPresenter e' l'interfaccia del Presenter della schermata Mappa.
+ * Interfaccia del Presenter della schermata Mappa.
  *
  * @use Interfaccia utilizzata dalla vista MapFragment per mantenere un riferimento al Presenter associato, e comunicare con esso.
  * @author Tobia Tesan <tobia.tesan@gmail.com>

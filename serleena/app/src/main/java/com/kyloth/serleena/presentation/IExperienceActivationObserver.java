@@ -45,6 +45,10 @@ import com.kyloth.serleena.model.IExperience;
 /**
  * Rappresenta l'interfaccia di un oggetto in grado di ricevere notifiche
  * riguardo l'attivazione di Esperienze.
+ *
+ * @use Viene implementata da TrackSelectionPresenter e MapPresenter per essere norificati quando viene attivata una nuova Esperienza.
+ * @author Filippo Sestini <sestini.filippo@gmail.com>
+ * @version 1.0.0
  */
 public interface IExperienceActivationObserver {
 
