@@ -40,7 +40,10 @@
 
 package com.kyloth.serleena.model;
 
+import com.kyloth.serleena.common.GeoPoint;
+import com.kyloth.serleena.common.IQuadrant;
 import com.kyloth.serleena.common.UserPoint;
+import com.kyloth.serleena.persistence.NoSuchQuadrantException;
 
 /**
  * Interfaccia realizzata da oggetti che rappresentano un'Esperienza.
@@ -87,4 +90,6 @@ public interface IExperience {
      */
     String getName();
 
+    IQuadrant getQuadrant(GeoPoint location)
+            throws NoSuchQuadrantException;
 }

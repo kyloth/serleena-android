@@ -41,6 +41,8 @@
 
 package com.kyloth.serleena.persistence.sqlite;
 
+import com.kyloth.serleena.common.GeoPoint;
+import com.kyloth.serleena.common.IQuadrant;
 import com.kyloth.serleena.common.UserPoint;
 import com.kyloth.serleena.persistence.*;
 
@@ -114,6 +116,19 @@ class SQLiteDAOExperience implements IExperienceStorage
     @Override
     public String getName() {
         return name;
+    }
+
+    /**
+     * Implementa IExperienceStorage.getQuadrant().
+     *
+     * @param location Posizione geografica contenente il quadrante.
+     * @return Oggetto IQuadrant
+     * @throws NoSuchQuadrantException
+     */
+    @Override
+    public IQuadrant getQuadrant(GeoPoint location)
+            throws NoSuchQuadrantException {
+        return dataSource.getQuadrant(location, this);
     }
 
     /**
