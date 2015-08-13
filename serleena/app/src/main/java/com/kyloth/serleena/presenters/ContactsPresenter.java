@@ -176,15 +176,18 @@ public class ContactsPresenter implements IContactsPresenter,
         if (contacts == null)
             throw new IllegalArgumentException();
 
-        this.contacts = contacts;
-        index = 0;
+        if (!contacts.equals(this.contacts)) {
+            this.contacts = contacts;
+            index = 0;
 
-        if (contacts.size() == 0)
-            view.clearView();
-        else {
-            EmergencyContact c = contacts.get(0);
-            view.displayContact(c.name(), c.value());
+            if (contacts.size() == 0)
+                view.clearView();
+            else {
+                EmergencyContact c = contacts.get(index);
+                view.displayContact(c.name(), c.value());
+            }
         }
+
     }
 
 }
