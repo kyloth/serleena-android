@@ -54,6 +54,7 @@ import com.kyloth.serleena.view.fragments.ContactsFragment;
 import com.kyloth.serleena.view.fragments.ExperienceSelectionFragment;
 import com.kyloth.serleena.view.fragments.MapFragment;
 import com.kyloth.serleena.view.fragments.ObjectListFragment;
+import com.kyloth.serleena.view.fragments.QuitFragment;
 import com.kyloth.serleena.view.fragments.SyncFragment;
 import com.kyloth.serleena.view.fragments.TelemetryFragment;
 import com.kyloth.serleena.view.fragments.TrackFragment;
@@ -210,7 +211,7 @@ public class SerleenaActivityTest {
             ListAdapter listAdapter =
                     ((ObjectListFragment) fragment).getListAdapter();
 
-            if (listAdapter.getCount() != 5)
+            if (listAdapter.getCount() != 6)
                 return false;
 
             List<Fragment> fragmentsInMenu = new ArrayList<>();
@@ -233,6 +234,10 @@ public class SerleenaActivityTest {
                             fragmentsInMenu,
                             SyncFragment.class,
                             "Sincronizza") &&
+                    containsFragment(
+                            fragmentsInMenu,
+                            QuitFragment.class,
+                            "Esci") &&
                     containsFragment(
                             fragmentsInMenu,
                             ContactsFragment.class,
