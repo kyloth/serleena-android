@@ -143,6 +143,7 @@ public class SerleenaActivity extends Activity
             menuList.add(contactsFragment);
             menuList.add(compassFragment);
             menuList.add(syncFragment);
+            menuList.add(new QuitFragment());
 
             menuFragment.setList(menuList);
             menuFragment.attachObserver(this);
