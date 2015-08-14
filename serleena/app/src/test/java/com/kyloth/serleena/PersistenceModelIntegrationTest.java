@@ -40,7 +40,6 @@ import com.kyloth.serleena.model.IExperience;
 import com.kyloth.serleena.model.ITelemetry;
 import com.kyloth.serleena.model.ITrack;
 import com.kyloth.serleena.model.SerleenaDataSource;
-import com.kyloth.serleena.persistence.sqlite.IRasterSource;
 import com.kyloth.serleena.persistence.sqlite.SerleenaDatabase;
 import com.kyloth.serleena.persistence.sqlite.SerleenaSQLiteDataSource;
 

@@ -57,7 +57,6 @@ import java.util.Iterator;
 
 import com.kyloth.serleena.BuildConfig;
 import com.kyloth.serleena.TestDB;
-import com.kyloth.serleena.persistence.sqlite.IRasterSource;
 import com.kyloth.serleena.persistence.sqlite.SerleenaSQLiteDataSource;
 import com.kyloth.serleena.persistence.sqlite.SerleenaDatabase;
 import com.kyloth.serleena.common.UserPoint;

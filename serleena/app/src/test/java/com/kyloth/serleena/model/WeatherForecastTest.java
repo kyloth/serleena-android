@@ -48,7 +48,6 @@ import com.kyloth.serleena.BuildConfig;
 import com.kyloth.serleena.common.GeoPoint;
 import com.kyloth.serleena.common.NoSuchWeatherForecastException;
 import com.kyloth.serleena.persistence.WeatherForecastEnum;
-import com.kyloth.serleena.persistence.sqlite.IRasterSource;
 import com.kyloth.serleena.persistence.sqlite.SerleenaDatabase;
 import com.kyloth.serleena.persistence.sqlite.SerleenaSQLiteDataSource;
 import com.kyloth.serleena.persistence.sqlite.TestFixtures;
