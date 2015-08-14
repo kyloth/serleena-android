@@ -46,8 +46,11 @@ import static org.junit.Assert.*;
 import org.junit.Before;
 import static org.mockito.Mockito.*;
 
+import java.sql.SQLClientInfoException;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Iterator;
+import java.util.List;
 
 import com.kyloth.serleena.common.TelemetryEvent;
 
@@ -93,4 +96,26 @@ public class SQLiteDAOTelemetryTest {
         assertTrue(i_ret.next() == te1);
         assertTrue(i_ret.next() == te2);
     }
+
+    /**
+     * Verifica che il comportamento di equals risponda alla specifica.
+     */
+    @Test
+    public void equalsShouldBehaveAsExpected() {
+        List<TelemetryEvent> list1 = new ArrayList<>();
+        List<TelemetryEvent> list2 = new ArrayList<>();
+        List<TelemetryEvent> list3 = new ArrayList<>();
+        list3.add(mock(TelemetryEvent.class));
+        SQLiteDAOTelemetry t1 = new SQLiteDAOTelemetry(0, list1);
+        SQLiteDAOTelemetry t2 = new SQLiteDAOTelemetry(0, list2);
+        SQLiteDAOTelemetry t3 = new SQLiteDAOTelemetry(1, list1);
+        SQLiteDAOTelemetry t4 = new SQLiteDAOTelemetry(0, list3);
+
+        assertTrue(t1.equals(t2));
+        assertTrue(!t1.equals(t3));
+        assertTrue(!t1.equals(t4));
+        assertTrue(!t1.equals(null));
+        assertTrue(!t1.equals(new Object()));
+    }
+
 }
