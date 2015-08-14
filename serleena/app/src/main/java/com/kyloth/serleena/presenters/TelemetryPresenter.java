@@ -50,6 +50,7 @@ import com.kyloth.serleena.sensors.TrackAlreadyStartedException;
  *
  * @use Viene utilizzata solamente dall'Activity, che ne mantiene un riferimento. Il Presenter, alla creazione, si registra alla sua Vista, passando se stesso come parametro dietro interfaccia.
  * @field telMan : ITelemetryManager Gestore dei Tracciamenti dell'applicazione
+ * @field view : ITelemetryView Vista associata al presenter
  * @author Filippo Sestini <sestini.filippo@gmail.com>
  * @version 1.0.0
  */

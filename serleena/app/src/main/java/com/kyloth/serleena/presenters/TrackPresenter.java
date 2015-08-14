@@ -70,11 +70,10 @@ import com.kyloth.serleena.sensors.SensorNotAvailableException;
  *
  * @use Viene utilizzata solamente dall'Activity, che ne mantiene un riferimento. Il Presenter, alla creazione, si registra alla sua Vista, passando se stesso come parametro dietro interfaccia.
  * @field view : IWeatherView Vista associata al presenter
- * @field activity : ISerleenaActivity Activity a cui il presenter appartiene
  * @field activeTrack : ITrack Percorso attivo
- * @field telemetry : boolean Indicazione dello stato di abilitazione o disabilitazione del Tracciamento
- * @field lastKnownLocation : GeoPoint Ultima posizione geografica conosciuta dell'utente
- * @field telMan : ITelemetryManager Gestore dei Tracciamenti
+ * @field lastKnownLocation : GeoPoint Ultima posizione geografica dell'utente conosciuta
+ * @field lastKnownHeading : AzimuthMagneticNorth Ultimo valore di orientamento dell'utente conosciuto
+ * @field tc : ITrackCrossing Gestore dell'attraversamento del Percorso
  * @field locMan : ILocationManager Gestore del sensore di posizione
  * @field hMan : IHeadingManager Gestore del sensore di battito cardiaco
  * @author Filippo Sestini <sestini.filippo@gmail.com>
@@ -93,8 +92,6 @@ public class TrackPresenter implements ITrackPresenter, ITrackCrossingObserver,
     private final ILocationManager locMan;
     private final ITrackCrossing tc;
     private IHeadingManager hMan;
-
-    private boolean active;
 
     /**
      * Crea un nuovo oggetto TrackPresenter.

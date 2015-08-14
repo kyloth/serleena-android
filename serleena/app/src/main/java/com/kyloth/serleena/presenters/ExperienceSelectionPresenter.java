@@ -52,9 +52,11 @@ import java.util.List;
 /**
  * Concretizza IExperienceSelectionPresenter.
  *
- * @use Viene utilizzata solamente dall'Activity, che ne mantiene un riferimento. Il Presenter, alla creazione, si registra alla sua Vista, passando se stesso come parametro dietro interfaccia.
+ * @use Viene utilizzata solamente dall'Activity, che ne mantiene un riferimento. Il Presenter, alla creazione, si registra alla sua Vista, passando se stesso come parametro dietro interfaccia. Gli oggetti di tipo TrackSelectionPresenter e MapPresenter si registrano ai suoi eventi per ottenere informazioni sull'attivazione delle Esperienze.
  * @field activity : ISerleenaActivity Activity a cui il Presenter appartiene
  * @field view : IObjectListView Vista associata al Presenter
+ * @field observers : List<IExperienceActivationObserver> Lista di observers collegati al presenter in quanto IExperienceActivationSource
+ * @field selectedExperience : IExperience Esperienza selezionata e correntemente attiva
  * @author Filippo Sestini <sestini.filippo@gmail.com>
  * @version 1.0.0
  */

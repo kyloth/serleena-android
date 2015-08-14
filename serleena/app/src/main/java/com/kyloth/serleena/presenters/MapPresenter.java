@@ -69,6 +69,7 @@ import java.util.List;
  * @field activeExperience : IExperience Esperienza attiva
  * @field currentPosition : GeoPoint Posizione geografica attuale dell'utente
  * @field locMan : ILocationManager Gestore del sensore di posizione
+ * @field currentQuadrant : IQuadrant Quadrante attuale
  * @author Filippo Sestini <sestini.filippo@gmail.com>
  * @version 1.0.0
  */
@@ -207,7 +208,16 @@ public class MapPresenter
         this.activeExperience = experience;
     }
 
+    /**
+     * Segnala al presenter di mostrare sulla vista da esso gestita un elenco di
+     * Punti Utente.
+     *
+     * @param points Punti Utente da mostrare sulla vista associata.
+     */
     public void displayUserPoints(Iterable<UserPoint> points) {
+        if (points == null)
+            throw new IllegalArgumentException("Illegal null user points");
+
         if (currentQuadrant != null) {
             List<UserPoint> list = new ArrayList<>();
             for (UserPoint point : points)

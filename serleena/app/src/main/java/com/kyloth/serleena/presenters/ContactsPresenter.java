@@ -62,6 +62,7 @@ import java.util.ArrayList;
  * @field activity : ISerleenaActivity Activity a cui il Presenter appartiene
  * @field locMan : ILocationManager Gestore del sensore di posizione
  * @field contacts : DirectAccessList<EmergencyContact> Contatti da visualizzare sulla vista
+ * @field index : int Indice del contatto correntemente visualizzato
  * @author Filippo Sestini <sestini.filippo@gmail.com>
  * @version 1.0.0
  */
