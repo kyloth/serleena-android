@@ -48,6 +48,7 @@ import android.view.KeyEvent;
 import com.kyloth.serleena.R;
 import com.kyloth.serleena.model.*;
 import com.kyloth.serleena.persistence.IPersistenceDataSink;
+import com.kyloth.serleena.persistence.IPersistenceDataSource;
 import com.kyloth.serleena.persistence.sqlite.CachedSQLiteDataSource;
 import com.kyloth.serleena.persistence.sqlite.SerleenaDatabase;
 import com.kyloth.serleena.persistence.sqlite.SerleenaSQLiteDataSink;
@@ -55,8 +56,14 @@ import com.kyloth.serleena.persistence.sqlite.SerleenaSQLiteDataSource;
 import com.kyloth.serleena.presentation.*;
 import com.kyloth.serleena.presenters.*;
 import com.kyloth.serleena.sensors.*;
+import com.kyloth.serleena.synchronization.KylothCloudSynchronizer;
+import com.kyloth.serleena.synchronization.net.INetProxy;
+import com.kyloth.serleena.synchronization.net.SerleenaJSONNetProxy;
+import com.kyloth.serleena.synchronization.kylothcloud.LocalEnvKylothIdSource;
 import com.kyloth.serleena.view.fragments.*;
 
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.util.ArrayList;
 
 /**
@@ -101,10 +108,21 @@ public class SerleenaActivity extends Activity
         sensorManager = SerleenaSensorManager.getInstance(this);
 
         SerleenaDatabase serleenaDatabase = new SerleenaDatabase(this, 1);
-        dataSource = new SerleenaDataSource(
+        IPersistenceDataSource persistenceDataSource =
                 new CachedSQLiteDataSource(
-                        new SerleenaSQLiteDataSource(new SerleenaDatabase(this, 1))));
+                        new SerleenaSQLiteDataSource(new SerleenaDatabase(this, 1)));
+        dataSource = new SerleenaDataSource(persistenceDataSource);
         dataSink = new SerleenaSQLiteDataSink(this, serleenaDatabase);
+
+        try {
+            INetProxy netProxy = new SerleenaJSONNetProxy(
+                    new LocalEnvKylothIdSource(),
+                    new URL("http://api.kyloth.info/"));
+            KylothCloudSynchronizer.getInstance(
+                    netProxy, dataSink, persistenceDataSource);
+        } catch (MalformedURLException e) {
+            throw new RuntimeException();
+        }
 
         if (findViewById(R.id.main_container) != null) {
             if (savedInstanceState != null)
