@@ -28,12 +28,45 @@
 ///////////////////////////////////////////////////////////////////////////////
 
 
-package com.kyloth.serleena.persistence.sqlite;
+package com.kyloth.serleena.view.widgets;
 
-import android.graphics.Bitmap;
+import android.content.Context;
+import android.graphics.Canvas;
 
-import java.io.FileNotFoundException;
+import org.junit.Test;
 
-public interface IRasterSource {
-    Bitmap getRaster(String uuid) throws NoSuchRasterException;
+import static junit.framework.Assert.assertTrue;
+import static org.mockito.Matchers.any;
+import static org.mockito.Matchers.eq;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.verify;
+
+public class CompassWidgetTest {
+
+    /**
+     * Verifica che il widget ritorni un valore di orientamento come
+     * impostato precedentemente.
+     */
+    @Test
+    public void getOrientationShouldReturnCorrectOrientation() {
+        CompassWidget widget = new CompassWidget(mock(Context.class));
+        widget.setOrientation(5.0f);
+        assertTrue(5.0f == widget.getOrientation());
+    }
+
+    /**
+     * Verifica che il valore di orientamento impostato causi una rotazione
+     * dell'immagine visualizzata dal widget in base ai gradi impostati.
+     */
+    @Test
+    public void onDrawShouldRotateCanvas() {
+        CompassWidget widget = new CompassWidget(mock(Context.class));
+        widget.setOrientation(5.0f);
+        Canvas canvas = mock(Canvas.class);
+
+        widget.onDraw(canvas);
+        verify(canvas).rotate(
+                eq(-5.0f), any(Integer.class), any(Integer.class));
+    }
+
 }

@@ -183,36 +183,20 @@ public class MapWidget extends ImageView {
     private void drawUserPoint(UserPoint up, Canvas canvas) {
         Paint red = new Paint();
         red.setColor(Color.RED);
-        Paint black = new Paint();
-        black.setColor(Color.BLACK);
-        canvas.drawCircle(getLeft(up), getTop(up), 6, black);
-        canvas.drawCircle(getLeft(up), getTop(up), 5, red);
+        ScaledGeoPoint scaled = new ScaledGeoPoint(
+                getMeasuredWidth(), getMeasuredHeight(), quadrant, up);
+        canvas.drawCircle(scaled.x(), scaled.y(), 5, red);
     }
 
     private void drawUserPosition(GeoPoint gp, Canvas canvas) {
-        Paint white = new Paint();
-        white.setColor(Color.WHITE);
         Paint blue = new Paint();
         blue.setColor(Color.BLUE);
         Paint black = new Paint();
         black.setColor(Color.BLACK);
-        canvas.drawCircle(getLeft(gp), getTop(gp), 10, black);
-        canvas.drawCircle(getLeft(gp), getTop(gp), 9, white);
-        canvas.drawCircle(getLeft(gp), getTop(gp), 6, blue);
-    }
-
-    private float getTop(GeoPoint point) {
-        double topLat = quadrant.getNorthWestPoint().latitude();
-        double botLat = quadrant.getSouthEastPoint().latitude();
-        double height = getMeasuredHeight();
-        return (float)(height*(topLat - point.latitude()) / (topLat - botLat));
-    }
-
-    private float getLeft(GeoPoint point) {
-        double topLon = quadrant.getNorthWestPoint().longitude();
-        double botLon = quadrant.getSouthEastPoint().longitude();
-        double width = getMeasuredWidth();
-        return (float)(width * (topLon-point.longitude()) / (topLon - botLon));
+        ScaledGeoPoint scaled = new ScaledGeoPoint(
+                getMeasuredWidth(), getMeasuredHeight(), quadrant, gp);
+        canvas.drawCircle(scaled.x(), scaled.y(), 10, black);
+        canvas.drawCircle(scaled.x(), scaled.y(), 6, blue);
     }
 
 }
