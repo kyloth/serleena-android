@@ -29,7 +29,7 @@
 
 
 /**
- * Name: ExperienceSelectionFragmentIntegrationTest.java
+ * Name: ExperienceSelectionPresenterIntegrationTest.java
  * Package: com.kyloth.serleena.view.fragments
  * Author: Sebastiano Valle
  *
@@ -39,7 +39,7 @@
  *                           documentazione in Javadoc.
  */
 
-package com.kyloth.serleena.view.fragments;
+package com.kyloth.serleena.presenters;
 
 import android.app.Fragment;
 import android.app.ListFragment;
@@ -63,6 +63,7 @@ import com.kyloth.serleena.presenters.ExperienceSelectionPresenter;
 import com.kyloth.serleena.presenters.ISerleenaActivity;
 import com.kyloth.serleena.model.ISerleenaDataSource;
 import com.kyloth.serleena.presenters.TrackSelectionPresenter;
+import com.kyloth.serleena.view.fragments.ExperienceSelectionFragment;
 import com.jayway.awaitility.Awaitility;
 
 import junit.framework.Assert;
@@ -84,7 +85,7 @@ import static junit.framework.Assert.assertTrue;
 import static org.mockito.Mockito.mock;
 
 /**
- * Contiene i test di integrazione per la classe ExperienceSelectionFragment.
+ * Contiene i test di integrazione per la classe ExperienceSelectionFPresenter.
  *
  * @author Sebastiano Valle <valle.sebastiano93@gmail.com>
  * @version 1.0.0
@@ -93,7 +94,7 @@ import static org.mockito.Mockito.mock;
 @RunWith(RobolectricGradleTestRunner.class)
 @Config(constants = BuildConfig.class, emulateSdk = 19,
         manifest = "src/main/AndroidManifest.xml")
-public class ExperienceSelectionFragmentIntegrationTest {
+public class ExperienceSelectionPresenterIntegrationTest {
 
     /**
      * Activity che permette di fornire un datasource impostato ad hoc per i test.
