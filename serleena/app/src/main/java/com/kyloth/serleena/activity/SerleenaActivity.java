@@ -48,6 +48,7 @@ import android.view.KeyEvent;
 import com.kyloth.serleena.R;
 import com.kyloth.serleena.model.*;
 import com.kyloth.serleena.persistence.IPersistenceDataSink;
+import com.kyloth.serleena.persistence.IPersistenceDataSource;
 import com.kyloth.serleena.persistence.sqlite.CachedSQLiteDataSource;
 import com.kyloth.serleena.persistence.sqlite.SerleenaDatabase;
 import com.kyloth.serleena.persistence.sqlite.SerleenaSQLiteDataSink;
@@ -55,8 +56,14 @@ import com.kyloth.serleena.persistence.sqlite.SerleenaSQLiteDataSource;
 import com.kyloth.serleena.presentation.*;
 import com.kyloth.serleena.presenters.*;
 import com.kyloth.serleena.sensors.*;
+import com.kyloth.serleena.synchronization.KylothCloudSynchronizer;
+import com.kyloth.serleena.synchronization.net.INetProxy;
+import com.kyloth.serleena.synchronization.net.SerleenaJSONNetProxy;
+import com.kyloth.serleena.synchronization.kylothcloud.LocalEnvKylothIdSource;
 import com.kyloth.serleena.view.fragments.*;
 
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.util.ArrayList;
 
 /**
@@ -101,64 +108,28 @@ public class SerleenaActivity extends Activity
         sensorManager = SerleenaSensorManager.getInstance(this);
 
         SerleenaDatabase serleenaDatabase = new SerleenaDatabase(this, 1);
-        dataSource = new SerleenaDataSource(
+        IPersistenceDataSource persistenceDataSource =
                 new CachedSQLiteDataSource(
-                        new SerleenaSQLiteDataSource(new SerleenaDatabase(this, 1))));
+                        new SerleenaSQLiteDataSource(new SerleenaDatabase(this, 1)));
+        dataSource = new SerleenaDataSource(persistenceDataSource);
         dataSink = new SerleenaSQLiteDataSink(this, serleenaDatabase);
+
+        try {
+            INetProxy netProxy = new SerleenaJSONNetProxy(
+                    new LocalEnvKylothIdSource(),
+                    new URL("http://api.kyloth.info/"));
+            KylothCloudSynchronizer.getInstance(
+                    netProxy, dataSink, persistenceDataSource);
+        } catch (MalformedURLException e) {
+            throw new RuntimeException();
+        }
 
         if (findViewById(R.id.main_container) != null) {
             if (savedInstanceState != null)
                 return;
 
-            trackFragment = new TrackFragment();
-            compassFragment = new CompassFragment();
-            contactsFragment = new ContactsFragment();
-            experienceSelectionFragment = new ExperienceSelectionFragment();
-            trackSelectionFragment = new TrackSelectionFragment();
-            telemetryFragment = new TelemetryFragment();
-            weatherFragment = new WeatherFragment();
-            mapFragment = new MapFragment();
-            syncFragment = new SyncFragment();
-            experienceFragment = new ObjectListFragment() {
-                @Override
-                public String toString() {
-                    return "Esperienza";
-                }
-            };
-            menuFragment = new ObjectListFragment();
-
-            ArrayList<Object> expList = new ArrayList<>();
-            expList.add(telemetryFragment);
-            expList.add(mapFragment);
-            expList.add(experienceSelectionFragment);
-            expList.add(trackSelectionFragment);
-            expList.add(trackFragment);
-
-            experienceFragment.setList(expList);
-            experienceFragment.attachObserver(this);
-
-            ArrayList<Object> menuList = new ArrayList<>();
-            menuList.add(experienceFragment);
-            menuList.add(weatherFragment);
-            menuList.add(contactsFragment);
-            menuList.add(compassFragment);
-            menuList.add(syncFragment);
-            menuList.add(new QuitFragment());
-
-            menuFragment.setList(menuList);
-            menuFragment.attachObserver(this);
-
-            new CompassPresenter(compassFragment, this);
-            new ContactsPresenter(contactsFragment, this);
-            ExperienceSelectionPresenter esp =
-                    new ExperienceSelectionPresenter(
-                            experienceSelectionFragment, this);
-            new MapPresenter(mapFragment, this, esp);
-            new TrackSelectionPresenter(trackSelectionFragment, this, esp);
-            new WeatherPresenter(weatherFragment, this);
-            new TrackPresenter(trackFragment, this);
-            new TelemetryPresenter(telemetryFragment, this);
-            new SyncPresenter(syncFragment, this);
+            initFragments();
+            initPresenters();
 
             getFragmentManager().beginTransaction()
                     .add(R.id.main_container, menuFragment).commit();
@@ -226,6 +197,61 @@ public class SerleenaActivity extends Activity
         getFragmentManager().beginTransaction()
                 .replace(R.id.main_container, f).addToBackStack("fragment")
                 .commit();
+    }
+
+    private void initFragments() {
+        trackFragment = new TrackFragment();
+        compassFragment = new CompassFragment();
+        contactsFragment = new ContactsFragment();
+        experienceSelectionFragment = new ExperienceSelectionFragment();
+        trackSelectionFragment = new TrackSelectionFragment();
+        telemetryFragment = new TelemetryFragment();
+        weatherFragment = new WeatherFragment();
+        mapFragment = new MapFragment();
+        syncFragment = new SyncFragment();
+        experienceFragment = new ObjectListFragment() {
+            @Override
+            public String toString() {
+                return "Esperienza";
+            }
+        };
+        menuFragment = new ObjectListFragment();
+
+        ArrayList<Object> expList = new ArrayList<>();
+        expList.add(telemetryFragment);
+        expList.add(mapFragment);
+        expList.add(experienceSelectionFragment);
+        expList.add(trackSelectionFragment);
+        expList.add(trackFragment);
+
+        experienceFragment.setList(expList);
+        experienceFragment.attachObserver(this);
+
+        ArrayList<Object> menuList = new ArrayList<>();
+        menuList.add(experienceFragment);
+        menuList.add(weatherFragment);
+        menuList.add(contactsFragment);
+        menuList.add(compassFragment);
+        menuList.add(syncFragment);
+        menuList.add(new QuitFragment());
+
+        menuFragment.setList(menuList);
+        menuFragment.attachObserver(this);
+    }
+
+    private void initPresenters() {
+        new CompassPresenter(compassFragment, this);
+        new ContactsPresenter(contactsFragment, this);
+        ExperienceSelectionPresenter esp =
+                new ExperienceSelectionPresenter(
+                        experienceSelectionFragment, this);
+        new MapPresenter(mapFragment, this, esp);
+        new TrackSelectionPresenter(trackSelectionFragment, this, esp);
+        new WeatherPresenter(weatherFragment, this);
+        new TrackPresenter(trackFragment, this);
+        new TelemetryPresenter(telemetryFragment, this);
+        new SyncPresenter(syncFragment, this);
+
     }
 
 }
