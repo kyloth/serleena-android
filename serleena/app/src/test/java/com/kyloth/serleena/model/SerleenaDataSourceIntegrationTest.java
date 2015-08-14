@@ -56,7 +56,6 @@ import com.kyloth.serleena.common.NoSuchWeatherForecastException;
 import com.kyloth.serleena.common.Quadrant;
 import com.kyloth.serleena.persistence.NoSuchQuadrantException;
 import com.kyloth.serleena.persistence.WeatherForecastEnum;
-import com.kyloth.serleena.persistence.sqlite.IRasterSource;
 import com.kyloth.serleena.persistence.sqlite.SerleenaDatabase;
 import com.kyloth.serleena.persistence.sqlite.SerleenaSQLiteDataSource;
 import com.kyloth.serleena.persistence.sqlite.TestFixtures;
@@ -196,7 +195,6 @@ public class SerleenaDataSourceIntegrationTest {
         TestDB.checkPointEventQuery(db, 1, 200, 2, 0);
         TestDB.checkPointEventQuery(db, 2, 500, 1, 1);
         TestDB.checkPointEventQuery(db, 3, 600, 2, 1);
-        // TODO: Cos'e'? Come fa a funzionare?
 
         SerleenaDataSource dataSource = new SerleenaDataSource(
                 new SerleenaSQLiteDataSource(serleenaDb));
@@ -205,31 +203,8 @@ public class SerleenaDataSourceIntegrationTest {
         ITrack track2 = dataSource.getExperiences().iterator().next()
                 .getTracks().iterator().next();
         assertTrue(track1.equals(track2));
-    }
-
-    private void putQuadrant(double nwLat, double nwLon, double seLat,
-                             double seLon, String base64, long expId) {
-        ContentValues values = new ContentValues();
-        values.put("raster_nw_corner_latitude", nwLat);
-        values.put("raster_nw_corner_longitude", nwLon);
-        values.put("raster_se_corner_latitude", seLat);
-        values.put("raster_se_corner_longitude", seLon);
-        values.put("raster_base64", base64);
-        values.put("raster_experience", expId);
-        db.insertOrThrow(SerleenaDatabase.TABLE_RASTERS, null, values);
-    }
-
-    public boolean bitmapEquals(Bitmap first, Bitmap second) {
-        if (first.getWidth() == second.getWidth() &&
-                first.getHeight() == second.getHeight() &&
-                first.getConfig().equals(second.getConfig())) {
-            boolean b = true;
-            for (int i = 0; i < first.getWidth() && b; i++)
-                for (int j = 0; j < first.getHeight() && b; j++)
-                    b = b && (first.getPixel(i, j) == second.getPixel(i, j));
-            return b;
-        }
-        return false;
+        assertTrue(!track1.equals(null));
+        assertTrue(!track1.equals(new Object()));
     }
 
 }
