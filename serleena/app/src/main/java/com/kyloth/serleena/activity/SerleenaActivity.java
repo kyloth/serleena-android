@@ -110,55 +110,8 @@ public class SerleenaActivity extends Activity
             if (savedInstanceState != null)
                 return;
 
-            trackFragment = new TrackFragment();
-            compassFragment = new CompassFragment();
-            contactsFragment = new ContactsFragment();
-            experienceSelectionFragment = new ExperienceSelectionFragment();
-            trackSelectionFragment = new TrackSelectionFragment();
-            telemetryFragment = new TelemetryFragment();
-            weatherFragment = new WeatherFragment();
-            mapFragment = new MapFragment();
-            syncFragment = new SyncFragment();
-            experienceFragment = new ObjectListFragment() {
-                @Override
-                public String toString() {
-                    return "Esperienza";
-                }
-            };
-            menuFragment = new ObjectListFragment();
-
-            ArrayList<Object> expList = new ArrayList<>();
-            expList.add(telemetryFragment);
-            expList.add(mapFragment);
-            expList.add(experienceSelectionFragment);
-            expList.add(trackSelectionFragment);
-            expList.add(trackFragment);
-
-            experienceFragment.setList(expList);
-            experienceFragment.attachObserver(this);
-
-            ArrayList<Object> menuList = new ArrayList<>();
-            menuList.add(experienceFragment);
-            menuList.add(weatherFragment);
-            menuList.add(contactsFragment);
-            menuList.add(compassFragment);
-            menuList.add(syncFragment);
-            menuList.add(new QuitFragment());
-
-            menuFragment.setList(menuList);
-            menuFragment.attachObserver(this);
-
-            new CompassPresenter(compassFragment, this);
-            new ContactsPresenter(contactsFragment, this);
-            ExperienceSelectionPresenter esp =
-                    new ExperienceSelectionPresenter(
-                            experienceSelectionFragment, this);
-            new MapPresenter(mapFragment, this, esp);
-            new TrackSelectionPresenter(trackSelectionFragment, this, esp);
-            new WeatherPresenter(weatherFragment, this);
-            new TrackPresenter(trackFragment, this);
-            new TelemetryPresenter(telemetryFragment, this);
-            new SyncPresenter(syncFragment, this);
+            initFragments();
+            initPresenters();
 
             getFragmentManager().beginTransaction()
                     .add(R.id.main_container, menuFragment).commit();
@@ -226,6 +179,61 @@ public class SerleenaActivity extends Activity
         getFragmentManager().beginTransaction()
                 .replace(R.id.main_container, f).addToBackStack("fragment")
                 .commit();
+    }
+
+    private void initFragments() {
+        trackFragment = new TrackFragment();
+        compassFragment = new CompassFragment();
+        contactsFragment = new ContactsFragment();
+        experienceSelectionFragment = new ExperienceSelectionFragment();
+        trackSelectionFragment = new TrackSelectionFragment();
+        telemetryFragment = new TelemetryFragment();
+        weatherFragment = new WeatherFragment();
+        mapFragment = new MapFragment();
+        syncFragment = new SyncFragment();
+        experienceFragment = new ObjectListFragment() {
+            @Override
+            public String toString() {
+                return "Esperienza";
+            }
+        };
+        menuFragment = new ObjectListFragment();
+
+        ArrayList<Object> expList = new ArrayList<>();
+        expList.add(telemetryFragment);
+        expList.add(mapFragment);
+        expList.add(experienceSelectionFragment);
+        expList.add(trackSelectionFragment);
+        expList.add(trackFragment);
+
+        experienceFragment.setList(expList);
+        experienceFragment.attachObserver(this);
+
+        ArrayList<Object> menuList = new ArrayList<>();
+        menuList.add(experienceFragment);
+        menuList.add(weatherFragment);
+        menuList.add(contactsFragment);
+        menuList.add(compassFragment);
+        menuList.add(syncFragment);
+        menuList.add(new QuitFragment());
+
+        menuFragment.setList(menuList);
+        menuFragment.attachObserver(this);
+    }
+
+    private void initPresenters() {
+        new CompassPresenter(compassFragment, this);
+        new ContactsPresenter(contactsFragment, this);
+        ExperienceSelectionPresenter esp =
+                new ExperienceSelectionPresenter(
+                        experienceSelectionFragment, this);
+        new MapPresenter(mapFragment, this, esp);
+        new TrackSelectionPresenter(trackSelectionFragment, this, esp);
+        new WeatherPresenter(weatherFragment, this);
+        new TrackPresenter(trackFragment, this);
+        new TelemetryPresenter(telemetryFragment, this);
+        new SyncPresenter(syncFragment, this);
+
     }
 
 }
