@@ -36,7 +36,7 @@
  * History:
  * Version  Programmer       Changes
  * 1.0.0    Gabriele Pozzan  Creazione file scrittura
- *                                       codice e documentazione Javadoc
+ *                           codice e documentazione Javadoc
  */
 
 package com.kyloth.serleena.presenters;
@@ -48,6 +48,7 @@ import org.junit.runner.RunWith;
 import org.junit.rules.ExpectedException;
 import static org.mockito.Mockito.*;
 
+import org.mockito.ArgumentCaptor;
 import org.robolectric.RobolectricTestRunner;
 
 import com.kyloth.serleena.common.LocationNotAvailableException;
@@ -61,9 +62,11 @@ import com.kyloth.serleena.common.GeoPoint;
 import com.kyloth.serleena.sensors.ILocationManager;
 import com.kyloth.serleena.sensors.ISensorManager;
 
+import java.util.Iterator;
+
 
 /**
- * Contiene test per la classe MapPresenter.
+ * Contiene test di unità per la classe MapPresenter.
  *
  * @author Gabriele Pozzan <gabriele.pozzan@studenti.unipd.it>
  * @version 1.0.0
@@ -183,6 +186,10 @@ public class MapPresenterTest {
         mp.onLocationUpdate(null);
     }
 
+    /**
+     * Verifica che il metodo onLocationUpdate() causi un aggiornamento della
+     * vista con la posizione geografica aggiornata.
+     */
     @Test
     public void onLocationUpdateShouldUpdateView() {
         GeoPoint gp = mock(GeoPoint.class);
@@ -190,10 +197,23 @@ public class MapPresenterTest {
         verify(view).setUserLocation(gp);
     }
 
+    /**
+     * Verifica che il metodo newUserPoint() chiamato quando non vi è nessuna
+     * Esperienza attiva sollevi un'eccezione NoActiveExperienceException.
+     */
     @Test(expected = NoActiveExperienceException.class)
     public void newUserPointShouldThrowWhenNoActiveExperience()
             throws NoActiveExperienceException, LocationNotAvailableException {
         mp.newUserPoint();
+    }
+
+    /**
+     * Verifica che il metodo displayUserPoints() sollevi un'eccezione
+     * IllegalArgumentException se gli vengono passati parametri null.
+     */
+    @Test(expected = IllegalArgumentException.class)
+    public void displayUserPointsShouldThrowIfNullPoints() {
+        mp.displayUserPoints(null);
     }
 
 }
