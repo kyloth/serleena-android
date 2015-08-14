@@ -1,0 +1,25 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+             xmlns:tools="http://schemas.android.com/tools"
+             android:layout_width="match_parent"
+             android:layout_height="match_parent"
+             android:orientation="vertical"
+             tools:context="com.kyloth.serleena.view.fragments.QuitFragment">
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Sei sicuro di voler uscire?"
+        android:textAlignment="center"
+        android:gravity="center_horizontal"/>
+    <Button
+        android:id="@+id/yes_button"
+        android:layout_width="match_parent"
+        android:layout_height="40dp"
+        android:text="Sì"/>
+    <Button
+        android:id="@+id/no_button"
+        android:layout_width="match_parent"
+        android:layout_height="40dp"
+        android:text="No"/>
+
+</LinearLayout>
