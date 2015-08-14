@@ -33,20 +33,29 @@ package com.kyloth.serleena.view.widgets;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
+import android.graphics.Color;
+import android.graphics.Paint;
 
+import com.kyloth.serleena.BuildConfig;
 import com.kyloth.serleena.common.GeoPoint;
 import com.kyloth.serleena.common.IQuadrant;
 import com.kyloth.serleena.common.UserPoint;
 
 import org.junit.Before;
 import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.robolectric.RobolectricGradleTestRunner;
+import org.robolectric.RuntimeEnvironment;
+import org.robolectric.annotation.Config;
 
 import java.util.ArrayList;
 
 import static junit.framework.Assert.assertEquals;
 import static junit.framework.Assert.assertNotNull;
 import static junit.framework.Assert.assertNull;
+import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.verifyZeroInteractions;
 import static org.mockito.Mockito.when;
@@ -130,9 +139,11 @@ public class MapWidgetTest {
         verifyZeroInteractions(canvas);
 
         mapWidget.setUserPosition(mock(GeoPoint.class));
+        mapWidget.onDraw(canvas);
         verifyZeroInteractions(canvas);
 
         mapWidget.setUserPoints(new ArrayList<UserPoint>());
+        mapWidget.onDraw(canvas);
         verifyZeroInteractions(canvas);
     }
 
