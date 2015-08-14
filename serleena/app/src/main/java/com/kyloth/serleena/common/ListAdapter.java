@@ -95,9 +95,9 @@ public class ListAdapter<T> implements DirectAccessList<T> {
     /**
      * Ridefinisce Object.equals()
      *
-     * @return True se e solo se il metodo entrambi gli oggetti sono diversi da
-     * null, sono entrambi di tipo ListAdapter<T> e equals() chiamato sulle
-     * liste incapsulate dai due oggetti restituisce true. False altrimenti.
+     * @return True se entrambi gli oggetti sono non null, entrambi di tipo
+     * ListAdapter<T> e le liste incapsulate sono uguali secondo i rispettivi
+     * metodi equals(). False altrimenti.
      */
     @Override
     public boolean equals(Object other) {

@@ -108,6 +108,10 @@ public class AzimuthMagneticNorth {
 
     /**
      * Ridefinisce Object.equals().
+     *
+     * @return True se entrambi gli oggetti sono non null, di tipo
+     * AzimuthMagneticNorth, e rappresentano un valore di orientamento uguale.
+     * False altrimenti.
      */
     @Override
     public boolean equals(Object other) {

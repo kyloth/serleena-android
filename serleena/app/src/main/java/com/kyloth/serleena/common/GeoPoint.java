@@ -125,9 +125,9 @@ public class GeoPoint
      * Overriding del metodo equals() della superclasse Object.
      *
      * @param o Oggetto da comparare.
-     * @return  True se entrambi gli oggetti hanno tipo GeoPoint e si riferiscono
-     *          al medesimo punto geografico, quindi con uguali valori di
-     *          latitudine e longitudine. False altrimenti.
+     * @return  True se entrambi gli oggetti hanno tipo GeoPoint e si
+     * riferiscono al medesimo punto geografico, quindi con uguali valori di
+     * latitudine e longitudine. False altrimenti.
      */
     public boolean equals(Object o) {
         if (o != null && o instanceof GeoPoint) {

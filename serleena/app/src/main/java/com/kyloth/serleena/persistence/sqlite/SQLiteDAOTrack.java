@@ -138,9 +138,9 @@ class SQLiteDAOTrack implements ITrackStorage {
     /**
      * Ridefinisce Object.equals()
      *
-     * @return Restituisce true se e solo se i due oggetti sono non null, di tipo
-     * SQLiteDAOTrack, e il metodo equals restituisce true per gli id, l'elenco
-     * di checkpoint e il nome degli oggetti. False altrimenti
+     * @return Restituisce true se e solo se i due oggetti sono non null, di
+     * tipo SQLiteDAOTrack, e il metodo equals restituisce true per gli id,
+     * l'elenco di checkpoint e il nome degli oggetti. False altrimenti.
      */
     @Override
     public boolean equals(Object other) {

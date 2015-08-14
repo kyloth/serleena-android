@@ -49,7 +49,7 @@ import com.kyloth.serleena.persistence.ITelemetryStorage;
  * database SQLite.
  *
  * @use Istanze di SQLiteDAOTelemetry vengono create e utilizzate dal DAO SerleenaSQLiteDataSource, che le restituisce all'esterno dietro interfaccia ITelemetryStorage. Mantiene un riferimento al database di appartenenza attraverso ISerleenaSQLiteDataSource.
- * @field id : int ID della riga di database associata all'oggetto 
+ * @field id : int ID della riga di database associata all'oggetto
  * @field events : Iterable<TelemetryEvent> Eventi del Tracciamento rappresentato dall'istanza
  * @author Filippo Sestini <sestini.filippo@gmail.com>
  * @version 1.0.0
@@ -95,7 +95,7 @@ class SQLiteDAOTelemetry implements ITelemetryStorage {
      * Ridefinisce Object.equals()
      *
      * @return True se e solo se entrambi gli oggetti sono non null,
-     * di tipo SQLiteDAOTelemetry, e se il metodo equals restituisce true per
+     * di tipo SQLiteDAOTelemetry, e se il metodo equals() restituisce true per
      * gli id e l'elenco di eventi TelemetryEvent degli oggetti. False
      * altrimenti.
      */
