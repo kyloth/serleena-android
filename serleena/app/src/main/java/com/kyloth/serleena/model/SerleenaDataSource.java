@@ -48,6 +48,7 @@ import com.kyloth.serleena.common.IQuadrant;
 import com.kyloth.serleena.persistence.IExperienceStorage;
 import com.kyloth.serleena.persistence.IPersistenceDataSource;
 import com.kyloth.serleena.common.NoSuchWeatherForecastException;
+import com.kyloth.serleena.persistence.NoSuchQuadrantException;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -103,17 +104,6 @@ public class SerleenaDataSource implements ISerleenaDataSource {
     public IWeatherForecast getWeatherInfo(GeoPoint p, Date date)
             throws NoSuchWeatherForecastException {
         return new WeatherForecast(dataSource.getWeatherInfo(p, date));
-    }
-
-    /**
-     * Implementa ISerleenaDataSource.getQuadrant().
-     *
-     * @param point Posizione geografica il cui quadrante si vuole ottenere.
-     * @return Quadrante contenente il punto geografico specificato.
-     */
-    @Override
-    public IQuadrant getQuadrant(GeoPoint point) {
-        return dataSource.getQuadrant(point);
     }
 
     /**

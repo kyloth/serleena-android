@@ -40,14 +40,12 @@
  */
 package com.kyloth.serleena.activity;
 
-import android.app.AlarmManager;
 import android.app.Fragment;
 import android.os.Bundle;
 import android.app.Activity;
 import android.view.KeyEvent;
 
 import com.kyloth.serleena.R;
-import com.kyloth.serleena.common.GeoPoint;
 import com.kyloth.serleena.model.*;
 import com.kyloth.serleena.persistence.IPersistenceDataSink;
 import com.kyloth.serleena.persistence.sqlite.CachedSQLiteDataSource;
@@ -60,8 +58,6 @@ import com.kyloth.serleena.sensors.*;
 import com.kyloth.serleena.view.fragments.*;
 
 import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
 
 /**
  * Classe che implementa ISerleenaActivity.
@@ -107,7 +103,7 @@ public class SerleenaActivity extends Activity
         SerleenaDatabase serleenaDatabase = new SerleenaDatabase(this, 1);
         dataSource = new SerleenaDataSource(
                 new CachedSQLiteDataSource(
-                        new SerleenaSQLiteDataSource(this, serleenaDatabase)));
+                        new SerleenaSQLiteDataSource(new SerleenaDatabase(this, 1))));
         dataSink = new SerleenaSQLiteDataSink(this, serleenaDatabase);
 
         if (findViewById(R.id.main_container) != null) {
@@ -152,11 +148,11 @@ public class SerleenaActivity extends Activity
             menuFragment.attachObserver(this);
 
             new CompassPresenter(compassFragment, this);
-            new MapPresenter(mapFragment, this);
             new ContactsPresenter(contactsFragment, this);
             ExperienceSelectionPresenter esp =
                     new ExperienceSelectionPresenter(
                             experienceSelectionFragment, this);
+            new MapPresenter(mapFragment, this, esp);
             new TrackSelectionPresenter(trackSelectionFragment, this, esp);
             new WeatherPresenter(weatherFragment, this);
             new TrackPresenter(trackFragment, this);

@@ -28,55 +28,12 @@
 ///////////////////////////////////////////////////////////////////////////////
 
 
-/**
- * Name: Quadrant.java
- * Package: com.kyloth.serleena.common
- * Author: Tobia Tesan
- *
- * History:
- * Version  Programmer   Changes
- * 1.0.0    Tobia Tesan  Creazione file e scrittura di codice
- *                                          e documentazione in Javadoc.
- */
-package com.kyloth.serleena.common;
+package com.kyloth.serleena.persistence.sqlite;
 
 import android.graphics.Bitmap;
 
-/**
- * Classe che realizza l'interfaccia IQuadrant.
- *
- * @use Viene istanziato da persistence.sqlite.SerleenaSQLiteDataSource e restituito al chiamante dietro interfaccia.
- * @field northWest : GeoPoint Punto a nord-est del rettangolo che individua l'area del quadrante
- * @field southEast : GeoPoint Punto a sud-ovest del rettangolo che individua l'area del quadrante
- * @field raster : Bitmap Immagine raster della porzione di mappa associata al quadrante
- * @author Tobia Tesan <tobia.tesan@gmail.com>
- * @version 1.0
- */
-public class Quadrant extends Region implements IQuadrant {
-    private Bitmap raster;
+import java.io.FileNotFoundException;
 
-    /**
-     * Crea un oggetto Quadrant.
-     *
-     * @param northWest
-     * @param southEast
-     * @param raster L'immagine raster della mappa per il quadrante.
-     */
-    public Quadrant(GeoPoint northWest, GeoPoint southEast, Bitmap raster) {
-        super(northWest, southEast);
-
-        if (raster == null)
-            throw new IllegalArgumentException("Illegal null raster");
-
-        this.raster = raster;
-    }
-
-    /**
-     * Implementa IQuadrant.getRaster().
-     */
-    @Override
-    public Bitmap getRaster() {
-        return raster;
-    }
-
+public interface IRasterSource {
+    Bitmap getRaster(String uuid) throws NoSuchRasterException;
 }

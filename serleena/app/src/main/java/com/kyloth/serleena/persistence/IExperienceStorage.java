@@ -41,6 +41,8 @@
 
 package com.kyloth.serleena.persistence;
 
+import com.kyloth.serleena.common.GeoPoint;
+import com.kyloth.serleena.common.IQuadrant;
 import com.kyloth.serleena.common.UserPoint;
 
 /**
@@ -80,4 +82,6 @@ public interface IExperienceStorage {
      */
     String getName();
 
+    IQuadrant getQuadrant(GeoPoint location)
+            throws NoSuchQuadrantException;
 }

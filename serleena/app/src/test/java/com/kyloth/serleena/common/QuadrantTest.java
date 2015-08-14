@@ -41,97 +41,109 @@
 
 package com.kyloth.serleena.common;
 
+import android.graphics.Bitmap;
+
 import org.junit.Before;
 import org.junit.Test;
 
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.assertFalse;
+import static org.mockito.Mockito.mock;
 
 public class QuadrantTest {
-	/**
-	 * Verifica che contains dia risultato positivo per un punto
-	 * effettivamente contenuto nel quadrante.
-	 */
-	@Test
-	public void testContains() {
-		GeoPoint ne = new GeoPoint(2, 0);
-		GeoPoint p = new GeoPoint(1, 1);
-		GeoPoint sw = new GeoPoint(0, 2);
-		Quadrant q = new Quadrant(ne, sw, null);
-		assertTrue(q.contains(p));
-	}
+    /**
+     * Verifica che contains dia risultato positivo per un punto
+     * effettivamente contenuto nel quadrante.
+     */
+    @Test
+    public void testContains() {
+        GeoPoint ne = new GeoPoint(2, 0);
+        GeoPoint p = new GeoPoint(1, 1);
+        GeoPoint sw = new GeoPoint(0, 2);
+        Quadrant q = new Quadrant(ne, sw, mock(Bitmap.class));
+        assertTrue(q.contains(p));
+    }
 
-	/**
-	 * Verifica che contains dia risultato positivo per l'estremita'
-	 * NE del quadrante.
-	 */
-	@Test
-	public void testContainsNEEdge() {
-		GeoPoint ne = new GeoPoint(0, 0);
-		GeoPoint sw = new GeoPoint(-2, 2);
-		Quadrant q = new Quadrant(ne, sw, null);
-		assertTrue(q.contains(ne));
-	}
+    /**
+     * Verifica che contains dia risultato positivo per l'estremita'
+     * NE del quadrante.
+     */
+    @Test
+    public void testContainsNEEdge() {
+        GeoPoint ne = new GeoPoint(0, 0);
+        GeoPoint sw = new GeoPoint(-2, 2);
+        Quadrant q = new Quadrant(ne, sw, mock(Bitmap.class));
+        assertTrue(q.contains(ne));
+    }
 
-	/**
-	 * Verifica che contains dia risultato positivo per l'estremita'
-	 * SW del quadrante.
-	 */
-	@Test
-	public void testContainsSWEdge() {
-		GeoPoint ne = new GeoPoint(0, 0);
-		GeoPoint sw = new GeoPoint(-2, 2);
-		Quadrant q = new Quadrant(ne, sw, null);
-		assertTrue(q.contains(sw));
-	}
+    /**
+     * Verifica che contains dia risultato positivo per l'estremita'
+     * SW del quadrante.
+     */
+    @Test
+    public void testContainsSWEdge() {
+        GeoPoint ne = new GeoPoint(0, 0);
+        GeoPoint sw = new GeoPoint(-2, 2);
+        Quadrant q = new Quadrant(ne, sw, mock(Bitmap.class));
+        assertTrue(q.contains(sw));
+    }
 
-	/**
-	 * Verifica che contains dia risultato negativo per un
-	 * punto non contenuto nel quadrante.
-	 */
-	@Test
-	public void testDoesNotContain() {
-		GeoPoint ne = new GeoPoint(0, 0);
-		GeoPoint p = new GeoPoint(3, 3);
-		GeoPoint sw = new GeoPoint(-2, 2);
-		Quadrant q = new Quadrant(ne, sw, null);
-		assertFalse(q.contains(p));
-	}
+    /**
+     * Verifica che contains dia risultato negativo per un
+     * punto non contenuto nel quadrante.
+     */
+    @Test
+    public void testDoesNotContain() {
+        GeoPoint ne = new GeoPoint(0, 0);
+        GeoPoint p = new GeoPoint(3, 3);
+        GeoPoint sw = new GeoPoint(-2, 2);
+        Quadrant q = new Quadrant(ne, sw, mock(Bitmap.class));
+        assertFalse(q.contains(p));
+    }
 
-	/**
-	 * Verifica che contains sollevi eccezione IllegalArgumentException
-	 * se gli viene passato null.
-	 */
-	@Test(expected = IllegalArgumentException.class)
-	public void testNoNullContainsArg() {
-		GeoPoint ne = new GeoPoint(0, 0);
-		GeoPoint sw = new GeoPoint(-2, 2);
-		Quadrant q = new Quadrant(ne, sw, null);
-		assertTrue(q.contains(null));
-	}
+    /**
+     * Verifica che contains sollevi eccezione IllegalArgumentException
+     * se gli viene passato null.
+     */
+    @Test(expected = IllegalArgumentException.class)
+    public void testNoNullContainsArg() {
+        GeoPoint ne = new GeoPoint(0, 0);
+        GeoPoint sw = new GeoPoint(-2, 2);
+        Quadrant q = new Quadrant(ne, sw, mock(Bitmap.class));
+        assertTrue(q.contains(null));
+    }
 
-	/**
-	 * Verifica che il costruttore di Quadrant sollevi
-	 * IllegalArgumentException se riceve un'estremita' null.
-	 */
-	@Test(expected = IllegalArgumentException.class)
-	public void testNoNullFirstArg() {
-		GeoPoint p = new GeoPoint(1, 1);
-		GeoPoint sw = new GeoPoint(-2, 2);
-		Quadrant q = new Quadrant(null, sw, null);
-		assertTrue(q.contains(p));
-	}
+    /**
+     * Verifica che il costruttore di Quadrant sollevi
+     * IllegalArgumentException se riceve un'estremita' null.
+     */
+    @Test(expected = IllegalArgumentException.class)
+    public void testNoNullFirstArg() {
+        GeoPoint p = new GeoPoint(1, 1);
+        GeoPoint sw = new GeoPoint(-2, 2);
+        Quadrant q = new Quadrant(null, sw, mock(Bitmap.class));
+        assertTrue(q.contains(p));
+    }
 
-	/**
-	 * Verifica che il costruttore di Quadrant sollevi
-	 * IllegalArgumentException se riceve un'estremita' null.
-	 */
-	@Test(expected = IllegalArgumentException.class)
-	public void testNoNullSecondArg() {
-		GeoPoint ne = new GeoPoint(0, 0);
-		GeoPoint p = new GeoPoint(1, 1);
-		Quadrant q = new Quadrant(ne, null, null);
-		assertTrue(q.contains(p));
-	}
+    /**
+     * Verifica che il costruttore di Quadrant sollevi
+     * IllegalArgumentException se riceve un'estremita' null.
+     */
+    @Test(expected = IllegalArgumentException.class)
+    public void testNoNullSecondArg() {
+        GeoPoint ne = new GeoPoint(0, 0);
+        GeoPoint p = new GeoPoint(1, 1);
+        Quadrant q = new Quadrant(ne, null, mock(Bitmap.class));
+        assertTrue(q.contains(p));
+    }
+
+    /**
+     * Verifica che il costruttore sollevi un'eccezione
+     * IllegalArgumentException se viene passata una bitmap null.
+     */
+    @Test(expected = IllegalArgumentException.class)
+    public void ctorShouldThrowIfNullBitmap() {
+        new Quadrant(mock(GeoPoint.class), mock(GeoPoint.class), null);
+    }
 
 }

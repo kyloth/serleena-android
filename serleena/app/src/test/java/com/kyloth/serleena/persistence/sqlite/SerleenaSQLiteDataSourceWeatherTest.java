@@ -51,6 +51,7 @@ import java.util.Calendar;
 import java.util.GregorianCalendar;
 
 import static junit.framework.Assert.assertTrue;
+import static org.mockito.Mockito.mock;
 
 @RunWith(RobolectricGradleTestRunner.class)
 @Config(constants = BuildConfig.class, emulateSdk = 19)
@@ -148,7 +149,7 @@ public class SerleenaSQLiteDataSourceWeatherTest {
     public void setup() throws URISyntaxException {
         SerleenaDatabase sh = new SerleenaDatabase(RuntimeEnvironment.application, null, null, 1);
         db = sh.getWritableDatabase();
-        sds = new SerleenaSQLiteDataSource(RuntimeEnvironment.application, sh);
+        sds = new SerleenaSQLiteDataSource(sh);
         ContentValues values = TestFixtures.pack(TestFixtures.WEATHER_FIXTURE);
         db.insertOrThrow(SerleenaDatabase.TABLE_WEATHER_FORECASTS, null, values);
     }

@@ -6,8 +6,8 @@
              android:padding="0dp">
 
     <com.kyloth.serleena.view.widgets.MapWidget
-        android:layout_width="240px"
-        android:layout_height="240px"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
         android:id="@+id/map_widget"
         android:layout_margin="0dp"/>
 

@@ -39,17 +39,25 @@
  */
 package com.kyloth.serleena.persistence.sqlite;
 
+import android.app.Application;
 import android.content.ContentValues;
+import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.util.Base64;
 
 import com.kyloth.serleena.BuildConfig;
+import com.kyloth.serleena.TestDB;
 import com.kyloth.serleena.common.EmergencyContact;
 import com.kyloth.serleena.common.GeoPoint;
 import com.kyloth.serleena.common.IQuadrant;
 import com.kyloth.serleena.common.Quadrant;
+import com.kyloth.serleena.common.Region;
 import com.kyloth.serleena.common.TelemetryEvent;
 import com.kyloth.serleena.persistence.IExperienceStorage;
 import com.kyloth.serleena.persistence.ITelemetryStorage;
+import com.kyloth.serleena.persistence.NoSuchQuadrantException;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -58,12 +66,16 @@ import org.robolectric.RobolectricGradleTestRunner;
 import org.robolectric.RuntimeEnvironment;
 import org.robolectric.annotation.Config;
 
+import java.io.File;
 import java.net.URISyntaxException;
 import java.util.GregorianCalendar;
 
 import static com.kyloth.serleena.persistence.sqlite.SerleenaDatabaseTestUtils.makeExperience;
 import static com.kyloth.serleena.persistence.sqlite.SerleenaDatabaseTestUtils.makeTrack;
+import static junit.framework.Assert.assertEquals;
 import static junit.framework.Assert.assertTrue;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
 
 /**
  * Suite di test per SerleenaSQLiteDataSource
@@ -75,136 +87,97 @@ import static junit.framework.Assert.assertTrue;
 @Config(constants = BuildConfig.class, emulateSdk = 19)
 public class SerleenaSQLiteDataSourceTest {
 
-    SerleenaSQLiteDataSource sds;
-    SQLiteDatabase db;
+    private SerleenaSQLiteDataSource sds;
+    private SQLiteDatabase db;
+    private Bitmap testBitmap;
+    private String testBase64;
 
-    /**
-     * Verifica che il path dei raster sia != null, != ""
-     */
-    @Test
-    public void testGetRasterPathWellFormed() {
-        assertTrue(sds.getRasterPath(0, 0) != null);
-        assertTrue(sds.getRasterPath(0, 0).length() != 0);
+    @Before
+    public void setup() throws URISyntaxException {
+        Application app = RuntimeEnvironment.application;
+        SerleenaDatabase sh = new SerleenaDatabase(app, null, null, 1);
+        db = sh.getWritableDatabase();
+        sds = new SerleenaSQLiteDataSource(sh);
+
+        testBase64 = "asdfghjklqwertyuiopzxcvbnm";
+        byte[] data = Base64.decode(testBase64, Base64.DEFAULT);
+        testBitmap = BitmapFactory.decodeByteArray(data, 0, data.length);
     }
 
     /**
-     * Verifica che il path dei raster cambi al cambiare di I,J
+     * Verifica che il costruttore sollevi un'eccezione
+     * IllegalArgumentException se vengono passati parametri null.
      */
-    @Test
-    public void testGetRasterPathAreDifferent() {
-        assertTrue(sds.getRasterPath(0, 0) != sds.getRasterPath(1, 1));
-    }
-
-    /**
-     * Controlla che l'output di getIJ sia all'interno del range corretto.
-     */
-    @Test
-    public void testGetIJRange() {
-        for (int x = -180; x < 180; x++) {
-            for (int y = -90; y < 90; y++) {
-                int[] ij = sds.getIJ(new GeoPoint(y, x));
-                assertTrue(0 <= ij[0]);
-                assertTrue(0 <= ij[1]);
-                assertTrue(ij[0] <= SerleenaSQLiteDataSource.TOT_LAT_QUADRANTS);
-                assertTrue(ij[1] <= SerleenaSQLiteDataSource.TOT_LONG_QUADRANTS);
-            }
-        }
-    }
-
-    /**
-     * Controlla che l'output di getIJ sia corretto alle estremita' del range
-     */
-    @Test
-    public void testGetIJTopBottom() {
-        int[] ij = sds.getIJ(new GeoPoint(+90, -180));
-        assertTrue(0 == ij[0]);
-        assertTrue(0 == ij[1]);
-        GeoPoint p = new GeoPoint(-90.0 + SerleenaSQLiteDataSource.QUADRANT_LATSIZE / 2.0,
-                                  180.0 - SerleenaSQLiteDataSource.QUADRANT_LONGSIZE / 2.0);
-        ij = sds.getIJ(p);
-        assertTrue(ij[0] == SerleenaSQLiteDataSource.TOT_LAT_QUADRANTS - 1);
-        assertTrue(ij[1] == SerleenaSQLiteDataSource.TOT_LONG_QUADRANTS - 1);
-
-        GeoPoint p2 = new GeoPoint(-90.0,
-                180.0 - SerleenaSQLiteDataSource.QUADRANT_LONGSIZE / 2.0);
-        ij = sds.getIJ(p2);
-        assertTrue(ij[0] == SerleenaSQLiteDataSource.TOT_LAT_QUADRANTS - 1);
-        assertTrue(ij[1] == SerleenaSQLiteDataSource.TOT_LONG_QUADRANTS - 1);
+    @Test(expected = IllegalArgumentException.class)
+    public void ctorShouldThrowIfArgumentIsNull() {
+        new SerleenaSQLiteDataSource(null);
     }
 
     /**
      * Controlla che per un dato punto il quadrante sia quello atteso.
      */
     @Test
-    public void testGetQuadrantMidPoint() {
-        GeoPoint p = new GeoPoint(+90.0 - SerleenaSQLiteDataSource.QUADRANT_LATSIZE / 2.0,
-                                  -180.0 + SerleenaSQLiteDataSource.QUADRANT_LONGSIZE / 2.0);
-        Quadrant q = (Quadrant) sds.getQuadrant(p);
-        GeoPoint first = q.getNorthWestPoint();
-        GeoPoint second = q.getSouthEastPoint();
-        assertTrue(first.latitude() == +90.0);
-        assertTrue(first.longitude() == -180.0);
-        assertTrue(second.latitude() == +90.0 - SerleenaSQLiteDataSource.QUADRANT_LATSIZE);
-        assertTrue(second.longitude() == -180.0 + SerleenaSQLiteDataSource.QUADRANT_LONGSIZE);
+    public void testGetQuadrant() throws NoSuchQuadrantException {
+        ContentValues exp = new ContentValues();
+        exp.put("experience_name", "experience");
+        long expId =
+                db.insertOrThrow(SerleenaDatabase.TABLE_EXPERIENCES, null, exp);
+        SQLiteDAOExperience expp = new SQLiteDAOExperience(
+                "experience", (int)expId, sds);
+
+        TestDB.quadrantQuery(db, 2, 0, 0, 2, testBase64, expId);
+
+        IQuadrant quadrant = sds.getQuadrant(new GeoPoint(1, 1), expp);
+        assertEquals(2.0, quadrant.getNorthWestPoint().latitude());
+        assertEquals(0.0, quadrant.getNorthWestPoint().longitude());
+        assertEquals(0.0, quadrant.getSouthEastPoint().latitude());
+        assertEquals(2.0, quadrant.getSouthEastPoint().longitude());
+        assertTrue(TestDB.bitmapEquals(testBitmap, quadrant.getRaster()));
     }
 
     /**
-     * Controlla che per un dato punto al margine di un quadrante il quadrante sia
-     * uno tra i due possibili corretti.
+     * Verifica che la richiesta di un quadrante non presente nel database
+     * sollevi un'eccezione NoSuchQuadrantException.
      */
-    @Test
-    public void testGetQuadrantEdgePoint() {
-        GeoPoint p = new GeoPoint(+90.0 - SerleenaSQLiteDataSource.QUADRANT_LATSIZE,
-                                  -180.0 + SerleenaSQLiteDataSource.QUADRANT_LONGSIZE);
-        Quadrant q = (Quadrant) sds.getQuadrant(p);
-        GeoPoint first = q.getNorthWestPoint();
-        GeoPoint second = q.getSouthEastPoint();
-        assertTrue(first.latitude() == +90.0
-                   && second.latitude() == +90.0 - SerleenaSQLiteDataSource.QUADRANT_LATSIZE ||
-                   first.latitude() == +90.0 - SerleenaSQLiteDataSource.QUADRANT_LATSIZE
-                   && second.latitude() == +90.0 - 2 * SerleenaSQLiteDataSource.QUADRANT_LATSIZE);
-        assertTrue(first.longitude() == -180.0
-                   && second.longitude() == -180.0 + SerleenaSQLiteDataSource.QUADRANT_LONGSIZE ||
-                   first.longitude() == -180.0 + SerleenaSQLiteDataSource.QUADRANT_LONGSIZE
-                   && second.longitude() == -180.0 + 2 * SerleenaSQLiteDataSource.QUADRANT_LONGSIZE);
+    @Test(expected = NoSuchQuadrantException.class)
+    public void queryingNonexistentQuadrantShouldThrow()
+            throws NoSuchQuadrantException {
+        ContentValues exp = new ContentValues();
+        exp.put("experience_name", "experience");
+        long expId =
+                db.insertOrThrow(SerleenaDatabase.TABLE_EXPERIENCES, null, exp);
+        SQLiteDAOExperience expp = new SQLiteDAOExperience(
+                "experience", (int)expId, sds);
+        sds.getQuadrant(new GeoPoint(1, 1), expp);
     }
 
     /**
-     * Controlla che l'output di getQuadrant sia all'interno del range corretto.
+     * Controlla che per un dato punto al margine di un quadrante il quadrante
+     * sia uno tra i due possibili corretti.
      */
     @Test
-    public void testGetQuadrantRange() {
-        for (int x = -180; x < 180; x++) {
-            for (int y = -90; y <= 90; y++) {
-                IQuadrant quad = sds.getQuadrant(new GeoPoint(y, x));
-                assertTrue(quad.getNorthWestPoint().latitude() >= -90);
-                assertTrue(quad.getNorthWestPoint().latitude() <= +90);
-                assertTrue(quad.getNorthWestPoint().longitude() >= -180);
-                assertTrue(quad.getNorthWestPoint().longitude() < 180);
-                assertTrue(quad.getSouthEastPoint().latitude() >= -90);
-                assertTrue(quad.getSouthEastPoint().latitude() <= +90);
-                assertTrue(quad.getSouthEastPoint().longitude() >= -180);
-                assertTrue(quad.getSouthEastPoint().longitude() < 180);
-            }
-        }
-    }
-
-    /**
-     * Controlla che l'output di getQuadrant abbia n<=s e w<=e
-     */
-    @Test
-    public void testGetQuadrantSWGreaterThanNE() {
-        for (int x = -180; x < 180; x++) {
-            for (int y = -90; y <= 90; y++) {
-                IQuadrant quad = sds.getQuadrant(new GeoPoint(y, x));
-                // Polo nord = 90' latitudine; Polo sud = -90'
-                assertTrue(quad.getNorthWestPoint().latitude() > quad.getSouthEastPoint().latitude());
-                assertTrue(quad.getNorthWestPoint().longitude() < quad.getSouthEastPoint().longitude() ||
-                                quad.getNorthWestPoint().longitude() > quad.getSouthEastPoint().longitude() &&
-                                quad.getNorthWestPoint().longitude() < quad.getSouthEastPoint().longitude() + 360.0
-                );
-            }
-        }
+    public void testGetQuadrantEdgePoint()
+            throws NoSuchQuadrantException {
+        ContentValues exp = new ContentValues();
+        exp.put("experience_name", "experience");
+        long expId =
+                db.insertOrThrow(SerleenaDatabase.TABLE_EXPERIENCES, null, exp);
+        SQLiteDAOExperience expp = new SQLiteDAOExperience(
+                "experience", (int)expId, sds);
+        TestDB.quadrantQuery(db, 5, 0, 0, 5, "asd", expId);
+        TestDB.quadrantQuery(db, 10, 5, 5, 10, "lol", expId);
+        TestDB.quadrantQuery(db, 10, 0, 5, 5, "qwe", expId);
+        TestDB.quadrantQuery(db, 5, 5, 0, 10, "rty", expId);
+        IQuadrant quadrant = sds.getQuadrant(new GeoPoint(5, 5), expp);
+        assertTrue(
+                TestDB.quadrantHasRegion(quadrant,
+                        new Region(new GeoPoint(5, 0), new GeoPoint(0, 5))) ||
+                TestDB.quadrantHasRegion(quadrant,
+                        new Region(new GeoPoint(10, 5), new GeoPoint(5, 10))) ||
+                TestDB.quadrantHasRegion(quadrant,
+                        new Region(new GeoPoint(10, 0), new GeoPoint(5, 5))) ||
+                TestDB.quadrantHasRegion(quadrant,
+                        new Region(new GeoPoint(5, 5), new GeoPoint(0, 10))));
     }
 
     /**
@@ -470,11 +443,5 @@ public class SerleenaSQLiteDataSourceTest {
         assertTrue(i == 0);
     }
 
-    @Before
-    public void setup() throws URISyntaxException {
-        SerleenaDatabase sh = new SerleenaDatabase(RuntimeEnvironment.application, null, null, 1);
-        db = sh.getWritableDatabase();
-        sds = new SerleenaSQLiteDataSource(RuntimeEnvironment.application, sh);
-    }
 }
 

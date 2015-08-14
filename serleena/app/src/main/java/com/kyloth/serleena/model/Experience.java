@@ -41,9 +41,12 @@
 
 package com.kyloth.serleena.model;
 
+import com.kyloth.serleena.common.GeoPoint;
+import com.kyloth.serleena.common.IQuadrant;
 import com.kyloth.serleena.common.UserPoint;
 import com.kyloth.serleena.persistence.IExperienceStorage;
 import com.kyloth.serleena.persistence.ITrackStorage;
+import com.kyloth.serleena.persistence.NoSuchQuadrantException;
 
 import java.util.ArrayList;
 
@@ -114,6 +117,19 @@ final class Experience implements IExperience {
     @Override
     public String getName() {
         return storage.getName();
+    }
+
+    /**
+     * Implementa IExperience.getQuadrant().
+     *
+     * @param location Posizione geografica contenuta dal quadrante.
+     * @return Oggetto IQuadrant
+     * @throws NoSuchQuadrantException
+     */
+    @Override
+    public IQuadrant getQuadrant(GeoPoint location)
+            throws NoSuchQuadrantException {
+        return storage.getQuadrant(location);
     }
 
     /**

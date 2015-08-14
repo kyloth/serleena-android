@@ -38,6 +38,7 @@ import android.database.sqlite.SQLiteOpenHelper;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonParser;
 import com.kyloth.serleena.persistence.IExperienceStorage;
+import com.kyloth.serleena.persistence.sqlite.IRasterSource;
 import com.kyloth.serleena.persistence.sqlite.SerleenaDatabase;
 import com.kyloth.serleena.persistence.sqlite.SerleenaSQLiteDataSink;
 import com.kyloth.serleena.persistence.sqlite.SerleenaSQLiteDataSource;
@@ -74,6 +75,7 @@ import javax.servlet.http.HttpServletResponse;
 
 import static junit.framework.Assert.assertTrue;
 import static org.junit.Assert.assertEquals;
+import static org.mockito.Mockito.mock;
 
 
 /**
@@ -215,7 +217,7 @@ public class DummyServerIntegrationTest {
         JSON_OUTPUT = "{\"data\":[{\"experience\":\"Experience_1\"}]}";
         url = new URL("http://localhost:8081");
         sink = new SerleenaSQLiteDataSink(RuntimeEnvironment.application, sh);
-        source = new SerleenaSQLiteDataSource(RuntimeEnvironment.application, sh);
+        source = new SerleenaSQLiteDataSource(sh);
 
     }
 

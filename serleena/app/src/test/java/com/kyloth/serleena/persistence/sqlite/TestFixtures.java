@@ -232,4 +232,29 @@ public class TestFixtures {
                 tmp.put("track_experience", EXPERIENCES_FIXTURE_EXPERIENCE_2_ID);
                 EXPERIENCES_FIXTURE_EXPERIENCE_2_TRACK_1 = Collections.unmodifiableMap(tmp);
             };
+
+        ////////////////////////////////////////
+        // TODO: this must be improved
+        ///////////////////////////////////////
+
+        public static final float raster_nw_corner_latitude = 5;
+        public static final float raster_nw_corner_longitude = 0;
+        public static final float raster_se_corner_latitude = 0;
+        public static final float raster_se_corner_longitude = 5;
+        public static final String raster_base64 = "iVBORw0KGgoAAAANSUhEUgAAAPAAAADwCAIAAACxN37FAAABJ0lEQVR42u3XwQnDMAwF0JxzKOlAXbC75tABjCssMJ4grcJ7GKPz5yPsbQMAAAAAAAAAAAAAAAAAAAAAAAAAAAAutrejD3OQCYWtVc5BJtyh0DY093lyrLdMKL+h11eHTPApBAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAfuTzfvZhDjKhsGjw3o5oc5zz8YpbJtQudPY4am1DU172OO/c0zKh9oaej43c1jKh9qdwVjkHmQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAMAf+AIrnplnW4V/mgAAAABJRU5ErkJggg==";
+
+        public static final Map<String, Object> RASTER_FIXTURE;
+        static {
+            Hashtable<String, Object> tmp = new Hashtable<String, Object>();
+            tmp.put("raster_nw_corner_latitude", raster_nw_corner_latitude);
+            tmp.put("raster_nw_corner_longitude", raster_nw_corner_longitude);
+            tmp.put("raster_se_corner_latitude", raster_se_corner_latitude);
+            tmp.put("raster_se_corner_longitude", raster_se_corner_longitude);
+            tmp.put("raster_base64", raster_base64);
+            tmp.put("raster_experience", EXPERIENCES_FIXTURE_EXPERIENCE_1_ID);
+            RASTER_FIXTURE = Collections.unmodifiableMap(tmp);
+        };
+
+
+
 }

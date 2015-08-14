@@ -53,6 +53,7 @@ import com.kyloth.serleena.model.ITelemetry;
 import com.kyloth.serleena.model.ITrack;
 import com.kyloth.serleena.model.NoSuchTelemetryEventException;
 import com.kyloth.serleena.model.SerleenaDataSource;
+import com.kyloth.serleena.persistence.sqlite.IRasterSource;
 import com.kyloth.serleena.persistence.sqlite.SerleenaDatabase;
 import com.kyloth.serleena.persistence.sqlite.SerleenaSQLiteDataSource;
 
@@ -99,9 +100,7 @@ public class TelemetryTrackCrossingIntegrationTest {
         TestDB.checkpointQuery(db, 1, 1, 1, 1, 1);
         TestDB.checkpointQuery(db, 2, 2, 2, 2, 1);
 
-        dataSource = new SerleenaDataSource(
-                new SerleenaSQLiteDataSource(
-                        RuntimeEnvironment.application, serleenaDb));
+        dataSource = new SerleenaDataSource(new SerleenaSQLiteDataSource(serleenaDb));
         track = dataSource.getExperiences().iterator()
                 .next().getTracks().iterator().next();
 

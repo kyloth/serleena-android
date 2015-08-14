@@ -55,6 +55,7 @@ import com.kyloth.serleena.common.Checkpoint;
 import com.kyloth.serleena.model.IExperience;
 import com.kyloth.serleena.model.ITrack;
 import com.kyloth.serleena.model.SerleenaDataSource;
+import com.kyloth.serleena.persistence.sqlite.IRasterSource;
 import com.kyloth.serleena.persistence.sqlite.SerleenaDatabase;
 import com.kyloth.serleena.persistence.sqlite.SerleenaSQLiteDataSource;
 import com.kyloth.serleena.presentation.IExperienceActivationSource;
@@ -81,6 +82,7 @@ import java.util.concurrent.Callable;
 
 import static junit.framework.Assert.assertEquals;
 import static junit.framework.Assert.assertTrue;
+import static org.mockito.Mockito.mock;
 
 /**
  * Contiene i test di integrazione per la classe ExperienceSelectionFragment.
@@ -125,9 +127,7 @@ public class ExperienceSelectionFragmentIntegrationTest {
     public void initialize() {
         SerleenaDatabase serleenaDB = TestDB.getEmptyDatabase();
         db = serleenaDB.getWritableDatabase();
-        dataSource = new SerleenaDataSource(
-                new SerleenaSQLiteDataSource(
-                        RuntimeEnvironment.application, serleenaDB));
+        dataSource = new SerleenaDataSource(new SerleenaSQLiteDataSource(serleenaDB));
     }
 
     public void setup() {

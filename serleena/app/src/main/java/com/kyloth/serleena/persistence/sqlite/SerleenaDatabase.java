@@ -71,6 +71,7 @@ public class SerleenaDatabase extends SQLiteOpenHelper {
     public static final String TABLE_WEATHER_FORECASTS = "weather_forecasts";
     public static final String TABLE_USER_POINTS = "user_points";
     public static final String TABLE_CHECKPOINTS = "checkpoints";
+    public static final String TABLE_RASTERS = "rasters";
     private static final int DATABASE_VERSION = 1;
 
     public static final String EVENT_TYPE_CHECKPOINT = "event_checkpoint";
@@ -136,13 +137,24 @@ public class SerleenaDatabase extends SQLiteOpenHelper {
         "(experience_id) ON DELETE CASCADE)";
 
     private static final String CREATE_TABLE_CHECKPOINTS =
-        "CREATE TABLE " + TABLE_CHECKPOINTS + "(" +
+        "CREATE TABLE " + TABLE_CHECKPOINTS + " (" +
         "checkpoint_id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, " +
         "checkpoint_num INTEGER NOT NULL, " +
         "checkpoint_latitude REAL NOT NULL, " +
         "checkpoint_longitude REAL NOT NULL, " +
         "checkpoint_track INTEGER NOT NULL, " +
         "FOREIGN KEY(checkpoint_track) REFERENCES " + TABLE_TRACKS + "(track_id) ON DELETE CASCADE)";
+
+    private static final String CREATE_TABLE_RASTERS =
+            "CREATE TABLE " + TABLE_RASTERS + " (" +
+                    "raster_experience INTEGER NOT NULL, " +
+                    "raster_nw_corner_latitude REAL NOT NULL, " +
+                    "raster_nw_corner_longitude REAL NOT NULL, " +
+                    "raster_se_corner_latitude REAL NOT NULL, " +
+                    "raster_se_corner_longitude REAL NOT NULL, " +
+                    "raster_base64 TEXT NOT NULL, " +
+                    "FOREIGN KEY(raster_experience) REFERENCES " + TABLE_EXPERIENCES +
+                    "(experience_id) ON DELETE CASCADE)";
 
     /**
      * Crea un oggetto SerleenaDatabase associato al database predefinito dalla
@@ -187,6 +199,7 @@ public class SerleenaDatabase extends SQLiteOpenHelper {
         db.execSQL(CREATE_TABLE_WEATHER_FORECASTS);
         db.execSQL(CREATE_TABLE_USER_POINTS);
         db.execSQL(CREATE_TABLE_CHECKPOINTS);
+        db.execSQL(CREATE_TABLE_RASTERS);
     }
 
     /**
@@ -223,6 +236,7 @@ public class SerleenaDatabase extends SQLiteOpenHelper {
         db.execSQL("DROP TABLE IF EXISTS " + TABLE_WEATHER_FORECASTS);
         db.execSQL("DROP TABLE IF EXISTS " + TABLE_USER_POINTS);
         db.execSQL("DROP TABLE IF EXISTS " + TABLE_CHECKPOINTS);
+        db.execSQL("DROP TABLE IF EXISTS " + TABLE_RASTERS);
 
         onCreate(db);
     }

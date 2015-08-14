@@ -50,6 +50,7 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.util.Base64;
 
 import com.kyloth.serleena.common.Checkpoint;
 import com.kyloth.serleena.common.CheckpointReachedTelemetryEvent;
@@ -64,9 +65,10 @@ import com.kyloth.serleena.common.TelemetryEvent;
 import com.kyloth.serleena.common.UserPoint;
 import com.kyloth.serleena.persistence.IExperienceStorage;
 import com.kyloth.serleena.persistence.IWeatherStorage;
+import com.kyloth.serleena.persistence.NoSuchQuadrantException;
 import com.kyloth.serleena.persistence.WeatherForecastEnum;
 
-import java.io.File;
+import java.io.FileOutputStream;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
@@ -85,50 +87,12 @@ import static java.lang.Math.floor;
  * @version 1.0.0
  */
 public class SerleenaSQLiteDataSource implements ISerleenaSQLiteDataSource {
-    final static int QUADRANT_LATSIZE = 10;
-    final static int QUADRANT_LONGSIZE = 10;
-    final static int TOT_LAT_QUADRANTS = 180 / QUADRANT_LATSIZE;
-    final static int TOT_LONG_QUADRANTS = 360 / QUADRANT_LONGSIZE;
-    final static String RASTER_PATH = "raster/";
-
     private SerleenaDatabase dbHelper;
-    private Context context;
 
-    public SerleenaSQLiteDataSource(Context context, SerleenaDatabase dbHelper) {
+    public SerleenaSQLiteDataSource(SerleenaDatabase dbHelper) {
+        if (dbHelper == null)
+            throw new IllegalArgumentException("Illegal null database");
         this.dbHelper = dbHelper;
-        this.context = context;
-    }
-
-    /**
-     * Ritorna il percorso del file per il quadrante i,j-esimo.
-     *
-     * @return Il path
-     */
-    public static String getRasterPath(int i, int j) {
-        return RASTER_PATH + i + "_" + j;
-    }
-
-    /**
-     * Ritorna la coppia i,j che identifica il quadrante a cui appartiene un punto.
-     *
-     * @param p Il punto geografico
-     * @return Un array int [2] di due punti i,j che identifica il quadrante.
-     */
-    public static int[] getIJ(GeoPoint p) {
-        int ij[] = new int[2];
-        if (p.latitude() == -90.0) {
-            ij[0] = TOT_LAT_QUADRANTS - 1;
-        } else {
-            ij[0] = (int) (floor(-(p.latitude() - 90.0) / QUADRANT_LATSIZE));
-        }
-        if(ij[0] >= TOT_LAT_QUADRANTS) {
-            throw new IllegalArgumentException(ij[0]+" "+ij[1]);
-        };
-        ij[1] = (int)(floor((p.longitude() + 180.0) / QUADRANT_LONGSIZE) %  TOT_LONG_QUADRANTS);
-        if(ij[1] >= TOT_LONG_QUADRANTS) {
-            throw new IllegalArgumentException(ij[0]+" "+ij[1]);
-        };
-        return ij;
     }
 
     /**
@@ -320,7 +284,7 @@ public class SerleenaSQLiteDataSource implements ISerleenaSQLiteDataSource {
     public Iterable<IExperienceStorage> getExperiences() {
         SQLiteDatabase db = dbHelper.getReadableDatabase();
         Cursor result = db.query(SerleenaDatabase.TABLE_EXPERIENCES,
-                new String[] { "experience_id", "experience_name" }, null,
+                new String[]{"experience_id", "experience_name"}, null,
                 null, null, null, null);
 
         int idIndex = result.getColumnIndexOrThrow("experience_id");
@@ -339,33 +303,63 @@ public class SerleenaSQLiteDataSource implements ISerleenaSQLiteDataSource {
         return list;
     }
 
-    /**
-     * Restituisce il quadrante i cui limiti comprendono la posizione
-     * geografica specificata.
-     *
-     * @param location Posizione geografica che ricade nei limiti del quadrante.
-     * @return Oggetto IQuadrant.
-     */
     @Override
-    public IQuadrant getQuadrant(GeoPoint location) {
+    public IQuadrant getQuadrant(GeoPoint location, SQLiteDAOExperience exp)
+            throws NoSuchQuadrantException {
+        if (location == null)
+            throw new IllegalArgumentException("Illegal null location");
+        if (exp == null)
+            throw new IllegalArgumentException("Illegal null experience");
 
-        int[] ij = getIJ(location);
+        SQLiteDatabase db = dbHelper.getReadableDatabase();
 
-        assert(ij[0] < TOT_LAT_QUADRANTS);
-        assert(ij[1] < TOT_LONG_QUADRANTS);
+        String where =
+                "`raster_nw_corner_latitude` >= " +
+                location.latitude() + " AND " +
+                "`raster_nw_corner_longitude` <= " +
+                location.longitude() + " AND " +
+                "`raster_se_corner_latitude` <= " +
+                location.latitude() + " AND " +
+                "`raster_se_corner_longitude` >= " +
+                location.longitude() + " AND " +
+                "`raster_experience` = " +
+                exp.id();
 
-        String fileName = getRasterPath(ij[0], ij[1]);
-        GeoPoint p1 = new GeoPoint((-(ij[0] * QUADRANT_LATSIZE) + 90.0),
-                (ij[1] * QUADRANT_LONGSIZE - 180.0));
-        // Vogliamo longitudine 180.0 espressa come -180.0 (=in mod 2pi)
-        GeoPoint p2 = new GeoPoint((-((ij[0]+1) * QUADRANT_LATSIZE) + 90.0),
-                (((ij[1] + 1) * QUADRANT_LONGSIZE) % 360.0) - 180.0);
+        Cursor result = db.query(SerleenaDatabase.TABLE_RASTERS,
+                new String[]{
+                    "raster_nw_corner_latitude",
+                    "raster_nw_corner_longitude",
+                    "raster_se_corner_latitude",
+                    "raster_se_corner_longitude",
+                    "raster_base64"
+                },
+                where, null, null, null, null);
 
-        Bitmap raster = null;
-        File file = new File(context.getFilesDir(), fileName);
-        if (file.exists())
-            raster = BitmapFactory.decodeFile(file.getAbsolutePath());
-        return new Quadrant(p1, p2, raster);
+        int nwLatIndex =
+                result.getColumnIndexOrThrow("raster_nw_corner_latitude");
+        int nwLonIndex =
+                result.getColumnIndexOrThrow("raster_nw_corner_longitude");
+        int seLatIndex =
+                result.getColumnIndexOrThrow("raster_se_corner_latitude");
+        int seLonIndex =
+                result.getColumnIndexOrThrow("raster_se_corner_longitude");
+        int base64Index =
+                result.getColumnIndexOrThrow("raster_base64");
+
+        if (result.moveToNext()) {
+            double nwLat = result.getDouble(nwLatIndex);
+            double nwLon = result.getDouble(nwLonIndex);
+            double seLat = result.getDouble(seLatIndex);
+            double seLon = result.getDouble(seLonIndex);
+            byte[] data = Base64.decode(
+                    result.getString(base64Index), Base64.DEFAULT);
+
+            return new Quadrant(
+                    new GeoPoint(nwLat, nwLon),
+                    new GeoPoint(seLat, seLon),
+                    BitmapFactory.decodeByteArray(data, 0, data.length));
+        } else
+            throw new NoSuchQuadrantException();
     }
 
     /**
@@ -527,4 +521,5 @@ public class SerleenaSQLiteDataSource implements ISerleenaSQLiteDataSource {
             throw new NoSuchWeatherForecastException();
         }
     }
+
 }

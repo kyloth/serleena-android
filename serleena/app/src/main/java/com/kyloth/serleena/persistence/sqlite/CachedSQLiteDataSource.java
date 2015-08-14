@@ -49,6 +49,7 @@ import com.kyloth.serleena.common.TelemetryEvent;
 import com.kyloth.serleena.common.UserPoint;
 import com.kyloth.serleena.persistence.IExperienceStorage;
 import com.kyloth.serleena.persistence.IWeatherStorage;
+import com.kyloth.serleena.persistence.NoSuchQuadrantException;
 
 import java.util.Date;
 import java.util.HashMap;
@@ -216,9 +217,10 @@ public class CachedSQLiteDataSource implements ISerleenaSQLiteDataSource {
      * @return Dati cachati dall'oggetto ISerleenaSQLiteDataSource sottostante.
      */
     @Override
-    public IQuadrant getQuadrant(GeoPoint location) {
+    public IQuadrant getQuadrant(GeoPoint location, SQLiteDAOExperience exp)
+            throws NoSuchQuadrantException {
         if (quadrant == null || !quadrant.contains(location))
-            quadrant = dataSource.getQuadrant(location);
+            quadrant = dataSource.getQuadrant(location, exp);
         return quadrant;
     }
 

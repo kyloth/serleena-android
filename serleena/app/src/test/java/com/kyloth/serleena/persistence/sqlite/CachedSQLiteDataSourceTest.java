@@ -41,6 +41,7 @@ import com.kyloth.serleena.common.UserPoint;
 import com.kyloth.serleena.model.ISerleenaDataSource;
 import com.kyloth.serleena.persistence.IExperienceStorage;
 import com.kyloth.serleena.persistence.IWeatherStorage;
+import com.kyloth.serleena.persistence.NoSuchQuadrantException;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -170,19 +171,21 @@ public class CachedSQLiteDataSourceTest {
      * all'interno dello stesso quadrante.
      */
     @Test
-    public void testThatQuadrantGetsCachedForSameArea() {
+    public void testThatQuadrantGetsCachedForSameArea()
+            throws NoSuchQuadrantException {
         IQuadrant q1 = mock(IQuadrant.class);
         IQuadrant q2 = mock(IQuadrant.class);
         GeoPoint gp = mock(GeoPoint.class);
+        SQLiteDAOExperience exp = mock(SQLiteDAOExperience.class);
 
-        when(ds.getQuadrant(gp)).thenReturn(q1);
-        cachedDS.getQuadrant(gp);
+        when(ds.getQuadrant(gp, exp)).thenReturn(q1);
+        cachedDS.getQuadrant(gp, exp);
 
         GeoPoint gp2 = mock(GeoPoint.class);
         when(q1.contains(gp2)).thenReturn(true);
-        when(ds.getQuadrant(gp2)).thenReturn(q2);
+        when(ds.getQuadrant(gp2, exp)).thenReturn(q2);
 
-        assertTrue(cachedDS.getQuadrant(gp2) == q1);
+        assertTrue(cachedDS.getQuadrant(gp2, exp) == q1);
     }
 
     /**
@@ -191,20 +194,22 @@ public class CachedSQLiteDataSourceTest {
      * IQuadrant appropriati, ignorando i valori cachati.
      */
     @Test
-    public void testThatDifferentAreasGetDifferentQuadrants() {
+    public void testThatDifferentAreasGetDifferentQuadrants()
+            throws NoSuchQuadrantException {
         IQuadrant q1 = mock(IQuadrant.class);
         IQuadrant q2 = mock(IQuadrant.class);
         GeoPoint gp1 = mock(GeoPoint.class);
         GeoPoint gp2 = mock(GeoPoint.class);
+        SQLiteDAOExperience exp = mock(SQLiteDAOExperience.class);
 
-        when(ds.getQuadrant(gp1)).thenReturn(q1);
-        assertTrue(cachedDS.getQuadrant(gp1) == q1);
-        verify(ds).getQuadrant(gp1);
+        when(ds.getQuadrant(gp1, exp)).thenReturn(q1);
+        assertTrue(cachedDS.getQuadrant(gp1, exp) == q1);
+        verify(ds).getQuadrant(gp1, exp);
 
-        when(ds.getQuadrant(gp2)).thenReturn(q2);
+        when(ds.getQuadrant(gp2, exp)).thenReturn(q2);
         when(q1.contains(gp2)).thenReturn(false);
-        assertTrue(cachedDS.getQuadrant(gp2) == q2);
-        verify(ds).getQuadrant(gp2);
+        assertTrue(cachedDS.getQuadrant(gp2, exp) == q2);
+        verify(ds).getQuadrant(gp2, exp);
     }
 
     /**

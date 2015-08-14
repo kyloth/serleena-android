@@ -45,6 +45,7 @@ import com.kyloth.serleena.synchronization.kylothcloud.CheckpointEntity;
 import com.kyloth.serleena.synchronization.kylothcloud.EmergencyDataEntity;
 import com.kyloth.serleena.synchronization.kylothcloud.ExperienceEntity;
 import com.kyloth.serleena.synchronization.kylothcloud.InboundRootEntity;
+import com.kyloth.serleena.synchronization.kylothcloud.RasterDataEntity;
 import com.kyloth.serleena.synchronization.kylothcloud.TelemetryEntity;
 import com.kyloth.serleena.synchronization.kylothcloud.TrackEntity;
 import com.kyloth.serleena.synchronization.kylothcloud.UserPointEntity;
@@ -79,6 +80,7 @@ public class CloudSerleenaSQLiteInboundDumpBuilder implements InboundDumpBuilder
         res.add("DELETE FROM " + SerleenaDatabase.TABLE_USER_POINTS);
         res.add("DELETE FROM " + SerleenaDatabase.TABLE_TRACKS);
         res.add("DELETE FROM " + SerleenaDatabase.TABLE_CHECKPOINTS);
+        res.add("DELETE FROM " + SerleenaDatabase.TABLE_RASTERS);
         return res;
     }
 
@@ -105,6 +107,24 @@ public class CloudSerleenaSQLiteInboundDumpBuilder implements InboundDumpBuilder
                         " " + up.point.longitude() + "," +
                         " " + expCounter +
                         ")");
+            }
+
+            for (RasterDataEntity raster : exp.rasterData) {
+                res.add("INSERT INTO " + SerleenaDatabase.TABLE_RASTERS +"" +
+                        "(`raster_experience`," +
+                        "`raster_nw_corner_latitude`," +
+                        "`raster_nw_corner_longitude`," +
+                        "`raster_se_corner_latitude`," +
+                        "`raster_se_corner_longitude`,"+
+                        "`raster_base64`)" +
+                        "VALUES" +
+                        "("+ expCounter +", "+
+                         raster.boundingRect.getNorthWestPoint().latitude() +", " +
+                         raster.boundingRect.getNorthWestPoint().longitude() +", " +
+                         raster.boundingRect.getNorthWestPoint().latitude() +", " +
+                         raster.boundingRect.getNorthWestPoint().longitude() +", " +
+                         "\"" + raster.base64Raster + "\"" +
+                        ") ");
             }
             for (TrackEntity track : exp.tracks) {
                 res.add("INSERT INTO " + SerleenaDatabase.TABLE_TRACKS +"" +

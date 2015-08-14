@@ -45,6 +45,7 @@ import com.kyloth.serleena.common.EmergencyContact;
 import com.kyloth.serleena.common.GeoPoint;
 import com.kyloth.serleena.common.IQuadrant;
 import com.kyloth.serleena.common.NoSuchWeatherForecastException;
+import com.kyloth.serleena.persistence.NoSuchQuadrantException;
 
 import java.util.Date;
 
@@ -77,13 +78,6 @@ public interface ISerleenaDataSource {
      */
     IWeatherForecast getWeatherInfo(GeoPoint p, Date date)
             throws NoSuchWeatherForecastException;
-
-    /**
-     * Restituisce il quadrante di afferenza per una dato punto geografico.
-     *
-     * @version 1.0
-     */
-    IQuadrant getQuadrant(GeoPoint point);
 
     /**
      * Restituisce i contatti di emergenza che hanno giurisdizione su un dato

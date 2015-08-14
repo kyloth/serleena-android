@@ -55,6 +55,7 @@ import com.kyloth.serleena.common.NoTrackCrossingException;
 import com.kyloth.serleena.model.IExperience;
 import com.kyloth.serleena.model.ITrack;
 import com.kyloth.serleena.model.SerleenaDataSource;
+import com.kyloth.serleena.persistence.sqlite.IRasterSource;
 import com.kyloth.serleena.persistence.sqlite.SerleenaDatabase;
 import com.kyloth.serleena.persistence.sqlite.SerleenaSQLiteDataSource;
 import com.kyloth.serleena.model.ISerleenaDataSource;
@@ -73,6 +74,7 @@ import java.lang.Override;
 
 import static junit.framework.Assert.assertEquals;
 import static junit.framework.Assert.assertTrue;
+import static org.mockito.Mockito.mock;
 
 /**
  * Contiene i test di integrazione per la classe TrackSelectionPresenter e le
@@ -110,8 +112,7 @@ public class TrackSelectionPresenterIntegrationTest {
         SerleenaDatabase serleenaDb = TestDB.getEmptyDatabase();
         db = serleenaDb.getWritableDatabase();
         SerleenaDataSource dataSource = new SerleenaDataSource(
-                new SerleenaSQLiteDataSource(
-                        RuntimeEnvironment.application, serleenaDb));
+                new SerleenaSQLiteDataSource(serleenaDb));
         activity = Robolectric.buildActivity(TestingActivity.class)
                 .create().start().resume().visible().get();
         activity.setDataSource(dataSource);

@@ -43,14 +43,20 @@ package com.kyloth.serleena.model;
 
 import android.content.ContentValues;
 import android.database.sqlite.SQLiteDatabase;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.util.Base64;
 
 import com.kyloth.serleena.BuildConfig;
 import com.kyloth.serleena.TestDB;
 import com.kyloth.serleena.common.EmergencyContact;
 import com.kyloth.serleena.common.GeoPoint;
+import com.kyloth.serleena.common.IQuadrant;
 import com.kyloth.serleena.common.NoSuchWeatherForecastException;
 import com.kyloth.serleena.common.Quadrant;
+import com.kyloth.serleena.persistence.NoSuchQuadrantException;
 import com.kyloth.serleena.persistence.WeatherForecastEnum;
+import com.kyloth.serleena.persistence.sqlite.IRasterSource;
 import com.kyloth.serleena.persistence.sqlite.SerleenaDatabase;
 import com.kyloth.serleena.persistence.sqlite.SerleenaSQLiteDataSource;
 import com.kyloth.serleena.persistence.sqlite.TestFixtures;
@@ -70,6 +76,8 @@ import java.util.Iterator;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
 
 /**
  * Contiene test di integrazione per le classi di persistenza.
@@ -93,32 +101,21 @@ public class SerleenaDataSourceIntegrationTest {
 
     @Before
     public void initialize() {
-        serleenaDB = new SerleenaDatabase(RuntimeEnvironment.application, "sample.db", null, 1);
+        serleenaDB = new SerleenaDatabase(RuntimeEnvironment.application, 1);
         db = serleenaDB.getWritableDatabase();
-        serleenaDB.onConfigure(db);
-        serleenaDB.onUpgrade(db, 1, 2);
+        serleenaDB.onUpgrade(db, 1, 1);
         ContentValues contacts_1 = TestFixtures.pack(TestFixtures.CONTACTS_FIXTURE_1);
         db.insertOrThrow(SerleenaDatabase.TABLE_CONTACTS, null, contacts_1);
         ContentValues contacts_2 = TestFixtures.pack(TestFixtures.CONTACTS_FIXTURE_2);
         db.insertOrThrow(SerleenaDatabase.TABLE_CONTACTS, null, contacts_2);
         ContentValues weather_1 = TestFixtures.pack(TestFixtures.WEATHER_FIXTURE);
         db.insertOrThrow(SerleenaDatabase.TABLE_WEATHER_FORECASTS, null, weather_1);
-        ContentValues values_2;
-        values_2 = new ContentValues();
-        values_2.put("experience_name", "foo");
-        // TODO: Sostituire con fixture
-        db.insertOrThrow(SerleenaDatabase.TABLE_EXPERIENCES, null, values_2);
-        serleenaSQLDS = new SerleenaSQLiteDataSource(RuntimeEnvironment.application, serleenaDB);
+        ContentValues exp = TestFixtures.pack(TestFixtures.EXPERIENCES_FIXTURE_EXPERIENCE_1);
+        db.insertOrThrow(SerleenaDatabase.TABLE_EXPERIENCES, null, exp);
+        ContentValues values = TestFixtures.pack(TestFixtures.RASTER_FIXTURE);
+        db.insertOrThrow(SerleenaDatabase.TABLE_RASTERS, null, values);
+        serleenaSQLDS = new SerleenaSQLiteDataSource(serleenaDB);
         dataSource = new SerleenaDataSource(serleenaSQLDS);
-    }
-
-    /**
-     * Chiude il database per permettere il funzionamento dei test successivi.
-     */
-
-    @After
-    public void cleanUp() {
-        serleenaDB.close();
     }
 
     /**
@@ -156,21 +153,6 @@ public class SerleenaDataSourceIntegrationTest {
     }
 
     /**
-     * Verifica che il metodo getQuadrant restituisca correttamente i quadranti
-     * relativi ai GeoPoint forniti come input (senza sollevare eccezioni).
-     */
-    @Test
-    public void testGetQuadrant() {
-        GeoPoint normal_point = new GeoPoint(10, 10);
-        GeoPoint min_point = new GeoPoint(90.0, -180.0);
-        GeoPoint max_point = new GeoPoint(-90.0 + 10 / 2.0,
-                                          180.0 - 10 / 2.0);
-        Quadrant quadrant = (Quadrant) dataSource.getQuadrant(normal_point);
-        Quadrant max_limit_quadrant = (Quadrant) dataSource.getQuadrant(min_point);
-        Quadrant min_limit_quadrant = (Quadrant) dataSource.getQuadrant(max_point);
-    }
-
-    /**
      * Verifica che il metodo getWeatherInfo restituisca correttamente
      * le informazioni meteo relative alla località e alla data fornite.
      */
@@ -194,7 +176,7 @@ public class SerleenaDataSourceIntegrationTest {
         Iterable<IExperience> experiences = dataSource.getExperiences();
         Iterator<IExperience> i_experiences = experiences.iterator();
         Experience experience = (Experience) i_experiences.next();
-        assertTrue(experience.getName().equals("foo"));
+        assertTrue(experience.getName().equals(TestFixtures.EXPERIENCES_FIXTURE_EXPERIENCE_1_NAME));
     }
 
     /**
@@ -216,13 +198,38 @@ public class SerleenaDataSourceIntegrationTest {
         TestDB.checkPointEventQuery(db, 3, 600, 2, 1);
         // TODO: Cos'e'? Come fa a funzionare?
 
-        SerleenaDataSource dataSource = new SerleenaDataSource(new
-                SerleenaSQLiteDataSource(RuntimeEnvironment.application, serleenaDb));
+        SerleenaDataSource dataSource = new SerleenaDataSource(
+                new SerleenaSQLiteDataSource(serleenaDb));
         ITrack track1 = dataSource.getExperiences().iterator().next()
                 .getTracks().iterator().next();
         ITrack track2 = dataSource.getExperiences().iterator().next()
                 .getTracks().iterator().next();
         assertTrue(track1.equals(track2));
+    }
+
+    private void putQuadrant(double nwLat, double nwLon, double seLat,
+                             double seLon, String base64, long expId) {
+        ContentValues values = new ContentValues();
+        values.put("raster_nw_corner_latitude", nwLat);
+        values.put("raster_nw_corner_longitude", nwLon);
+        values.put("raster_se_corner_latitude", seLat);
+        values.put("raster_se_corner_longitude", seLon);
+        values.put("raster_base64", base64);
+        values.put("raster_experience", expId);
+        db.insertOrThrow(SerleenaDatabase.TABLE_RASTERS, null, values);
+    }
+
+    public boolean bitmapEquals(Bitmap first, Bitmap second) {
+        if (first.getWidth() == second.getWidth() &&
+                first.getHeight() == second.getHeight() &&
+                first.getConfig().equals(second.getConfig())) {
+            boolean b = true;
+            for (int i = 0; i < first.getWidth() && b; i++)
+                for (int j = 0; j < first.getHeight() && b; j++)
+                    b = b && (first.getPixel(i, j) == second.getPixel(i, j));
+            return b;
+        }
+        return false;
     }
 
 }

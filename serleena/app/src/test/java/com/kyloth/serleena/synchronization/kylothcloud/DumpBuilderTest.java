@@ -37,6 +37,7 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonParser;
 import com.kyloth.serleena.BuildConfig;
 import com.kyloth.serleena.persistence.IExperienceStorage;
+import com.kyloth.serleena.persistence.sqlite.IRasterSource;
 import com.kyloth.serleena.persistence.sqlite.SerleenaDatabase;
 import com.kyloth.serleena.persistence.sqlite.SerleenaSQLiteDataSource;
 import com.kyloth.serleena.persistence.sqlite.TestFixtures;
@@ -53,6 +54,8 @@ import org.robolectric.annotation.Config;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
+
+import static org.mockito.Mockito.mock;
 
 @RunWith(RobolectricGradleTestRunner.class)
 @Config(constants = BuildConfig.class, emulateSdk = 19)
@@ -73,7 +76,7 @@ public class DumpBuilderTest {
         Foo f = new Foo(4096);
 
         CloudJSONOutboundStreamBuilder b = new CloudJSONOutboundStreamBuilder();
-        SerleenaSQLiteDataSource source = new SerleenaSQLiteDataSource(RuntimeEnvironment.application, sh);
+        SerleenaSQLiteDataSource source = new SerleenaSQLiteDataSource(sh);
         for (IExperienceStorage exp : source.getExperiences()) {
             b.addExperience(exp);
         }
