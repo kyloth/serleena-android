@@ -48,9 +48,7 @@ import com.kyloth.serleena.common.LocationNotAvailableException;
 import com.kyloth.serleena.common.NoActiveExperienceException;
 import com.kyloth.serleena.common.UserPoint;
 import com.kyloth.serleena.model.IExperience;
-import com.kyloth.serleena.model.ISerleenaDataSource;
 import com.kyloth.serleena.persistence.NoSuchQuadrantException;
-import com.kyloth.serleena.presentation.IExperienceActivationObserver;
 import com.kyloth.serleena.presentation.IExperienceActivationSource;
 import com.kyloth.serleena.presentation.IMapPresenter;
 import com.kyloth.serleena.presentation.IMapView;
@@ -73,18 +71,16 @@ import java.util.List;
  * @author Filippo Sestini <sestini.filippo@gmail.com>
  * @version 1.0.0
  */
-public class MapPresenter
-        implements IMapPresenter, ILocationObserver,
-        IExperienceActivationObserver {
+public class MapPresenter implements IMapPresenter, ILocationObserver {
 
     private static final int UPDATE_INTERVAL_SECONDS = 30;
 
     private IMapView view;
     private ISerleenaActivity activity;
-    private IExperience activeExperience;
     private GeoPoint currentPosition;
     private ILocationManager locMan;
     private IQuadrant currentQuadrant;
+    private IExperienceActivationSource expActivationSource;
 
     /**
      * Crea un oggetto MapPresenter.
@@ -112,9 +108,9 @@ public class MapPresenter
 
         this.activity = activity;
         this.view = view;
+        this.expActivationSource = experienceActivationSource;
 
         locMan = activity.getSensorManager().getLocationSource();
-        experienceActivationSource.attachObserver(this);
         view.attachPresenter(this);
     }
 
@@ -129,8 +125,8 @@ public class MapPresenter
     @Override
     public synchronized void newUserPoint()
             throws NoActiveExperienceException, LocationNotAvailableException {
-        if (activeExperience == null)
-            throw new NoActiveExperienceException();
+        final IExperience activeExperience =
+                expActivationSource.activeExperience();
         if (currentPosition == null)
             throw new LocationNotAvailableException();
 
@@ -186,26 +182,12 @@ public class MapPresenter
         currentPosition = loc;
         view.setUserLocation(loc);
 
-        if (activeExperience != null) {
-            updateQuadrant(loc);
-            updateUserPoints();
-        }
-    }
-
-    /**
-     * Implementa IExperienceActivationObserver.onExperienceActivated()
-     *
-     * Segnala al presenter l'esperienza correntemente attiva.
-     *
-     * @param experience Esperienza appena attivata. Se null,
-     *                   viene sollevata un'eccezione IllegalArgumentException.
-     * @throws IllegalArgumentException
-     */
-    @Override
-    public void onExperienceActivated(IExperience experience) {
-        if (experience == null)
-            throw new IllegalArgumentException("Illegal null experience");
-        this.activeExperience = experience;
+        IExperience activeExperience = null;
+        try {
+            activeExperience = expActivationSource.activeExperience();
+            updateQuadrant(activeExperience, loc);
+            updateUserPoints(activeExperience);
+        } catch (NoActiveExperienceException e) { }
     }
 
     /**
@@ -227,7 +209,7 @@ public class MapPresenter
         }
     }
 
-    private void updateUserPoints() {
+    private void updateUserPoints(final IExperience activeExperience) {
         new AsyncTask<Void, Void, Iterable<UserPoint>>() {
             @Override
             protected Iterable<UserPoint> doInBackground(Void... params) {
@@ -240,7 +222,8 @@ public class MapPresenter
         }.execute();
     }
 
-    private void updateQuadrant(final GeoPoint loc) {
+    private void updateQuadrant(final IExperience activeExperience,
+                                final GeoPoint loc) {
         new AsyncTask<Void, Void, Void>() {
             @Override
             protected Void doInBackground(Void... params) {
