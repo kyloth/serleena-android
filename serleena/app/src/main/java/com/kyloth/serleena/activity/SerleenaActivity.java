@@ -69,11 +69,23 @@ import java.util.ArrayList;
 /**
  * Classe che implementa ISerleenaActivity.
  *
- * In questa visuale è possibile selezionare un'esperienza da attivare tra quelle disponibili.
+ * Rappresenta l'unica Activity dell'applicazione, il punto di accesso
+ * principale alle sue risorse. Si occupa di creare le viste e i presenter, e
+ * agganciarli le une agli altri.
  *
- * @use Viene utilizzata solamente dall'Activity, che ne mantiene un riferimento. Il Presenter, alla creazione, si registra alla sua Vista, passando se stesso come parametro dietro interfaccia.
- * @field dataSource : sorgente dati utilizzata dall'activity e dai suoi presenter
- * @field sensorManager : gestore dei sensori utilizzato dall'activity e dai suoi presenter
+ * @use Ogni presenter dell'applicazione mantiene un riferimento all'Activity dietro interfaccia ISerleenaActivity.
+ * @field application : ISerleenaApplication Applicazione serleena
+ * @field trackFragment : TrackFragment Visuale Percorso
+ * @field compassFragment : CompassFragment Schermata Bussola
+ * @field contactsFragment : ContactsFragment Schermata Autorita` locali
+ * @field telemetryFragment : TelemetryFragment Visuale Tracciamento
+ * @field weatherFragment : WeatherFragment Schermata Meteo
+ * @field mapFragment : MapFragment Visuale Mappa
+ * @field experienceSelectionFragment : ExperienceSelectionFragment Imposta Esperienza
+ * @field trackSelectionFragment : TrackSelectionFragment Visuale Imposta Percorso
+ * @field menuFragment : ObjectListFragment Schermata menu` principale
+ * @field experienceFragment : ObjectListFragment Schermata Esperienza
+ * @field syncFragment : SyncFragment Schermata Sincronizza
  * @author Filippo Sestini <valle.sebastiano93@gmail.com>
  * @version 1.0.0
  * @see android.support.v7.app.AppCompatActivity
@@ -145,6 +157,9 @@ public class SerleenaActivity extends Activity
 
     /**
      * Implementa ISerleenaActivity.getDataSource().
+     *
+     * Inoltra l'oggetto ISerleenaDataSource restituito dall'applicazione
+     * ISerleenaApplication.
      */
     @Override
     public ISerleenaDataSource getDataSource() {
@@ -153,6 +168,9 @@ public class SerleenaActivity extends Activity
 
     /**
      * Implementa ISerleenaActivity.getSensorManager().
+     *
+     * Inoltra l'oggetto ISensorManager restituito dall'applicazione
+     * ISerleenaApplication.
      */
     @Override
     public ISensorManager getSensorManager() {
@@ -161,6 +179,9 @@ public class SerleenaActivity extends Activity
 
     /**
      * Implementa ISerleenaActivity.getDataSink().
+     *
+     * Inoltra l'oggetto IPersistenceDataSink restituito dall'applicazione
+     * ISerleenaApplication.
      */
     @Override
     public IPersistenceDataSink getDataSink() {
@@ -169,6 +190,10 @@ public class SerleenaActivity extends Activity
 
     /**
      * Implementa IObjectListObserver.onObjectSelected().
+     *
+     * Riceve eventi di selezione da parte delle schermate Esperienza e dal
+     * menu principale. Il Fragment selezionato viene visualizzato in primo
+     * piano.
      *
      * @param obj Oggetto selezionato.
      */
@@ -180,6 +205,9 @@ public class SerleenaActivity extends Activity
                 .commit();
     }
 
+    /**
+     * Inizializza i Fragment.
+     */
     private void initFragments() {
         trackFragment = new TrackFragment();
         compassFragment = new CompassFragment();
@@ -220,6 +248,9 @@ public class SerleenaActivity extends Activity
         menuFragment.attachObserver(this);
     }
 
+    /**
+     * Inizializza i Presenter.
+     */
     private void initPresenters() {
         new CompassPresenter(compassFragment, this);
         new ContactsPresenter(contactsFragment, this);
