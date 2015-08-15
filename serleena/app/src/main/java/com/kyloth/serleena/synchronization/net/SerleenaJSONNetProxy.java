@@ -98,7 +98,7 @@ public class SerleenaJSONNetProxy implements INetProxy {
         URL authUrl = null;
 
         try {
-            authUrl = new URL(baseUrl.toString()+"/users/pair/"+getTempToken());
+            authUrl = new URL(baseUrl.toString()+"users/pair/"+getTempToken());
         } catch (MalformedURLException e) {
             e.printStackTrace();
         }
@@ -112,7 +112,7 @@ public class SerleenaJSONNetProxy implements INetProxy {
         try {
             // syncUrl = new URL(baseUrl.toString()+"/users/sync/"+kylothIdSource.getKylothId());
             // TODO: Qual'e' il vero URL? ST o quello che dice Bronsa? Vedi SHCLOUD-34
-            syncUrl = new URL(baseUrl.toString()+"/data/");
+            syncUrl = new URL(baseUrl.toString()+"data/");
         } catch (MalformedURLException e) {
             e.printStackTrace();
         }
@@ -125,7 +125,7 @@ public class SerleenaJSONNetProxy implements INetProxy {
         URL preAuthUrl = null;
 
         try {
-            preAuthUrl = new URL(baseUrl.toString()+"/token/"+kylothIdSource.getKylothId());
+            preAuthUrl = new URL(baseUrl.toString()+"tokens/"+kylothIdSource.getKylothId());
         } catch (MalformedURLException e) {
             e.printStackTrace();
         }

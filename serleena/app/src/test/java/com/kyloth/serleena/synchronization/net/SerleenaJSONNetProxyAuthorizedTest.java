@@ -83,7 +83,7 @@ public class SerleenaJSONNetProxyAuthorizedTest {
     final URL BASE_URL;
     {URL BASE_URL1;
         try {
-            BASE_URL1 = new URL("http://localhost");
+            BASE_URL1 = new URL("http://localhost/");
         } catch (MalformedURLException e) {
             BASE_URL1 = null;
         }
@@ -94,7 +94,7 @@ public class SerleenaJSONNetProxyAuthorizedTest {
 
     {URL DATA_URL;
         try {
-            DATA_URL = new URL(BASE_URL + "/data/");
+            DATA_URL = new URL(BASE_URL + "data/");
             // Lo dice la ST
         } catch (MalformedURLException e) {
             DATA_URL = null;
