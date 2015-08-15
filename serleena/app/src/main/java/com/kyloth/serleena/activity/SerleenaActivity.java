@@ -113,14 +113,12 @@ public class SerleenaActivity extends Activity
      */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
+        super.onCreate(null);
         setContentView(R.layout.activity_serleena);
 
         application = (ISerleenaApplication) getApplication();
 
         if (findViewById(R.id.main_container) != null) {
-            if (savedInstanceState != null)
-                return;
 
             initFragments();
             initPresenters();
