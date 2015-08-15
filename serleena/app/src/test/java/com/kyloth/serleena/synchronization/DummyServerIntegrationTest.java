@@ -86,7 +86,7 @@ public class DummyServerIntegrationTest {
 
     final static String SAMPLES_DIR = "../../common/samples/";
     final String AUTH_TOKEN_NAME = "X-AuthToken";
-    final String DATA_TOKEN_NAME = "Data";
+    final String DATA_TOKEN_NAME = "data";
     String JSON_OUTPUT;
 
     SerleenaDatabase sh;

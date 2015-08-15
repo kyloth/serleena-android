@@ -174,7 +174,7 @@ public class SerleenaJSONNetProxyAuthorizedTest {
         s.flush();
         s.close();
         String response = outputStreamData.toString();
-        assertEquals(response, "Data=ABC");
+        assertEquals(response, "data=ABC");
         assertTrue(proxy.success());
         proxy.disconnect();
     }

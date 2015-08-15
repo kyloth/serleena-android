@@ -78,7 +78,7 @@ public class SerleenaJSONNetProxy implements INetProxy {
     SerleenaConnectionFactory factory;
 
     final String AUTH_TOKEN_NAME = "X-AuthToken";
-    final String DATA_TOKEN_NAME = "Data";
+    final String DATA_TOKEN_NAME = "data";
     final String CHARSET = "UTF-8";
 
     public String getCharset() {
