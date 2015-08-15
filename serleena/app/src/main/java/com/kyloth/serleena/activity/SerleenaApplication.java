@@ -47,7 +47,6 @@ import com.kyloth.serleena.model.ISerleenaDataSource;
 import com.kyloth.serleena.model.SerleenaDataSource;
 import com.kyloth.serleena.persistence.IPersistenceDataSink;
 import com.kyloth.serleena.persistence.IPersistenceDataSource;
-import com.kyloth.serleena.persistence.sqlite.CachedSQLiteDataSource;
 import com.kyloth.serleena.persistence.sqlite.SerleenaDatabase;
 import com.kyloth.serleena.persistence.sqlite.SerleenaSQLiteDataSink;
 import com.kyloth.serleena.persistence.sqlite.SerleenaSQLiteDataSource;
@@ -96,8 +95,7 @@ public class SerleenaApplication extends Application implements ISerleenaApplica
 
         SerleenaDatabase serleenaDatabase = new SerleenaDatabase(this, 1);
         IPersistenceDataSource persistenceDataSource =
-                new CachedSQLiteDataSource(
-                        new SerleenaSQLiteDataSource(new SerleenaDatabase(this, 1)));
+                new SerleenaSQLiteDataSource(new SerleenaDatabase(this, 1));
         dataSource = new SerleenaDataSource(persistenceDataSource);
         dataSink = new SerleenaSQLiteDataSink(this, serleenaDatabase);
 
