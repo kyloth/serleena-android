@@ -44,6 +44,7 @@ import android.app.Fragment;
 import android.os.Bundle;
 import android.app.Activity;
 import android.view.KeyEvent;
+import android.view.View;
 
 import com.kyloth.serleena.R;
 import com.kyloth.serleena.model.*;
@@ -69,11 +70,23 @@ import java.util.ArrayList;
 /**
  * Classe che implementa ISerleenaActivity.
  *
- * In questa visuale è possibile selezionare un'esperienza da attivare tra quelle disponibili.
+ * Rappresenta l'unica Activity dell'applicazione, il punto di accesso
+ * principale alle sue risorse. Si occupa di creare le viste e i presenter, e
+ * agganciarli le une agli altri.
  *
- * @use Viene utilizzata solamente dall'Activity, che ne mantiene un riferimento. Il Presenter, alla creazione, si registra alla sua Vista, passando se stesso come parametro dietro interfaccia.
- * @field dataSource : sorgente dati utilizzata dall'activity e dai suoi presenter
- * @field sensorManager : gestore dei sensori utilizzato dall'activity e dai suoi presenter
+ * @use Ogni presenter dell'applicazione mantiene un riferimento all'Activity dietro interfaccia ISerleenaActivity.
+ * @field application : ISerleenaApplication Applicazione serleena
+ * @field trackFragment : TrackFragment Visuale Percorso
+ * @field compassFragment : CompassFragment Schermata Bussola
+ * @field contactsFragment : ContactsFragment Schermata Autorita` locali
+ * @field telemetryFragment : TelemetryFragment Visuale Tracciamento
+ * @field weatherFragment : WeatherFragment Schermata Meteo
+ * @field mapFragment : MapFragment Visuale Mappa
+ * @field experienceSelectionFragment : ExperienceSelectionFragment Imposta Esperienza
+ * @field trackSelectionFragment : TrackSelectionFragment Visuale Imposta Percorso
+ * @field menuFragment : ObjectListFragment Schermata menu` principale
+ * @field experienceFragment : ObjectListFragment Schermata Esperienza
+ * @field syncFragment : SyncFragment Schermata Sincronizza
  * @author Filippo Sestini <valle.sebastiano93@gmail.com>
  * @version 1.0.0
  * @see android.support.v7.app.AppCompatActivity
@@ -81,8 +94,7 @@ import java.util.ArrayList;
 public class SerleenaActivity extends Activity
         implements ISerleenaActivity, IObjectListObserver {
 
-    private ISerleenaDataSource dataSource;
-    private ISensorManager sensorManager;
+    private ISerleenaApplication application;
 
     private TrackFragment trackFragment;
     private CompassFragment compassFragment;
@@ -94,7 +106,6 @@ public class SerleenaActivity extends Activity
     private TrackSelectionFragment trackSelectionFragment;
     private ObjectListFragment menuFragment;
     private ObjectListFragment experienceFragment;
-    private IPersistenceDataSink dataSink;
     private SyncFragment syncFragment;
 
     /**
@@ -102,31 +113,12 @@ public class SerleenaActivity extends Activity
      */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
+        super.onCreate(null);
         setContentView(R.layout.activity_serleena);
 
-        sensorManager = SerleenaSensorManager.getInstance(this);
-
-        SerleenaDatabase serleenaDatabase = new SerleenaDatabase(this, 1);
-        IPersistenceDataSource persistenceDataSource =
-                new CachedSQLiteDataSource(
-                        new SerleenaSQLiteDataSource(new SerleenaDatabase(this, 1)));
-        dataSource = new SerleenaDataSource(persistenceDataSource);
-        dataSink = new SerleenaSQLiteDataSink(this, serleenaDatabase);
-
-        try {
-            INetProxy netProxy = new SerleenaJSONNetProxy(
-                    new LocalEnvKylothIdSource(),
-                    new URL("http://api.kyloth.info/"));
-            KylothCloudSynchronizer.getInstance(
-                    netProxy, dataSink, persistenceDataSource);
-        } catch (MalformedURLException e) {
-            throw new RuntimeException();
-        }
+        application = (ISerleenaApplication) getApplication();
 
         if (findViewById(R.id.main_container) != null) {
-            if (savedInstanceState != null)
-                return;
 
             initFragments();
             initPresenters();
@@ -134,19 +126,6 @@ public class SerleenaActivity extends Activity
             getFragmentManager().beginTransaction()
                     .add(R.id.main_container, menuFragment).commit();
         }
-    }
-
-    /**
-     * Ridefinisce Activity.onDestroy()
-     *
-     * Annulla l'attraversamento del Percorso alla chiusura dell'Activity,
-     * evitando che risorse in background rimangano attive anche ad applicazione
-     * terminata.
-     */
-    @Override
-    protected void onDestroy() {
-        super.onDestroy();
-        getSensorManager().getTrackCrossingManager().abort();
     }
 
     /**
@@ -164,30 +143,43 @@ public class SerleenaActivity extends Activity
 
     /**
      * Implementa ISerleenaActivity.getDataSource().
+     *
+     * Inoltra l'oggetto ISerleenaDataSource restituito dall'applicazione
+     * ISerleenaApplication.
      */
     @Override
     public ISerleenaDataSource getDataSource() {
-        return dataSource;
+        return application.getDataSource();
     }
 
     /**
      * Implementa ISerleenaActivity.getSensorManager().
+     *
+     * Inoltra l'oggetto ISensorManager restituito dall'applicazione
+     * ISerleenaApplication.
      */
     @Override
     public ISensorManager getSensorManager() {
-        return sensorManager;
+        return application.getSensorManager();
     }
 
     /**
      * Implementa ISerleenaActivity.getDataSink().
+     *
+     * Inoltra l'oggetto IPersistenceDataSink restituito dall'applicazione
+     * ISerleenaApplication.
      */
     @Override
     public IPersistenceDataSink getDataSink() {
-        return dataSink;
+        return application.getDataSink();
     }
 
     /**
      * Implementa IObjectListObserver.onObjectSelected().
+     *
+     * Riceve eventi di selezione da parte delle schermate Esperienza e dal
+     * menu principale. Il Fragment selezionato viene visualizzato in primo
+     * piano.
      *
      * @param obj Oggetto selezionato.
      */
@@ -199,7 +191,11 @@ public class SerleenaActivity extends Activity
                 .commit();
     }
 
+    /**
+     * Inizializza i Fragment.
+     */
     private void initFragments() {
+        QuitFragment quitFragment = new QuitFragment();
         trackFragment = new TrackFragment();
         compassFragment = new CompassFragment();
         contactsFragment = new ContactsFragment();
@@ -233,12 +229,29 @@ public class SerleenaActivity extends Activity
         menuList.add(contactsFragment);
         menuList.add(compassFragment);
         menuList.add(syncFragment);
-        menuList.add(new QuitFragment());
+        menuList.add(quitFragment);
 
         menuFragment.setList(menuList);
         menuFragment.attachObserver(this);
+
+        quitFragment.setOnYesClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                getSensorManager().getTrackCrossingManager().abort();
+                finish();
+            }
+        });
+        quitFragment.setOnNoClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                onKeyDown(KeyEvent.KEYCODE_MENU, null);
+            }
+        });
     }
 
+    /**
+     * Inizializza i Presenter.
+     */
     private void initPresenters() {
         new CompassPresenter(compassFragment, this);
         new ContactsPresenter(contactsFragment, this);
