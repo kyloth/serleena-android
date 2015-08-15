@@ -29,7 +29,7 @@
 
 
 /**
- * Name: QuitFragmentIntegrationTest.java
+ * Name: QuitFragmentTest.java
  * Package: com.kyloth.serleena.view.fragments
  * Author: Filippo Sestini
  *
@@ -42,7 +42,12 @@
 package com.kyloth.serleena.view.fragments;
 
 import android.app.ListFragment;
+import android.content.Context;
+import android.os.Bundle;
 import android.view.KeyEvent;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ListAdapter;
 
@@ -55,12 +60,17 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.robolectric.Robolectric;
 import org.robolectric.RobolectricGradleTestRunner;
+import org.robolectric.RuntimeEnvironment;
 import org.robolectric.annotation.Config;
 
 import static junit.framework.Assert.assertTrue;
+import static org.mockito.Matchers.eq;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
+import static org.mockito.Matchers.any;
 
 /**
- * Contiene test di integrazione per la classe QuitFragment.
+ * Contiene test di unità per la classe QuitFragment.
  *
  * @author Filippo Sestini <sestini.filippo@gmail.com>
  * @version 1.0.0
@@ -68,70 +78,62 @@ import static junit.framework.Assert.assertTrue;
 @RunWith(RobolectricGradleTestRunner.class)
 @Config(constants = BuildConfig.class, emulateSdk = 19,
         manifest = "src/main/AndroidManifest.xml")
-public class QuitFragmentIntegrationTest {
+public class QuitFragmentTest {
 
-    private static class TestActivity extends SerleenaActivity {
-        public boolean backPressed = false;
-        public boolean finishing = false;
-        @Override
-        public void onBackPressed() {
-            super.onBackPressed();
-            backPressed = true;
-        }
-        @Override
-        public void finish() {
-            super.finish();
-            finishing = true;
-        }
-    }
-
-    private TestActivity activity;
     private QuitFragment fragment;
     private Button yesButton;
     private Button noButton;
 
     @Before
     public void initialize() {
-        activity = Robolectric.buildActivity(TestActivity.class)
-                .create().start().resume().visible().get();
-        fragment = switchToQuitFragment();
-        yesButton = (Button) fragment.getView().findViewById(R.id.yes_button);
-        noButton = (Button) fragment.getView().findViewById(R.id.no_button);
+        LayoutInflater inflater = mock(LayoutInflater.class);
+        ViewGroup vg = mock(ViewGroup.class);
+        View v = mock(View.class);
+        yesButton = new Button(RuntimeEnvironment.application);
+        noButton = new Button(RuntimeEnvironment.application);
+
+        when(inflater.inflate(
+                        eq(R.layout.fragment_quit),
+                        eq(vg),
+                        any(Boolean.class))
+        ).thenReturn(v);
+        when(v.findViewById(R.id.yes_button)).thenReturn(yesButton);
+        when(v.findViewById(R.id.no_button)).thenReturn(noButton);
+
+        fragment = new QuitFragment();
+        fragment.onCreateView(inflater, vg, mock(Bundle.class));
     }
 
     /**
-     * Verifica che la pressione del pulsante "sì" segnali all'activity di
-     * chiudersi.
+     * Verifica che il Listener registrato all'evento onYesClick() venga
+     * correttamente segnalato alla pressione del bottone.
      */
     @Test
-    public void hittingYesShouldCloseTheActivity() {
+    public void yesButtonClickShouldNotifyListener() {
+        TestClick test = new TestClick();
+        fragment.setOnYesClickListener(test);
         yesButton.callOnClick();
-        assertTrue(activity.finishing);
+        assertTrue(test.called);
     }
 
     /**
-     * Verifica che la pressione del pulsante "no" segnali all'activity di
-     * tornare indietro allo stato precedente.
+     * Verifica che il Listener registrato all'evento onNoClick() venga
+     * correttamente segnalato alla pressione del bottone.
      */
     @Test
-    public void hittingNoShouldGoBack() {
+    public void noButtonClickShouldNotifyListener() {
+        TestClick test = new TestClick();
+        fragment.setOnNoClickListener(test);
         noButton.callOnClick();
-        assertTrue(activity.backPressed);
+        assertTrue(test.called);
     }
 
-    private QuitFragment switchToQuitFragment() {
-        activity.onKeyDown(KeyEvent.KEYCODE_MENU, null);
-        ListFragment menuFragment =
-                (ListFragment) activity.getFragmentManager()
-                        .findFragmentById(R.id.main_container);
-        menuFragment.onResume();
-        ListAdapter adapter = menuFragment.getListAdapter();
-        QuitFragment quitFragment = null;
-        for (int i = 0; i < adapter.getCount(); i++)
-            if (adapter.getItem(i).toString().equals("Esci"))
-                quitFragment = (QuitFragment) adapter.getItem(i);
-        activity.onObjectSelected(quitFragment);
-        quitFragment.onResume();
-        return quitFragment;
+    private static class TestClick implements View.OnClickListener {
+        public boolean called = false;
+        @Override
+        public void onClick(View v) {
+            called = true;
+        }
     }
+
 }
