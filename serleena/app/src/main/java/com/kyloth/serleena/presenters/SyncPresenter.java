@@ -40,8 +40,23 @@
 
 package com.kyloth.serleena.presenters;
 
+import android.app.Activity;
+import com.kyloth.serleena.common.SyncStatusEnum;
+import com.kyloth.serleena.persistence.IPersistenceDataSink;
+import com.kyloth.serleena.persistence.IPersistenceDataSource;
 import com.kyloth.serleena.presentation.ISyncPresenter;
 import com.kyloth.serleena.presentation.ISyncView;
+import com.kyloth.serleena.synchronization.AuthException;
+import com.kyloth.serleena.synchronization.IKylothCloudSynchronizer;
+import com.kyloth.serleena.synchronization.KylothCloudSynchronizer;
+import com.kyloth.serleena.synchronization.net.INetProxy;
+import com.kyloth.serleena.synchronization.net.SerleenaJSONNetProxy;
+import com.kyloth.serleena.synchronization.kylothcloud.IKylothIdSource;
+import com.kyloth.serleena.synchronization.kylothcloud.LocalEnvKylothIdSource;
+
+import java.io.IOException;
+import java.net.MalformedURLException;
+import java.net.URL;
 
 /**
  * Concretizza ISyncPresenter.
@@ -56,6 +71,20 @@ public class SyncPresenter implements ISyncPresenter {
 
     private ISyncView view;
     private ISerleenaActivity activity;
+    private IKylothCloudSynchronizer synchronizer;
+    private static final URL KYLOTH_PORTAL_URL;
+    private Thread syncingThread;
+
+    static {URL kylothPortalUrl1;
+        try {
+            kylothPortalUrl1 = new URL("http://api.kyloth.info");
+        } catch (MalformedURLException e) {
+            e.printStackTrace();
+            kylothPortalUrl1 = null;
+        }
+        KYLOTH_PORTAL_URL = kylothPortalUrl1;
+    }
+    private SyncStatusEnum status;
 
     /**
      * Crea un nuovo oggetto SyncPresenter.
@@ -75,6 +104,11 @@ public class SyncPresenter implements ISyncPresenter {
 
         this.view = view;
         this.activity = activity;
+        this.synchronizer = KylothCloudSynchronizer.getInstance(null, null, null);
+        // Questo arriva gia' inizializzato dall'activity.
+        this.status = SyncStatusEnum.NOTPAIRED;
+
+        this.view.attachPresenter(this);
     }
 
     /**
@@ -82,7 +116,149 @@ public class SyncPresenter implements ISyncPresenter {
      */
     @Override
     public void synchronize() {
+        try {
+            // Se c'e' un thread che sta facendo qualcosa lo aborta
+            syncingThread.interrupt();
+        } catch (NullPointerException e) {
+            // Altrimenti ok
+        }
+        syncingThread = new Thread(){
+            public void run() {
+                synchronized(status) {
+                    switch (status) {
+                        case NOTPAIRED:
+                            // Se premo il bottone quando non preauthato inizio a pairare.
+                            status = SyncStatusEnum.PREAUTHING;
+                            refresh();
+                            preAuth();
+                            break;
+                        case PREAUTHING:
+                            // Se premo il bottone quando sta preauthando interrupto il thread e ritorno allo stato precedente.
+                            // un preauth vale sempre, anche ce l'avesse fatta
+                            status = SyncStatusEnum.NOTPAIRED;
+                            refresh();
+                            break;
+                        case PREAUTHED:
+                            // Se premo il bottone quando ha preauthato parto con l'auth vera
+                            status = SyncStatusEnum.AUTHING;
+                            refresh();
+                            auth();
+                            break;
+                        case AUTHING:
+                            // Se premo il bottone quando sta authando aborto tutto
+                            // un preauth vale sempre, tanto
+                            status = SyncStatusEnum.NOTPAIRED;
+                            refresh();
+                            break;
+                        case AUTHED:
+                            // Se premo il bottone quando e' authato parto col sync vero
+                            status = SyncStatusEnum.SYNCING;
+                            refresh();
+                            sync();
+                            break;
+                        case SYNCING:
+                            // Se premo il bottone quando sta syncando aborto e torno a authed.
+                            status = SyncStatusEnum.AUTHED;
+                            refresh();
+                            break;
+                        case SYNCED:
+                            status = SyncStatusEnum.SYNCING;
+                            refresh();
+                            sync();
+                            break;
+                        case REJECTED:
+                            // Se premo il bottone quando sono stato negato riprovo da zero.
+                            // tanto preauth vale sempre
+                            status = SyncStatusEnum.PREAUTHING;
+                            refresh();
+                            preAuth();
+                            break;
+                        case FAILED:
+                            // Se premo il bottone quando e' fallita la sync riprovo
+                            status = SyncStatusEnum.SYNCING;
+                            refresh();
+                            sync();
+                            break;
+                        case AUTHFAILED:
+                            // Se premo il bottone quando e' fallita l'auth riprovo
+                            status = SyncStatusEnum.PREAUTHING;
+                            refresh();
+                            preAuth();
+                            break;
+                    }
+                };
+            }
+        };
 
+        syncingThread.start();
+
+    }
+
+    private void refreshToken(final String s) {
+        // TODO: Sostituire con un handler
+        if (activity instanceof Activity) {
+            ((Activity) activity).runOnUiThread(new Runnable() {
+                final String finalS = s;
+                @Override
+                public void run() {
+                    // TODO: Rimuovere
+                    System.out.println(finalS);
+                    view.setSyncStatus(status);
+                    view.displayToken(finalS);
+                }
+            });
+        }
+    }
+
+    private void refresh() {
+        // TODO: Sostituire con un handler
+        if (activity instanceof Activity) {
+            ((Activity) activity).runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    // This code will always run on the UI thread, therefore is safe to modify UI elements.
+                    view.setSyncStatus(status);
+                }
+            });
+        }
+    }
+
+    private void preAuth() {
+        String s = "ERROR";
+        // You should never see this
+        try {
+            s = synchronizer.preAuth();
+            status = SyncStatusEnum.PREAUTHED;
+        } catch (AuthException e) {
+            status = SyncStatusEnum.REJECTED;
+        } catch (IOException e) {
+            status = SyncStatusEnum.AUTHFAILED;
+        }
+        refreshToken(s);
+    }
+
+    private void auth() {
+        try {
+            synchronizer.auth();
+            status = SyncStatusEnum.AUTHED;
+        } catch (AuthException e) {
+            status = SyncStatusEnum.REJECTED;
+        } catch (IOException e) {
+            status = SyncStatusEnum.AUTHFAILED;
+        }
+        refresh();
+    }
+
+    private void sync() {
+        try {
+            synchronizer.sync();
+            status = SyncStatusEnum.SYNCED;
+        } catch (AuthException e) {
+            status = SyncStatusEnum.REJECTED;
+        } catch (IOException e) {
+            status = SyncStatusEnum.FAILED;
+        }
+        refresh();
     }
 
     /**
@@ -90,7 +266,7 @@ public class SyncPresenter implements ISyncPresenter {
      */
     @Override
     public void resume() {
-
+        refresh();
     }
 
     /**
@@ -98,7 +274,7 @@ public class SyncPresenter implements ISyncPresenter {
      */
     @Override
     public void pause() {
-
+        // NOOP?
     }
 
 }
