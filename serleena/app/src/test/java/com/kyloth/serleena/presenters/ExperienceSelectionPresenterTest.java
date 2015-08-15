@@ -44,13 +44,14 @@ package com.kyloth.serleena.presenters;
 import org.junit.Test;
 import org.junit.Before;
 
+import static junit.framework.Assert.assertEquals;
 import static org.mockito.Mockito.*;
 
 import java.util.ArrayList;
 
+import com.kyloth.serleena.common.NoActiveExperienceException;
 import com.kyloth.serleena.model.IExperience;
 import com.kyloth.serleena.model.ISerleenaDataSource;
-import com.kyloth.serleena.presentation.IExperienceActivationObserver;
 import com.kyloth.serleena.presentation.IExperienceSelectionPresenter;
 import com.kyloth.serleena.presentation.IExperienceSelectionView;
 
@@ -108,6 +109,10 @@ public class ExperienceSelectionPresenterTest {
         new ExperienceSelectionPresenter(null, null);
     }
 
+    /**
+     * Verifica che activateExperience() sollevi un'eccezione
+     * IllegalArgumentException se gli viene passato un parametro null.
+     */
     @Test(expected = IllegalArgumentException.class)
     public void activateExperienceShouldThrowWhenNullExperience() {
         new ExperienceSelectionPresenter(view, activity)
@@ -115,70 +120,8 @@ public class ExperienceSelectionPresenterTest {
     }
 
     /**
-     * Verifica che il passaggio di null come parametro a attachObserver()
-     * sollevi un'eccezione.
+     * Verifica che il presenter popoli la vista durante resume().
      */
-    @Test(expected = IllegalArgumentException.class)
-    public void nullObserversShouldThrow1() {
-        new ExperienceSelectionPresenter(view, activity).attachObserver(null);
-    }
-
-    /**
-     * Verifica che il passaggio di null come parametro a detachObserver()
-     * sollevi un'eccezione.
-     */
-    @Test(expected = IllegalArgumentException.class)
-    public void nullObserversShouldThrow2() {
-        new ExperienceSelectionPresenter(view, activity).detachObserver(null);
-    }
-
-    @Test(expected = RuntimeException.class)
-    public void notifyObserversWithNoExperienceShouldThrow() {
-        new ExperienceSelectionPresenter(view, activity).notifyObservers();
-    }
-
-    /**
-     * Verifica che il metodo notifyObservers() notifichi correttamente gli
-     * Observer.
-     */
-    @Test
-    public void observersNotificationShouldWorkCorrectly() {
-        IExperience exp = mock(IExperience.class);
-        IExperienceActivationObserver o1 =
-                mock(IExperienceActivationObserver.class);
-        IExperienceActivationObserver o2 =
-                mock(IExperienceActivationObserver.class);
-        IExperienceActivationObserver o3 =
-                mock(IExperienceActivationObserver.class);
-        ExperienceSelectionPresenter p = new ExperienceSelectionPresenter
-                (view, activity);
-
-        p.activateExperience(exp);
-
-        p.attachObserver(o1);
-        p.notifyObservers();
-        verify(o1).onExperienceActivated(exp);
-
-        p.attachObserver(o2);
-        p.notifyObservers();
-        verify(o1, times(2)).onExperienceActivated(exp);
-        verify(o2, times(1)).onExperienceActivated(exp);
-
-        p.attachObserver(o3);
-        p.notifyObservers();
-        verify(o1, times(3)).onExperienceActivated(exp);
-        verify(o2, times(2)).onExperienceActivated(exp);
-        verify(o3, times(1)).onExperienceActivated(exp);
-
-        p.detachObserver(o1);
-        p.detachObserver(o2);
-        p.detachObserver(o3);
-        p.notifyObservers();
-        verify(o1, times(3)).onExperienceActivated(exp);
-        verify(o2, times(2)).onExperienceActivated(exp);
-        verify(o3, times(1)).onExperienceActivated(exp);
-    }
-
     @Test
     public void presenterShouldPopulateViewOnResume() {
         IExperienceSelectionPresenter p =
@@ -188,19 +131,30 @@ public class ExperienceSelectionPresenterTest {
     }
 
     /**
-     * Verifica che activateExperience() notifichi correttamente gli Observer.
+     * Verifica che activeExperience() restituisca correttamente l'Esperienza
+     * attiva.
      */
     @Test
-    public void activateExperienceShouldNotifyObservers() {
-        ExperienceSelectionPresenter p = new ExperienceSelectionPresenter
-                (view, activity);
-        IExperienceActivationObserver o = mock(IExperienceActivationObserver
-                .class);
-        p.attachObserver(o);
-
+    public void activateExperienceShouldNotifyObservers()
+            throws NoActiveExperienceException {
+        ExperienceSelectionPresenter p =
+                new ExperienceSelectionPresenter(view, activity);
+        p.activateExperience(mock(IExperience.class));
         IExperience e = mock(IExperience.class);
         p.activateExperience(e);
-        verify(o).onExperienceActivated(e);
+        assertEquals(e, p.activeExperience());
+    }
+
+    /**
+     * Verifica che activeExperience() sollevi un'eccezione
+     * NoActiveExperienceException se non vi è un'Esperienza attiva.
+     */
+    @Test(expected = NoActiveExperienceException.class)
+    public void activeExperienceShouldThrowIfNoActiveExperience()
+            throws NoActiveExperienceException {
+        ExperienceSelectionPresenter p =
+                new ExperienceSelectionPresenter(view, activity);
+        p.activeExperience();
     }
 
 }

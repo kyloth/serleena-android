@@ -138,27 +138,6 @@ public class TrackSelectionPresenterTest {
     }
 
     /**
-     * Verifica che il costruttore chiami il metodo attachPresenter sulla view
-     * fornendo il nuovo TrackSelectionPresenter creato come parametro.
-     */
-    @Test
-    public void constructorShouldCallAttachObserverToExperienceSource() {
-        TrackSelectionPresenter p = new TrackSelectionPresenter(view,
-                activity, source);
-        verify(source).attachObserver(p);
-    }
-
-    /**
-     * Verifica che il metodo onExperienceActivated() lanci un'eccezione
-     * IllegalArgumentException quando chiamato con parametro nullo.
-     */
-    @Test(expected = IllegalArgumentException.class)
-    public void onExperienceActivatedShouldThrowExceptionWhenNullExperience() {
-        new TrackSelectionPresenter(view, activity, source)
-                .onExperienceActivated(null);
-    }
-
-    /**
      * Verifica che il metodo activateTrack() lanci un'eccezione
      * IllegalArgumentException quando chiamato con parametro nullo.
      */

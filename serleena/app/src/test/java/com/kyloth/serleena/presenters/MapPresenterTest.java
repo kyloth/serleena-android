@@ -43,27 +43,20 @@ package com.kyloth.serleena.presenters;
 
 import org.junit.Test;
 import org.junit.Before;
-import org.junit.Rule;
 import org.junit.runner.RunWith;
-import org.junit.rules.ExpectedException;
 import static org.mockito.Mockito.*;
 
-import org.mockito.ArgumentCaptor;
+import org.mockito.Mockito;
 import org.robolectric.RobolectricTestRunner;
 
 import com.kyloth.serleena.common.LocationNotAvailableException;
-import com.kyloth.serleena.common.UserPoint;
 import com.kyloth.serleena.model.ISerleenaDataSource;
-import com.kyloth.serleena.model.IExperience;
 import com.kyloth.serleena.presentation.IExperienceActivationSource;
 import com.kyloth.serleena.presentation.IMapView;
 import com.kyloth.serleena.common.NoActiveExperienceException;
 import com.kyloth.serleena.common.GeoPoint;
 import com.kyloth.serleena.sensors.ILocationManager;
 import com.kyloth.serleena.sensors.ISensorManager;
-
-import java.util.Iterator;
-
 
 /**
  * Contiene test di unità per la classe MapPresenter.
@@ -134,6 +127,8 @@ public class MapPresenterTest {
     @Test(expected = NoActiveExperienceException.class)
     public void newUserPointShouldThrowExceptionWhenNoActiveExperience()
             throws NoActiveExperienceException, LocationNotAvailableException {
+        Mockito.doThrow(NoActiveExperienceException.class)
+                .when(expActSource).activeExperience();
         new MapPresenter(view, activity, expActSource).newUserPoint();
     }
 
@@ -155,16 +150,6 @@ public class MapPresenterTest {
     public void pauseShouldUnregisterSensor() {
         mp.pause();
         verify(locMan).detachObserver(mp);
-    }
-
-    /**
-     * Verifica che setActiveExperience() sollevi un'eccezione al passaggio
-     * di un'Esperienza null.
-     */
-    @Test(expected = IllegalArgumentException.class)
-    public void setActiveExperienceShouldThrowWhenNullExperience() {
-        MapPresenter mp = new MapPresenter(view, activity, expActSource);
-        mp.onExperienceActivated(null);
     }
 
     /**
@@ -191,7 +176,10 @@ public class MapPresenterTest {
      * vista con la posizione geografica aggiornata.
      */
     @Test
-    public void onLocationUpdateShouldUpdateView() {
+    public void onLocationUpdateShouldUpdateView()
+            throws NoActiveExperienceException {
+        Mockito.doThrow(NoActiveExperienceException.class)
+                .when(expActSource).activeExperience();
         GeoPoint gp = mock(GeoPoint.class);
         mp.onLocationUpdate(gp);
         verify(view).setUserLocation(gp);
@@ -204,6 +192,8 @@ public class MapPresenterTest {
     @Test(expected = NoActiveExperienceException.class)
     public void newUserPointShouldThrowWhenNoActiveExperience()
             throws NoActiveExperienceException, LocationNotAvailableException {
+        Mockito.doThrow(NoActiveExperienceException.class)
+                .when(expActSource).activeExperience();
         mp.newUserPoint();
     }
 
