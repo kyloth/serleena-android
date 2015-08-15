@@ -65,6 +65,8 @@ public class QuitFragment extends Fragment implements View.OnClickListener {
 
     private Button yesButton;
     private Button noButton;
+    private View.OnClickListener yesListener;
+    private View.OnClickListener noListener;
 
     public QuitFragment() { }
 
@@ -92,9 +94,9 @@ public class QuitFragment extends Fragment implements View.OnClickListener {
     @Override
     public void onClick(View v) {
         if (v == yesButton)
-            getActivity().finish();
+            onYesClick();
         else
-            getActivity().onBackPressed();
+            onNoClick();
     }
 
     /**
@@ -105,6 +107,45 @@ public class QuitFragment extends Fragment implements View.OnClickListener {
     @Override
     public String toString() {
         return "Esci";
+    }
+
+    /**
+     * Viene invocato in seguito al rifiuto dell'utente di uscire
+     * dall'applicazione. Invoca il Listener impostato con setOnNoClickListener.
+     */
+    public void onYesClick() {
+        if (yesListener != null)
+            yesListener.onClick(yesButton);
+    }
+
+    /**
+     * Viene invocato in seguito alla conferma dell'utente di uscire
+     * dall'applicazione. Invoca il Listener impostato con
+     * setOnYesClickListener.
+     */
+    public void onNoClick() {
+        if (noListener != null)
+            noListener.onClick(noButton);
+    }
+
+    /**
+     * Imposta il Listener che verrà chiamato alla conferma dell'utente di
+     * uscire dall'applicazione.
+     */
+    public void setOnYesClickListener(View.OnClickListener listener) {
+        if (listener == null)
+            throw new IllegalArgumentException("Illegal null listener");
+        yesListener = listener;
+    }
+
+    /**
+     * Imposta il Listener che verrà chiamato al rifiuto dell'utente di
+     * uscire dall'applicazione.
+     */
+    public void setOnNoClickListener(View.OnClickListener listener) {
+        if (listener == null)
+            throw new IllegalArgumentException("Illegal null listener");
+        noListener = listener;
     }
 
 }
