@@ -44,6 +44,7 @@ import android.app.Fragment;
 import android.os.Bundle;
 import android.app.Activity;
 import android.view.KeyEvent;
+import android.view.View;
 
 import com.kyloth.serleena.R;
 import com.kyloth.serleena.model.*;
