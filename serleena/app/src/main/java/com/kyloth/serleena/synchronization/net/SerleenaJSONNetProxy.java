@@ -225,7 +225,11 @@ public class SerleenaJSONNetProxy implements INetProxy {
             } else {
                 int c = urlConnection.getResponseCode();
                 disconnect();
-                throw new AuthException("Got " + c + " from remote service");
+                if (c == 403 || c == 401 || c == 405) {
+                    throw new AuthException("Got " + c + " from remote service");
+                } else {
+                    throw new IOException("Got " + c + " from remote service");
+                }
             }
         } else {
             throw new RuntimeException("Existing URL connection? disconnect() first");
