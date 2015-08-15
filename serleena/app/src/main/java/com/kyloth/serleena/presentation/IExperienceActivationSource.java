@@ -40,35 +40,27 @@
 
 package com.kyloth.serleena.presentation;
 
+import com.kyloth.serleena.common.NoActiveExperienceException;
+import com.kyloth.serleena.model.IExperience;
+
 /**
- * Rappresenta l'interfaccia di un oggetto che solleva eventi riguardo
- * l'attivazione di Esperienze, segnalati a degli eventuali observer.
+ * Rappresenta l'interfaccia di un oggetto da cui è possibile ottenere
+ * l'Esperienza correntemente attiva.
  *
- * Realizza il pattern Observer insieme a IExperienceActivationObserver.
- *
- * @use Viene implementata da ExperienceSelectionFragment, che si occupa di gestire l'attivazione delle Esperienze e segnalarlo agli osservatori, quali MapPresenter e TrackSelectionPresenter, che implementano l'interfaccia IExperienceActivationObserver.
+ * @use Viene implementata da ExperienceSelectionFragment, che si occupa di gestire l'attivazione delle Esperienze. MapPresenter e TrackSelectionPresenter mantendono un riferimento a questa interfaccia per ottenere l'Esperienza attiva.
  * @author Filippo Sestini <sestini.filippo@gmail.com>
  * @version 1.0.0
  */
 public interface IExperienceActivationSource {
 
     /**
-     * Aggancia un observer all'oggetto.
+     * Restituisce l'Esperienza correntemente attiva.
      *
-     * @param observer Observer da registrare.
-     */
-    void attachObserver(IExperienceActivationObserver observer);
-
-    /**
-     * Cancella la registrazione di un observer all'oggetto.
+     * Se non è attiva alcuna Esperienza, viene sollevata un'eccezione
+     * NoActiveExperienceException.
      *
-     * @param observer Observer la cui registrazione deve essere cancellata.
+     * @return Esperienza correntemente attiva.
      */
-    void detachObserver(IExperienceActivationObserver observer);
-
-    /**
-     * Notifica gli observer registrati agli eventi dell'oggetto.
-     */
-    void notifyObservers();
+    IExperience activeExperience() throws NoActiveExperienceException;
 
 }
