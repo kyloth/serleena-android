@@ -130,19 +130,6 @@ public class SerleenaActivity extends Activity
     }
 
     /**
-     * Ridefinisce Activity.onDestroy()
-     *
-     * Annulla l'attraversamento del Percorso alla chiusura dell'Activity,
-     * evitando che risorse in background rimangano attive anche ad applicazione
-     * terminata.
-     */
-    @Override
-    protected void onDestroy() {
-        super.onDestroy();
-        getSensorManager().getTrackCrossingManager().abort();
-    }
-
-    /**
      * Ridefinisce Activity.onKeyDown().
      */
     @Override
@@ -209,6 +196,7 @@ public class SerleenaActivity extends Activity
      * Inizializza i Fragment.
      */
     private void initFragments() {
+        QuitFragment quitFragment = new QuitFragment();
         trackFragment = new TrackFragment();
         compassFragment = new CompassFragment();
         contactsFragment = new ContactsFragment();
@@ -242,10 +230,24 @@ public class SerleenaActivity extends Activity
         menuList.add(contactsFragment);
         menuList.add(compassFragment);
         menuList.add(syncFragment);
-        menuList.add(new QuitFragment());
+        menuList.add(quitFragment);
 
         menuFragment.setList(menuList);
         menuFragment.attachObserver(this);
+
+        quitFragment.setOnYesClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                getSensorManager().getTrackCrossingManager().abort();
+                finish();
+            }
+        });
+        quitFragment.setOnNoClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                onKeyDown(KeyEvent.KEYCODE_MENU, null);
+            }
+        });
     }
 
     /**
