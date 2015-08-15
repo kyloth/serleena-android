@@ -81,8 +81,7 @@ import java.util.ArrayList;
 public class SerleenaActivity extends Activity
         implements ISerleenaActivity, IObjectListObserver {
 
-    private ISerleenaDataSource dataSource;
-    private ISensorManager sensorManager;
+    private ISerleenaApplication application;
 
     private TrackFragment trackFragment;
     private CompassFragment compassFragment;
@@ -94,7 +93,6 @@ public class SerleenaActivity extends Activity
     private TrackSelectionFragment trackSelectionFragment;
     private ObjectListFragment menuFragment;
     private ObjectListFragment experienceFragment;
-    private IPersistenceDataSink dataSink;
     private SyncFragment syncFragment;
 
     /**
@@ -105,24 +103,7 @@ public class SerleenaActivity extends Activity
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_serleena);
 
-        sensorManager = SerleenaSensorManager.getInstance(this);
-
-        SerleenaDatabase serleenaDatabase = new SerleenaDatabase(this, 1);
-        IPersistenceDataSource persistenceDataSource =
-                new CachedSQLiteDataSource(
-                        new SerleenaSQLiteDataSource(new SerleenaDatabase(this, 1)));
-        dataSource = new SerleenaDataSource(persistenceDataSource);
-        dataSink = new SerleenaSQLiteDataSink(this, serleenaDatabase);
-
-        try {
-            INetProxy netProxy = new SerleenaJSONNetProxy(
-                    new LocalEnvKylothIdSource(),
-                    new URL("http://api.kyloth.info/"));
-            KylothCloudSynchronizer.getInstance(
-                    netProxy, dataSink, persistenceDataSource);
-        } catch (MalformedURLException e) {
-            throw new RuntimeException();
-        }
+        application = (ISerleenaApplication) getApplication();
 
         if (findViewById(R.id.main_container) != null) {
             if (savedInstanceState != null)
@@ -167,7 +148,7 @@ public class SerleenaActivity extends Activity
      */
     @Override
     public ISerleenaDataSource getDataSource() {
-        return dataSource;
+        return application.getDataSource();
     }
 
     /**
@@ -175,7 +156,7 @@ public class SerleenaActivity extends Activity
      */
     @Override
     public ISensorManager getSensorManager() {
-        return sensorManager;
+        return application.getSensorManager();
     }
 
     /**
@@ -183,7 +164,7 @@ public class SerleenaActivity extends Activity
      */
     @Override
     public IPersistenceDataSink getDataSink() {
-        return dataSink;
+        return application.getDataSink();
     }
 
     /**
