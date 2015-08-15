@@ -31,6 +31,8 @@
 package com.kyloth.serleena.view.fragments;
 
 
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.os.Bundle;
 import android.app.Fragment;
 import android.view.LayoutInflater;
@@ -89,7 +91,16 @@ public class MapFragment extends Fragment implements IMapView,
         try {
             presenter.newUserPoint();
         } catch (NoActiveExperienceException|LocationNotAvailableException e) {
-            throw new UnsupportedOperationException();
+            AlertDialog.Builder alertBuilder =
+                    new AlertDialog.Builder(getActivity());
+            alertBuilder.setMessage("Nessuna esperienza attiva");
+            alertBuilder.setNeutralButton("OK", new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+                    dialog.cancel();
+                }
+            });
+            alertBuilder.create().show();
         }
     }
 
