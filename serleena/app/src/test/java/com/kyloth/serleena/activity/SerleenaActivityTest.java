@@ -139,14 +139,14 @@ public class SerleenaActivityTest {
     }
 
     /**
-     * Verifica che il metodo onCreate() non inizializzi l'activity se viene
-     * passato un oggetto Bundle != null.
+     * Verifica che il metodo onCreate() inizializzi l'activity anche se
+     * viene passato un oggetto Bundle diverso da null.
      */
     @Test
     public void activityDoesNothingIfBundleNotNull() {
         activity = Robolectric.buildActivity(SerleenaActivity.class).create
                 (Bundle.EMPTY).start().visible().get();
-        assertNull(currentFragment());
+        assertNotNull(currentFragment());
     }
 
     /**
