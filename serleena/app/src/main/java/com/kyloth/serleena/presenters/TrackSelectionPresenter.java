@@ -40,11 +40,9 @@
 
 package com.kyloth.serleena.presenters;
 
-import android.os.AsyncTask;
-
+import com.kyloth.serleena.common.NoActiveExperienceException;
 import com.kyloth.serleena.model.IExperience;
 import com.kyloth.serleena.model.ITrack;
-import com.kyloth.serleena.presentation.IExperienceActivationObserver;
 import com.kyloth.serleena.presentation.IExperienceActivationSource;
 import com.kyloth.serleena.presentation.ITrackSelectionPresenter;
 import com.kyloth.serleena.presentation.ITrackSelectionView;
@@ -58,11 +56,11 @@ import com.kyloth.serleena.presentation.ITrackSelectionView;
  * @author Filippo Sestini <sestini.filippo@gmail.com>
  * @version 1.0.0
  */
-public class TrackSelectionPresenter
-        implements ITrackSelectionPresenter, IExperienceActivationObserver {
+public class TrackSelectionPresenter implements ITrackSelectionPresenter {
 
     private ISerleenaActivity activity;
     private ITrackSelectionView view;
+    private IExperienceActivationSource experienceActivationSource;
 
     /**
      * Crea un oggetto TrackSelectionPresenter.
@@ -89,10 +87,10 @@ public class TrackSelectionPresenter
             throw new IllegalArgumentException("Illegal null experience " +
                     "activation source");
 
+        this.experienceActivationSource = source;
         this.activity = activity;
         this.view = view;
         this.view.attachPresenter(this);
-        source.attachObserver(this);
     }
 
     /**
@@ -103,7 +101,11 @@ public class TrackSelectionPresenter
      */
     @Override
     public void resume() {
-
+        try {
+            IExperience experience =
+                    experienceActivationSource.activeExperience();
+            view.setTracks(experience.getTracks());
+        } catch (NoActiveExperienceException e) { }
     }
 
     /**
@@ -122,34 +124,6 @@ public class TrackSelectionPresenter
         if (track == null)
             throw new IllegalArgumentException("Illegal null track");
         activity.getSensorManager().getTrackCrossingManager().startTrack(track);
-    }
-
-    /**
-     * Implementa IExperienceActivationObserver.onExperienceActivated().
-     *
-     * La lista rappresentata dalla vista viene popolata con i Percorsi
-     * dell'Esperienza attivata.
-     *
-     * @param experience Esperienza attivata.
-     */
-    @Override
-    public void onExperienceActivated(final IExperience experience) {
-        if (experience == null)
-            throw new IllegalArgumentException("Illegal null experience");
-
-        AsyncTask<Void, Void, Iterable<ITrack>> task =
-                new AsyncTask<Void, Void, Iterable<ITrack>>() {
-            @Override
-            protected Iterable<ITrack> doInBackground(Void... params) {
-                return experience.getTracks();
-            }
-            @Override
-            protected void onPostExecute(Iterable<ITrack> iTracks) {
-                super.onPostExecute(iTracks);
-                view.setTracks(iTracks);
-            }
-        };
-        task.execute();
     }
 
 }
