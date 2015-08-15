@@ -140,8 +140,6 @@ public class SerleenaJSONNetProxy implements INetProxy {
         } else {
             urlConnection = factory.createURLConnection(getSyncUrl());
             urlConnection.addRequestProperty(AUTH_TOKEN_NAME, authToken);
-            urlConnection.setDoInput(true);
-            urlConnection.setDoOutput(true);
         }
     }
 
@@ -187,6 +185,8 @@ public class SerleenaJSONNetProxy implements INetProxy {
     public CloudJSONOutboundStream send() throws AuthException, IOException {
         if (urlConnection == null) {
             connect();
+            urlConnection.setDoInput(true);
+            urlConnection.setDoOutput(true);
             urlConnection.setRequestMethod("POST");
             OutputStream os = urlConnection.getOutputStream();
             BufferedWriter writer = new BufferedWriter(
@@ -217,6 +217,7 @@ public class SerleenaJSONNetProxy implements INetProxy {
     public InboundStream get() throws AuthException, IOException {
         if (urlConnection == null) {
             connect();
+            urlConnection.setDoInput(true);
             urlConnection.setRequestMethod("GET");
             if (urlConnection.getResponseCode() == HttpURLConnection.HTTP_OK) {
                 CloudJSONInboundStream in;
