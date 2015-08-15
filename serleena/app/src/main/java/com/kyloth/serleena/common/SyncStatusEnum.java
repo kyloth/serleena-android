@@ -47,12 +47,14 @@ package com.kyloth.serleena.common;
  * @author Tobia Tesan <tobia.tesan@gmail.com>
  */
 public enum SyncStatusEnum {
-    INACTIVE, // Inattivo
-    PREAUTH, // Contatto e ricezione del token temporaneo
-    INPUT_REQUIRED, // In attesa che l'utente confermi il token
-                    // temporaneo sul cloud
-    SYNCING, // In fase di sincronizzazione
-    COMPLETE, // Sincronizzazione completata
-    REJECTED, // Autenticazione rifiutata
-    FAILED // Sincronizzazione fallita per altre ragioni
+    NOTPAIRED,
+    PREAUTHING,
+    PREAUTHED,
+    AUTHING,
+    AUTHED,
+    SYNCING,
+    SYNCED,
+    REJECTED,
+    FAILED,
+    AUTHFAILED
 }

@@ -79,13 +79,17 @@ public class SyncFragment extends Fragment implements ISyncView {
     public SyncFragment() {
         super();
         states = new HashMap<>();
-        states.put(SyncStatusEnum.COMPLETE,"FATTO");
-        states.put(SyncStatusEnum.FAILED,"ERRORE");
-        states.put(SyncStatusEnum.INACTIVE,"SINCRONIZZAZIONE NON ATTIVA");
-        states.put(SyncStatusEnum.INPUT_REQUIRED, "IN ATTESA DI CONFERMA...");
-        states.put(SyncStatusEnum.PREAUTH, "STO RICEVENDO IL TOKEN...");
-        states.put(SyncStatusEnum.REJECTED, "INSERIMENTO NON CORRETTO");
-        states.put(SyncStatusEnum.SYNCING, "SINCRONIZZANDO...");
+        states.put(SyncStatusEnum.NOTPAIRED,"Press to pair");
+        states.put(SyncStatusEnum.FAILED,"Sync error, presso to retry");
+        states.put(SyncStatusEnum.PREAUTHING,"Preauthorizing, press to abort");
+        states.put(SyncStatusEnum.PREAUTHED, "Enter token into Kyloth Cloud, press to continue");
+        states.put(SyncStatusEnum.AUTHING, "Authorizing, press to abort");
+        states.put(SyncStatusEnum.AUTHED, "Authorized, press to sync");
+        states.put(SyncStatusEnum.SYNCING, "Syncing, press to abort");
+        states.put(SyncStatusEnum.SYNCED, "Synced, press to resync");
+        states.put(SyncStatusEnum.REJECTED, "Auth rejected, press to retry");
+        states.put(SyncStatusEnum.AUTHFAILED, "Auth failed, press to retry");
+        states.put(SyncStatusEnum.FAILED, "Sync failed, press to retry");
         /* Null object pattern */
         presenter = new ISyncPresenter() {
             @Override public void synchronize() { }
@@ -131,7 +135,7 @@ public class SyncFragment extends Fragment implements ISyncView {
      */
     @Override
     public void setSyncStatus(SyncStatusEnum status) {
-        if(status != SyncStatusEnum.INPUT_REQUIRED)
+        if(status != SyncStatusEnum.PREAUTHED)
             token.setText("");
         info.setText(states.get(status));
     }

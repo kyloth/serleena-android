@@ -78,7 +78,7 @@ public class SerleenaJSONNetProxy implements INetProxy {
     SerleenaConnectionFactory factory;
 
     final String AUTH_TOKEN_NAME = "X-AuthToken";
-    final String DATA_TOKEN_NAME = "Data";
+    final String DATA_TOKEN_NAME = "data";
     final String CHARSET = "UTF-8";
 
     public String getCharset() {
@@ -98,7 +98,7 @@ public class SerleenaJSONNetProxy implements INetProxy {
         URL authUrl = null;
 
         try {
-            authUrl = new URL(baseUrl.toString()+"/users/pair/"+getTempToken());
+            authUrl = new URL(baseUrl.toString()+"users/pair/"+getTempToken());
         } catch (MalformedURLException e) {
             e.printStackTrace();
         }
@@ -112,7 +112,7 @@ public class SerleenaJSONNetProxy implements INetProxy {
         try {
             // syncUrl = new URL(baseUrl.toString()+"/users/sync/"+kylothIdSource.getKylothId());
             // TODO: Qual'e' il vero URL? ST o quello che dice Bronsa? Vedi SHCLOUD-34
-            syncUrl = new URL(baseUrl.toString()+"/data/");
+            syncUrl = new URL(baseUrl.toString()+"data/");
         } catch (MalformedURLException e) {
             e.printStackTrace();
         }
@@ -125,7 +125,7 @@ public class SerleenaJSONNetProxy implements INetProxy {
         URL preAuthUrl = null;
 
         try {
-            preAuthUrl = new URL(baseUrl.toString()+"/token/"+kylothIdSource.getKylothId());
+            preAuthUrl = new URL(baseUrl.toString()+"tokens/"+kylothIdSource.getKylothId());
         } catch (MalformedURLException e) {
             e.printStackTrace();
         }
@@ -140,8 +140,6 @@ public class SerleenaJSONNetProxy implements INetProxy {
         } else {
             urlConnection = factory.createURLConnection(getSyncUrl());
             urlConnection.addRequestProperty(AUTH_TOKEN_NAME, authToken);
-            urlConnection.setDoInput(true);
-            urlConnection.setDoOutput(true);
         }
     }
 
@@ -187,6 +185,8 @@ public class SerleenaJSONNetProxy implements INetProxy {
     public CloudJSONOutboundStream send() throws AuthException, IOException {
         if (urlConnection == null) {
             connect();
+            urlConnection.setDoInput(true);
+            urlConnection.setDoOutput(true);
             urlConnection.setRequestMethod("POST");
             OutputStream os = urlConnection.getOutputStream();
             BufferedWriter writer = new BufferedWriter(
@@ -217,6 +217,7 @@ public class SerleenaJSONNetProxy implements INetProxy {
     public InboundStream get() throws AuthException, IOException {
         if (urlConnection == null) {
             connect();
+            urlConnection.setDoInput(true);
             urlConnection.setRequestMethod("GET");
             if (urlConnection.getResponseCode() == HttpURLConnection.HTTP_OK) {
                 CloudJSONInboundStream in;
@@ -225,7 +226,11 @@ public class SerleenaJSONNetProxy implements INetProxy {
             } else {
                 int c = urlConnection.getResponseCode();
                 disconnect();
-                throw new AuthException("Got " + c + " from remote service");
+                if (c == 403 || c == 401 || c == 405) {
+                    throw new AuthException("Got " + c + " from remote service");
+                } else {
+                    throw new IOException("Got " + c + " from remote service");
+                }
             }
         } else {
             throw new RuntimeException("Existing URL connection? disconnect() first");

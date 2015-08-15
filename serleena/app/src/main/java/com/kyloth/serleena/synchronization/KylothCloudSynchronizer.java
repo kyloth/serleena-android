@@ -84,21 +84,6 @@ public class KylothCloudSynchronizer implements IKylothCloudSynchronizer {
     /**
      * Ritorna l'istanza unica di KylothCloudSynchronizer
      */
-    public static IKylothCloudSynchronizer getInstance(IPersistenceDataSink sink, IPersistenceDataSource source) {
-        try {
-            return getInstance(
-                    new SerleenaJSONNetProxy(
-                            new LocalEnvKylothIdSource(),
-                            new URL(DEFAULT_URL)
-                    ),
-                    sink,
-                    source
-            );
-        } catch (MalformedURLException e) {
-            throw new RuntimeException(e);
-        }
-    }
-
     public static KylothCloudSynchronizer getInstance(INetProxy proxy, IPersistenceDataSink sink, IPersistenceDataSource source) {
         if (instance == null) {
             instance = new KylothCloudSynchronizer(proxy, sink, source);

@@ -86,7 +86,7 @@ public class DummyServerIntegrationTest {
 
     final static String SAMPLES_DIR = "../../common/samples/";
     final String AUTH_TOKEN_NAME = "X-AuthToken";
-    final String DATA_TOKEN_NAME = "Data";
+    final String DATA_TOKEN_NAME = "data";
     String JSON_OUTPUT;
 
     SerleenaDatabase sh;
@@ -117,7 +117,7 @@ public class DummyServerIntegrationTest {
         // TODO: Fare altri test, in particolare gli edge case
         FileReader in = new FileReader(SAMPLES_DIR + "partial/track.json");
         BufferedReader r = new BufferedReader(in);
-        final Pattern preauthP = Pattern.compile("/token/([\\w|::]+)");
+        final Pattern preauthP = Pattern.compile("/tokens/([\\w|::]+)");
         final Pattern authP = Pattern.compile("/users/pair/([\\w|::]+)");
         final Pattern syncP = Pattern.compile("/data/([\\w|::]*)");
         final String kylothId = "foo";
@@ -214,7 +214,7 @@ public class DummyServerIntegrationTest {
         ContentValues values = TestFixtures.pack(TestFixtures.EXPERIENCES_FIXTURE_EXPERIENCE_1);
         db.insertOrThrow(SerleenaDatabase.TABLE_EXPERIENCES, null, values);
         JSON_OUTPUT = "{\"data\":[{\"experience\":\"Experience_1\"}]}";
-        url = new URL("http://localhost:8081");
+        url = new URL("http://localhost:8081/");
         sink = new SerleenaSQLiteDataSink(RuntimeEnvironment.application, sh);
         source = new SerleenaSQLiteDataSource(sh);
 

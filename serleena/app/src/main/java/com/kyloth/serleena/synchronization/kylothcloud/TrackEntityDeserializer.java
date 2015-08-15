@@ -34,6 +34,7 @@ import com.google.gson.JsonArray;
 import com.google.gson.JsonDeserializationContext;
 import com.google.gson.JsonDeserializer;
 import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
 import com.google.gson.JsonParseException;
 import com.kyloth.serleena.common.GeoPoint;
 
@@ -76,7 +77,10 @@ class TrackEntityDeserializer implements JsonDeserializer<TrackEntity> {
             te.checkpoints.add(cp);
         }
         te.telemetries = new LinkedList<TelemetryEntity>();
-        te.telemetries.add(new TelemetryEntityDeserializer().deserialize(json.getAsJsonObject().get("bestTelemetry").getAsJsonObject(), TelemetryEntity.class, context));
+        JsonElement bestTele = json.getAsJsonObject().get("bestTelemetry");
+
+        if (!bestTele.isJsonNull())
+            te.telemetries.add(new TelemetryEntityDeserializer().deserialize(bestTele.getAsJsonObject(), TelemetryEntity.class, context));
         return te;
     }
 }
