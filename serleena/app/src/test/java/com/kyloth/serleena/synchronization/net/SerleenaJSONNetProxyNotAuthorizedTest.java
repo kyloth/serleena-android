@@ -430,4 +430,36 @@ public class SerleenaJSONNetProxyNotAuthorizedTest {
             fail("IOException thrown on 403");
         } catch (AuthException ae) {}
     }
+
+    /**
+     * Verifica che se error 405 per send il proxy sollevi AuthException
+     */
+    @Test(expected = AuthException.class)
+    public void testSendAuthExceptionOn405() throws AuthException, IOException {
+        when(urlConnection.getResponseCode()).thenReturn(HttpURLConnection.HTTP_BAD_METHOD);
+        String text = "Test405Auth";
+        when(urlConnection.getInputStream()).thenReturn(new CloudJSONInboundStream(new ByteArrayInputStream(text.getBytes("UTF-8"))));
+        CloudJSONOutboundStream out = (CloudJSONOutboundStream) proxy.send();
+        out.close();
+        proxy.success();
+    }
+
+    /**
+     * Verifica che se error 405 per send il proxy non sollevi IOException
+     */
+    @Test
+    public void testSendNotIOExceptionOn405() throws AuthException, IOException {
+        try {
+            when(urlConnection.getResponseCode()).thenReturn(HttpURLConnection.HTTP_BAD_METHOD);
+            String text = "Test405IO";
+            ByteArrayOutputStream streamOut = new ByteArrayOutputStream();
+            streamOut.write(text.getBytes("UTF-8"));
+            when(urlConnection.getOutputStream()).thenReturn(new CloudJSONOutboundStream(streamOut));
+            CloudJSONOutboundStream out = (CloudJSONOutboundStream) proxy.send();
+            out.close();
+            proxy.success();
+        } catch (IOException ioe) {
+            fail("IOException thrown on 405");
+        } catch (AuthException ae) {}
+    }
 }
