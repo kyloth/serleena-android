@@ -267,7 +267,7 @@ public class TrackPresenter implements ITrackPresenter, ITrackCrossingObserver,
                 float bearingTo = lastKnownLocation.bearingTo(cp);
                 float azimuthTrueNorth =
                         lastKnownHeading.toTrueNorth(lastKnownLocation);
-                view.setDirection(bearingTo - azimuthTrueNorth);
+                view.setDirection(azimuthTrueNorth - bearingTo);
             }
         } catch (NoTrackCrossingException|NoActiveTrackException e) { }
     }
