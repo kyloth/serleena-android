@@ -154,7 +154,7 @@ public class GeoPoint
         Location otherLocation = new Location("");
         otherLocation.setLatitude(other.latitude());
         otherLocation.setLongitude(other.longitude());
-        return location.bearingTo(otherLocation);
+        return -location.bearingTo(otherLocation);
     }
 
 }
