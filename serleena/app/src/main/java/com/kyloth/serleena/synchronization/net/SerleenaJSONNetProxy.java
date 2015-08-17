@@ -203,9 +203,11 @@ public class SerleenaJSONNetProxy implements INetProxy {
         if (urlConnection == null) {
             throw new RuntimeException("No connection?");
         } else {
-            if (urlConnection.getResponseCode() == HttpURLConnection.HTTP_OK) {
+            int c = urlConnection.getResponseCode();
+            if (c == HttpURLConnection.HTTP_OK || c == 204) {
+                // 204 == esperienza cancellata
                 return true;
-            } else if (urlConnection.getResponseCode() == HttpURLConnection.HTTP_FORBIDDEN) {
+            } else if (c == 403 || c == 401 || c == 405) {
                 throw new AuthException("Unauthorized, got HTTP "+urlConnection.getResponseCode());
             } else  {
                 throw new IOException("Network error, status "+urlConnection.getResponseCode());
