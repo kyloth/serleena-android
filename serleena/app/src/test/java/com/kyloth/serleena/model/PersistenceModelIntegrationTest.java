@@ -30,9 +30,11 @@
 
 package com.kyloth.serleena.model;
 
+import android.content.ContentValues;
 import android.database.sqlite.SQLiteDatabase;
 
 import com.kyloth.serleena.BuildConfig;
+import com.kyloth.serleena.TestDB;
 import com.kyloth.serleena.common.CheckpointReachedTelemetryEvent;
 import com.kyloth.serleena.common.GeoPoint;
 import com.kyloth.serleena.common.TelemetryEvent;
@@ -43,6 +45,7 @@ import com.kyloth.serleena.model.ITrack;
 import com.kyloth.serleena.model.SerleenaDataSource;
 import com.kyloth.serleena.persistence.sqlite.SerleenaDatabase;
 import com.kyloth.serleena.persistence.sqlite.SerleenaSQLiteDataSource;
+import com.kyloth.serleena.persistence.sqlite.TestFixtures;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -54,6 +57,7 @@ import org.robolectric.annotation.Config;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
+import java.util.UUID;
 
 import static junit.framework.Assert.assertEquals;
 import static junit.framework.Assert.assertTrue;
@@ -65,49 +69,6 @@ public class PersistenceModelIntegrationTest {
 
     SQLiteDatabase db;
     SerleenaDataSource dataSource;
-
-    private String getExperienceQuery(int id, String name) {
-    return "INSERT INTO experiences (experience_id, experience_name) VALUES (" +
-        String.valueOf(id) + ", '" +  name + "')";
-    }
-
-    private String getTrackQuery(int id, String name, int experience) {
-        return "INSERT INTO tracks (track_id, track_name, track_experience) " +
-            "VALUES (" + String.valueOf(id) + ", '" + name + "', " + 
-            String.valueOf(experience) + ")";
-    }
-
-    private String getTelemetryQuery(int id, int track) {
-        return "INSERT INTO telemetries (telem_id, telem_track) VALUES (" +
-            String.valueOf(id) + ", " + String.valueOf(track) + ")";
-    }
-
-    private String getCheckpointTelemetryEventQuery(int id, int timestamp,
-                                                    int telemetry, int checkp) {
-        return "INSERT INTO telemetry_events_checkp (eventc_id, " +
-            "eventc_timestamp, eventc_value, eventc_telem) " +
-            "VALUES (" + String.valueOf(id) + ", " + String.valueOf(timestamp) +
-            ", " + String.valueOf(checkp) + ", " +
-            String.valueOf(telemetry) + ")";
-    }
-
-    private String getCheckpointQuery(int id, int num, double lat, double lon,
-                                     int track) {
-        return "INSERT INTO checkpoints (checkpoint_id, checkpoint_num, " + 
-            "checkpoint_latitude, checkpoint_longitude, checkpoint_track) " +
-            "VALUES (" + String.valueOf(id) + ", " + String.valueOf(num) + ", " +
-            String.valueOf(lat) + ", " + String.valueOf(lon) + ", "
-            + String.valueOf(track) + ")";
-    }
-
-    private String getUserPointQuery(int id, double lat, double lon,
-                                    int experience) {
-        return "INSERT INTO user_points (userpoint_id, userpoint_x, " +
-                "userpoint_y, " +
-            "userpoint_experience) VALUES (" + String.valueOf(id) + ", " +
-            String.valueOf(lat) + ", " + String.valueOf(lon) + ", " + 
-            String.valueOf(experience) + ")";
-    }
 
     private <T> boolean containsEquals(Iterable<T> elements, T element) {
         for (T t : elements)
@@ -131,30 +92,39 @@ public class PersistenceModelIntegrationTest {
 
 
     @Test
-    public void experienceShouldReturnHerName() {
-        db.execSQL(getExperienceQuery(1, "myExperience"));
-
+    public void experienceShouldReturnItsName() {
+        ContentValues values;
+        values = TestFixtures.pack(TestFixtures.EXPERIENCES_FIXTURE_EXPERIENCE_1);
+        db.insertOrThrow(SerleenaDatabase.TABLE_EXPERIENCES, null, values);
         Iterator<IExperience> iterator = dataSource.getExperiences().iterator();
-        assertEquals("myExperience", iterator.next().getName());
+        assertEquals(TestFixtures.EXPERIENCES_FIXTURE_EXPERIENCE_1_NAME, iterator.next().getName());
     }
 
     @Test
     public void experienceShouldReturnItsUserPoints() {
-        db.execSQL(getExperienceQuery(1, "myExperience"));
-        db.execSQL(getUserPointQuery(1, 3, 4, 1));
-        db.execSQL(getUserPointQuery(2, 5, 7, 1));
+        ContentValues values;
+        values = TestFixtures.pack(TestFixtures.EXPERIENCES_FIXTURE_EXPERIENCE_1);
+        db.insertOrThrow(SerleenaDatabase.TABLE_EXPERIENCES, null, values);
+        values = TestFixtures.pack(TestFixtures.EXPERIENCES_FIXTURE_EXPERIENCE_1_USERPOINT_1);
+        db.insertOrThrow(SerleenaDatabase.TABLE_USER_POINTS, null, values);
+        values = TestFixtures.pack(TestFixtures.EXPERIENCES_FIXTURE_EXPERIENCE_1_USERPOINT_2);
+        db.insertOrThrow(SerleenaDatabase.TABLE_USER_POINTS, null, values);
 
         assertTrue(containsEquals(
                 dataSource.getExperiences().iterator().next().getUserPoints(),
-                new UserPoint(3, 4)));
+                new UserPoint(TestFixtures.EXPERIENCES_FIXTURE_EXPERIENCE_1_USERPOINT_1_LAT,
+                        TestFixtures.EXPERIENCES_FIXTURE_EXPERIENCE_1_USERPOINT_1_LON)));
         assertTrue(containsEquals(
                 dataSource.getExperiences().iterator().next().getUserPoints(),
-                new UserPoint(5, 7)));
+                new UserPoint(TestFixtures.EXPERIENCES_FIXTURE_EXPERIENCE_1_USERPOINT_2_LAT,
+                        TestFixtures.EXPERIENCES_FIXTURE_EXPERIENCE_1_USERPOINT_2_LON)));
     }
 
     @Test
     public void userPointShouldBeAddedCorrectly() {
-        db.execSQL(getExperienceQuery(1, "myExperience"));
+        ContentValues values;
+        values = TestFixtures.pack(TestFixtures.EXPERIENCES_FIXTURE_EXPERIENCE_1);
+        db.insertOrThrow(SerleenaDatabase.TABLE_EXPERIENCES, null, values);
         IExperience experience = dataSource.getExperiences().iterator().next();
         assertTrue(!experience.getUserPoints().iterator().hasNext());
 
@@ -165,11 +135,14 @@ public class PersistenceModelIntegrationTest {
 
     @Test
     public void trackShouldReturnItsEvents() {
-        db.execSQL(getExperienceQuery(1, "myExperience"));
-        db.execSQL(getTrackQuery(1, "myTrack", 1));
-        db.execSQL(getTelemetryQuery(1, 1));
-        db.execSQL(getCheckpointTelemetryEventQuery(1, 300, 1, 0));
-        db.execSQL(getCheckpointTelemetryEventQuery(2, 300, 1, 1));
+        ContentValues values;
+        values = TestFixtures.pack(TestFixtures.EXPERIENCES_FIXTURE_EXPERIENCE_1);
+        db.insertOrThrow(SerleenaDatabase.TABLE_EXPERIENCES, null, values);
+        values = TestFixtures.pack(TestFixtures.EXPERIENCES_FIXTURE_EXPERIENCE_1_TRACK_1);
+        db.insertOrThrow(SerleenaDatabase.TABLE_TRACKS, null, values);
+        TestDB.telemetryQuery(db, 0, TestFixtures.EXPERIENCES_FIXTURE_EXPERIENCE_1_TRACK_1_UUID);
+        TestDB.checkPointEventQuery(db, 0, 300, 0, 0);
+        TestDB.checkPointEventQuery(db, 1, 300, 1, 0);
 
         IExperience experience = dataSource.getExperiences().iterator().next();
         ITrack track = experience.getTracks().iterator().next();
@@ -183,8 +156,11 @@ public class PersistenceModelIntegrationTest {
 
     @Test
     public void createTelemetryShouldWorkCorrectly() {
-        db.execSQL(getExperienceQuery(1, "myExperience"));
-        db.execSQL(getTrackQuery(1, "myTrack", 1));
+        ContentValues values;
+        values = TestFixtures.pack(TestFixtures.EXPERIENCES_FIXTURE_EXPERIENCE_1);
+        db.insertOrThrow(SerleenaDatabase.TABLE_EXPERIENCES, null, values);
+        values = TestFixtures.pack(TestFixtures.EXPERIENCES_FIXTURE_EXPERIENCE_1_TRACK_1);
+        db.insertOrThrow(SerleenaDatabase.TABLE_TRACKS, null, values);
 
         IExperience experience = dataSource.getExperiences().iterator().next();
         ITrack track = experience.getTracks().iterator().next();

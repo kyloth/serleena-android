@@ -41,7 +41,6 @@ package com.kyloth.serleena.persistence.sqlite;
 
 import android.app.Application;
 import android.content.ContentValues;
-import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -52,7 +51,6 @@ import com.kyloth.serleena.TestDB;
 import com.kyloth.serleena.common.EmergencyContact;
 import com.kyloth.serleena.common.GeoPoint;
 import com.kyloth.serleena.common.IQuadrant;
-import com.kyloth.serleena.common.Quadrant;
 import com.kyloth.serleena.common.Region;
 import com.kyloth.serleena.common.TelemetryEvent;
 import com.kyloth.serleena.persistence.IExperienceStorage;
@@ -66,16 +64,14 @@ import org.robolectric.RobolectricGradleTestRunner;
 import org.robolectric.RuntimeEnvironment;
 import org.robolectric.annotation.Config;
 
-import java.io.File;
 import java.net.URISyntaxException;
-import java.util.GregorianCalendar;
+import java.util.UUID;
 
 import static com.kyloth.serleena.persistence.sqlite.SerleenaDatabaseTestUtils.makeExperience;
 import static com.kyloth.serleena.persistence.sqlite.SerleenaDatabaseTestUtils.makeTrack;
 import static junit.framework.Assert.assertEquals;
 import static junit.framework.Assert.assertTrue;
 import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.when;
 
 /**
  * Suite di test per SerleenaSQLiteDataSource
@@ -119,13 +115,16 @@ public class SerleenaSQLiteDataSourceTest {
     @Test
     public void testGetQuadrant() throws NoSuchQuadrantException {
         ContentValues exp = new ContentValues();
-        exp.put("experience_name", "experience");
-        long expId =
-                db.insertOrThrow(SerleenaDatabase.TABLE_EXPERIENCES, null, exp);
+        exp.put("experience_uuid", TestFixtures.EXPERIENCES_FIXTURE_EXPERIENCE_1_UUID.toString());
+        exp.put("experience_name", TestFixtures.EXPERIENCES_FIXTURE_EXPERIENCE_1_NAME);
+        db.insertOrThrow(SerleenaDatabase.TABLE_EXPERIENCES, null, exp);
         SQLiteDAOExperience expp = new SQLiteDAOExperience(
-                "experience", (int)expId, sds);
+                "experience",
+                TestFixtures.EXPERIENCES_FIXTURE_EXPERIENCE_1_UUID,
+                sds
+        );
 
-        TestDB.quadrantQuery(db, 2, 0, 0, 2, testBase64, expId);
+        TestDB.quadrantQuery(db, 2, 0, 0, 2, testBase64, TestFixtures.EXPERIENCES_FIXTURE_EXPERIENCE_1_UUID);
 
         IQuadrant quadrant = sds.getQuadrant(new GeoPoint(1, 1), expp);
         assertEquals(2.0, quadrant.getNorthWestPoint().latitude());
@@ -143,11 +142,12 @@ public class SerleenaSQLiteDataSourceTest {
     public void queryingNonexistentQuadrantShouldThrow()
             throws NoSuchQuadrantException {
         ContentValues exp = new ContentValues();
-        exp.put("experience_name", "experience");
+        exp.put("experience_uuid", TestFixtures.EXPERIENCES_FIXTURE_EXPERIENCE_1_UUID.toString());
+        exp.put("experience_name", TestFixtures.EXPERIENCES_FIXTURE_EXPERIENCE_1_NAME);
         long expId =
                 db.insertOrThrow(SerleenaDatabase.TABLE_EXPERIENCES, null, exp);
         SQLiteDAOExperience expp = new SQLiteDAOExperience(
-                "experience", (int)expId, sds);
+                "experience", TestFixtures.EXPERIENCES_FIXTURE_EXPERIENCE_1_UUID, sds);
         sds.getQuadrant(new GeoPoint(1, 1), expp);
     }
 
@@ -159,15 +159,17 @@ public class SerleenaSQLiteDataSourceTest {
     public void testGetQuadrantEdgePoint()
             throws NoSuchQuadrantException {
         ContentValues exp = new ContentValues();
-        exp.put("experience_name", "experience");
-        long expId =
-                db.insertOrThrow(SerleenaDatabase.TABLE_EXPERIENCES, null, exp);
+        exp.put("experience_name", TestFixtures.EXPERIENCES_FIXTURE_EXPERIENCE_1_NAME);
+        exp.put("experience_uuid", TestFixtures.EXPERIENCES_FIXTURE_EXPERIENCE_1_UUID.toString());
+        db.insertOrThrow(SerleenaDatabase.TABLE_EXPERIENCES, null, exp);
         SQLiteDAOExperience expp = new SQLiteDAOExperience(
-                "experience", (int)expId, sds);
-        TestDB.quadrantQuery(db, 5, 0, 0, 5, "asd", expId);
-        TestDB.quadrantQuery(db, 10, 5, 5, 10, "lol", expId);
-        TestDB.quadrantQuery(db, 10, 0, 5, 5, "qwe", expId);
-        TestDB.quadrantQuery(db, 5, 5, 0, 10, "rty", expId);
+                TestFixtures.EXPERIENCES_FIXTURE_EXPERIENCE_1_NAME,
+                TestFixtures.EXPERIENCES_FIXTURE_EXPERIENCE_1_UUID,
+                sds);
+        TestDB.quadrantQuery(db, 5, 0, 0, 5, "asd", TestFixtures.EXPERIENCES_FIXTURE_EXPERIENCE_1_UUID);
+        TestDB.quadrantQuery(db, 10, 5, 5, 10, "lol", TestFixtures.EXPERIENCES_FIXTURE_EXPERIENCE_1_UUID);
+        TestDB.quadrantQuery(db, 10, 0, 5, 5, "qwe", TestFixtures.EXPERIENCES_FIXTURE_EXPERIENCE_1_UUID);
+        TestDB.quadrantQuery(db, 5, 5, 0, 10, "rty", TestFixtures.EXPERIENCES_FIXTURE_EXPERIENCE_1_UUID);
         IQuadrant quadrant = sds.getQuadrant(new GeoPoint(5, 5), expp);
         assertTrue(
                 TestDB.quadrantHasRegion(quadrant,
@@ -186,14 +188,15 @@ public class SerleenaSQLiteDataSourceTest {
      */
     @Test
     public void testGetTracks() {
-        long id = makeExperience(db);
         ContentValues values = new ContentValues();
+        values.put("track_uuid", UUID.randomUUID().toString());
         values.put("track_name", "bar");
-        values.put("track_experience", id);
-        id = db.insertOrThrow(SerleenaDatabase.TABLE_TRACKS, null, values);
+        values.put("track_experience", makeExperience(db).toString());
+        db.insertOrThrow(SerleenaDatabase.TABLE_TRACKS, null, values);
         Iterable<IExperienceStorage> exps = sds.getExperiences();
         IExperienceStorage exp = exps.iterator().next();
         Iterable<SQLiteDAOTrack> trax = sds.getTracks((SQLiteDAOExperience) exp);
+        assertTrue(trax.iterator().hasNext());
     }
 
     /**
@@ -201,14 +204,14 @@ public class SerleenaSQLiteDataSourceTest {
      */
     @Test
     public void testNoTracks() {
-        long id = makeExperience(db);
         ContentValues values = new ContentValues();
+        values.put("track_uuid", UUID.randomUUID().toString());
         values.put("track_name", "bar");
-        values.put("track_experience", id);
-        id = db.insertOrThrow(SerleenaDatabase.TABLE_TRACKS, null, values);
+        values.put("track_experience", makeExperience(db).toString());
+        long id = db.insertOrThrow(SerleenaDatabase.TABLE_TRACKS, null, values);
         Iterable<IExperienceStorage> exps = sds.getExperiences();
         IExperienceStorage exp = exps.iterator().next();
-        String whereClause = "experience_id = " + ((SQLiteDAOExperience)exp).id();
+        String whereClause = "experience_uuid = \"" + ((SQLiteDAOExperience)exp).getUUID() + "\"";
         db.delete(SerleenaDatabase.TABLE_EXPERIENCES, whereClause, null);
         Iterable<SQLiteDAOTrack> trax = sds.getTracks((SQLiteDAOExperience) exp);
         int i = 0;
@@ -223,14 +226,14 @@ public class SerleenaSQLiteDataSourceTest {
      */
     @Test
     public void testExperienceSlippage() {
-        long id = makeExperience(db);
         ContentValues values = new ContentValues();
+        values.put("track_uuid", UUID.randomUUID().toString());
         values.put("track_name", "bar");
-        values.put("track_experience", id);
-        id = db.insertOrThrow(SerleenaDatabase.TABLE_TRACKS, null, values);
+        values.put("track_experience", makeExperience(db).toString());
+        long id = db.insertOrThrow(SerleenaDatabase.TABLE_TRACKS, null, values);
         Iterable<IExperienceStorage> exps = sds.getExperiences();
         IExperienceStorage exp = exps.iterator().next();
-        String whereClause = "experience_id = " + ((SQLiteDAOExperience)exp).id();
+        String whereClause = "experience_uuid = \"" + ((SQLiteDAOExperience)exp).getUUID().toString() + "\"";
         Iterable<SQLiteDAOTrack> trax = sds.getTracks((SQLiteDAOExperience) exp);
         db.delete(SerleenaDatabase.TABLE_EXPERIENCES, whereClause, null);
         int i = 0;
@@ -245,18 +248,18 @@ public class SerleenaSQLiteDataSourceTest {
      */
     @Test
     public void testGetCheckpoints() {
-        long id = makeTrack(db);
+        UUID id = makeTrack(db);
         ContentValues values = new ContentValues();
         values.put("checkpoint_num", 1);
         values.put("checkpoint_latitude", 0.000);
         values.put("checkpoint_longitude", 0.000);
-        values.put("checkpoint_track", id);
-        id = db.insertOrThrow(SerleenaDatabase.TABLE_CHECKPOINTS, null, values);
+        values.put("checkpoint_track", id.toString());
+        db.insertOrThrow(SerleenaDatabase.TABLE_CHECKPOINTS, null, values);
         values.put("checkpoint_num", 2);
         values.put("checkpoint_latitude", 1.000);
         values.put("checkpoint_longitude", 1.000);
-        values.put("checkpoint_track", id);
-        id = db.insertOrThrow(SerleenaDatabase.TABLE_CHECKPOINTS, null, values);
+        values.put("checkpoint_track", id.toString());
+        db.insertOrThrow(SerleenaDatabase.TABLE_CHECKPOINTS, null, values);
         Iterable<IExperienceStorage> exps = sds.getExperiences();
         SQLiteDAOExperience exp = (SQLiteDAOExperience) exps.iterator().next();
         Iterable<SQLiteDAOTrack> trax = sds.getTracks(exp);
@@ -269,9 +272,8 @@ public class SerleenaSQLiteDataSourceTest {
      */
     @Test
     public void testGetTelemetries() {
-        long id = makeTrack(db);
         ContentValues values = new ContentValues();
-        values.put("telem_track", id);
+        values.put("telem_track", makeTrack(db).toString());
         db.insertOrThrow(SerleenaDatabase.TABLE_TELEMETRIES, null, values);
         db.insertOrThrow(SerleenaDatabase.TABLE_TELEMETRIES, null, values);
         Iterable<IExperienceStorage> exps = sds.getExperiences();
@@ -292,10 +294,9 @@ public class SerleenaSQLiteDataSourceTest {
      */
     @Test
     public void testGetTelemetryEvents() {
-        long id = makeTrack(db);
         ContentValues values = new ContentValues();
-        values.put("telem_track", id);
-        id = db.insertOrThrow(SerleenaDatabase.TABLE_TELEMETRIES, null, values);
+        values.put("telem_track", makeTrack(db).toString());
+        long id = db.insertOrThrow(SerleenaDatabase.TABLE_TELEMETRIES, null, values);
 
         values = new ContentValues();
         values.put("eventc_timestamp", 100);
@@ -333,9 +334,9 @@ public class SerleenaSQLiteDataSourceTest {
      */
     @Test
     public void testAddUserPoint() {
-        long id = makeTrack(db);
+        UUID id = makeTrack(db);
         ContentValues values = new ContentValues();
-        values.put("telem_track", id);
+        values.put("telem_track", id.toString());
         db.insertOrThrow(SerleenaDatabase.TABLE_TELEMETRIES, null, values);
         db.insertOrThrow(SerleenaDatabase.TABLE_TELEMETRIES, null, values);
         Iterable<IExperienceStorage> exps = sds.getExperiences();

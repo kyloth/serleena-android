@@ -61,6 +61,7 @@ import java.util.Calendar;
 import java.util.GregorianCalendar;
 import java.util.LinkedList;
 import java.util.Date;
+import java.util.UUID;
 
 import static org.mockito.Mockito.mock;
 
@@ -99,6 +100,7 @@ public class DumpBuilderIntegrationTest {
     public void testBuildExperiences() {
         InboundRootEntity r = new InboundRootEntity();
         ExperienceEntity e = new ExperienceEntity();
+        e.uuid = UUID.randomUUID();
         e.name = "FOO";
         e.region = new Region(
                 new GeoPoint(3,2),

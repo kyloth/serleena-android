@@ -72,6 +72,7 @@ import com.kyloth.serleena.view.widgets.CompassWidget;
 import com.jayway.awaitility.Awaitility;
 
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.robolectric.Robolectric;
@@ -81,6 +82,7 @@ import org.robolectric.Shadows;
 import org.robolectric.annotation.Config;
 import org.robolectric.shadows.ShadowLocationManager;
 
+import java.util.UUID;
 import java.util.concurrent.Callable;
 
 import static junit.framework.Assert.assertEquals;
@@ -119,25 +121,31 @@ public class TrackPresenterIntegrationTest {
         SerleenaDatabase serleenaDb = TestDB.getEmptyDatabase();
         db = serleenaDb.getWritableDatabase();
         dataSource = new SerleenaDataSource(new SerleenaSQLiteDataSource(serleenaDb));
-        TestDB.experienceQuery(db, 0, "experience1");
-        TestDB.trackQuery(db, 0, "Track 1", 0);
+        UUID expUUID = UUID.randomUUID();
+        UUID trackUUID = UUID.randomUUID();
+        TestDB.experienceQuery(db, expUUID, "experience1");
+        TestDB.trackQuery(db, trackUUID, "Track 1", expUUID);
+
         // (1, 1), (3, 3), (0, 5), (3, 7)
-        TestDB.checkpointQuery(db, 0, 1, 1, 1, 0);
-        TestDB.checkpointQuery(db, 1, 2, 3, 3, 0);
-        TestDB.checkpointQuery(db, 2, 3, 0, 5, 0);
-        TestDB.checkpointQuery(db, 3, 4, 3, 7, 0);
+        TestDB.checkpointQuery(db, 0, 1, 1, 1, trackUUID);
+        TestDB.checkpointQuery(db, 1, 2, 3, 3, trackUUID);
+        TestDB.checkpointQuery(db, 2, 3, 0, 5, trackUUID);
+        TestDB.checkpointQuery(db, 3, 4, 3, 7, trackUUID);
+
         // 100, 200, 300, 400
-        TestDB.telemetryQuery(db, 0, 0);
+        TestDB.telemetryQuery(db, 0, trackUUID);
         TestDB.checkPointEventQuery(db, 0, 100, 1, 0);
         TestDB.checkPointEventQuery(db, 1, 200, 2, 0);
         TestDB.checkPointEventQuery(db, 2, 300, 3, 0);
         TestDB.checkPointEventQuery(db, 3, 400, 4, 0);
+
         // (3, 3), (1, 1), (-1, -1), (-3, -3)
-        TestDB.trackQuery(db, 1, "Track 2", 0);
-        TestDB.checkpointQuery(db, 4, 1, 3, 3, 1);
-        TestDB.checkpointQuery(db, 5, 2, 1, 1, 1);
-        TestDB.checkpointQuery(db, 6, 3, -1, -1, 1);
-        TestDB.checkpointQuery(db, 7, 4, -3, -3, 1);
+        UUID track2UUID = UUID.randomUUID();
+        TestDB.trackQuery(db, track2UUID, "Track 2", expUUID);
+        TestDB.checkpointQuery(db, 4, 1, 3, 3, track2UUID);
+        TestDB.checkpointQuery(db, 5, 2, 1, 1, track2UUID);
+        TestDB.checkpointQuery(db, 6, 3, -1, -1, track2UUID);
+        TestDB.checkpointQuery(db, 7, 4, -3, -3, track2UUID);
 
         activity = Robolectric.buildActivity(TestSerleenaActivity.class)
                 .create().start().visible().get();

@@ -30,27 +30,8 @@
 
 package com.kyloth.serleena.synchronization.kylothcloud;
 
-import com.google.gson.JsonArray;
-import com.google.gson.JsonDeserializationContext;
-import com.google.gson.JsonDeserializer;
-import com.google.gson.JsonElement;
-import com.google.gson.JsonParseException;
+import java.util.UUID;
 
-import java.lang.reflect.Type;
-
-import java.util.ArrayList;
-
-class OutboundRootDeserializer implements JsonDeserializer<OutboundRootEntity> {
-
-    @Override
-    public OutboundRootEntity deserialize(JsonElement json, Type typeOfT, JsonDeserializationContext context) throws JsonParseException {
-        OutboundRootEntity ore = new OutboundRootEntity();
-        ore.data = new ArrayList<OutboundDataEntity>();
-        JsonArray data = json.getAsJsonArray();
-        for (JsonElement d : data) {
-            ore.data.add(new OutboundDataDeserializer().deserialize(d, OutboundDataEntity.class, context));
-        }
-
-        return ore;
-    }
+public class OutboundTelemetryEntity extends TelemetryEntity {
+    public UUID track; // Used ONLY when sending
 }

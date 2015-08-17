@@ -42,6 +42,7 @@ import java.lang.reflect.Type;
 
 import java.util.ArrayList;
 import java.util.Iterator;
+import java.util.UUID;
 
 /**
  * Deserializer custom per deserializzare una ExperienceEntity dal JSON passato da Kyloth in GSON.
@@ -67,6 +68,8 @@ class ExperienceEntityDeserializer implements JsonDeserializer<ExperienceEntity>
     @Override
     public ExperienceEntity deserialize(JsonElement json, Type typeOfT, JsonDeserializationContext context) throws JsonParseException {
         ExperienceEntity ee = new ExperienceEntity();
+        String idString = json.getAsJsonObject().get("id").getAsString();
+        ee.uuid = UUID.fromString(idString);
         ee.name = json.getAsJsonObject().get("name").getAsString();
         ee.tracks = new ArrayList<TrackEntity>();
         JsonArray tracks = json.getAsJsonObject().get("tracks").getAsJsonArray();

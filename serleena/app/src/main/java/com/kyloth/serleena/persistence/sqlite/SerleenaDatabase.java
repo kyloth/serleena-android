@@ -78,21 +78,21 @@ public class SerleenaDatabase extends SQLiteOpenHelper {
 
     private static final String CREATE_TABLE_EXPERIENCES =
         "CREATE TABLE " + TABLE_EXPERIENCES + "(" +
-        "experience_id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, " +
+        "experience_uuid TEXT PRIMARY KEY NOT NULL, " +
         "experience_name TEXT NOT NULL)";
 
     private static final String CREATE_TABLE_TRACKS =
         "CREATE TABLE " + TABLE_TRACKS + "(" +
-        "track_id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, " +
+        "track_uuid TEXT PRIMARY KEY NOT NULL, " +
         "track_name TEXT NOT NULL, " +
-        "track_experience INTEGER NOT NULL, " +
-        "FOREIGN KEY(track_experience) REFERENCES " + TABLE_EXPERIENCES + " (experience_id) ON DELETE CASCADE)";
+        "track_experience TEXT NOT NULL, " +
+        "FOREIGN KEY(track_experience) REFERENCES " + TABLE_EXPERIENCES + " (experience_uuid) ON DELETE CASCADE)";
 
     private static final String CREATE_TABLE_TELEMETRIES =
         "CREATE TABLE " + TABLE_TELEMETRIES + "(" +
         "telem_id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, " +
-        "telem_track INTEGER NOT NULL, " +
-        "FOREIGN KEY(telem_track) REFERENCES " + TABLE_TRACKS + "(track_id) ON DELETE CASCADE)";
+        "telem_track TEXT NOT NULL, " +
+        "FOREIGN KEY(telem_track) REFERENCES " + TABLE_TRACKS + "(track_uuid) ON DELETE CASCADE)";
 
     private static final String CREATE_TABLE_TELEM_EVENTS_CHECKP =
         "CREATE TABLE " + TABLE_TELEM_EVENTS_CHECKP + "(" +
@@ -132,9 +132,9 @@ public class SerleenaDatabase extends SQLiteOpenHelper {
         "userpoint_id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL," +
         "userpoint_x REAL NOT NULL, " +
         "userpoint_y REAL NOT NULL, " +
-        "userpoint_experience INTEGER NOT NULL, " +
+        "userpoint_experience TEXT NOT NULL, " +
         "FOREIGN KEY(userpoint_experience) REFERENCES " + TABLE_EXPERIENCES +
-        "(experience_id) ON DELETE CASCADE)";
+        "(experience_uuid) ON DELETE CASCADE)";
 
     private static final String CREATE_TABLE_CHECKPOINTS =
         "CREATE TABLE " + TABLE_CHECKPOINTS + " (" +
@@ -142,19 +142,19 @@ public class SerleenaDatabase extends SQLiteOpenHelper {
         "checkpoint_num INTEGER NOT NULL, " +
         "checkpoint_latitude REAL NOT NULL, " +
         "checkpoint_longitude REAL NOT NULL, " +
-        "checkpoint_track INTEGER NOT NULL, " +
-        "FOREIGN KEY(checkpoint_track) REFERENCES " + TABLE_TRACKS + "(track_id) ON DELETE CASCADE)";
+        "checkpoint_track TEXT NOT NULL, " +
+        "FOREIGN KEY(checkpoint_track) REFERENCES " + TABLE_TRACKS + "(track_uuid) ON DELETE CASCADE)";
 
     private static final String CREATE_TABLE_RASTERS =
             "CREATE TABLE " + TABLE_RASTERS + " (" +
-                    "raster_experience INTEGER NOT NULL, " +
+                    "raster_experience TEXT NOT NULL, " +
                     "raster_nw_corner_latitude REAL NOT NULL, " +
                     "raster_nw_corner_longitude REAL NOT NULL, " +
                     "raster_se_corner_latitude REAL NOT NULL, " +
                     "raster_se_corner_longitude REAL NOT NULL, " +
                     "raster_base64 TEXT NOT NULL, " +
                     "FOREIGN KEY(raster_experience) REFERENCES " + TABLE_EXPERIENCES +
-                    "(experience_id) ON DELETE CASCADE)";
+                    "(experience_uuid) ON DELETE CASCADE)";
 
     /**
      * Crea un oggetto SerleenaDatabase associato al database predefinito dalla

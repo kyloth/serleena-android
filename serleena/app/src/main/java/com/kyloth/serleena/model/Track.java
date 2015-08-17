@@ -48,6 +48,7 @@ import com.kyloth.serleena.persistence.ITelemetryStorage;
 import com.kyloth.serleena.persistence.ITrackStorage;
 
 import java.util.ArrayList;
+import java.util.UUID;
 
 /**
  * Concretizza ITrack.
@@ -147,6 +148,11 @@ class Track implements ITrack {
             throw new NoSuchTelemetryException();
 
         return best;
+    }
+
+    @Override
+    public UUID getUUID() {
+        return storage.getUUID();
     }
 
     /**

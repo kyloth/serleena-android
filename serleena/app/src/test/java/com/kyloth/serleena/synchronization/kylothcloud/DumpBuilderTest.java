@@ -36,6 +36,7 @@ import android.database.sqlite.SQLiteDatabase;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonParser;
 import com.kyloth.serleena.BuildConfig;
+import com.kyloth.serleena.TestDB;
 import com.kyloth.serleena.persistence.IExperienceStorage;
 import com.kyloth.serleena.persistence.sqlite.SerleenaDatabase;
 import com.kyloth.serleena.persistence.sqlite.SerleenaSQLiteDataSource;
@@ -53,6 +54,8 @@ import org.robolectric.annotation.Config;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
+import java.net.URLDecoder;
+import java.net.URLEncoder;
 
 import static org.mockito.Mockito.mock;
 
@@ -66,13 +69,20 @@ public class DumpBuilderTest {
         SQLiteDatabase db = sh.getWritableDatabase();
         ContentValues values = TestFixtures.pack(TestFixtures.EXPERIENCES_FIXTURE_EXPERIENCE_1);
         db.insertOrThrow(SerleenaDatabase.TABLE_EXPERIENCES, null, values);
-        String JSON_OUTPUT = "{\"data\":[{\"experience\":\"Experience_1\"}]}";
+        values = TestFixtures.pack(TestFixtures.EXPERIENCES_FIXTURE_EXPERIENCE_1_TRACK_1);
+        db.insertOrThrow(SerleenaDatabase.TABLE_TRACKS, null, values);
+        values = TestFixtures.pack(TestFixtures.EXPERIENCES_FIXTURE_EXPERIENCE_1_USERPOINT_1);
+        db.insertOrThrow(SerleenaDatabase.TABLE_USER_POINTS, null, values);
+        TestDB.telemetryQuery(db, 0, TestFixtures.EXPERIENCES_FIXTURE_EXPERIENCE_1_TRACK_1_UUID);
+        TestDB.checkPointEventQuery(db, 0, 123456, 0, 0);
+        TestDB.checkPointEventQuery(db, 1, 654321, 1, 0);
+        String JSON_OUTPUT = "[{\"experience\":\"b989daae-9102-409b-abac-e428afe38baf\",\"userPoints\":[{\"latitude\":13.0,\"longitude\":73.0,\"name\":\"Point 0\"}],\"telemetryData\":[{\"events\":[123456,654321],\"track\":\"af024d00-e2d5-4fae-8bad-8b16f823a2cc\"}]}]";
 
         class Foo extends ByteArrayOutputStream implements JSONOutboundStream {
             Foo (int i) { super (i); }
         }
 
-        Foo f = new Foo(4096);
+        Foo f = new Foo(8192);
 
         CloudJSONOutboundStreamBuilder b = new CloudJSONOutboundStreamBuilder();
         SerleenaSQLiteDataSource source = new SerleenaSQLiteDataSource(sh);
@@ -85,6 +95,7 @@ public class DumpBuilderTest {
 
         try {
             String res = new String(f.toByteArray(),"UTF-8");
+            res = URLDecoder.decode(res,"UTF-8");
             JsonElement o1 = parser.parse(res);
             JsonElement o2 = parser.parse(JSON_OUTPUT);
             Assert.assertEquals(o1, o2);

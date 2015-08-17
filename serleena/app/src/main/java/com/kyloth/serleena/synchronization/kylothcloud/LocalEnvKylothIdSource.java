@@ -35,10 +35,10 @@ import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 
 /**
- * Implementa IKylothIdSource per scopi di sviluppo ricavando un id 
+ * Implementa IKylothIdSource per scopi di sviluppo ricavando un getUUID
  * "sufficientemente" univoco.
  *
- * Ricava un id dall'hash di 
+ * Ricava un getUUID dall'hash di
  * (user.name + user.home + user.dir + 
  *  os.name + os.arch + os.version).
  * In produzione deve essere sostituito con un opportuna chiamata all'hardware.

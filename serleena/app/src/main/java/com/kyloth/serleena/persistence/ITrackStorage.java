@@ -45,6 +45,8 @@ import com.kyloth.serleena.common.Checkpoint;
 import com.kyloth.serleena.common.DirectAccessList;
 import com.kyloth.serleena.common.TelemetryEvent;
 
+import java.util.UUID;
+
 /**
  * Interfaccia implementata da un oggetto che realizza la persistenza di un
  * Percorso.
@@ -83,4 +85,6 @@ public interface ITrackStorage {
      * @return Nome del percorso.
      */
     String name();
+
+    UUID getUUID();
 }

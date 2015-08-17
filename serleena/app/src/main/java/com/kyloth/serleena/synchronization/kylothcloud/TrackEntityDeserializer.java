@@ -40,6 +40,7 @@ import com.kyloth.serleena.common.GeoPoint;
 
 import java.lang.reflect.Type;
 import java.util.LinkedList;
+import java.util.UUID;
 
 /**
  * Deserializer custom per deserializzare una TrackEntity dal JSON passato da Kyloth in GSON.
@@ -64,6 +65,8 @@ class TrackEntityDeserializer implements JsonDeserializer<TrackEntity> {
     @Override
     public TrackEntity deserialize(JsonElement json, Type typeOfT, JsonDeserializationContext context) throws JsonParseException {
         TrackEntity te = new TrackEntity();
+        String idString = json.getAsJsonObject().get("id").getAsString();
+        te.uuid = UUID.fromString(idString);
         te.name = json.getAsJsonObject().get("name").getAsString();
         te.checkpoints = new LinkedList<CheckpointEntity>();
         JsonArray cpoints = json.getAsJsonObject().get("checkPoints").getAsJsonArray();

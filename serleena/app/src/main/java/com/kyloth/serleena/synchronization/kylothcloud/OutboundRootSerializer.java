@@ -39,7 +39,7 @@ import java.lang.reflect.Type;
 
 import java.util.Iterator;
 
-class OutboundRootSerializer implements JsonSerializer<OutboundRootEntity> {
+public class OutboundRootSerializer implements JsonSerializer<OutboundRootEntity> {
     @Override
     public JsonElement serialize(OutboundRootEntity or, Type typeOfOr, JsonSerializationContext context) {
         JsonArray outboundRoot = new JsonArray();

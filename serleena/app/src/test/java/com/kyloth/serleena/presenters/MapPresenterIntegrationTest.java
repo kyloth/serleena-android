@@ -71,12 +71,14 @@ import com.kyloth.serleena.model.IExperience;
 import com.kyloth.serleena.model.SerleenaDataSource;
 import com.kyloth.serleena.persistence.sqlite.SerleenaDatabase;
 import com.kyloth.serleena.persistence.sqlite.SerleenaSQLiteDataSource;
+import com.kyloth.serleena.persistence.sqlite.TestFixtures;
 import com.kyloth.serleena.presenters.MapPresenter;
 import com.kyloth.serleena.view.fragments.MapFragment;
 import com.kyloth.serleena.view.widgets.MapWidget;
 import com.jayway.awaitility.Awaitility;
 
 import java.util.Iterator;
+import java.util.UUID;
 import java.util.concurrent.Callable;
 
 import org.eclipse.jetty.server.Authentication;
@@ -139,7 +141,7 @@ public class MapPresenterIntegrationTest {
 
         SerleenaDatabase serleenaDb = TestDB.getEmptyDatabase();
         db = serleenaDb.getWritableDatabase();
-        TestDB.experienceQuery(db, 0, "experience");
+        TestDB.experienceQuery(db, TestFixtures.EXPERIENCES_FIXTURE_EXPERIENCE_1_UUID, "experience");
 
         dataSource = new SerleenaDataSource(new SerleenaSQLiteDataSource(serleenaDb));
 
@@ -188,7 +190,7 @@ public class MapPresenterIntegrationTest {
      */
     @Test
     public void presenterShouldSetMapWithLatestLocationUpdate() {
-        TestDB.quadrantQuery(db, 30, 0, 0, 30, "asdlol", 0);
+        TestDB.quadrantQuery(db, 30, 0, 0, 30, "asdlol", TestFixtures.EXPERIENCES_FIXTURE_EXPERIENCE_1_UUID);
 
         gotoFragment();
 
@@ -215,9 +217,9 @@ public class MapPresenterIntegrationTest {
      */
     @Test
     public void viewShouldShowQuadrantAccordingToActiveExperience() {
-        TestDB.experienceQuery(db, 1, "experience2");
-        TestDB.quadrantQuery(db, 3, 1, 1, 3, "asdlol", 0);
-        TestDB.quadrantQuery(db, 5, 0, 0, 5, "lolasd", 1);
+        TestDB.experienceQuery(db, TestFixtures.EXPERIENCES_FIXTURE_EXPERIENCE_2_UUID, TestFixtures.EXPERIENCES_FIXTURE_EXPERIENCE_2_NAME);
+        TestDB.quadrantQuery(db, 3, 1, 1, 3, "asdlol", TestFixtures.EXPERIENCES_FIXTURE_EXPERIENCE_1_UUID);
+        TestDB.quadrantQuery(db, 5, 0, 0, 5, "lolasd", TestFixtures.EXPERIENCES_FIXTURE_EXPERIENCE_2_UUID);
 
         activateExperienceByName(
                 (ListFragment) switchToFragmentInExperienceFragment(
@@ -241,7 +243,7 @@ public class MapPresenterIntegrationTest {
         activateExperienceByName(
                 (ListFragment) switchToFragmentInExperienceFragment(
                         "Imposta Esperienza"),
-                "experience2");
+                TestFixtures.EXPERIENCES_FIXTURE_EXPERIENCE_2_NAME);
         gotoFragment();
 
         expectedLocation = createLocation(2.5, 2.5);
@@ -264,8 +266,8 @@ public class MapPresenterIntegrationTest {
      */
     @Test
     public void viewShouldShowQuadrantForCurrentLocation() {
-        TestDB.quadrantQuery(db, 5, 0, 0, 5, "asdlol", 0);
-        TestDB.quadrantQuery(db, 10, 5, 5, 10, "lolasd", 0);
+        TestDB.quadrantQuery(db, 5, 0, 0, 5, "asdlol", TestFixtures.EXPERIENCES_FIXTURE_EXPERIENCE_1_UUID);
+        TestDB.quadrantQuery(db, 10, 5, 5, 10, "lolasd", TestFixtures.EXPERIENCES_FIXTURE_EXPERIENCE_1_UUID);
 
         activateExperienceByName(
                 (ListFragment) switchToFragmentInExperienceFragment(
@@ -306,11 +308,11 @@ public class MapPresenterIntegrationTest {
      */
     @Test
     public void viewShouldShowUserPointForCurrentQuadrant() {
-        TestDB.userPointQuery(db, 0, 1, 1, 0);
-        TestDB.userPointQuery(db, 1, 2, 2, 0);
-        TestDB.userPointQuery(db, 2, 6, 6, 0);
-        TestDB.userPointQuery(db, 3, 7, 7, 0);
-        TestDB.quadrantQuery(db, 5, 0, 0, 5, "asdlol", 0);
+        TestDB.userPointQuery(db, 0, 1, 1, TestFixtures.EXPERIENCES_FIXTURE_EXPERIENCE_1_UUID);
+        TestDB.userPointQuery(db, 1, 2, 2, TestFixtures.EXPERIENCES_FIXTURE_EXPERIENCE_1_UUID);
+        TestDB.userPointQuery(db, 2, 6, 6, TestFixtures.EXPERIENCES_FIXTURE_EXPERIENCE_1_UUID);
+        TestDB.userPointQuery(db, 3, 7, 7, TestFixtures.EXPERIENCES_FIXTURE_EXPERIENCE_1_UUID);
+        TestDB.quadrantQuery(db, 5, 0, 0, 5, "asdlol", TestFixtures.EXPERIENCES_FIXTURE_EXPERIENCE_1_UUID);
 
         activateExperienceByName(
                 (ListFragment) switchToFragmentInExperienceFragment(

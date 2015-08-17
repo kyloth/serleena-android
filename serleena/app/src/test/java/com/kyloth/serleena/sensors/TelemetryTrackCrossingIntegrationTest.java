@@ -55,6 +55,7 @@ import com.kyloth.serleena.model.NoSuchTelemetryEventException;
 import com.kyloth.serleena.model.SerleenaDataSource;
 import com.kyloth.serleena.persistence.sqlite.SerleenaDatabase;
 import com.kyloth.serleena.persistence.sqlite.SerleenaSQLiteDataSource;
+import com.kyloth.serleena.persistence.sqlite.TestFixtures;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -94,10 +95,10 @@ public class TelemetryTrackCrossingIntegrationTest {
     public void initialize() {
         SerleenaDatabase serleenaDb = TestDB.getEmptyDatabase();
         SQLiteDatabase db = serleenaDb.getWritableDatabase();
-        TestDB.experienceQuery(db, 1, "experience");
-        TestDB.trackQuery(db, 1, "track", 1);
-        TestDB.checkpointQuery(db, 1, 1, 1, 1, 1);
-        TestDB.checkpointQuery(db, 2, 2, 2, 2, 1);
+        TestDB.experienceQuery(db, TestFixtures.EXPERIENCES_FIXTURE_EXPERIENCE_1_UUID, TestFixtures.EXPERIENCES_FIXTURE_EXPERIENCE_1_NAME);
+        TestDB.trackQuery(db, TestFixtures.EXPERIENCES_FIXTURE_EXPERIENCE_1_TRACK_1_UUID, TestFixtures.EXPERIENCES_FIXTURE_EXPERIENCE_1_TRACK_1_NAME, TestFixtures.EXPERIENCES_FIXTURE_EXPERIENCE_1_UUID);
+        TestDB.checkpointQuery(db, 1, 1, 1, 1, TestFixtures.EXPERIENCES_FIXTURE_EXPERIENCE_1_TRACK_1_UUID);
+        TestDB.checkpointQuery(db, 2, 2, 2, 2, TestFixtures.EXPERIENCES_FIXTURE_EXPERIENCE_1_TRACK_1_UUID);
 
         dataSource = new SerleenaDataSource(new SerleenaSQLiteDataSource(serleenaDb));
         track = dataSource.getExperiences().iterator()

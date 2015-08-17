@@ -44,7 +44,7 @@ class OutboundDataSerializer implements JsonSerializer<OutboundDataEntity> {
     @Override
     public JsonElement serialize(OutboundDataEntity or, Type typeOfOr, JsonSerializationContext context) {
         JsonObject outboundData = new JsonObject();
-        outboundData.addProperty("experience", or.experience);
+        outboundData.addProperty("experience", or.experience.toString());
         JsonArray userPoints = new JsonArray();
         Iterator<UserPointEntity> i_userpoints = or.userPoints.iterator();
         while(i_userpoints.hasNext()) {
@@ -52,9 +52,9 @@ class OutboundDataSerializer implements JsonSerializer<OutboundDataEntity> {
         }
         outboundData.add("userPoints", userPoints);
         JsonArray telemetryData = new JsonArray();
-        Iterator<TelemetryEntity> i_telemetry = or.telemetryData.iterator();
+        Iterator<OutboundTelemetryEntity> i_telemetry = or.telemetryData.iterator();
         while(i_telemetry.hasNext()) {
-            telemetryData.add(new TelemetryEntitySerializer().serialize(i_telemetry.next(), TelemetryEntity.class, context));
+            telemetryData.add(new OutboundTelemetryEntitySerializer().serialize(i_telemetry.next(), OutboundTelemetryEntity.class, context));
         }
         outboundData.add("telemetryData", telemetryData);
 

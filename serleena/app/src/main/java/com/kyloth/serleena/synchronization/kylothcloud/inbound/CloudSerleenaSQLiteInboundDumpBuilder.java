@@ -86,15 +86,13 @@ public class CloudSerleenaSQLiteInboundDumpBuilder implements InboundDumpBuilder
 
     private SerleenaSQLiteInboundDump buildExperiences(Collection<ExperienceEntity> e) {
         SerleenaSQLiteInboundDump res =  new SerleenaSQLiteInboundDump();
-        int expCounter = 0;
-        int trackCounter = 0;
         int telemCounter = 0;
         for (ExperienceEntity exp : e) {
             res.add("INSERT INTO " + SerleenaDatabase.TABLE_EXPERIENCES +
-                    "(`experience_id`," +
+                    "(`experience_uuid`," +
                     " `experience_name`)" +
                     " VALUES " +
-                    "("+expCounter+"," +
+                    "(\""+exp.uuid.toString()+"\"," +
                     "  \"" + exp.name + "\")");
             // TODO: Manca la region? SHANDROID-291
             for (UserPointEntity up : exp.userPoints) {
@@ -105,7 +103,7 @@ public class CloudSerleenaSQLiteInboundDumpBuilder implements InboundDumpBuilder
                         " VALUES " +
                         "(" + up.point.latitude() +"," +
                         " " + up.point.longitude() + "," +
-                        " " + expCounter +
+                        "\"" + exp.uuid.toString() +"\"" +
                         ")");
             }
 
@@ -118,8 +116,8 @@ public class CloudSerleenaSQLiteInboundDumpBuilder implements InboundDumpBuilder
                         "`raster_se_corner_longitude`,"+
                         "`raster_base64`)" +
                         "VALUES" +
-                        "("+ expCounter +", "+
-                         raster.boundingRect.getNorthWestPoint().latitude() +", " +
+                        "("+ "\"" + exp.uuid.toString() +"\", " +
+                        raster.boundingRect.getNorthWestPoint().latitude() +", " +
                          raster.boundingRect.getNorthWestPoint().longitude() +", " +
                          raster.boundingRect.getNorthWestPoint().latitude() +", " +
                          raster.boundingRect.getNorthWestPoint().longitude() +", " +
@@ -128,13 +126,13 @@ public class CloudSerleenaSQLiteInboundDumpBuilder implements InboundDumpBuilder
             }
             for (TrackEntity track : exp.tracks) {
                 res.add("INSERT INTO " + SerleenaDatabase.TABLE_TRACKS +"" +
-                        "(`track_id`," +
+                        "(`track_uuid`," +
                         "`track_name`, " +
                         "`track_experience`)" +
                         "VALUES" +
-                        "("+ trackCounter+", "+
-                        "\""+track.name+"\"," +
-                        expCounter  +
+                        "("+ "\"" + track.uuid.toString() + "\", " +
+                        "\""+ track.name + "\"," +
+                        "\"" + exp.uuid.toString() +"\"" +
                         ") ");
                 for (CheckpointEntity cp : track.checkpoints) {
                     res.add("INSERT INTO " + SerleenaDatabase.TABLE_CHECKPOINTS + "" +
@@ -147,7 +145,7 @@ public class CloudSerleenaSQLiteInboundDumpBuilder implements InboundDumpBuilder
                             cp.id + ", " +
                             cp.point.latitude() + ", " +
                             cp.point.longitude() + ", " +
-                            trackCounter +
+                            "\"" + track.uuid.toString() + "\"" +
                             ")");
                 }
 
@@ -165,7 +163,8 @@ public class CloudSerleenaSQLiteInboundDumpBuilder implements InboundDumpBuilder
                             "telem_track) " +
                             "VALUES (" +
                             telemCounter + "," +
-                            trackCounter + ")");
+                            "\"" + track.uuid.toString() + "\"" +
+                            ")");
 
                     int eventCounter = 0;
                     for (Long ee : best.events) {
@@ -181,9 +180,7 @@ public class CloudSerleenaSQLiteInboundDumpBuilder implements InboundDumpBuilder
                     }
                     telemCounter++;
                 }
-                trackCounter++;
             }
-            expCounter++;
         }
         return res;
     }

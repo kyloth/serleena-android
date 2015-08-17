@@ -40,34 +40,38 @@ import org.robolectric.annotation.Config;
 import android.content.ContentValues;
 import android.database.sqlite.SQLiteDatabase;
 import android.graphics.Bitmap;
+import android.util.Base64;
 
 import com.kyloth.serleena.common.IQuadrant;
 import com.kyloth.serleena.common.Region;
 import com.kyloth.serleena.persistence.WeatherForecastEnum;
 import com.kyloth.serleena.persistence.sqlite.SerleenaDatabase;
 
+import java.nio.ByteBuffer;
+import java.util.UUID;
+
 @RunWith(RobolectricGradleTestRunner.class)
 @Config(constants = BuildConfig.class, emulateSdk = 19)
 @Ignore
 public class TestDB {
 
-    public static void experienceQuery(SQLiteDatabase db, int id, String name) {
-        String query = "INSERT INTO experiences (experience_id, experience_name) VALUES (" +
-                       String.valueOf(id) + ", '" +  name + "')";
+    public static void experienceQuery(SQLiteDatabase db, UUID uuid, String name) {
+        String query = "INSERT INTO experiences (experience_uuid, experience_name) VALUES " +
+                "(\""+ uuid.toString() +"\", \"" +  name + "\")";
         db.execSQL(query);
     }
 
-    public static void trackQuery(SQLiteDatabase db, int id, String name,
-                                  int experience) {
-        String query = "INSERT INTO tracks (track_id, track_name, track_experience) " +
-                       "VALUES (" + String.valueOf(id) + ", '" + name + "', " +
-                       String.valueOf(experience) + ")";
+    public static void trackQuery(SQLiteDatabase db, UUID uuid, String name,
+                                  UUID experience) {
+        String query = "INSERT INTO tracks (track_uuid, track_name, track_experience) " +
+                       "VALUES (\""+ uuid.toString() +"\", '" + name + "', " +
+                       "\"" + experience.toString() + "\")";
         db.execSQL(query);
     }
 
-    public static void telemetryQuery(SQLiteDatabase db, int id, int track) {
+    public static void telemetryQuery(SQLiteDatabase db, int id, UUID track) {
         String query = "INSERT INTO telemetries (telem_id, telem_track) VALUES (" +
-                       String.valueOf(id) + ", " + String.valueOf(track) + ")";
+                       String.valueOf(id) + ", \""+track.toString()+"\")";
         db.execSQL(query);
     }
 
@@ -93,22 +97,22 @@ public class TestDB {
     }
 
     public static void checkpointQuery(SQLiteDatabase db, int id, int num,
-           double lat, double lon, int track) {
+           double lat, double lon, UUID track) {
         String query = "INSERT INTO checkpoints (checkpoint_id, checkpoint_num, " +
                        "checkpoint_latitude, checkpoint_longitude, checkpoint_track) " +
                        "VALUES (" + String.valueOf(id) + ", " + String.valueOf(num) + ", " +
-                       String.valueOf(lat) + ", " + String.valueOf(lon) + ", "
-                       + String.valueOf(track) + ")";
+                       String.valueOf(lat) + ", " + String.valueOf(lon) + ", " +
+                       "'"+track.toString()+"')";
         db.execSQL(query);
     }
 
     public static void userPointQuery(SQLiteDatabase db, int id, double lat,
-          double lon, int experience) {
+          double lon, UUID experience) {
         String query = "INSERT INTO user_points (userpoint_id, userpoint_x, " +
                        "userpoint_y, " +
                        "userpoint_experience) VALUES (" + String.valueOf(id) + ", " +
                        String.valueOf(lat) + ", " + String.valueOf(lon) + ", " +
-                       String.valueOf(experience) + ")";
+                       "\"" + experience.toString() + "\")";
         db.execSQL(query);
     }
 
@@ -201,14 +205,14 @@ public class TestDB {
 
     public static void quadrantQuery(
             SQLiteDatabase db, double nwLat, double nwLon, double seLat,
-            double seLon, String base64, long expId) {
+            double seLon, String base64, UUID expId) {
         ContentValues values = new ContentValues();
         values.put("raster_nw_corner_latitude", nwLat);
         values.put("raster_nw_corner_longitude", nwLon);
         values.put("raster_se_corner_latitude", seLat);
         values.put("raster_se_corner_longitude", seLon);
         values.put("raster_base64", base64);
-        values.put("raster_experience", expId);
+        values.put("raster_experience", expId.toString());
         db.insertOrThrow(SerleenaDatabase.TABLE_RASTERS, null, values);
     }
 

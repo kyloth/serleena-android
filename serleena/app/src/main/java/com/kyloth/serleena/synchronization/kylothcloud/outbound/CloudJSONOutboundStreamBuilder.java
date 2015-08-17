@@ -40,6 +40,7 @@
 package com.kyloth.serleena.synchronization.kylothcloud.outbound;
 
 import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import com.google.gson.stream.JsonWriter;
 import com.kyloth.serleena.common.TelemetryEvent;
 import com.kyloth.serleena.common.UserPoint;
@@ -51,7 +52,8 @@ import com.kyloth.serleena.synchronization.OutboundStream;
 import com.kyloth.serleena.synchronization.OutboundStreamBuilder;
 import com.kyloth.serleena.synchronization.kylothcloud.OutboundDataEntity;
 import com.kyloth.serleena.synchronization.kylothcloud.OutboundRootEntity;
-import com.kyloth.serleena.synchronization.kylothcloud.TelemetryEntity;
+import com.kyloth.serleena.synchronization.kylothcloud.OutboundTelemetryEntity;
+import com.kyloth.serleena.synchronization.kylothcloud.OutboundRootSerializer;
 import com.kyloth.serleena.synchronization.kylothcloud.TrackEntity;
 import com.kyloth.serleena.synchronization.kylothcloud.UserPointEntity;
 
@@ -70,7 +72,9 @@ import java.util.ArrayList;
  */
 public class CloudJSONOutboundStreamBuilder implements OutboundStreamBuilder {
     OutboundRootEntity root;
-
+    final Gson gson = new GsonBuilder().registerTypeAdapter(OutboundRootEntity.class,
+                                                                 new OutboundRootSerializer()).create();
+    
     public CloudJSONOutboundStreamBuilder() {
         root = new OutboundRootEntity();
         root.data = new ArrayList<OutboundDataEntity>();
@@ -87,28 +91,28 @@ public class CloudJSONOutboundStreamBuilder implements OutboundStreamBuilder {
     @Override
     public void addExperience(IExperienceStorage exp) {
         OutboundDataEntity e = new OutboundDataEntity();
-        e.experience = exp.getName();
+        e.experience = exp.getUUID();
+        int userPointCounter = 0;
         for (UserPoint p : exp.getUserPoints()) {
             UserPointEntity pe = new UserPointEntity();
             pe.point = p;
-            pe.name = "";
-            // TODO: Noi non ce l'abbiamo?
+            pe.name = "Point "+userPointCounter++;
             e.userPoints.add(pe);
         }
         for (ITrackStorage t : exp.getTracks()) {
             TrackEntity te = new TrackEntity();
             te.name = "";
             // TODO: Noi non ce l'abbiamo?
+            te.uuid = t.getUUID();
             int i = 0;
             for (ITelemetryStorage ts : t.getTelemetries()) {
-                TelemetryEntity tse = new TelemetryEntity();
+                OutboundTelemetryEntity tse = new OutboundTelemetryEntity();
                 for (TelemetryEvent tsv : ts.getEvents()) {
                     long ee;
                     ee = tsv.timestamp();
                     tse.events.add(ee);
-                    // tse.id = 0;
-                    // TODO: Noi non ce l'abbiamo? SHANDROID-31
                 }
+                tse.track = te.uuid;
                 e.telemetryData.add(tse);
             }
         }
@@ -116,7 +120,6 @@ public class CloudJSONOutboundStreamBuilder implements OutboundStreamBuilder {
     }
 
     public String build() {
-        final Gson gson = new Gson();
         return gson.toJson(root, OutboundRootEntity.class);
     }
     /**
@@ -126,7 +129,6 @@ public class CloudJSONOutboundStreamBuilder implements OutboundStreamBuilder {
     public void stream(OutboundStream s) throws IOException {
         if (s instanceof JSONOutboundStream) {
             JsonWriter writer = null;
-            final Gson gson = new Gson();
             try {
                 URLEncodedWriter urlw = new URLEncodedWriter(
                         new OutputStreamWriter(
@@ -135,6 +137,7 @@ public class CloudJSONOutboundStreamBuilder implements OutboundStreamBuilder {
                 );
                 writer = new JsonWriter(urlw);
                 writer.setIndent("  ");
+
                 gson.toJson(root, OutboundRootEntity.class, writer);
                 writer.flush();
             } catch (UnsupportedEncodingException e) {

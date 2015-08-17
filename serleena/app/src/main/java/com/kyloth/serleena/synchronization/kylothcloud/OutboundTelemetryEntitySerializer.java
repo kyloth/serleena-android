@@ -41,17 +41,18 @@ import java.lang.reflect.Type;
 
 import java.util.Iterator;
 
-class TelemetryEntitySerializer implements JsonSerializer<TelemetryEntity> {
+class OutboundTelemetryEntitySerializer implements JsonSerializer<OutboundTelemetryEntity> {
     @Override
-    public JsonElement serialize(TelemetryEntity te, Type typeOfTe, JsonSerializationContext context) {
+    public JsonElement serialize(OutboundTelemetryEntity src, Type typeOfSrc, JsonSerializationContext context) {
         JsonObject telemetry = new JsonObject();
         JsonArray events = new JsonArray();
-        Iterator<Long> i_events = te.events.iterator();
+        Iterator<Long> i_events = src.events.iterator();
         while(i_events.hasNext()) {
             JsonPrimitive j = new JsonPrimitive(i_events.next());
             events.add(j);
         }
         telemetry.add("events", events);
+        telemetry.add("track", new JsonPrimitive(src.track.toString()));
         return telemetry;
     }
 }

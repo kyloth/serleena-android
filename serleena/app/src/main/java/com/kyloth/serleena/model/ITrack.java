@@ -44,6 +44,8 @@ import com.kyloth.serleena.common.Checkpoint;
 import com.kyloth.serleena.common.DirectAccessList;
 import com.kyloth.serleena.common.TelemetryEvent;
 
+import java.util.UUID;
+
 /**
  * Interfaccia realizzata da oggetti che rappresentano un
  * Percorso
@@ -96,4 +98,5 @@ public interface ITrack {
      */
     ITelemetry getBestTelemetry() throws NoSuchTelemetryException;
 
+    UUID getUUID();
 }

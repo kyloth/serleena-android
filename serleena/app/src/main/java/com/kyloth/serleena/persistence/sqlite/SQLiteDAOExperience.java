@@ -47,6 +47,7 @@ import com.kyloth.serleena.common.UserPoint;
 import com.kyloth.serleena.persistence.*;
 
 import java.util.ArrayList;
+import java.util.UUID;
 
 /**
  * Implementazione di IExperienceStorage per la persistenza su database
@@ -54,7 +55,7 @@ import java.util.ArrayList;
  *
  * @use Istanze di SQLiteDAOExperience vengono create e utilizzate dal DAO SerleenaSQLiteDataSource, che le restituisce all'esterno dietro interfaccia IExperienceStorage. Mantiene un riferimento al database di appartenenza attraverso ISerleenaSQLiteDataSource.
  * @field name : String Nome dell'Esperienza
- * @field id : int ID della riga di database associata all'istanza
+ * @field getUUID : int ID della riga di database associata all'istanza
  * @field dataSource : ISerleenaSQLiteDataSource Database a cui fa riferimento l'oggetto
  * @author Filippo Sestini <sestini.filippo@gmail.com>
  * @version 1.0.0
@@ -63,19 +64,19 @@ class SQLiteDAOExperience implements IExperienceStorage
 {
 
     private String name;
-    private int id;
+    private UUID uuid;
     private ISerleenaSQLiteDataSource dataSource;
 
     /**
      * Crea una nuova istanza di SQLiteDAOExperience.
      *
-     * @param   id              Id dell'oggetto nella tabella di appartenenza.
+     * @param   uuid              Id dell'oggetto nella tabella di appartenenza.
      * @param   dataSource      La sorgente di dati SQL a cui questo oggetto è
      *                          associato.
      */
-    public SQLiteDAOExperience(String name, int id,
+    public SQLiteDAOExperience(String name, UUID uuid,
             ISerleenaSQLiteDataSource dataSource) {
-        this.id = id;
+        this.uuid = uuid;
         this.dataSource = dataSource;
         this.name = name;
     }
@@ -118,6 +119,8 @@ class SQLiteDAOExperience implements IExperienceStorage
         return name;
     }
 
+
+
     /**
      * Implementa IExperienceStorage.getQuadrant().
      *
@@ -136,8 +139,9 @@ class SQLiteDAOExperience implements IExperienceStorage
      *
      * @return ID dell'oggetto esperienza.
      */
-    public int id() {
-        return this.id;
+    @Override
+    public UUID getUUID() {
+        return this.uuid;
     }
 
 }

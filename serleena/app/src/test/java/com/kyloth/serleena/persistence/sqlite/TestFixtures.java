@@ -40,6 +40,7 @@ import java.util.Collections;
 import java.util.GregorianCalendar;
 import java.util.Hashtable;
 import java.util.Map;
+import java.util.UUID;
 
 public class TestFixtures {
 
@@ -60,6 +61,8 @@ public class TestFixtures {
                 values.put(key, (Double)value);
             } else if (value.getClass() == Long.class) {
                 values.put(key, (Long)value);
+            } else if (value.getClass() == UUID.class) {
+                values.put(key, value.toString());
             } else {
                 throw new RuntimeException(value.getClass().toString());
             }
@@ -151,13 +154,13 @@ public class TestFixtures {
         /////////////////////////
         // Exp #1
         /////////////////////////
-        public static final int EXPERIENCES_FIXTURE_EXPERIENCE_1_ID = 1;
+        public static final UUID EXPERIENCES_FIXTURE_EXPERIENCE_1_UUID = UUID.fromString("b989daae-9102-409b-abac-e428afe38baf");
         public static final String EXPERIENCES_FIXTURE_EXPERIENCE_1_NAME = "Experience_1";
 
         public static final Map<String, Object> EXPERIENCES_FIXTURE_EXPERIENCE_1;
         static {
             Hashtable<String, Object> tmp = new Hashtable<String, Object>();
-            tmp.put("experience_id", EXPERIENCES_FIXTURE_EXPERIENCE_1_ID);
+            tmp.put("experience_uuid", EXPERIENCES_FIXTURE_EXPERIENCE_1_UUID);
             tmp.put("experience_name", EXPERIENCES_FIXTURE_EXPERIENCE_1_NAME);
             EXPERIENCES_FIXTURE_EXPERIENCE_1 = Collections.unmodifiableMap(tmp);
         };
@@ -165,30 +168,30 @@ public class TestFixtures {
             /////////////////////////
             // Exp #1 Track #1
             /////////////////////////
-            public static final int EXPERIENCES_FIXTURE_EXPERIENCE_1_TRACK_1_ID = 5;
+            public static final UUID EXPERIENCES_FIXTURE_EXPERIENCE_1_TRACK_1_UUID = UUID.fromString("af024d00-e2d5-4fae-8bad-8b16f823a2cc");
             public static final String EXPERIENCES_FIXTURE_EXPERIENCE_1_TRACK_1_NAME = "Track_1";
 
             public static final Map<String, Object> EXPERIENCES_FIXTURE_EXPERIENCE_1_TRACK_1;
             static {
                 Hashtable<String, Object> tmp = new Hashtable<String, Object>();
-                tmp.put("track_id", EXPERIENCES_FIXTURE_EXPERIENCE_1_TRACK_1_ID);
+                tmp.put("track_uuid", EXPERIENCES_FIXTURE_EXPERIENCE_1_TRACK_1_UUID);
                 tmp.put("track_name", EXPERIENCES_FIXTURE_EXPERIENCE_1_TRACK_1_NAME);
-                tmp.put("track_experience", EXPERIENCES_FIXTURE_EXPERIENCE_1_ID);
+                tmp.put("track_experience", EXPERIENCES_FIXTURE_EXPERIENCE_1_UUID);
                 EXPERIENCES_FIXTURE_EXPERIENCE_1_TRACK_1 = Collections.unmodifiableMap(tmp);
             };
 
             /////////////////////////
             // Exp #1 Track #2
             /////////////////////////
-            public static final int EXPERIENCES_FIXTURE_EXPERIENCE_1_TRACK_2_ID = 9;
+            public static final UUID EXPERIENCES_FIXTURE_EXPERIENCE_1_TRACK_2_UUID = UUID.fromString("5a0b1752-ee36-4109-a65f-50bec550124c");
             public static final String EXPERIENCES_FIXTURE_EXPERIENCE_1_TRACK_2_NAME = "Track_2";
 
             public static final Map<String, Object> EXPERIENCES_FIXTURE_EXPERIENCE_1_TRACK_2;
             static {
                 Hashtable<String, Object> tmp = new Hashtable<String, Object>();
-                tmp.put("track_id", EXPERIENCES_FIXTURE_EXPERIENCE_1_TRACK_2_ID);
+                tmp.put("track_uuid", EXPERIENCES_FIXTURE_EXPERIENCE_1_TRACK_2_UUID);
                 tmp.put("track_name", EXPERIENCES_FIXTURE_EXPERIENCE_1_TRACK_2_NAME);
-                tmp.put("track_experience", EXPERIENCES_FIXTURE_EXPERIENCE_1_ID);
+                tmp.put("track_experience", EXPERIENCES_FIXTURE_EXPERIENCE_1_UUID);
                 EXPERIENCES_FIXTURE_EXPERIENCE_1_TRACK_2 = Collections.unmodifiableMap(tmp);
             };
 
@@ -203,35 +206,66 @@ public class TestFixtures {
                     Hashtable<String, Object> tmp = new Hashtable<String, Object>();
                     tmp.put("userpoint_x", EXPERIENCES_FIXTURE_EXPERIENCE_1_USERPOINT_1_LAT);
                     tmp.put("userpoint_y", EXPERIENCES_FIXTURE_EXPERIENCE_1_USERPOINT_1_LON);
-                    tmp.put("userpoint_experience", EXPERIENCES_FIXTURE_EXPERIENCE_1_ID);
+                    tmp.put("userpoint_experience", EXPERIENCES_FIXTURE_EXPERIENCE_1_UUID);
                     EXPERIENCES_FIXTURE_EXPERIENCE_1_USERPOINT_1 = Collections.unmodifiableMap(tmp);
                 };
 
-        /////////////
+                /////////////////////////
+                // Exp #1 Userpoint #2
+                /////////////////////////
+                public static final double EXPERIENCES_FIXTURE_EXPERIENCE_1_USERPOINT_2_LAT = 31;
+                public static final double EXPERIENCES_FIXTURE_EXPERIENCE_1_USERPOINT_2_LON = 23;
+
+                public static final Map<String, Object> EXPERIENCES_FIXTURE_EXPERIENCE_1_USERPOINT_2;
+                static {
+                    Hashtable<String, Object> tmp = new Hashtable<String, Object>();
+                    tmp.put("userpoint_x", EXPERIENCES_FIXTURE_EXPERIENCE_1_USERPOINT_2_LAT);
+                    tmp.put("userpoint_y", EXPERIENCES_FIXTURE_EXPERIENCE_1_USERPOINT_2_LON);
+                    tmp.put("userpoint_experience", EXPERIENCES_FIXTURE_EXPERIENCE_1_UUID);
+                    EXPERIENCES_FIXTURE_EXPERIENCE_1_USERPOINT_2 = Collections.unmodifiableMap(tmp);
+                };
+
+
+
+    /////////////
         // Exp #2
         /////////////
-        public static final int EXPERIENCES_FIXTURE_EXPERIENCE_2_ID = 2;
+        public static final UUID EXPERIENCES_FIXTURE_EXPERIENCE_2_UUID = UUID.fromString("4b4cb548-ab91-4df2-b8d8-6e42a2f98366");
         public static final String EXPERIENCES_FIXTURE_EXPERIENCE_2_NAME = "Experience_2";
         public static final Map<String, Object> EXPERIENCES_FIXTURE_EXPERIENCE_2;
         static {
             Hashtable<String, Object> tmp = new Hashtable<String, Object>();
-            tmp.put("experience_id", EXPERIENCES_FIXTURE_EXPERIENCE_2_ID);
+            tmp.put("experience_uuid", EXPERIENCES_FIXTURE_EXPERIENCE_2_UUID);
             tmp.put("experience_name", EXPERIENCES_FIXTURE_EXPERIENCE_2_NAME);
             EXPERIENCES_FIXTURE_EXPERIENCE_2 = Collections.unmodifiableMap(tmp);
         };
 
 
-            public static final int EXPERIENCES_FIXTURE_EXPERIENCE_2_TRACK_1_ID = 12;
+            public static final UUID EXPERIENCES_FIXTURE_EXPERIENCE_2_TRACK_1_UUID = UUID.fromString("e619b42b-9184-4dc4-b475-5a7412cd4e59");
             public static final String EXPERIENCES_FIXTURE_EXPERIENCE_2_TRACK_1_NAME = "Track_3";
 
             public static final Map<String, Object> EXPERIENCES_FIXTURE_EXPERIENCE_2_TRACK_1;
             static {
                 Hashtable<String, Object> tmp = new Hashtable<String, Object>();
-                tmp.put("track_id", EXPERIENCES_FIXTURE_EXPERIENCE_2_TRACK_1_ID);
+                tmp.put("track_uuid", EXPERIENCES_FIXTURE_EXPERIENCE_2_TRACK_1_UUID);
                 tmp.put("track_name", EXPERIENCES_FIXTURE_EXPERIENCE_2_TRACK_1_NAME);
-                tmp.put("track_experience", EXPERIENCES_FIXTURE_EXPERIENCE_2_ID);
+                tmp.put("track_experience", EXPERIENCES_FIXTURE_EXPERIENCE_2_UUID);
                 EXPERIENCES_FIXTURE_EXPERIENCE_2_TRACK_1 = Collections.unmodifiableMap(tmp);
             };
+
+
+            public static final UUID EXPERIENCES_FIXTURE_EXPERIENCE_2_TRACK_2_UUID = UUID.fromString("4001eae5-9876-4ed0-9105-f59b57277ed5");
+            public static final String EXPERIENCES_FIXTURE_EXPERIENCE_2_TRACK_2_NAME = "Track_4";
+
+            public static final Map<String, Object> EXPERIENCES_FIXTURE_EXPERIENCE_2_TRACK_2;
+            static {
+                Hashtable<String, Object> tmp = new Hashtable<String, Object>();
+                tmp.put("track_uuid", EXPERIENCES_FIXTURE_EXPERIENCE_2_TRACK_2_UUID);
+                tmp.put("track_name", EXPERIENCES_FIXTURE_EXPERIENCE_2_TRACK_2_NAME);
+                tmp.put("track_experience", EXPERIENCES_FIXTURE_EXPERIENCE_2_UUID);
+                EXPERIENCES_FIXTURE_EXPERIENCE_2_TRACK_2 = Collections.unmodifiableMap(tmp);
+            };
+
 
         ////////////////////////////////////////
         // TODO: this must be improved
@@ -251,7 +285,7 @@ public class TestFixtures {
             tmp.put("raster_se_corner_latitude", raster_se_corner_latitude);
             tmp.put("raster_se_corner_longitude", raster_se_corner_longitude);
             tmp.put("raster_base64", raster_base64);
-            tmp.put("raster_experience", EXPERIENCES_FIXTURE_EXPERIENCE_1_ID);
+            tmp.put("raster_experience", EXPERIENCES_FIXTURE_EXPERIENCE_1_UUID);
             RASTER_FIXTURE = Collections.unmodifiableMap(tmp);
         };
 

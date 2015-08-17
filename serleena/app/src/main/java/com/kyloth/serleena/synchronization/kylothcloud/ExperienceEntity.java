@@ -44,11 +44,13 @@ import com.kyloth.serleena.common.IRegion;
 
 import java.util.Collection;
 import java.util.LinkedList;
+import java.util.UUID;
 
 /**
  * Struct rappresentante un'esperienza
  */
 public class ExperienceEntity implements IKylothDataEntity {
+    public UUID uuid;
     public Collection<TrackEntity> tracks;
     public String name;
     public Collection<RasterDataEntity> rasterData;
