@@ -50,6 +50,7 @@ import com.kyloth.serleena.common.GeoPoint;
 
 import org.junit.After;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.robolectric.RobolectricGradleTestRunner;
@@ -58,6 +59,7 @@ import org.robolectric.annotation.Config;
 
 import java.net.URISyntaxException;
 import java.util.ArrayList;
+import java.util.UUID;
 
 import static com.kyloth.serleena.persistence.sqlite.SerleenaDatabaseTestUtils.makeExperience;
 import static com.kyloth.serleena.persistence.sqlite.SerleenaDatabaseTestUtils.makeTelemetry;
@@ -103,6 +105,7 @@ public class SerleenaDatabaseTest {
 
         for (String name : names) {
             values = new ContentValues();
+            values.put("experience_uuid", UUID.randomUUID().toString());
             values.put("experience_name", name);
             db.insertOrThrow(SerleenaDatabase.TABLE_EXPERIENCES, null, values);
         }
@@ -115,6 +118,7 @@ public class SerleenaDatabaseTest {
     @Test(expected = SQLException.class)
     public void testExperienceNoNameFails() {
         ContentValues values = (new ContentValues());
+        values.put("experience_uuid", UUID.randomUUID().toString());
         values.put("experience_name", (String)null);
         db.insertOrThrow(SerleenaDatabase.TABLE_EXPERIENCES, null, values);
     }
@@ -130,7 +134,7 @@ public class SerleenaDatabaseTest {
     public void testAddTrack() {
         ContentValues values;
 
-        long id = makeExperience(db);
+        UUID id = makeExperience(db);
 
         ArrayList<String> names = new ArrayList<String>();
 
@@ -140,7 +144,8 @@ public class SerleenaDatabaseTest {
 
         for (String name : names) {
             values = new ContentValues();
-            values.put("track_experience", id);
+            values.put("track_uuid", UUID.randomUUID().toString());
+            values.put("track_experience", id.toString());
             values.put("track_name", name);
             db.insertOrThrow(SerleenaDatabase.TABLE_TRACKS, null, values);
         }
@@ -153,6 +158,9 @@ public class SerleenaDatabaseTest {
     @Test(expected = SQLException.class)
     public void testTrackNoNameFails() {
         ContentValues values = (new ContentValues());
+        UUID id = makeExperience(db);
+        values.put("track_uuid", UUID.randomUUID().toString());
+        values.put("track_experience", id.toString());
         values.put("track_name", (String) null);
         db.insertOrThrow(SerleenaDatabase.TABLE_TRACKS, null, values);
     }
@@ -163,12 +171,12 @@ public class SerleenaDatabaseTest {
      */
     @Test(expected = SQLException.class)
     public void testTrackWrongID() {
-        long id = makeExperience(db);
+        UUID id = makeExperience(db);
         // Questo dovrebbe rompere l'integrita' referenziale?
-        id += 123;
+        id = UUID.randomUUID();
         ContentValues values;
         values = new ContentValues();
-        values.put("track_experience", id);
+        values.put("track_experience", id.toString());
         values.put("track_name", "bar");
         db.insertOrThrow(SerleenaDatabase.TABLE_TRACKS, null, values);
     }
@@ -180,6 +188,7 @@ public class SerleenaDatabaseTest {
     @Test(expected = SQLException.class)
     public void testTrackNoExpFails() {
         ContentValues values = (new ContentValues());
+        values.put("track_uuid", UUID.randomUUID().toString());
         values.put("track_name", "foo");
         db.insertOrThrow(SerleenaDatabase.TABLE_TRACKS, null, values);
     }
@@ -190,15 +199,16 @@ public class SerleenaDatabaseTest {
     @Test
     public void testTrackCascade() {
         ContentValues values;
-        long id = makeExperience(db);
+        UUID id = makeExperience(db);
         values = new ContentValues();
-        values.put("track_experience", id);
+        values.put("track_uuid", UUID.randomUUID().toString());
+        values.put("track_experience", id.toString());
         values.put("track_name", "bar");
         db.insertOrThrow(SerleenaDatabase.TABLE_TRACKS, null, values);
-        db.delete(SerleenaDatabase.TABLE_EXPERIENCES, "experience_id = " + id, null);
+        db.delete(SerleenaDatabase.TABLE_EXPERIENCES, "experience_uuid = \"" + id.toString() + "\"", null);
         Cursor query = db.query(SerleenaDatabase.TABLE_TRACKS,
                                 null,
-                                "track_experience = " + id,
+                                "track_experience = \"" + id.toString() + "\"",
                                 null,
                                 null,
                                 null,
@@ -271,12 +281,12 @@ public class SerleenaDatabaseTest {
     @Test(expected = SQLException.class)
     public void testHeartCascade() {
         ContentValues values = new ContentValues();
-        long id = makeTrack(db);
-        values.put("eventc_telem", id);
+        UUID id = makeTrack(db);
+        values.put("eventc_telem", id.toString());
         values.put("eventc_timestamp", 1);
         values.put("eventc_value", 1);
         db.insertOrThrow(SerleenaDatabase.TABLE_TELEM_EVENTS_CHECKP, null, values);
-        db.delete(SerleenaDatabase.TABLE_TRACKS, "track_id = " + id, null);
+        db.delete(SerleenaDatabase.TABLE_TRACKS, "track_id = \"" + id.toString() + "\"", null);
         Cursor query = db.query(SerleenaDatabase.TABLE_TELEM_EVENTS_CHECKP, null,
                 "eventc_telem = " + id, null, null, null, null);
         assertTrue(query.getCount() == 0);
@@ -447,7 +457,7 @@ public class SerleenaDatabaseTest {
     public void testAddUserPoint() {
         ContentValues values;
         values = new ContentValues();
-        values.put("userpoint_experience", makeExperience(db));
+        values.put("userpoint_experience", makeExperience(db).toString());
         values.put("userpoint_x", 1);
         values.put("userpoint_y", 1);
         db.insertOrThrow(SerleenaDatabase.TABLE_USER_POINTS, null, values);
@@ -486,14 +496,14 @@ public class SerleenaDatabaseTest {
     @Test
     public void testUserPointCascade() {
         ContentValues values;
-        long id = makeExperience(db);
+        UUID id = makeExperience(db);
         values = new ContentValues();
-        values.put("userpoint_experience", id);
+        values.put("userpoint_experience", id.toString());
         values.put("userpoint_x", 1);
         values.put("userpoint_y", 1);
         db.insertOrThrow(SerleenaDatabase.TABLE_USER_POINTS, null, values);
-        db.delete(SerleenaDatabase.TABLE_EXPERIENCES, "experience_id = " + id, null);
-        Cursor query = db.query(SerleenaDatabase.TABLE_USER_POINTS, null, "userpoint_experience = " + id, null, null, null, null);
+        db.delete(SerleenaDatabase.TABLE_EXPERIENCES, "experience_uuid = \"" + id.toString() + "\"", null);
+        Cursor query = db.query(SerleenaDatabase.TABLE_USER_POINTS, null, "userpoint_experience = \"" + id.toString() + "\"", null, null, null, null);
         assertTrue(query.getCount() == 0);
     }
 
@@ -511,7 +521,7 @@ public class SerleenaDatabaseTest {
         values.put("checkpoint_latitude", 1);
         values.put("checkpoint_longitude", 1);
         values.put("checkpoint_num", 1);
-        values.put("checkpoint_track", makeTrack(db));
+        values.put("checkpoint_track", makeTrack(db).toString());
         db.insertOrThrow(SerleenaDatabase.TABLE_CHECKPOINTS, null, values);
     }
 
@@ -550,14 +560,14 @@ public class SerleenaDatabaseTest {
     public void testCheckpointCascade() {
         ContentValues values;
         values = new ContentValues();
-        long id = makeTrack(db);
+        UUID id = makeTrack(db);
         values.put("checkpoint_latitude", 1);
         values.put("checkpoint_longitude", 1);
         values.put("checkpoint_num", 1);
-        values.put("checkpoint_track", id);
+        values.put("checkpoint_track", id.toString());
         db.insertOrThrow(SerleenaDatabase.TABLE_CHECKPOINTS, null, values);
-        db.delete(SerleenaDatabase.TABLE_TRACKS, "track_id = " + id, null);
-        Cursor query = db.query(SerleenaDatabase.TABLE_CHECKPOINTS, null, "checkpoint_track = " + id, null, null, null, null);
+        db.delete(SerleenaDatabase.TABLE_TRACKS, "track_uuid = \"" + id.toString() + "\"", null);
+        Cursor query = db.query(SerleenaDatabase.TABLE_CHECKPOINTS, null, "checkpoint_track = \"" + id.toString() + "\"", null, null, null, null);
         assertTrue(query.getCount() == 0);
     }
 
@@ -575,7 +585,7 @@ public class SerleenaDatabaseTest {
                 "raster_nw_corner_longitude <= " + longitude + " AND " +
                 "raster_se_corner_latitude <= " + latitude + " AND " +
                 "raster_se_corner_longitude >= " + longitude + " AND " +
-                "raster_experience = " + TestFixtures.EXPERIENCES_FIXTURE_EXPERIENCE_1_ID,
+                "raster_experience = \"" + TestFixtures.EXPERIENCES_FIXTURE_EXPERIENCE_1_UUID + "\"",
                 null, null, null, null);
         assertEquals(1, query.getCount());
     }

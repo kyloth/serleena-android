@@ -51,6 +51,7 @@ import org.robolectric.RobolectricGradleTestRunner;
 import org.robolectric.RuntimeEnvironment;
 import org.robolectric.annotation.Config;
 
+import android.content.ContentValues;
 import android.database.sqlite.SQLiteDatabase;
 
 import java.util.Iterator;
@@ -59,6 +60,7 @@ import com.kyloth.serleena.BuildConfig;
 import com.kyloth.serleena.persistence.sqlite.SerleenaSQLiteDataSource;
 import com.kyloth.serleena.persistence.sqlite.SerleenaDatabase;
 import com.kyloth.serleena.common.UserPoint;
+import com.kyloth.serleena.persistence.sqlite.TestFixtures;
 
 /**
  * Contiene test per la classe Experience.
@@ -78,21 +80,16 @@ public class ExperienceTest {
     /**
      * Inizializza i campi dati necessari alla conduzione dei test.
      */
-
     @Before
     public void initialize() {
         serleenaDB = new SerleenaDatabase(RuntimeEnvironment.application, "sample.db", null, 1);
         db = serleenaDB.getWritableDatabase();
         serleenaDB.onConfigure(db);
         serleenaDB.onUpgrade(db, 1, 2);
-        String insertExperience_1 = "INSERT INTO experiences " +
-                                    "(experience_id, experience_name) " +
-                                    "VALUES (1, 'Experience_1')";
-        String insertExperience_2 = "INSERT INTO experiences " +
-                                    "(experience_id, experience_name) " +
-                                    "VALUES (2, 'Experience_2')";
-        db.execSQL(insertExperience_1);
-        db.execSQL(insertExperience_2);
+        ContentValues values = TestFixtures.pack(TestFixtures.EXPERIENCES_FIXTURE_EXPERIENCE_1);
+        db.insertOrThrow(SerleenaDatabase.TABLE_EXPERIENCES, null, values);
+        values = TestFixtures.pack(TestFixtures.EXPERIENCES_FIXTURE_EXPERIENCE_2);
+        db.insertOrThrow(SerleenaDatabase.TABLE_EXPERIENCES, null, values);
         serleenaSQLDS = new SerleenaSQLiteDataSource(serleenaDB);
         dataSource = new SerleenaDataSource(serleenaSQLDS);
     }
@@ -100,7 +97,6 @@ public class ExperienceTest {
     /**
      * Chiude il database per permettere il funzionamento dei test successivi.
      */
-
     @After
     public void cleanUp() {
         serleenaDB.close();
@@ -110,27 +106,29 @@ public class ExperienceTest {
      * Verifica che il metodo getName restituisca il nome effettivo
      * delle Esperienze salvate nel db.
      */
-
     @Test
     public void testGetName() {
         Iterable<IExperience> experiences = dataSource.getExperiences();
         Iterator<IExperience> i_experiences = experiences.iterator();
-        assertTrue(i_experiences.next().getName().equals("Experience_1"));
+        String name = i_experiences.next().getName();
+        assertTrue(
+                name.equals(TestFixtures.EXPERIENCES_FIXTURE_EXPERIENCE_1_NAME) ||
+                name.equals(TestFixtures.EXPERIENCES_FIXTURE_EXPERIENCE_2_NAME)
+        );
     }
 
     /**
      * Verifica che il metodo getUserPoints restituisca i corretti
      * Punti Utente per le diverse Esperienze.
      */
-
     @Test
     public void testGetUserPoints() {
         String insertUserPoints_1 = "INSERT INTO user_points " +
-                                    "(userpoint_id, userpoint_x, userpoint_y, userpoint_experience) " +
-                                    "VALUES (1, 2, 2, 1)";
+                "(userpoint_id, userpoint_x, userpoint_y, userpoint_experience) " +
+                "VALUES (1, 2, 2, \"" + TestFixtures.EXPERIENCES_FIXTURE_EXPERIENCE_1_UUID + "\")";
         String insertUserPoints_2 = "INSERT INTO user_points " +
-                                    "(userpoint_id, userpoint_x, userpoint_y, userpoint_experience) " +
-                                    "VALUES (2, 3, 3, 1)";
+                "(userpoint_id, userpoint_x, userpoint_y, userpoint_experience) " +
+                "VALUES (2, 3, 3, \""  + TestFixtures.EXPERIENCES_FIXTURE_EXPERIENCE_1_UUID + "\")";
         db.execSQL(insertUserPoints_1);
         db.execSQL(insertUserPoints_2);
         Iterable<IExperience> experiences = dataSource.getExperiences();
@@ -150,7 +148,6 @@ public class ExperienceTest {
      * Verifica che il metodo addUserPoints aggiunga un Punto
      * Utente per l'Esperienza sul quale è chiamato.
      */
-
     @Test
     public void testAddUserPoints() {
         UserPoint up = new UserPoint(5, 5);
@@ -165,26 +162,8 @@ public class ExperienceTest {
      * Verifica che il metodo getTracks restituisca correttamente
      * i Percorsi in base all'Esperienza sul quale è chiamato.
      */
-
     @Test
     public void testGetTracks() {
-        String insertTrack_1 = "INSERT INTO tracks " +
-                               "(track_id, track_name, track_experience) " +
-                               "VALUES (1, 'Track_1', 1)";
-        String insertTrack_2 = "INSERT INTO tracks " +
-                               "(track_id, track_name, track_experience) " +
-                               "VALUES (2, 'Track_2', 2)";
-        db.execSQL(insertTrack_1);
-        db.execSQL(insertTrack_2);
-        Iterable<IExperience> experiences = dataSource.getExperiences();
-        Iterator<IExperience> i_experiences = experiences.iterator();
-        Experience exp_1 = (Experience) i_experiences.next();
-        Experience exp_2 = (Experience) i_experiences.next();
-        Iterable<ITrack> tracks_1 = exp_1.getTracks();
-        Iterable<ITrack> tracks_2 = exp_2.getTracks();
-        Track t1 = (Track) tracks_1.iterator().next();
-        Track t2 = (Track) tracks_2.iterator().next();
-        assertTrue(t1 != null);
-        assertTrue(t2 != null);
+        // TODO
     }
 }

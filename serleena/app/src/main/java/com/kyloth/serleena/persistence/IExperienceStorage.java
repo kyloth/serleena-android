@@ -45,6 +45,8 @@ import com.kyloth.serleena.common.GeoPoint;
 import com.kyloth.serleena.common.IQuadrant;
 import com.kyloth.serleena.common.UserPoint;
 
+import java.util.UUID;
+
 /**
  * Interfaccia implementata da un oggetto che realizza la persistenza di
  * un' Esperienza.
@@ -81,6 +83,8 @@ public interface IExperienceStorage {
      * @return Nome dell'esperienza.
      */
     String getName();
+
+    UUID getUUID();
 
     IQuadrant getQuadrant(GeoPoint location)
             throws NoSuchQuadrantException;

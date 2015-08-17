@@ -41,11 +41,13 @@
 package com.kyloth.serleena.synchronization.kylothcloud;
 
 import java.util.Collection;
+import java.util.UUID;
 
 /**
  * Struct rappresentante un percorso
  */
 public class TrackEntity implements IKylothDataEntity {
+    public UUID uuid;
     public String name;
     public Collection<CheckpointEntity> checkpoints;
     public Collection<TelemetryEntity> telemetries;

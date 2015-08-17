@@ -41,10 +41,15 @@
 package com.kyloth.serleena.synchronization.kylothcloud;
 
 import java.util.Collection;
+import java.util.LinkedList;
+import java.util.UUID;
 
 /**
  * Struct rappresentante una telemetria
  */
 public class TelemetryEntity implements IKylothDataEntity {
     public Collection<Long> events;
+    public TelemetryEntity() {
+        events = new LinkedList<Long>();
+    }
 }

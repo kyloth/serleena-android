@@ -139,21 +139,21 @@ public class SQLiteDAOExperienceTest {
     public void testConstructorAndGetters() {
         SQLiteDAOExperience daoExp = new SQLiteDAOExperience(
                 TestFixtures.EXPERIENCES_FIXTURE_EXPERIENCE_1_NAME,
-                TestFixtures.EXPERIENCES_FIXTURE_EXPERIENCE_1_ID,
+                TestFixtures.EXPERIENCES_FIXTURE_EXPERIENCE_1_UUID,
                 serleenaSQLDS);
         assertEquals(
                 daoExp.getName(),
                 TestFixtures.EXPERIENCES_FIXTURE_EXPERIENCE_1_NAME
         );
         assertEquals(
-                daoExp.id(),
-                TestFixtures.EXPERIENCES_FIXTURE_EXPERIENCE_1_ID
+                daoExp.getUUID(),
+                TestFixtures.EXPERIENCES_FIXTURE_EXPERIENCE_1_UUID
         );
     }
 
     /**
      * Verifica che il metodo getTracks restituisca correttamente
-     * l'insieme dei percorsi collegati all'esperienza il cui id
+     * l'insieme dei percorsi collegati all'esperienza il cui getUUID
      * è fornito alla costruzione di SQLiteDAOExperience.
      */
 
@@ -161,7 +161,7 @@ public class SQLiteDAOExperienceTest {
     public void testGetTracks() {
         SQLiteDAOExperience daoExp = new SQLiteDAOExperience(
                 TestFixtures.EXPERIENCES_FIXTURE_EXPERIENCE_1_NAME,
-                TestFixtures.EXPERIENCES_FIXTURE_EXPERIENCE_1_ID,
+                TestFixtures.EXPERIENCES_FIXTURE_EXPERIENCE_1_UUID,
                 serleenaSQLDS);
         Iterable<ITrackStorage> trackStorage = daoExp.getTracks();
         Iterator<ITrackStorage> i_trackStorage = trackStorage.iterator();
@@ -169,16 +169,16 @@ public class SQLiteDAOExperienceTest {
         SQLiteDAOTrack track_2 = (SQLiteDAOTrack) i_trackStorage.next();
         assertFalse(i_trackStorage.hasNext());
         assertTrue(
-                (track_1.id() == TestFixtures.EXPERIENCES_FIXTURE_EXPERIENCE_1_TRACK_1_ID &&
-                 track_2.id() == TestFixtures.EXPERIENCES_FIXTURE_EXPERIENCE_1_TRACK_2_ID) ||
-                (track_1.id() == TestFixtures.EXPERIENCES_FIXTURE_EXPERIENCE_1_TRACK_2_ID &&
-                 track_2.id() == TestFixtures.EXPERIENCES_FIXTURE_EXPERIENCE_1_TRACK_1_ID)
+                (track_1.getUUID().equals(TestFixtures.EXPERIENCES_FIXTURE_EXPERIENCE_1_TRACK_1_UUID) &&
+                 track_2.getUUID().equals(TestFixtures.EXPERIENCES_FIXTURE_EXPERIENCE_1_TRACK_2_UUID)) ||
+                (track_1.getUUID().equals(TestFixtures.EXPERIENCES_FIXTURE_EXPERIENCE_1_TRACK_2_UUID) &&
+                 track_2.getUUID().equals(TestFixtures.EXPERIENCES_FIXTURE_EXPERIENCE_1_TRACK_1_UUID))
                 );
     }
 
     /**
      * Verifica che il metodo getUserPoints restituisca correttamente
-     * i punti utente associati all'esperienza il cui id è fornito
+     * i punti utente associati all'esperienza il cui getUUID è fornito
      * alla costruzione di SQLiteDAOExperience.
      */
 
@@ -186,7 +186,7 @@ public class SQLiteDAOExperienceTest {
     public void testGetUserPoints() {
         SQLiteDAOExperience daoExp = new SQLiteDAOExperience(
                 TestFixtures.EXPERIENCES_FIXTURE_EXPERIENCE_1_NAME,
-                TestFixtures.EXPERIENCES_FIXTURE_EXPERIENCE_1_ID,
+                TestFixtures.EXPERIENCES_FIXTURE_EXPERIENCE_1_UUID,
                 serleenaSQLDS);
         Iterable<UserPoint> ups = daoExp.getUserPoints();
         Iterator<UserPoint> i_ups = ups.iterator();
@@ -197,7 +197,7 @@ public class SQLiteDAOExperienceTest {
 
     /**
      * Verifica che il metodo addUserPoint inserisca correttamente
-     * un nuovo punto utente associato all'esperienza il cui id
+     * un nuovo punto utente associato all'esperienza il cui getUUID
      * è fornito alla costruzione di SQLiteDAOExperience.
      */
 
@@ -205,7 +205,7 @@ public class SQLiteDAOExperienceTest {
     public void testAddUserPoint() {
         SQLiteDAOExperience daoExp = new SQLiteDAOExperience(
                 TestFixtures.EXPERIENCES_FIXTURE_EXPERIENCE_1_NAME,
-                TestFixtures.EXPERIENCES_FIXTURE_EXPERIENCE_1_ID,
+                TestFixtures.EXPERIENCES_FIXTURE_EXPERIENCE_1_UUID,
                 serleenaSQLDS);
         UserPoint up_1 = new UserPoint(44, 59);
         daoExp.addUserPoint(up_1);

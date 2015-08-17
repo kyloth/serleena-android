@@ -47,7 +47,6 @@ class UserPointSerializer implements JsonSerializer<UserPointEntity> {
         userPoint.addProperty("latitude", point.latitude());
         userPoint.addProperty("longitude", point.longitude());
         userPoint.addProperty("name", up.name);
-
         return userPoint;
     }
 

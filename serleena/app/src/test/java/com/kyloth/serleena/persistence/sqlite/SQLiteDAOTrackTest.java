@@ -85,7 +85,7 @@ public class SQLiteDAOTrackTest {
      */
     @Test(expected = IllegalArgumentException.class)
     public void ctorShouldThrowWhenNullCheckpoints() {
-        new SQLiteDAOTrack(null, 0, "", serleenaSQLDS);
+        new SQLiteDAOTrack(null, TestFixtures.EXPERIENCES_FIXTURE_EXPERIENCE_1_TRACK_1_UUID, "", serleenaSQLDS);
     }
 
     /**
@@ -94,7 +94,7 @@ public class SQLiteDAOTrackTest {
      */
     @Test(expected = IllegalArgumentException.class)
     public void ctorShouldThrowWhenNullName() {
-        new SQLiteDAOTrack(emptyCheckpointList, 0, null, serleenaSQLDS);
+        new SQLiteDAOTrack(emptyCheckpointList, TestFixtures.EXPERIENCES_FIXTURE_EXPERIENCE_1_TRACK_1_UUID, null, serleenaSQLDS);
     }
 
     /**
@@ -103,17 +103,17 @@ public class SQLiteDAOTrackTest {
      */
     @Test(expected = IllegalArgumentException.class)
     public void ctorShouldThrowWhenNullDataSource() {
-        new SQLiteDAOTrack(emptyCheckpointList, 0, "", null);
+        new SQLiteDAOTrack(emptyCheckpointList, TestFixtures.EXPERIENCES_FIXTURE_EXPERIENCE_1_TRACK_1_UUID, "", null);
     }
 
     /**
-     * Verifica che l'id ritornato da id() sia quello corretto.
+     * Verifica che l'getUUID ritornato da getUUID() sia quello corretto.
      */
     @Test
     public void idShouldBeReturnedCorrectly() {
         SQLiteDAOTrack daoTrack = new SQLiteDAOTrack(
-                emptyCheckpointList, 123, "", serleenaSQLDS);
-        assertEquals(123, daoTrack.id());
+                emptyCheckpointList, TestFixtures.EXPERIENCES_FIXTURE_EXPERIENCE_1_TRACK_1_UUID, "", serleenaSQLDS);
+        assertEquals(TestFixtures.EXPERIENCES_FIXTURE_EXPERIENCE_1_TRACK_1_UUID, daoTrack.getUUID());
     }
 
     /**
@@ -122,7 +122,7 @@ public class SQLiteDAOTrackTest {
     @Test
     public void nameShouldBeReturnedCorrectly() {
         SQLiteDAOTrack daoTrack = new SQLiteDAOTrack(
-                emptyCheckpointList, 123, "name", serleenaSQLDS);
+                emptyCheckpointList, TestFixtures.EXPERIENCES_FIXTURE_EXPERIENCE_1_TRACK_1_UUID, "name", serleenaSQLDS);
         assertEquals("name", daoTrack.name());
     }
 
@@ -138,7 +138,7 @@ public class SQLiteDAOTrackTest {
         List<Checkpoint> list = Arrays.asList(cp1, cp2, cp3);
         DirectAccessList<Checkpoint> cpList = new ListAdapter<Checkpoint>(list);
 
-        SQLiteDAOTrack daoTrack = new SQLiteDAOTrack(cpList, 1, "", serleenaSQLDS);
+        SQLiteDAOTrack daoTrack = new SQLiteDAOTrack(cpList, TestFixtures.EXPERIENCES_FIXTURE_EXPERIENCE_1_TRACK_1_UUID, "", serleenaSQLDS);
         DirectAccessList<Checkpoint> returnList = daoTrack.getCheckpoints();
         assertTrue(cp1.equals(returnList.get(0)));
         assertTrue(cp2.equals(returnList.get(1)));
@@ -153,7 +153,7 @@ public class SQLiteDAOTrackTest {
     @Test
     public void createTelemetryShouldForwardCorrectParams() {
         SQLiteDAOTrack daoTrack = new SQLiteDAOTrack(
-                emptyCheckpointList, 123, "", serleenaSQLDS);
+                emptyCheckpointList, TestFixtures.EXPERIENCES_FIXTURE_EXPERIENCE_1_TRACK_1_UUID, "", serleenaSQLDS);
         when(serleenaSQLDS.getTelemetries(any(SQLiteDAOTrack.class)))
                 .thenReturn(new ArrayList<SQLiteDAOTelemetry>());
         Iterable<TelemetryEvent> mock_list =
@@ -175,7 +175,7 @@ public class SQLiteDAOTrackTest {
         Iterable<SQLiteDAOTelemetry> telemetryList = Arrays.asList(t1, t2);
 
         SQLiteDAOTrack daoTrack = new SQLiteDAOTrack(
-                emptyCheckpointList, 123, "", serleenaSQLDS);
+                emptyCheckpointList, TestFixtures.EXPERIENCES_FIXTURE_EXPERIENCE_1_TRACK_1_UUID, "", serleenaSQLDS);
         when(serleenaSQLDS.getTelemetries(any(SQLiteDAOTrack.class))).thenReturn
                 (telemetryList);
         Iterable<ITelemetryStorage> result = daoTrack.getTelemetries();

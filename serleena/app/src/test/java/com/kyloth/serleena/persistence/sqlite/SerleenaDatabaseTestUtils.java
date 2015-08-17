@@ -43,6 +43,8 @@ package com.kyloth.serleena.persistence.sqlite;
 import android.content.ContentValues;
 import android.database.sqlite.SQLiteDatabase;
 
+import java.util.UUID;
+
 /**
  * Classe di utilita' per i test di SerleenaDatabase e SerleenaSQLiteDataSource
  */
@@ -51,23 +53,27 @@ class SerleenaDatabaseTestUtils {
     /**
      * Metodo di utilita' per creare un'esperienza.
      */
-    public static long makeExperience(SQLiteDatabase db) {
+    public static UUID makeExperience(SQLiteDatabase db) {
         ContentValues values;
         values = new ContentValues();
+        values.put("experience_uuid", TestFixtures.EXPERIENCES_FIXTURE_EXPERIENCE_1_UUID.toString());
         values.put("experience_name", TestFixtures.EXPERIENCES_FIXTURE_EXPERIENCE_1_NAME);
-        return db.insertOrThrow(SerleenaDatabase.TABLE_EXPERIENCES, null, values);
+        db.insertOrThrow(SerleenaDatabase.TABLE_EXPERIENCES, null, values);
+        return TestFixtures.EXPERIENCES_FIXTURE_EXPERIENCE_1_UUID;
     }
 
     /**
      * Metodo di utilita' per creare un percorso in un DB vuoto.
      * Crea automaticamente l'esperienza richiesta.
      */
-    public static long makeTrack(SQLiteDatabase db) {
+    public static UUID makeTrack(SQLiteDatabase db) {
         ContentValues values;
         values = new ContentValues();
+        values.put("track_uuid", TestFixtures.EXPERIENCES_FIXTURE_EXPERIENCE_1_TRACK_1_UUID.toString());
         values.put("track_name", TestFixtures.EXPERIENCES_FIXTURE_EXPERIENCE_1_TRACK_1_NAME);
-        values.put("track_experience", makeExperience(db));
-        return db.insertOrThrow(SerleenaDatabase.TABLE_TRACKS, null, values);
+        values.put("track_experience", makeExperience(db).toString());
+        db.insertOrThrow(SerleenaDatabase.TABLE_TRACKS, null, values);
+        return TestFixtures.EXPERIENCES_FIXTURE_EXPERIENCE_1_TRACK_1_UUID;
     }
 
     /**
@@ -77,7 +83,7 @@ class SerleenaDatabaseTestUtils {
     public static long makeTelemetry(SQLiteDatabase db) {
         ContentValues values;
         values = new ContentValues();
-        values.put("telem_track", makeTrack(db));
+        values.put("telem_track", makeTrack(db).toString());
         return db.insertOrThrow(SerleenaDatabase.TABLE_TELEMETRIES, null, values);
     }
 }

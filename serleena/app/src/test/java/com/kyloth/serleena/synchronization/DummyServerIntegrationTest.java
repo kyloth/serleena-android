@@ -141,9 +141,7 @@ public class DummyServerIntegrationTest {
                 String path = baseRequest.getRequestURI();
                 Matcher preauthM = preauthP.matcher(path);
                 Matcher authM = authP.matcher(path);
-                // TODO: La ST dice che e' /data, Bronsa dice che e' diverso
                 Matcher syncM = syncP.matcher(path);
-                // TODO: Controllare bene regexp con bronsa
                 if (preauthM.matches()) {
                     response.setContentType("text/plain; charset=utf-8");
                     assertEquals(preauthM.group(1), kylothId);
@@ -213,7 +211,12 @@ public class DummyServerIntegrationTest {
         db = sh.getWritableDatabase();
         ContentValues values = TestFixtures.pack(TestFixtures.EXPERIENCES_FIXTURE_EXPERIENCE_1);
         db.insertOrThrow(SerleenaDatabase.TABLE_EXPERIENCES, null, values);
-        JSON_OUTPUT = "{\"data\":[{\"experience\":\"Experience_1\"}]}";
+        values = TestFixtures.pack(TestFixtures.EXPERIENCES_FIXTURE_EXPERIENCE_1_TRACK_1);
+        db.insertOrThrow(SerleenaDatabase.TABLE_TRACKS, null, values);
+        values = TestFixtures.pack(TestFixtures.EXPERIENCES_FIXTURE_EXPERIENCE_1_USERPOINT_1);
+        db.insertOrThrow(SerleenaDatabase.TABLE_USER_POINTS, null, values);
+
+        JSON_OUTPUT = "[{\"experience\":\"b989daae-9102-409b-abac-e428afe38baf\",\"userPoints\":[{\"latitude\":13.0,\"longitude\":73.0,\"name\":\"Point 0\"}],\"telemetryData\":[]}]";
         url = new URL("http://localhost:8081/");
         sink = new SerleenaSQLiteDataSink(RuntimeEnvironment.application, sh);
         source = new SerleenaSQLiteDataSource(sh);

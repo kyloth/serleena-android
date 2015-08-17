@@ -39,22 +39,22 @@ import com.google.gson.JsonParseException;
 import java.lang.reflect.Type;
 
 import java.util.ArrayList;
+import java.util.UUID;
 
 class OutboundDataDeserializer implements JsonDeserializer<OutboundDataEntity> {
 
     @Override
     public OutboundDataEntity deserialize(JsonElement json, Type typeOfT, JsonDeserializationContext context) throws JsonParseException {
         OutboundDataEntity ode = new OutboundDataEntity();
-        ode.experience = json.getAsJsonObject().get("experience").getAsString();
+        ode.experience = UUID.fromString(json.getAsJsonObject().get("experience").getAsString());
         ode.userPoints = new ArrayList<UserPointEntity>();
         JsonArray userPoints = json.getAsJsonObject().get("userPoints").getAsJsonArray();
         for (JsonElement up : userPoints) {
             ode.userPoints.add(new UserPointDeserializer().deserialize(up, UserPointEntity.class, context));
         }
-        ode.telemetryData = new ArrayList<TelemetryEntity>();
+        ode.telemetryData = new ArrayList<OutboundTelemetryEntity>();
         JsonArray telemetryData = json.getAsJsonObject().get("telemetryData").getAsJsonArray();
         for (JsonElement t : telemetryData) {
-            ode.telemetryData.add(new TelemetryEntityDeserializer().deserialize(t, TelemetryEntity.class, context));
         }
 
         return ode;

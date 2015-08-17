@@ -60,6 +60,7 @@ import com.kyloth.serleena.persistence.sqlite.SerleenaSQLiteDataSource;
 import com.kyloth.serleena.model.ISerleenaDataSource;
 import com.kyloth.serleena.sensors.NoActiveTrackException;
 
+import org.junit.Ignore;
 import org.robolectric.Robolectric;
 import org.robolectric.RobolectricGradleTestRunner;
 import org.robolectric.RuntimeEnvironment;
@@ -70,6 +71,7 @@ import org.junit.runner.RunWith;
 import org.junit.Before;
 
 import java.lang.Override;
+import java.util.UUID;
 
 import static junit.framework.Assert.assertEquals;
 import static junit.framework.Assert.assertTrue;
@@ -87,9 +89,6 @@ import static org.mockito.Mockito.mock;
         manifest = "src/main/AndroidManifest.xml")
 public class TrackSelectionPresenterIntegrationTest {
 
-    /**
-     * Activity in cui e' possibile impostare un datasource ad hoc per i test.
-     */
     private static class TestingActivity extends SerleenaActivity {
         private ISerleenaDataSource ds;
 
@@ -116,6 +115,14 @@ public class TrackSelectionPresenterIntegrationTest {
                 .create().start().resume().visible().get();
         activity.setDataSource(dataSource);
 
+        UUID expUUID1 = UUID.randomUUID();
+        UUID expUUID2 = UUID.randomUUID();
+        TestDB.experienceQuery(db, expUUID1, "experience1");
+        TestDB.experienceQuery(db, expUUID2, "experience2");
+        TestDB.trackQuery(db, UUID.randomUUID(), "track1", expUUID1);
+        TestDB.trackQuery(db, UUID.randomUUID(), "track2", expUUID1);
+        TestDB.trackQuery(db, UUID.randomUUID(), "track3", expUUID2);
+        TestDB.trackQuery(db, UUID.randomUUID(), "track4", expUUID2);
     }
 
     private Fragment switchToFragmentInExperienceFragment(String string) {
@@ -147,13 +154,6 @@ public class TrackSelectionPresenterIntegrationTest {
      */
     @Test
     public void viewShouldShowTracksOfActiveExperience() {
-        TestDB.experienceQuery(db, 0, "experience1");
-        TestDB.experienceQuery(db, 1, "experience2");
-        TestDB.trackQuery(db, 0, "track1", 0);
-        TestDB.trackQuery(db, 1, "track2", 0);
-        TestDB.trackQuery(db, 2, "track3", 1);
-        TestDB.trackQuery(db, 3, "track4", 1);
-
         ListFragment expFrag =
                 (ListFragment) switchToFragmentInExperienceFragment(
                         "Imposta Esperienza");
@@ -179,13 +179,6 @@ public class TrackSelectionPresenterIntegrationTest {
     @Test
     public void selectingTrackFromViewShouldActivateIt()
             throws NoTrackCrossingException, NoActiveTrackException {
-        TestDB.experienceQuery(db, 0, "experience1");
-        TestDB.experienceQuery(db, 1, "experience2");
-        TestDB.trackQuery(db, 0, "track1", 0);
-        TestDB.trackQuery(db, 1, "track2", 0);
-        TestDB.trackQuery(db, 2, "track3", 1);
-        TestDB.trackQuery(db, 3, "track4", 1);
-
         ListFragment expFrag =
                 (ListFragment) switchToFragmentInExperienceFragment(
                         "Imposta Esperienza");

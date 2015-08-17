@@ -45,10 +45,8 @@
 package com.kyloth.serleena.persistence.sqlite;
 
 import android.content.ContentValues;
-import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
-import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.util.Base64;
 
@@ -68,13 +66,11 @@ import com.kyloth.serleena.persistence.IWeatherStorage;
 import com.kyloth.serleena.persistence.NoSuchQuadrantException;
 import com.kyloth.serleena.persistence.WeatherForecastEnum;
 
-import java.io.FileOutputStream;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
-
-import static java.lang.Math.floor;
+import java.util.UUID;
 
 /**
  * Classe concreta contenente l’implementazione del data source per l’accesso al
@@ -108,20 +104,20 @@ public class SerleenaSQLiteDataSource implements ISerleenaSQLiteDataSource {
     @Override
     public Iterable<SQLiteDAOTrack> getTracks(SQLiteDAOExperience experience) {
         SQLiteDatabase db = dbHelper.getReadableDatabase();
-        String where = "track_experience = " + experience.id();
+        String where = "track_experience = \"" + experience.getUUID() + "\"";
         Cursor result = db.query(SerleenaDatabase.TABLE_TRACKS,
-                new String[] { "track_id, track_name" }, where, null, null,
+                new String[] { "track_uuid, track_name" }, where, null, null,
                 null, null);
 
         ArrayList<SQLiteDAOTrack> list = new ArrayList<SQLiteDAOTrack>();
-        int idIndex = result.getColumnIndexOrThrow("track_id");
+        int uuidIndex = result.getColumnIndexOrThrow("track_uuid");
         int nameIndex = result.getColumnIndexOrThrow("track_name");
 
         while (result.moveToNext()) {
-            int trackId = result.getInt(idIndex);
+            UUID trackUuid = UUID.fromString(result.getString(uuidIndex));
             String name = result.getString(nameIndex);
             list.add(new SQLiteDAOTrack(
-                    getCheckpoints(trackId), trackId, name, this));
+                    getCheckpoints(trackUuid), trackUuid, name, this));
         }
 
         result.close();
@@ -131,12 +127,12 @@ public class SerleenaSQLiteDataSource implements ISerleenaSQLiteDataSource {
     /**
      * Restituisce i checkpoint di un Percorso.
      *
-     * @param trackId ID del percorso di cui si vogliono ottenere i Checkpoint.
+     * @param trackUuid ID del percorso di cui si vogliono ottenere i Checkpoint.
      * @return Elenco di checkpoint del Percorso specificato.
      */
-    private DirectAccessList<Checkpoint> getCheckpoints(int trackId) {
+    private DirectAccessList<Checkpoint> getCheckpoints(UUID trackUuid) {
         SQLiteDatabase db = dbHelper.getReadableDatabase();
-        String where = "checkpoint_track = " + trackId;
+        String where = "checkpoint_track = \"" + trackUuid + '\"';
         String orderBy = "checkpoint_num ASC";
 
         Cursor result = db.query(SerleenaDatabase.TABLE_CHECKPOINTS,
@@ -170,7 +166,7 @@ public class SerleenaSQLiteDataSource implements ISerleenaSQLiteDataSource {
     @Override
     public Iterable<SQLiteDAOTelemetry> getTelemetries(SQLiteDAOTrack track) {
         SQLiteDatabase db = dbHelper.getReadableDatabase();
-        String where = "telem_track = " + track.id();
+        String where = "telem_track = \"" + track.getUUID() + "\"";
         Cursor result = db.query(SerleenaDatabase.TABLE_TELEMETRIES,
                 new String[]{"telem_id"}, where, null, null, null, null);
 
@@ -200,7 +196,7 @@ public class SerleenaSQLiteDataSource implements ISerleenaSQLiteDataSource {
     @Override
     public Iterable<UserPoint> getUserPoints(SQLiteDAOExperience experience) {
         SQLiteDatabase db = dbHelper.getReadableDatabase();
-        String where = "userpoint_experience = " + experience.id();
+        String where = "userpoint_experience = \"" + experience.getUUID() + "\"";
         Cursor result = db.query(SerleenaDatabase.TABLE_USER_POINTS,
                 new String[] { "userpoint_x", "userpoint_y" }, where, null,
                 null, null, null);
@@ -231,7 +227,7 @@ public class SerleenaSQLiteDataSource implements ISerleenaSQLiteDataSource {
 
         values.put("userpoint_x", point.latitude());
         values.put("userpoint_y", point.longitude());
-        values.put("userpoint_experience", experience.id());
+        values.put("userpoint_experience", experience.getUUID().toString());
 
         db.insert(SerleenaDatabase.TABLE_USER_POINTS, null, values);
     }
@@ -251,7 +247,8 @@ public class SerleenaSQLiteDataSource implements ISerleenaSQLiteDataSource {
         SQLiteDatabase db = dbHelper.getWritableDatabase();
 
         ContentValues values = new ContentValues();
-        values.put("telem_track", track.id());
+
+        values.put("telem_track", track.getUUID().toString());
         long newId = db.insert(SerleenaDatabase.TABLE_TELEMETRIES, null, values);
 
         for (TelemetryEvent event : events) {
@@ -264,7 +261,7 @@ public class SerleenaSQLiteDataSource implements ISerleenaSQLiteDataSource {
                 values.put("eventc_timestamp", eventc.timestamp());
                 values.put("eventc_value", eventc.checkpointNumber());
                 values.put("eventc_telem", newId);
-                db.insert(SerleenaDatabase.TABLE_TELEM_EVENTS_CHECKP, null,values);
+                db.insertOrThrow(SerleenaDatabase.TABLE_TELEM_EVENTS_CHECKP, null,values);
 
             }
 
@@ -284,19 +281,19 @@ public class SerleenaSQLiteDataSource implements ISerleenaSQLiteDataSource {
     public Iterable<IExperienceStorage> getExperiences() {
         SQLiteDatabase db = dbHelper.getReadableDatabase();
         Cursor result = db.query(SerleenaDatabase.TABLE_EXPERIENCES,
-                new String[]{"experience_id", "experience_name"}, null,
+                new String[]{"experience_uuid", "experience_name"}, null,
                 null, null, null, null);
 
-        int idIndex = result.getColumnIndexOrThrow("experience_id");
+        int uuidIndex = result.getColumnIndexOrThrow("experience_uuid");
         int nameIndex = result.getColumnIndexOrThrow("experience_name");
 
         ArrayList<IExperienceStorage> list =
                 new ArrayList<IExperienceStorage>();
 
         while (result.moveToNext()) {
-            int id = result.getInt(idIndex);
+            UUID uuid = UUID.fromString(result.getString(uuidIndex));
             String name = result.getString(nameIndex);
-            list.add(new SQLiteDAOExperience(name, id, this));
+            list.add(new SQLiteDAOExperience(name, uuid, this));
         }
 
         result.close();
@@ -322,8 +319,8 @@ public class SerleenaSQLiteDataSource implements ISerleenaSQLiteDataSource {
                 location.latitude() + " AND " +
                 "`raster_se_corner_longitude` >= " +
                 location.longitude() + " AND " +
-                "`raster_experience` = " +
-                exp.id();
+                "`raster_experience` = \"" +
+                        exp.getUUID() + "\"";
 
         Cursor result = db.query(SerleenaDatabase.TABLE_RASTERS,
                 new String[]{

@@ -49,6 +49,7 @@ import com.kyloth.serleena.persistence.ITrackStorage;
 import com.kyloth.serleena.persistence.NoSuchQuadrantException;
 
 import java.util.ArrayList;
+import java.util.UUID;
 
 /**
  * Concretizza IExperience.
@@ -117,6 +118,11 @@ final class Experience implements IExperience {
     @Override
     public String getName() {
         return storage.getName();
+    }
+
+    @Override
+    public UUID getUUID() {
+        return storage.getUUID();
     }
 
     /**

@@ -185,12 +185,15 @@ public class SerleenaDataSourceIntegrationTest {
     public void testTrackEquals() {
         SerleenaDatabase serleenaDb = TestDB.getEmptyDatabase();
         SQLiteDatabase db = serleenaDb.getWritableDatabase();
-        TestDB.experienceQuery(db, 0, "experience");
-        TestDB.trackQuery(db, 0, "track", 0);
-        TestDB.checkpointQuery(db, 0, 1, 5, 5, 0);
-        TestDB.checkpointQuery(db, 1, 2, 6, 6, 0);
-        TestDB.telemetryQuery(db, 0, 0);
-        TestDB.telemetryQuery(db, 1, 0);
+        ContentValues values = TestFixtures.pack(TestFixtures.EXPERIENCES_FIXTURE_EXPERIENCE_1);
+        db.insertOrThrow(SerleenaDatabase.TABLE_EXPERIENCES, null, values);
+        values = TestFixtures.pack(TestFixtures.EXPERIENCES_FIXTURE_EXPERIENCE_1_TRACK_1);
+        db.insertOrThrow(SerleenaDatabase.TABLE_TRACKS, null, values);
+
+        TestDB.checkpointQuery(db, 0, 1, 5, 5, TestFixtures.EXPERIENCES_FIXTURE_EXPERIENCE_1_TRACK_1_UUID);
+        TestDB.checkpointQuery(db, 1, 2, 6, 6, TestFixtures.EXPERIENCES_FIXTURE_EXPERIENCE_1_TRACK_1_UUID);
+        TestDB.telemetryQuery(db, 0, TestFixtures.EXPERIENCES_FIXTURE_EXPERIENCE_1_TRACK_1_UUID);
+        TestDB.telemetryQuery(db, 1, TestFixtures.EXPERIENCES_FIXTURE_EXPERIENCE_1_TRACK_1_UUID);
         TestDB.checkPointEventQuery(db, 0, 100, 1, 0);
         TestDB.checkPointEventQuery(db, 1, 200, 2, 0);
         TestDB.checkPointEventQuery(db, 2, 500, 1, 1);

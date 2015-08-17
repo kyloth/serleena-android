@@ -31,9 +31,15 @@
 package com.kyloth.serleena.synchronization.kylothcloud;
 
 import java.util.Collection;
+import java.util.LinkedList;
+import java.util.UUID;
 
 public class OutboundDataEntity implements IKylothDataEntity {
-    public String experience;
+    public UUID experience;
     public Collection<UserPointEntity> userPoints;
-    public Collection<TelemetryEntity> telemetryData;
+    public Collection<OutboundTelemetryEntity> telemetryData;
+    public OutboundDataEntity() {
+        userPoints = new LinkedList<UserPointEntity>();
+        telemetryData = new LinkedList<OutboundTelemetryEntity>();
+    }
 }

@@ -57,6 +57,7 @@ import com.kyloth.serleena.model.ITrack;
 import com.kyloth.serleena.model.SerleenaDataSource;
 import com.kyloth.serleena.persistence.sqlite.SerleenaDatabase;
 import com.kyloth.serleena.persistence.sqlite.SerleenaSQLiteDataSource;
+import com.kyloth.serleena.persistence.sqlite.TestFixtures;
 import com.kyloth.serleena.presentation.IExperienceActivationSource;
 import com.kyloth.serleena.presentation.ITrackSelectionView;
 import com.kyloth.serleena.presenters.ExperienceSelectionPresenter;
@@ -181,7 +182,7 @@ public class ExperienceSelectionPresenterIntegrationTest {
      */
     @Test
     public void oneExperienceInDbShouldBeShownByView() {
-        TestDB.experienceQuery(db, 0, "experience");
+        TestDB.experienceQuery(db, TestFixtures.EXPERIENCES_FIXTURE_EXPERIENCE_1_UUID, "experience");
         setup();
 
         assertEquals(1, experienceListAdapter.getCount());
@@ -195,8 +196,8 @@ public class ExperienceSelectionPresenterIntegrationTest {
      */
     @Test
     public void twoExperiencesInDbShouldBeShownByView() {
-        TestDB.experienceQuery(db, 0, "experience1");
-        TestDB.experienceQuery(db, 1, "experience2");
+        TestDB.experienceQuery(db, TestFixtures.EXPERIENCES_FIXTURE_EXPERIENCE_1_UUID, "experience1");
+        TestDB.experienceQuery(db, TestFixtures.EXPERIENCES_FIXTURE_EXPERIENCE_2_UUID, "experience2");
         setup();
 
         assertEquals(2, experienceListAdapter.getCount());
@@ -216,9 +217,13 @@ public class ExperienceSelectionPresenterIntegrationTest {
      */
     @Test
     public void testActivateExperience() {
-        TestDB.experienceQuery(db, 0, "experience");
-        TestDB.trackQuery(db, 0, "track", 0);
-        TestDB.checkpointQuery(db, 0, 1, 5, 6, 0);
+        TestDB.experienceQuery(db, TestFixtures.EXPERIENCES_FIXTURE_EXPERIENCE_1_UUID,
+                TestFixtures.EXPERIENCES_FIXTURE_EXPERIENCE_1_NAME);
+        TestDB.trackQuery(db, TestFixtures.EXPERIENCES_FIXTURE_EXPERIENCE_1_TRACK_1_UUID,
+                TestFixtures.EXPERIENCES_FIXTURE_EXPERIENCE_1_TRACK_1_NAME,
+                TestFixtures.EXPERIENCES_FIXTURE_EXPERIENCE_1_UUID);
+        TestDB.checkpointQuery(db, 0, 1, 5, 6,
+                TestFixtures.EXPERIENCES_FIXTURE_EXPERIENCE_1_TRACK_1_UUID);
         setup();
 
         fragment.onListItemClick(null, null, 0, 0);

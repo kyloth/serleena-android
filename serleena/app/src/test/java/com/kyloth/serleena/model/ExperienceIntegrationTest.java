@@ -60,6 +60,7 @@ import com.kyloth.serleena.TestDB;
 import com.kyloth.serleena.persistence.sqlite.SerleenaSQLiteDataSource;
 import com.kyloth.serleena.persistence.sqlite.SerleenaDatabase;
 import com.kyloth.serleena.common.UserPoint;
+import com.kyloth.serleena.persistence.sqlite.TestFixtures;
 
 /**
  * Contiene test di integrazione per la classe Experience.
@@ -83,7 +84,7 @@ public class ExperienceIntegrationTest {
         serleenaDB = new SerleenaDatabase(RuntimeEnvironment.application, 1);
         db = serleenaDB.getWritableDatabase();
         dataSource = new SerleenaDataSource(new SerleenaSQLiteDataSource(serleenaDB));
-        TestDB.experienceQuery(db, 0, "experience");
+        TestDB.experienceQuery(db, TestFixtures.EXPERIENCES_FIXTURE_EXPERIENCE_1_UUID, TestFixtures.EXPERIENCES_FIXTURE_EXPERIENCE_1_NAME);
     }
 
     /**
@@ -93,7 +94,7 @@ public class ExperienceIntegrationTest {
     @Test
     public void testGetName() {
         IExperience experience = dataSource.getExperiences().iterator().next();
-        assertEquals("experience", experience.getName());
+        assertEquals(TestFixtures.EXPERIENCES_FIXTURE_EXPERIENCE_1_NAME, experience.getName());
     }
 
     /**
@@ -102,7 +103,7 @@ public class ExperienceIntegrationTest {
     @Test
     public void toStringShouldReturnNameOfExperience() {
         IExperience experience = dataSource.getExperiences().iterator().next();
-        assertEquals("experience", experience.toString());
+        assertEquals(TestFixtures.EXPERIENCES_FIXTURE_EXPERIENCE_1_NAME, experience.toString());
     }
 
     /**
@@ -111,8 +112,8 @@ public class ExperienceIntegrationTest {
      */
     @Test
     public void testGetUserPoints() {
-        TestDB.userPointQuery(db, 0, 5, 5, 0);
-        TestDB.userPointQuery(db, 1, 10, 10, 0);
+        TestDB.userPointQuery(db, 0, 5, 5, TestFixtures.EXPERIENCES_FIXTURE_EXPERIENCE_1_UUID);
+        TestDB.userPointQuery(db, 1, 10, 10, TestFixtures.EXPERIENCES_FIXTURE_EXPERIENCE_1_UUID);
 
         IExperience experience = dataSource.getExperiences().iterator().next();
         Iterator<UserPoint> iterator = experience.getUserPoints().iterator();
@@ -152,19 +153,19 @@ public class ExperienceIntegrationTest {
      */
     @Test
     public void testGetTracks() {
-        TestDB.experienceQuery(db, 1, "experience2");
-        TestDB.trackQuery(db, 0, "track1", 0);
-        TestDB.trackQuery(db, 1, "track2", 1);
+        TestDB.experienceQuery(db, TestFixtures.EXPERIENCES_FIXTURE_EXPERIENCE_2_UUID, TestFixtures.EXPERIENCES_FIXTURE_EXPERIENCE_2_NAME);
+        TestDB.trackQuery(db, TestFixtures.EXPERIENCES_FIXTURE_EXPERIENCE_1_TRACK_1_UUID, TestFixtures.EXPERIENCES_FIXTURE_EXPERIENCE_1_TRACK_1_NAME, TestFixtures.EXPERIENCES_FIXTURE_EXPERIENCE_1_UUID);
+        TestDB.trackQuery(db, TestFixtures.EXPERIENCES_FIXTURE_EXPERIENCE_2_TRACK_1_UUID, TestFixtures.EXPERIENCES_FIXTURE_EXPERIENCE_2_TRACK_1_NAME, TestFixtures.EXPERIENCES_FIXTURE_EXPERIENCE_2_UUID);
 
         IExperience experience = null;
         for (IExperience ex : dataSource.getExperiences())
-            if (ex.getName().equals("experience"))
+            if (ex.getName().equals(TestFixtures.EXPERIENCES_FIXTURE_EXPERIENCE_1_NAME))
                 experience = ex;
 
         Iterator<ITrack> iterator = experience.getTracks().iterator();
         ITrack track = iterator.next();
         assertTrue(!iterator.hasNext());
-        assertEquals("track1", track.name());
+        assertEquals(TestFixtures.EXPERIENCES_FIXTURE_EXPERIENCE_1_TRACK_1_NAME, track.name());
     }
 
 }

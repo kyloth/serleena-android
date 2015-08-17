@@ -48,13 +48,14 @@ import com.kyloth.serleena.persistence.ITelemetryStorage;
 import com.kyloth.serleena.persistence.ITrackStorage;
 
 import java.util.ArrayList;
+import java.util.UUID;
 
 /**
  * Implementazione di persistence.ITrackStorage per la persistenza su
  * database SQLite integrato in Android.
  *
  * @use Istanze di SQLiteDAOTrack vengono create e utilizzate dal DAO SerleenaSQLiteDataSource, che le restituisce all'esterno dietro interfaccia ITrackStorage. Mantiene un riferimento al database di appartenenza attraverso ISerleenaSQLiteDataSource.
- * @field id : int ID della riga di database associata all'oggetto
+ * @field getUUID : int ID della riga di database associata all'oggetto
  * @field dataSource : ISerleenaSQLiteDataSource Database a cui fa riferimento l'oggetto
  * @field checkpoints : DirectAccessList<Checkpoint> Lista dei checkpoints associati al Percorso rappresentato dall'oggetto
  * @author Filippo Sestini <sestini.filippo@gmail.com>
@@ -63,13 +64,13 @@ import java.util.ArrayList;
  */
 class SQLiteDAOTrack implements ITrackStorage {
 
-    private int id;
+    private UUID uuid;
     private String name;
     private ISerleenaSQLiteDataSource dataSource;
     private DirectAccessList<Checkpoint> checkpoints;
 
     public SQLiteDAOTrack(DirectAccessList<Checkpoint> checkpoints,
-                          int id,
+                          UUID uuid,
                           String name,
                           ISerleenaSQLiteDataSource dataSource) {
         if (checkpoints == null)
@@ -79,7 +80,7 @@ class SQLiteDAOTrack implements ITrackStorage {
         if (dataSource == null)
             throw new IllegalArgumentException("Illegal null data source");;
 
-        this.id = id;
+        this.uuid = uuid;
         this.dataSource = dataSource;
         this.checkpoints = checkpoints;
         this.name = name;
@@ -131,22 +132,23 @@ class SQLiteDAOTrack implements ITrackStorage {
      *
      * @return ID dell'oggetto esperienza.
      */
-    public int id() {
-        return id;
+    @Override
+    public UUID getUUID() {
+        return uuid;
     }
 
     /**
      * Ridefinisce Object.equals()
      *
      * @return Restituisce true se e solo se i due oggetti sono non null, di
-     * tipo SQLiteDAOTrack, e il metodo equals restituisce true per gli id,
+     * tipo SQLiteDAOTrack, e il metodo equals restituisce true per gli getUUID,
      * l'elenco di checkpoint e il nome degli oggetti. False altrimenti.
      */
     @Override
     public boolean equals(Object other) {
         if (other != null && other instanceof SQLiteDAOTrack) {
             SQLiteDAOTrack otherTrack = (SQLiteDAOTrack) other;
-            return id == otherTrack.id && name.equals(otherTrack.name) &&
+            return uuid.equals(otherTrack.uuid) && name.equals(otherTrack.name) &&
                     checkpoints.equals(otherTrack.checkpoints) &&
                     getTelemetries().equals(otherTrack.getTelemetries());
         }
@@ -158,7 +160,7 @@ class SQLiteDAOTrack implements ITrackStorage {
      */
     @Override
     public int hashCode() {
-        return id;
+       return uuid.hashCode();
     }
 
 }
