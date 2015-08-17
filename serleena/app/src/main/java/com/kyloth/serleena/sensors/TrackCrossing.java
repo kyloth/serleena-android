@@ -94,7 +94,6 @@ public final class TrackCrossing implements ITrackCrossing,
         if (track == null)
             throw new IllegalArgumentException("Illegal null track");
 
-        trackStartTimestamp = System.currentTimeMillis() / 1000L;
         lastPartial = 0;
         this.track = track;
         nextCheckpointIndex = -1;
@@ -224,8 +223,14 @@ public final class TrackCrossing implements ITrackCrossing,
      */
     private void myAdvanceCheckpoint() {
         locReachMan.detachObserver(this);
-        long now = System.currentTimeMillis() / 1000L;
-        lastPartial = (int) (now - trackStartTimestamp);
+
+        if (nextCheckpointIndex == 0) {
+            trackStartTimestamp = System.currentTimeMillis() / 1000L;
+            lastPartial = 0;
+        } else if (nextCheckpointIndex > 0) {
+            long now = System.currentTimeMillis() / 1000L;
+            lastPartial = (int) (now - trackStartTimestamp);
+        }
 
         if ((nextCheckpointIndex + 1) < track.getCheckpoints().size()) {
             nextCheckpointIndex++;
