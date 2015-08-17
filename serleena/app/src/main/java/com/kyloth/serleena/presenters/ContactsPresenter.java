@@ -122,6 +122,8 @@ public class ContactsPresenter implements IContactsPresenter,
     @Override
     public synchronized void resume() {
         locMan.attachObserver(this, UPDATE_INTERVAL_SECONDS);
+        contacts = new ListAdapter<>(new ArrayList<EmergencyContact>());
+        view.clearView();
         displayContacts(contacts);
     }
 
