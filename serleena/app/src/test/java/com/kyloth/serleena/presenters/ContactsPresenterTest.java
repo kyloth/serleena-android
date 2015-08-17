@@ -233,4 +233,14 @@ public class ContactsPresenterTest {
                 any(String.class), any(String.class));
     }
 
+    /**
+     * Verifica che la vista venga pulita quando il presenter viene
+     * ripristinato.
+     */
+    @Test
+    public void viewShouldBeClearedOnResume() {
+        presenter.resume();
+        verify(view).clearView();
+    }
+
 }
