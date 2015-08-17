@@ -4,6 +4,7 @@
             "tracks": [
                 {
                     "name": "Track_1",
+                    "id": "d977b849-4d54-4a35-bfcc-f421f85a75c8",
                     "checkPoints": [
                         {
                             "latitude": 45.279032,
@@ -21,7 +22,7 @@
                             1437505820522,
                             1438441982647
                         ],
-                        "track": "Track_1"
+                        "track": "d977b849-4d54-4a35-bfcc-f421f85a75c8"
                     }
                 }
             ],
