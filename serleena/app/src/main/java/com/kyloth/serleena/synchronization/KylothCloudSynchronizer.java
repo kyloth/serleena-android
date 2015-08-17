@@ -146,7 +146,12 @@ public class KylothCloudSynchronizer implements IKylothCloudSynchronizer {
      */
     @Override
     public void sync() throws AuthException, IOException {
-        send();
-        get();
+        try {
+            send();
+            get();
+        } catch (Exception e) {
+            proxy.disconnect();
+            throw e;
+        }
     }
 }
