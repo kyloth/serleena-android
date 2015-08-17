@@ -245,7 +245,7 @@ public class SerleenaSQLiteDataSource implements ISerleenaSQLiteDataSource {
     @Override
     public void createTelemetry(Iterable<TelemetryEvent> events,
                                 SQLiteDAOTrack track) {
-        if (events == null && track == null)
+        if (events == null || track == null)
             throw new IllegalArgumentException();
 
         SQLiteDatabase db = dbHelper.getWritableDatabase();
