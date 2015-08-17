@@ -134,7 +134,11 @@ public class KylothCloudSynchronizer implements IKylothCloudSynchronizer {
         }
 
         OutboundStream s = proxy.send();
-        b.stream(s);
+        try {
+            b.stream(s);
+        } catch (IllegalArgumentException e) {
+            throw new IOException("Unable to parse stream");
+        }
         if (!proxy.success()) {
             throw new IOException("Unknown network error");
         }
