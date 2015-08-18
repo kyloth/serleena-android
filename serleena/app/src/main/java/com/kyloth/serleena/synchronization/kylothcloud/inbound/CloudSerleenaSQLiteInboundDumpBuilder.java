@@ -82,6 +82,10 @@ public class CloudSerleenaSQLiteInboundDumpBuilder implements InboundDumpBuilder
         res.add("DELETE FROM " + SerleenaDatabase.TABLE_TRACKS);
         res.add("DELETE FROM " + SerleenaDatabase.TABLE_CHECKPOINTS);
         res.add("DELETE FROM " + SerleenaDatabase.TABLE_RASTERS);
+        res.add("DELETE FROM " + SerleenaDatabase.TABLE_TELEM_EVENTS_CHECKP);
+        res.add("DELETE FROM " + SerleenaDatabase.TABLE_TELEMETRIES);
+        res.add("DELETE FROM " + SerleenaDatabase.TABLE_WEATHER_FORECASTS);
+        res.add("DELETE FROM " + SerleenaDatabase.TABLE_CONTACTS);
         return res;
     }
 
