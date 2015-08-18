@@ -16,7 +16,7 @@ xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
           \strong{Id} &amp; \strong{Nome test} &amp; \strong{Descrizione} &amp; \strong{Stato} \\ [0.5 ex]
           \hline
           <xsl:for-each select="method[@name != 'initialize' and @name != 'setup' and @name != 'tearDown' and @name != 'cleanUp']">
-              TBS<xsl:value-of select="../@x" />.<xsl:value-of select="@y" /> &amp;
+              TUB<xsl:value-of select="../@x" />.<xsl:value-of select="@y" /> &amp;
               \hspace{0pt}<xsl:value-of select="@name" /> &amp;
               \hspace{0pt}<xsl:value-of select="comment" /> &amp;
               superato \\ \hline
