@@ -43,6 +43,7 @@ package com.kyloth.serleena.synchronization.net;
 import com.kyloth.serleena.BuildConfig;
 import com.kyloth.serleena.synchronization.AuthException;
 import com.kyloth.serleena.synchronization.kylothcloud.IKylothIdSource;
+import com.kyloth.serleena.synchronization.kylothcloud.inbound.CloudJSONInboundStream;
 import com.kyloth.serleena.synchronization.kylothcloud.outbound.CloudJSONOutboundStream;
 
 import org.junit.Before;
@@ -63,6 +64,7 @@ import java.net.URL;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.fail;
 import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.eq;
 import static org.mockito.Mockito.mock;
@@ -257,5 +259,172 @@ public class SerleenaJSONNetProxyAuthorizedTest {
     public void testMustDisconnectAfterGet() throws AuthException, IOException {
         proxy.send();
         proxy.get();
+    }
+
+    /**
+     * Verifica che se error 401 per get il proxy sollevi AuthException
+     */
+    @Test(expected = AuthException.class)
+    public void testGetAuthExceptionOn401() throws AuthException, IOException {
+        when(urlConnectionData.getResponseCode()).thenReturn(HttpURLConnection.HTTP_UNAUTHORIZED);
+        String text = "Test401Auth";
+        when(urlConnectionData.getInputStream()).thenReturn(new CloudJSONInboundStream(new ByteArrayInputStream(text.getBytes("UTF-8"))));
+        CloudJSONInboundStream in = (CloudJSONInboundStream) proxy.get();
+        in.close();
+        proxy.success();
+    }
+
+    /**
+     * Verifica che se error 401 per get il proxy non sollevi IOException
+     */
+    @Test
+    public void testGetNotIOExceptionOn401() throws AuthException, IOException {
+        try {
+            when(urlConnectionData.getResponseCode()).thenReturn(HttpURLConnection.HTTP_UNAUTHORIZED);
+            String text = "Test401IO";
+            ByteArrayOutputStream streamOut = new ByteArrayOutputStream();
+            streamOut.write(text.getBytes("UTF-8"));
+            when(urlConnectionData.getOutputStream()).thenReturn(new CloudJSONOutboundStream(streamOut));
+            CloudJSONInboundStream in = (CloudJSONInboundStream) proxy.get();
+            in.close();
+            proxy.success();
+        } catch (IOException ioe) {
+            fail("IOException thrown on 401");
+        } catch (AuthException ae) {}
+    }
+
+
+    /**
+     * Verifica che se error 403 per get il proxy non sollevi IOException
+     */
+    @Test
+    public void testGetNotIOExceptionOn403() throws AuthException, IOException {
+        try {
+            when(urlConnectionData.getResponseCode()).thenReturn(HttpURLConnection.HTTP_FORBIDDEN);
+            String text = "Test403IO";
+            ByteArrayOutputStream streamOut = new ByteArrayOutputStream();
+            streamOut.write(text.getBytes("UTF-8"));
+            when(urlConnectionData.getOutputStream()).thenReturn(new CloudJSONOutboundStream(streamOut));
+            CloudJSONInboundStream in = (CloudJSONInboundStream) proxy.get();
+            in.close();
+            proxy.success();
+        } catch (IOException ioe) {
+            fail("IOException thrown on 403");
+        } catch (AuthException ae) {}
+    }
+
+    /**
+     * Verifica che se error 405 per get il proxy sollevi AuthException
+     */
+    @Test(expected = AuthException.class)
+    public void testGetAuthExceptionOn405() throws AuthException, IOException {
+        when(urlConnectionData.getResponseCode()).thenReturn(HttpURLConnection.HTTP_BAD_METHOD);
+        String text = "Test405Auth";
+        when(urlConnectionData.getInputStream()).thenReturn(new CloudJSONInboundStream(new ByteArrayInputStream(text.getBytes("UTF-8"))));
+        CloudJSONInboundStream in = (CloudJSONInboundStream) proxy.get();
+        in.close();
+        proxy.success();
+    }
+
+    /**
+     * Verifica che se error 405 per get il proxy non sollevi IOException
+     */
+    @Test
+    public void testGetNotIOExceptionOn405() throws AuthException, IOException {
+        try {
+            when(urlConnectionData.getResponseCode()).thenReturn(HttpURLConnection.HTTP_BAD_METHOD);
+            String text = "Test405IO";
+            ByteArrayOutputStream streamOut = new ByteArrayOutputStream();
+            streamOut.write(text.getBytes("UTF-8"));
+            when(urlConnectionData.getOutputStream()).thenReturn(new CloudJSONOutboundStream(streamOut));
+            CloudJSONInboundStream in = (CloudJSONInboundStream) proxy.get();
+            in.close();
+            proxy.success();
+        } catch (IOException ioe) {
+            fail("IOException thrown on 405");
+        } catch (AuthException ae) {}
+    }
+
+    /**
+     * Verifica che se error 401 per send il proxy sollevi AuthException
+     */
+    @Test(expected = AuthException.class)
+    public void testSendAuthExceptionOn401() throws AuthException, IOException {
+        when(urlConnectionData.getResponseCode()).thenReturn(HttpURLConnection.HTTP_UNAUTHORIZED);
+        String text = "Test401Auth";
+        when(urlConnectionData.getInputStream()).thenReturn(new CloudJSONInboundStream(new ByteArrayInputStream(text.getBytes("UTF-8"))));
+        CloudJSONOutboundStream out = (CloudJSONOutboundStream) proxy.send();
+        out.close();
+        proxy.success();
+    }
+
+    /**
+     * Verifica che se error 401 per send il proxy non sollevi IOException
+     */
+    @Test
+    public void testSendNotIOExceptionOn401() throws AuthException, IOException {
+        try {
+            when(urlConnectionData.getResponseCode()).thenReturn(HttpURLConnection.HTTP_UNAUTHORIZED);
+            String text = "Test401IO";
+            ByteArrayOutputStream streamOut = new ByteArrayOutputStream();
+            streamOut.write(text.getBytes("UTF-8"));
+            when(urlConnectionData.getOutputStream()).thenReturn(new CloudJSONOutboundStream(streamOut));
+            CloudJSONOutboundStream out = (CloudJSONOutboundStream) proxy.send();
+            out.close();
+            proxy.success();
+        } catch (IOException ioe) {
+            fail("IOException thrown on 401");
+        } catch (AuthException ae) {}
+    }
+
+    /**
+     * Verifica che se error 403 per send il proxy non sollevi IOException
+     */
+    @Test
+    public void testSendNotIOExceptionOn403() throws AuthException, IOException {
+        try {
+            when(urlConnectionData.getResponseCode()).thenReturn(HttpURLConnection.HTTP_FORBIDDEN);
+            String text = "Test403IO";
+            ByteArrayOutputStream streamOut = new ByteArrayOutputStream();
+            streamOut.write(text.getBytes("UTF-8"));
+            when(urlConnectionData.getOutputStream()).thenReturn(new CloudJSONOutboundStream(streamOut));
+            CloudJSONOutboundStream out = (CloudJSONOutboundStream) proxy.send();
+            out.close();
+            proxy.success();
+        } catch (IOException ioe) {
+            fail("IOException thrown on 403");
+        } catch (AuthException ae) {}
+    }
+
+    /**
+     * Verifica che se error 405 per send il proxy sollevi AuthException
+     */
+    @Test(expected = AuthException.class)
+    public void testSendAuthExceptionOn405() throws AuthException, IOException {
+        when(urlConnectionData.getResponseCode()).thenReturn(HttpURLConnection.HTTP_BAD_METHOD);
+        String text = "Test405Auth";
+        when(urlConnectionData.getInputStream()).thenReturn(new CloudJSONInboundStream(new ByteArrayInputStream(text.getBytes("UTF-8"))));
+        CloudJSONOutboundStream out = (CloudJSONOutboundStream) proxy.send();
+        out.close();
+        proxy.success();
+    }
+
+    /**
+     * Verifica che se error 405 per send il proxy non sollevi IOException
+     */
+    @Test
+    public void testSendNotIOExceptionOn405() throws AuthException, IOException {
+        try {
+            when(urlConnectionData.getResponseCode()).thenReturn(HttpURLConnection.HTTP_BAD_METHOD);
+            String text = "Test405IO";
+            ByteArrayOutputStream streamOut = new ByteArrayOutputStream();
+            streamOut.write(text.getBytes("UTF-8"));
+            when(urlConnectionData.getOutputStream()).thenReturn(new CloudJSONOutboundStream(streamOut));
+            CloudJSONOutboundStream out = (CloudJSONOutboundStream) proxy.send();
+            out.close();
+            proxy.success();
+        } catch (IOException ioe) {
+            fail("IOException thrown on 405");
+        } catch (AuthException ae) {}
     }
 }
