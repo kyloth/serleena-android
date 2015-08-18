@@ -76,7 +76,7 @@ public class DumpBuilderTest {
         TestDB.telemetryQuery(db, 0, TestFixtures.EXPERIENCES_FIXTURE_EXPERIENCE_1_TRACK_1_UUID);
         TestDB.checkPointEventQuery(db, 0, 123456, 0, 0);
         TestDB.checkPointEventQuery(db, 1, 654321, 1, 0);
-        String JSON_OUTPUT = "[{\"experience\":\"b989daae-9102-409b-abac-e428afe38baf\",\"userPoints\":[{\"latitude\":13.0,\"longitude\":73.0,\"name\":\"Point 0\"}],\"telemetryData\":[{\"events\":[123456,654321],\"track\":\"af024d00-e2d5-4fae-8bad-8b16f823a2cc\"}]}]";
+        String JSON_OUTPUT = "[{\"experience\":\"b989daae-9102-409b-abac-e428afe38baf\",\"userPoints\":[{\"latitude\":13.0,\"longitude\":73.0,\"name\":\"Point 0\"}],\"telemetryData\":[{\"events\":[123456000,654321000],\"track\":\"af024d00-e2d5-4fae-8bad-8b16f823a2cc\"}]}]";
 
         class Foo extends ByteArrayOutputStream implements JSONOutboundStream {
             Foo (int i) { super (i); }
