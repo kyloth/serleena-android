@@ -61,9 +61,9 @@ import static org.mockito.Mockito.mock;
 
 @RunWith(RobolectricGradleTestRunner.class)
 @Config(constants = BuildConfig.class, emulateSdk = 19)
-public class DumpBuilderTest {
+public class StreamBuilderTest {
     @Test
-    public void dumpBuilderSanityTest() throws IOException {
+    public void streamBuilderSanityTest() throws IOException {
         // TODO: Fare altri test
         SerleenaDatabase sh = new SerleenaDatabase(RuntimeEnvironment.application, "sample.db", null, 1);
         SQLiteDatabase db = sh.getWritableDatabase();
@@ -76,7 +76,13 @@ public class DumpBuilderTest {
         TestDB.telemetryQuery(db, 0, TestFixtures.EXPERIENCES_FIXTURE_EXPERIENCE_1_TRACK_1_UUID);
         TestDB.checkPointEventQuery(db, 0, 123456, 0, 0);
         TestDB.checkPointEventQuery(db, 1, 654321, 1, 0);
-        String JSON_OUTPUT = "[{\"experience\":\"b989daae-9102-409b-abac-e428afe38baf\",\"userPoints\":[{\"latitude\":13.0,\"longitude\":73.0,\"name\":\"Point 0\"}],\"telemetryData\":[{\"events\":[123456,654321],\"track\":\"af024d00-e2d5-4fae-8bad-8b16f823a2cc\"}]}]";
+
+        TestDB.telemetryQuery(db, 1, TestFixtures.EXPERIENCES_FIXTURE_EXPERIENCE_1_TRACK_1_UUID);
+        TestDB.checkPointEventQuery(db, 2, 56789, 0, 1);
+        TestDB.checkPointEventQuery(db, 3, 98765, 1, 1);
+
+
+        String JSON_OUTPUT = "[{\"experience\":\"b989daae-9102-409b-abac-e428afe38baf\",\"userPoints\":[{\"latitude\":13.0,\"longitude\":73.0,\"name\":\"Point 0\"}],\"telemetryData\":[{\"events\":[123456000,654321000],\"track\":\"af024d00-e2d5-4fae-8bad-8b16f823a2cc\"}, {\"events\":[56789000,98765000],\"track\":\"af024d00-e2d5-4fae-8bad-8b16f823a2cc\"}]}]";
 
         class Foo extends ByteArrayOutputStream implements JSONOutboundStream {
             Foo (int i) { super (i); }
