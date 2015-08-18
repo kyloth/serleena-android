@@ -153,9 +153,9 @@ public class TelemetryTest {
     @Test
     public void getDurationShouldReturnGreatestTimestamp() {
         TelemetryEvent te1 = mock(TelemetryEvent.class);
-        when(te1.timestamp()).thenReturn(20);
+        when(te1.timestamp()).thenReturn(20L);
         TelemetryEvent te2 = mock(TelemetryEvent.class);
-        when(te2.timestamp()).thenReturn(30);
+        when(te2.timestamp()).thenReturn(30L);
         ITelemetryStorage ts = mock(ITelemetryStorage.class);
         List<TelemetryEvent> list = new ArrayList<>();
         list.add(te1);

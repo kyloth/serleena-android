@@ -77,7 +77,7 @@ public class CheckpointCrossingTest {
     public void initialize() throws NoSuchTelemetryException {
         best = mock(ITelemetry.class);
         track = mock(ITrack.class);
-        crossing = new CheckpointCrossing(2, 150, track);
+        crossing = new CheckpointCrossing(2, 150, 100, track);
     }
 
     /**
@@ -86,7 +86,7 @@ public class CheckpointCrossingTest {
      */
     @Test(expected = IllegalArgumentException.class)
     public void ctorShouldThrowIfNullTrack() {
-        new CheckpointCrossing(2, 150, null);
+        new CheckpointCrossing(2, 150, 100, null);
     }
 
     /**
@@ -95,7 +95,7 @@ public class CheckpointCrossingTest {
      */
     @Test(expected = IllegalArgumentException.class)
     public void ctorShouldThrowIfNegativePartial() {
-        new CheckpointCrossing(2, -1, track);
+        new CheckpointCrossing(2, -1, 100, track);
     }
 
     /**
@@ -105,7 +105,7 @@ public class CheckpointCrossingTest {
      */
     @Test(expected = IllegalArgumentException.class)
     public void ctorShouldThrowIfNegativeCheckpointIndex() {
-        new CheckpointCrossing(-1, 100, track);
+        new CheckpointCrossing(-1, 100, 100, track);
     }
 
     /**

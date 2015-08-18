@@ -135,7 +135,7 @@ public class TrackPresenterIntegrationTest {
 
         // 100, 200, 300, 400
         TestDB.telemetryQuery(db, 0, trackUUID);
-        TestDB.checkPointEventQuery(db, 0, 100, 1, 0);
+        TestDB.checkPointEventQuery(db, 0, 0, 1, 0);
         TestDB.checkPointEventQuery(db, 1, 200, 2, 0);
         TestDB.checkPointEventQuery(db, 2, 300, 3, 0);
         TestDB.checkPointEventQuery(db, 3, 400, 4, 0);
@@ -213,21 +213,30 @@ public class TrackPresenterIntegrationTest {
         activateTrackByName(trackSelectionFragment, "Track 1");
         gotoFragment();
 
-        final int partials[] = new int[] { 100, 200, 300, 400 };
-        for (int i = 0; i < 4; i++) {
+        final int partials[] = new int[] { 0, 200, 300, 400 };
+        orientationWidget.callOnClick();
+        for (int i = 1; i < 4; i++) {
             final int index = i;
             orientationWidget.callOnClick();
             Awaitility.await().atMost(500, java.util.concurrent.TimeUnit.SECONDS).until(new Callable<Boolean>() {
                 @Override
                 public Boolean call() throws Exception {
-                    String minutes = (String) deltaText.getText().subSequence(1, deltaText.length() - 3);
-                    String seconds = (String) deltaText.getText().subSequence(deltaText.length() - 2, deltaText.length());
-                    String sign = (String) deltaText.getText().subSequence(0, 1);
-                    int delta = Integer.valueOf(minutes) * 60 + Integer.valueOf(seconds);
-                    if (sign.equals("-")) delta = -delta;
-                    return delta == activity.getSensorManager()
-                            .getTrackCrossingManager().getLastCrossed()
-                            .partialTime() - partials[index];
+                    if (deltaText.getText().length() > 0) {
+                        String minutes = (String) deltaText.getText().subSequence(1, deltaText.length() - 3);
+                        String seconds = (String) deltaText.getText().subSequence(deltaText.length() - 2, deltaText.length());
+                        String sign = (String) deltaText.getText().subSequence(0, 1);
+                        int delta = Integer.valueOf(minutes) * 60 + Integer.valueOf(seconds);
+                        if (sign.equals("-")) delta = -delta;
+                        int partialTime = activity.getSensorManager()
+                                .getTrackCrossingManager().getLastCrossed()
+                                .partialTime();
+                        int realDelta = partialTime - partials[index];
+                        int ddd = activity.getSensorManager()
+                                .getTrackCrossingManager().getLastCrossed()
+                                .delta();
+                        return delta == realDelta;
+                    } else
+                        return false;
                 }
             });
         }

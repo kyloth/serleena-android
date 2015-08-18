@@ -300,19 +300,19 @@ public class SerleenaSQLiteDataSourceTest {
 
         values = new ContentValues();
         values.put("eventc_timestamp", 100);
-        values.put("eventc_value", 0);
-        values.put("eventc_telem", id);
-        db.insertOrThrow(SerleenaDatabase.TABLE_TELEM_EVENTS_CHECKP, null, values);
-
-        values = new ContentValues();
-        values.put("eventc_timestamp", 200);
         values.put("eventc_value", 1);
         values.put("eventc_telem", id);
         db.insertOrThrow(SerleenaDatabase.TABLE_TELEM_EVENTS_CHECKP, null, values);
 
         values = new ContentValues();
-        values.put("eventc_timestamp", 300);
+        values.put("eventc_timestamp", 200);
         values.put("eventc_value", 2);
+        values.put("eventc_telem", id);
+        db.insertOrThrow(SerleenaDatabase.TABLE_TELEM_EVENTS_CHECKP, null, values);
+
+        values = new ContentValues();
+        values.put("eventc_timestamp", 300);
+        values.put("eventc_value", 3);
         values.put("eventc_telem", id);
         db.insertOrThrow(SerleenaDatabase.TABLE_TELEM_EVENTS_CHECKP, null, values);
 
