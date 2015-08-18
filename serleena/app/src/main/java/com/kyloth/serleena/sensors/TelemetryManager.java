@@ -144,7 +144,7 @@ class TelemetryManager
                 if (checkpointIndex == 0)
                     start();
                 events.add(new CheckpointReachedTelemetryEvent(
-                        tc.getLastCrossed().partialTime(), checkpointIndex+1));
+                        tc.getLastCrossed().timestamp(), checkpointIndex+1));
 
                 int total = tc.getTrack().getCheckpoints().size();
                 if (checkpointIndex == total - 1) {

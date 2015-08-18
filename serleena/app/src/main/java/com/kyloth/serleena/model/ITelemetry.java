@@ -80,4 +80,11 @@ public interface ITelemetry {
      */
     int getDuration();
 
+    /**
+     * Restituisce l'UNIX timestamp di inizio del Tracciamento.
+     *
+     * @return UNIX timestamp in millisecondi
+     */
+    long startTimestamp();
+
 }
