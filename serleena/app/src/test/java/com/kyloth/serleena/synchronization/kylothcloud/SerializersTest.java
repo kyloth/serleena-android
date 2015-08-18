@@ -127,6 +127,31 @@ public class SerializersTest {
     }
 
     @Test
+    public void weatherForecastSmokeTestAlternateCondition() throws FileNotFoundException {
+        Gson gson = new GsonBuilder().registerTypeAdapter(WeatherDataEntity.class, new WeatherEntityDeserializer()).create();
+        BufferedReader r;
+        FileReader in = new FileReader(SAMPLES_DIR + "partial/weatherforecast_alternate.json");
+        BufferedReader br = new BufferedReader(in);
+        WeatherDataEntity e = gson.fromJson(br, WeatherDataEntity.class);
+
+        assertEquals(e.morning.forecast, WeatherForecastEnum.Snowy);
+        Assert.assertNotEquals(e.morning.forecast, WeatherForecastEnum.Rainy);
+        assertEquals(e.afternoon.forecast, WeatherForecastEnum.Rainy);
+        Assert.assertNotEquals(e.afternoon.forecast, WeatherForecastEnum.Sunny);
+        assertEquals(e.night.forecast, WeatherForecastEnum.Cloudy);
+        Assert.assertNotEquals(e.night.forecast, WeatherForecastEnum.Rainy);
+        assertEquals(e.boundingRect.getNorthWestPoint().latitude(), new GeoPoint(45.276257, 11.654297).latitude(), GEO_TOLERANCE);
+        assertEquals(e.boundingRect.getNorthWestPoint().longitude(), new GeoPoint(45.276257, 11.654297).longitude(), GEO_TOLERANCE);
+        assertEquals(e.boundingRect.getSouthEastPoint().latitude(), new GeoPoint(45.146557, 11.954498).latitude(), GEO_TOLERANCE);
+        assertEquals(e.boundingRect.getSouthEastPoint().longitude(), new GeoPoint(45.146557, 11.954498).longitude(), GEO_TOLERANCE);
+        Assert.assertNotEquals(e.boundingRect.getSouthEastPoint(), new GeoPoint(12, -34));
+        assertEquals(e.morning.temperature, -2, 0.001);
+        assertEquals(e.afternoon.temperature, 0, 0.001);
+        assertEquals(e.night.temperature, 2, 0.001);
+        assertEquals(e.date, 1437436800000L);
+    }
+
+    @Test
     public void emergencyContactSmokeTest() throws FileNotFoundException {
         Gson gson = new GsonBuilder().registerTypeAdapter(EmergencyDataEntity.class, new EmergencyDataDeserializer()).create();
         BufferedReader r;
