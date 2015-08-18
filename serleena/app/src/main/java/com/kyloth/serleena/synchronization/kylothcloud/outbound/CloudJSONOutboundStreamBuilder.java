@@ -104,8 +104,8 @@ public class CloudJSONOutboundStreamBuilder implements OutboundStreamBuilder {
             te.name = "";
             // TODO: Noi non ce l'abbiamo?
             te.uuid = t.getUUID();
-            int i = 0;
-            for (ITelemetryStorage ts : t.getTelemetries()) {
+            // HACK per SHANDROID-372
+            for (ITelemetryStorage ts : t.getTelemetries(false)) {
                 OutboundTelemetryEntity tse = new OutboundTelemetryEntity();
                 for (TelemetryEvent tsv : ts.getEvents()) {
                     long ee;

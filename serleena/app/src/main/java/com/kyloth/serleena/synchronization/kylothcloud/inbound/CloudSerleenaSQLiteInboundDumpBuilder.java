@@ -91,7 +91,8 @@ public class CloudSerleenaSQLiteInboundDumpBuilder implements InboundDumpBuilder
 
     private SerleenaSQLiteInboundDump buildExperiences(Collection<ExperienceEntity> e) {
         SerleenaSQLiteInboundDump res =  new SerleenaSQLiteInboundDump();
-        int telemCounter = 0;
+        //HACK per SHANDROID-372
+        int telemCounter = -1;
         for (ExperienceEntity exp : e) {
             res.add("INSERT INTO " + SerleenaDatabase.TABLE_EXPERIENCES +
                     "(`experience_uuid`," +
@@ -183,7 +184,6 @@ public class CloudSerleenaSQLiteInboundDumpBuilder implements InboundDumpBuilder
                                 telemCounter + ")");
                         eventCounter++;
                     }
-                    telemCounter++;
                 }
             }
         }

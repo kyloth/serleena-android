@@ -166,8 +166,19 @@ public class SerleenaSQLiteDataSource implements ISerleenaSQLiteDataSource {
      */
     @Override
     public Iterable<SQLiteDAOTelemetry> getTelemetries(SQLiteDAOTrack track) {
+        return getTelemetries(track, true);
+    }
+
+    // HACK per SHANDROID-372
+    @Override
+    public Iterable<SQLiteDAOTelemetry> getTelemetries(SQLiteDAOTrack track, boolean includeGhost) {
         SQLiteDatabase db = dbHelper.getReadableDatabase();
         String where = "telem_track = \"" + track.getUUID() + "\"";
+
+        if (includeGhost == false) {
+            where = "telem_track = \"" + track.getUUID() + "\" AND telem_id != -1";
+        }
+
         Cursor result = db.query(SerleenaDatabase.TABLE_TELEMETRIES,
                 new String[]{"telem_id"}, where, null, null, null, null);
 
