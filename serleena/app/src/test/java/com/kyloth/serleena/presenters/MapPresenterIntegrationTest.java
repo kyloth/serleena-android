@@ -157,6 +157,7 @@ public class MapPresenterIntegrationTest {
     @Test
     public void userGestureShouldAddNewUserPointToExperience()
             throws NoActiveExperienceException, LocationNotAvailableException {
+        TestDB.quadrantQuery(db, 40, 0, 0, 40, "asd", TestFixtures.EXPERIENCES_FIXTURE_EXPERIENCE_1_UUID);
         activateExperienceByName(
                 (ListFragment) switchToFragmentInExperienceFragment(
                         "Imposta Esperienza"),

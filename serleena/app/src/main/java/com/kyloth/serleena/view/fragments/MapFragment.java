@@ -90,10 +90,21 @@ public class MapFragment extends Fragment implements IMapView,
     public void onClick(View v) {
         try {
             presenter.newUserPoint();
-        } catch (NoActiveExperienceException|LocationNotAvailableException e) {
+        } catch (NoActiveExperienceException e) {
             AlertDialog.Builder alertBuilder =
                     new AlertDialog.Builder(getActivity());
             alertBuilder.setMessage("Nessuna esperienza attiva");
+            alertBuilder.setNeutralButton("OK", new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+                    dialog.cancel();
+                }
+            });
+            alertBuilder.create().show();
+        } catch (LocationNotAvailableException ee) {
+            AlertDialog.Builder alertBuilder =
+                    new AlertDialog.Builder(getActivity());
+            alertBuilder.setMessage("Impossibile geolocalizzare");
             alertBuilder.setNeutralButton("OK", new DialogInterface.OnClickListener() {
                 @Override
                 public void onClick(DialogInterface dialog, int which) {

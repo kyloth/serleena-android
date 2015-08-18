@@ -129,6 +129,8 @@ public class MapPresenter implements IMapPresenter, ILocationObserver {
                 expActivationSource.activeExperience();
         if (currentPosition == null)
             throw new LocationNotAvailableException();
+        if (currentQuadrant == null)
+            throw new LocationNotAvailableException();
 
         new AsyncTask<Void, Void, Void>() {
             @Override

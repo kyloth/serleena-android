@@ -50,6 +50,8 @@ import org.mockito.Mockito;
 import org.robolectric.RobolectricTestRunner;
 
 import com.kyloth.serleena.common.LocationNotAvailableException;
+import com.kyloth.serleena.common.UserPoint;
+import com.kyloth.serleena.model.IExperience;
 import com.kyloth.serleena.model.ISerleenaDataSource;
 import com.kyloth.serleena.presentation.IExperienceActivationSource;
 import com.kyloth.serleena.presentation.IMapView;
@@ -57,6 +59,8 @@ import com.kyloth.serleena.common.NoActiveExperienceException;
 import com.kyloth.serleena.common.GeoPoint;
 import com.kyloth.serleena.sensors.ILocationManager;
 import com.kyloth.serleena.sensors.ISensorManager;
+
+import java.util.ArrayList;
 
 /**
  * Contiene test di unità per la classe MapPresenter.
@@ -186,24 +190,25 @@ public class MapPresenterTest {
     }
 
     /**
-     * Verifica che il metodo newUserPoint() chiamato quando non vi è nessuna
-     * Esperienza attiva sollevi un'eccezione NoActiveExperienceException.
-     */
-    @Test(expected = NoActiveExperienceException.class)
-    public void newUserPointShouldThrowWhenNoActiveExperience()
-            throws NoActiveExperienceException, LocationNotAvailableException {
-        Mockito.doThrow(NoActiveExperienceException.class)
-                .when(expActSource).activeExperience();
-        mp.newUserPoint();
-    }
-
-    /**
      * Verifica che il metodo displayUserPoints() sollevi un'eccezione
      * IllegalArgumentException se gli vengono passati parametri null.
      */
     @Test(expected = IllegalArgumentException.class)
     public void displayUserPointsShouldThrowIfNullPoints() {
         mp.displayUserPoints(null);
+    }
+
+    /**
+     * Verifica che il metodo newUserPoint() sollevi un'eccezione
+     * LocationNotAvailableException se non è visualizzato alcun quadrante.
+     */
+    @Test(expected = LocationNotAvailableException.class)
+    public void test() throws NoActiveExperienceException, LocationNotAvailableException {
+        IExperience exp = mock(IExperience.class);
+        when(exp.getUserPoints()).thenReturn(new ArrayList<UserPoint>());
+        when(expActSource.activeExperience()).thenReturn(exp);
+        mp.onLocationUpdate(mock(GeoPoint.class));
+        mp.newUserPoint();
     }
 
 }
