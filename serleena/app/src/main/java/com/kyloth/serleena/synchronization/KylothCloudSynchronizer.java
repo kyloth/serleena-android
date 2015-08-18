@@ -73,7 +73,7 @@ public class KylothCloudSynchronizer implements IKylothCloudSynchronizer {
     IPersistenceDataSource source;
     INetProxy proxy;
 
-    KylothCloudSynchronizer(INetProxy proxy, IPersistenceDataSink sink, IPersistenceDataSource source) {
+    private KylothCloudSynchronizer(INetProxy proxy, IPersistenceDataSink sink, IPersistenceDataSource source) {
         this.proxy = proxy;
         this.sink = sink;
         this.source = source;
