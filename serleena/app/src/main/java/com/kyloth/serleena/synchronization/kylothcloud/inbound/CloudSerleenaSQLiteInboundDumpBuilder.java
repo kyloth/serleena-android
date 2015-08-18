@@ -119,8 +119,8 @@ public class CloudSerleenaSQLiteInboundDumpBuilder implements InboundDumpBuilder
                         "("+ "\"" + exp.uuid.toString() +"\", " +
                         raster.boundingRect.getNorthWestPoint().latitude() +", " +
                          raster.boundingRect.getNorthWestPoint().longitude() +", " +
-                         raster.boundingRect.getNorthWestPoint().latitude() +", " +
-                         raster.boundingRect.getNorthWestPoint().longitude() +", " +
+                         raster.boundingRect.getSouthEastPoint().latitude() +", " +
+                         raster.boundingRect.getSouthEastPoint().longitude() +", " +
                          "\"" + raster.base64Raster + "\"" +
                         ") ");
             }
