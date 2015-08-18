@@ -30,6 +30,7 @@
 
 package com.kyloth.serleena.view.widgets;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.graphics.Canvas;
 
@@ -58,6 +59,7 @@ public class CompassWidgetTest {
      * Verifica che il valore di orientamento impostato causi una rotazione
      * dell'immagine visualizzata dal widget in base ai gradi impostati.
      */
+    @SuppressLint("WrongCall")
     @Test
     public void onDrawShouldRotateCanvas() {
         CompassWidget widget = new CompassWidget(mock(Context.class));
@@ -66,7 +68,7 @@ public class CompassWidgetTest {
 
         widget.onDraw(canvas);
         verify(canvas).rotate(
-                eq(-5.0f), any(Integer.class), any(Integer.class));
+                eq(5.0f), any(Integer.class), any(Integer.class));
     }
 
 }
