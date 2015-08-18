@@ -144,9 +144,9 @@ public class SerleenaJSONNetProxy implements INetProxy {
     }
 
     @Override
-    public void disconnect() {
+    public void disconnect() throws NotConnectedException {
         if (urlConnection == null) {
-            throw new RuntimeException("No urlConnection?");
+            throw new NotConnectedException("No urlConnection?");
         } else {
             try {
                 urlConnection.disconnect();
@@ -227,7 +227,11 @@ public class SerleenaJSONNetProxy implements INetProxy {
                 return in;
             } else {
                 int c = urlConnection.getResponseCode();
-                disconnect();
+                try {
+                    disconnect();
+                } catch (NotConnectedException e) {
+                    // TODO
+                }
                 if (c == 403 || c == 401 || c == 405) {
                     throw new AuthException("Got " + c + " from remote service");
                 } else {

@@ -88,7 +88,7 @@ public interface INetProxy {
     /**
      * Disconnette dal servizio remoto
      */
-    void disconnect();
+    void disconnect() throws NotConnectedException;
 
     /**
      * Verifica se l'ultima operazione di send() o get() e' andata a buon fine

@@ -198,10 +198,10 @@ public class SerleenaJSONNetProxyNotAuthorizedTest {
     }
 
     /**
-     * Verifica che se urlConnection == null disconnect sollevi RuntimeException
+     * Verifica che se urlConnection == null disconnect sollevi NotConnectedException
      */
-    @Test(expected = RuntimeException.class)
-    public void testDisconnectRuntimeExcpetion () throws RuntimeException {
+    @Test(expected = NotConnectedException.class)
+    public void testDisconnectRuntimeExcpetion () throws RuntimeException, NotConnectedException {
         proxy.disconnect();
     }
 

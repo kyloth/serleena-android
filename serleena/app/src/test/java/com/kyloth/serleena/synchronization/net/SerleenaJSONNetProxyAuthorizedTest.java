@@ -166,7 +166,7 @@ public class SerleenaJSONNetProxyAuthorizedTest {
      * @throws IOException
      */
     @Test
-    public void testSendOk() throws AuthException, IOException {
+    public void testSendOk() throws AuthException, IOException, NotConnectedException {
         CloudJSONOutboundStream s = proxy.send();
         s.write('A');
         s.write('B');
@@ -186,7 +186,7 @@ public class SerleenaJSONNetProxyAuthorizedTest {
      * @throws IOException
      */
     @Test(expected = AuthException.class)
-    public void testSendAuthExceptionOn403() throws AuthException, IOException {
+    public void testSendAuthExceptionOn403() throws AuthException, IOException, NotConnectedException {
         CloudJSONOutboundStream s = proxy.send();
         when(urlConnectionData.getResponseCode()).thenReturn(HttpURLConnection.HTTP_FORBIDDEN);
         proxy.success();
@@ -200,7 +200,7 @@ public class SerleenaJSONNetProxyAuthorizedTest {
      * @throws IOException
      */
     @Test(expected = IOException.class)
-    public void testSendIOExceptionOn500() throws AuthException, IOException {
+    public void testSendIOExceptionOn500() throws AuthException, IOException, NotConnectedException {
         CloudJSONOutboundStream s = proxy.send();
         when(urlConnectionData.getResponseCode()).thenReturn(HttpURLConnection.HTTP_INTERNAL_ERROR);
         proxy.success();
@@ -214,7 +214,7 @@ public class SerleenaJSONNetProxyAuthorizedTest {
      * @throws IOException
      */
     @Test(expected = AuthException.class)
-    public void testGetAuthExceptionOn403() throws AuthException, IOException {
+    public void testGetAuthExceptionOn403() throws AuthException, IOException, NotConnectedException {
         proxy.get();
         when(urlConnectionData.getResponseCode()).thenReturn(HttpURLConnection.HTTP_FORBIDDEN);
         proxy.success();
@@ -228,7 +228,7 @@ public class SerleenaJSONNetProxyAuthorizedTest {
      * @throws IOException
      */
     @Test(expected = IOException.class)
-    public void testGetIOExceptionOn500() throws AuthException, IOException {
+    public void testGetIOExceptionOn500() throws AuthException, IOException, NotConnectedException {
         proxy.get();
         when(urlConnectionData.getResponseCode()).thenReturn(HttpURLConnection.HTTP_INTERNAL_ERROR);
         proxy.success();

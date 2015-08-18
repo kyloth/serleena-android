@@ -43,6 +43,7 @@ import com.kyloth.serleena.persistence.IExperienceStorage;
 import com.kyloth.serleena.persistence.IPersistenceDataSink;
 import com.kyloth.serleena.persistence.IPersistenceDataSource;
 import com.kyloth.serleena.synchronization.net.INetProxy;
+import com.kyloth.serleena.synchronization.net.NotConnectedException;
 import com.kyloth.serleena.synchronization.net.SerleenaJSONNetProxy;
 import com.kyloth.serleena.synchronization.kylothcloud.InboundRootEntity;
 import com.kyloth.serleena.synchronization.kylothcloud.LocalEnvKylothIdSource;
@@ -121,7 +122,13 @@ public class KylothCloudSynchronizer implements IKylothCloudSynchronizer {
         if (!proxy.success()) {
             throw new IOException("Unknown network error");
         }
-        proxy.disconnect();
+
+        try {
+            proxy.disconnect();
+        } catch (NotConnectedException e) {
+            throw new IOException("Connection already lost?");
+        }
+
     }
 
     private void send() throws AuthException, IOException {
@@ -142,7 +149,12 @@ public class KylothCloudSynchronizer implements IKylothCloudSynchronizer {
         if (!proxy.success()) {
             throw new IOException("Unknown network error");
         }
-        proxy.disconnect();
+
+        try {
+            proxy.disconnect();
+        } catch (NotConnectedException e) {
+            throw new IOException("Connection already lost?");
+        }
     }
 
     /**
@@ -154,7 +166,11 @@ public class KylothCloudSynchronizer implements IKylothCloudSynchronizer {
             send();
             get();
         } catch (Exception e) {
-            proxy.disconnect();
+            try {
+                proxy.disconnect();
+            } catch (NotConnectedException nce) {
+                // noop
+            }
             throw e;
         }
     }
