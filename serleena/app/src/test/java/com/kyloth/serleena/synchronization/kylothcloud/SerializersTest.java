@@ -60,6 +60,8 @@ import java.util.Iterator;
 import java.util.ArrayList;
 import java.util.UUID;
 
+import static org.junit.Assert.assertEquals;
+
 
 /**
  * Smoke test per verificare che i JSON prodotti da Kyloth mappino
@@ -78,22 +80,22 @@ public class SerializersTest {
         FileReader in = new FileReader(SAMPLES_DIR + "partial/track.json");
         BufferedReader br = new BufferedReader(in);
         TrackEntity e = gson.fromJson(br, TrackEntity.class);
-        Assert.assertEquals(e.name, "Track_1");
+        assertEquals(e.name, "Track_1");
         Assert.assertNotEquals(e.name, "asdfasdfasdf");
-        Assert.assertEquals(e.checkpoints.size(), 2);
+        assertEquals(e.checkpoints.size(), 2);
         Iterator<CheckpointEntity> i = e.checkpoints.iterator();
         Assert.assertTrue(i.hasNext());
         CheckpointEntity c = i.next();
         Assert.assertTrue(i.hasNext());
-        Assert.assertEquals(c.id, 0);
-        Assert.assertEquals(c.point.latitude(), new GeoPoint(45.279032, 11.655213).latitude(), GEO_TOLERANCE);
-        Assert.assertEquals(c.point.longitude(), new GeoPoint(45.279032, 11.655213).longitude(), GEO_TOLERANCE);
+        assertEquals(c.id, 0);
+        assertEquals(c.point.latitude(), new GeoPoint(45.279032, 11.655213).latitude(), GEO_TOLERANCE);
+        assertEquals(c.point.longitude(), new GeoPoint(45.279032, 11.655213).longitude(), GEO_TOLERANCE);
         TelemetryEntity t = e.telemetries.iterator().next();
         Iterator<Long> it = t.events.iterator();
         long ee = it.next();
-        Assert.assertEquals(ee, 1437505820522L);
+        assertEquals(ee, 1437505820522L);
         ee = it.next();
-        Assert.assertEquals(ee, 1438441982647L);
+        assertEquals(ee, 1438441982647L);
     }
 
     @Test
@@ -104,21 +106,21 @@ public class SerializersTest {
         BufferedReader br = new BufferedReader(in);
         WeatherDataEntity e = gson.fromJson(br, WeatherDataEntity.class);
 
-        Assert.assertEquals(e.morning.forecast, WeatherForecastEnum.Stormy);
+        assertEquals(e.morning.forecast, WeatherForecastEnum.Stormy);
         Assert.assertNotEquals(e.morning.forecast, WeatherForecastEnum.Rainy);
-        Assert.assertEquals(e.afternoon.forecast, WeatherForecastEnum.Cloudy);
+        assertEquals(e.afternoon.forecast, WeatherForecastEnum.Cloudy);
         Assert.assertNotEquals(e.afternoon.forecast, WeatherForecastEnum.Rainy);
-        Assert.assertEquals(e.night.forecast, WeatherForecastEnum.Sunny);
+        assertEquals(e.night.forecast, WeatherForecastEnum.Sunny);
         Assert.assertNotEquals(e.night.forecast, WeatherForecastEnum.Rainy);
-        Assert.assertEquals(e.boundingRect.getNorthWestPoint().latitude(), new GeoPoint(45.276257, 11.654297).latitude(), GEO_TOLERANCE);
-        Assert.assertEquals(e.boundingRect.getNorthWestPoint().longitude(), new GeoPoint(45.276257, 11.654297).longitude(), GEO_TOLERANCE);
-        Assert.assertEquals(e.boundingRect.getSouthEastPoint().latitude(), new GeoPoint(45.146557, 11.954498).latitude(), GEO_TOLERANCE);
-        Assert.assertEquals(e.boundingRect.getSouthEastPoint().longitude(), new GeoPoint(45.146557, 11.954498).longitude(), GEO_TOLERANCE);
+        assertEquals(e.boundingRect.getNorthWestPoint().latitude(), new GeoPoint(45.276257, 11.654297).latitude(), GEO_TOLERANCE);
+        assertEquals(e.boundingRect.getNorthWestPoint().longitude(), new GeoPoint(45.276257, 11.654297).longitude(), GEO_TOLERANCE);
+        assertEquals(e.boundingRect.getSouthEastPoint().latitude(), new GeoPoint(45.146557, 11.954498).latitude(), GEO_TOLERANCE);
+        assertEquals(e.boundingRect.getSouthEastPoint().longitude(), new GeoPoint(45.146557, 11.954498).longitude(), GEO_TOLERANCE);
         Assert.assertNotEquals(e.boundingRect.getSouthEastPoint(), new GeoPoint(12, -34));
-        Assert.assertEquals(e.morning.temperature, -2, 0.001);
-        Assert.assertEquals(e.afternoon.temperature, 0, 0.001);
-        Assert.assertEquals(e.night.temperature, 2, 0.001);
-        Assert.assertEquals(e.date, 1437436800000L);
+        assertEquals(e.morning.temperature, -2, 0.001);
+        assertEquals(e.afternoon.temperature, 0, 0.001);
+        assertEquals(e.night.temperature, 2, 0.001);
+        assertEquals(e.date, 1437436800000L);
     }
 
     @Test
@@ -129,11 +131,11 @@ public class SerializersTest {
         BufferedReader br = new BufferedReader(in);
         EmergencyDataEntity e = gson.fromJson(br, EmergencyDataEntity.class);
 
-        Assert.assertEquals(e.rect.getNorthWestPoint(), new GeoPoint(45.276257, 11.654297));
-        Assert.assertEquals(e.rect.getSouthEastPoint(), new GeoPoint(45.146557, 11.954498));
+        assertEquals(e.rect.getNorthWestPoint(), new GeoPoint(45.276257, 11.654297));
+        assertEquals(e.rect.getSouthEastPoint(), new GeoPoint(45.146557, 11.954498));
         Assert.assertNotEquals(e.rect.getNorthWestPoint(), new GeoPoint(67, 15.44));
-        Assert.assertEquals(e.name, "Emergency_1");
-        Assert.assertEquals(e.number, "800977354");
+        assertEquals(e.name, "Emergency_1");
+        assertEquals(e.number, "800977354");
     }
 
     @Test
@@ -143,8 +145,8 @@ public class SerializersTest {
         BufferedReader br = new BufferedReader(in);
         CheckpointEntity e = gson.fromJson(br, CheckpointEntity.class);
 
-        Assert.assertEquals(e.point, new GeoPoint(2.0, 2.0));
-        Assert.assertEquals(e.id, 0);
+        assertEquals(e.point, new GeoPoint(2.0, 2.0));
+        assertEquals(e.id, 0);
     }
 
     @Test
@@ -154,20 +156,20 @@ public class SerializersTest {
         BufferedReader br = new BufferedReader(in);
         ExperienceEntity e = gson.fromJson(br, ExperienceEntity.class);
 
-        Assert.assertEquals(e.name, "Experience_1");
-        Assert.assertEquals(e.region.getNorthWestPoint().latitude(), new GeoPoint(45.276257, 11.654297).latitude(), GEO_TOLERANCE);
-        Assert.assertEquals(e.region.getNorthWestPoint().longitude(), new GeoPoint(45.276257, 11.654297).longitude(), GEO_TOLERANCE);
-        Assert.assertEquals(e.region.getSouthEastPoint().latitude(), new GeoPoint(45.146557, 11.954498).latitude(), GEO_TOLERANCE);
-        Assert.assertEquals(e.region.getSouthEastPoint().longitude(), new GeoPoint(45.146557, 11.954498).longitude(), GEO_TOLERANCE);
+        assertEquals(e.name, "Experience_1");
+        assertEquals(e.region.getNorthWestPoint().latitude(), new GeoPoint(45.276257, 11.654297).latitude(), GEO_TOLERANCE);
+        assertEquals(e.region.getNorthWestPoint().longitude(), new GeoPoint(45.276257, 11.654297).longitude(), GEO_TOLERANCE);
+        assertEquals(e.region.getSouthEastPoint().latitude(), new GeoPoint(45.146557, 11.954498).latitude(), GEO_TOLERANCE);
+        assertEquals(e.region.getSouthEastPoint().longitude(), new GeoPoint(45.146557, 11.954498).longitude(), GEO_TOLERANCE);
         Iterator<UserPointEntity> i_up = e.userPoints.iterator();
         UserPointEntity up = i_up.next();
-        Assert.assertEquals(up.point.latitude(), new GeoPoint(45.277573, 11.654908).latitude(), GEO_TOLERANCE);
-        Assert.assertEquals(up.point.longitude(), new GeoPoint(45.277573, 11.654908).longitude(), GEO_TOLERANCE);
+        assertEquals(up.point.latitude(), new GeoPoint(45.277573, 11.654908).latitude(), GEO_TOLERANCE);
+        assertEquals(up.point.longitude(), new GeoPoint(45.277573, 11.654908).longitude(), GEO_TOLERANCE);
         up = i_up.next();
-        Assert.assertEquals(up.point.latitude(), new GeoPoint(45.276413, 11.65555).latitude(), GEO_TOLERANCE);
-        Assert.assertEquals(up.point.longitude(), new GeoPoint(45.276413, 11.65555).longitude(), GEO_TOLERANCE);
+        assertEquals(up.point.latitude(), new GeoPoint(45.276413, 11.65555).latitude(), GEO_TOLERANCE);
+        assertEquals(up.point.longitude(), new GeoPoint(45.276413, 11.65555).longitude(), GEO_TOLERANCE);
         Iterator<TrackEntity> i_t = e.tracks.iterator();
-        Assert.assertEquals(i_t.next().name, "Track_1");
+        assertEquals(i_t.next().name, "Track_1");
     }
 
     @Test
@@ -179,9 +181,9 @@ public class SerializersTest {
 
         Iterator<Long> i_e = e.events.iterator();
         long ee = i_e.next();
-        Assert.assertEquals(ee, 1437505820522L);
+        assertEquals(ee, 1437505820522L);
         ee = i_e.next();
-        Assert.assertEquals(ee, 1438441982647L);
+        assertEquals(ee, 1438441982647L);
     }
 
     @Test
@@ -190,7 +192,7 @@ public class SerializersTest {
         FileReader in = new FileReader(SAMPLES_DIR + "kylothCloud-get-data.js");
         BufferedReader br = new BufferedReader(in);
         InboundRootEntity e = gson.fromJson(br, InboundRootEntity.class);
-        Assert.assertEquals(e.experiences.size(), 1);
+        assertEquals(e.experiences.size(), 1);
     }
 
     @Test
@@ -199,8 +201,8 @@ public class SerializersTest {
         FileReader in = new FileReader(SAMPLES_DIR + "partial/userPoint.json");
         BufferedReader br = new BufferedReader(in);
         UserPointEntity up = gson.fromJson(br, UserPointEntity.class);
-        Assert.assertEquals(up.point, new GeoPoint(4.0, 4.0));
-        Assert.assertEquals(up.name, "UP1");
+        assertEquals(up.point, new GeoPoint(4.0, 4.0));
+        assertEquals(up.name, "UP1");
     }
 
     @Test
@@ -212,8 +214,8 @@ public class SerializersTest {
         up.name = "UP_1";
         String userPoint = gsonSerializer.toJson(up, UserPointEntity.class);
         UserPointEntity upD = gsonDeserializer.fromJson(userPoint, UserPointEntity.class);
-        Assert.assertEquals(up.point, upD.point);
-        Assert.assertEquals(up.name, upD.name);
+        assertEquals(up.point, upD.point);
+        assertEquals(up.name, upD.name);
     }
 
     @Test
