@@ -5,8 +5,8 @@
              tools:context="com.kyloth.serleena.view.fragments.CompassFragment">
 
     <com.kyloth.serleena.view.widgets.CompassWidget
-        android:layout_width="240px"
-        android:layout_height="240px"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
         android:src="@drawable/compass"
         android:id="@+id/compass_widget"/>
 
