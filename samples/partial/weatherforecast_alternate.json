@@ -1,0 +1,24 @@
+{
+    "boundingRect": {
+        "topLeft": {
+            "latitude": 45.276257,
+            "longitude": 11.654297
+        },
+        "bottomRight": {
+            "latitude": 45.146557,
+            "longitude": 11.954498
+        }
+    },
+    "time": 1437436800000,
+    "morning": {"forecast": "SNOWY",
+        "temperature": -2
+    },
+    "afternoon": {
+        "forecast": "RAINY",
+        "temperature": 0
+    },
+    "night": {
+        "forecast": "CLOUDY",
+        "temperature": 2
+    }
+}
