@@ -166,7 +166,7 @@ public class CloudSerleenaSQLiteInboundDumpBuilder implements InboundDumpBuilder
                             "\"" + track.uuid.toString() + "\"" +
                             ")");
 
-                    int eventCounter = 0;
+                    int eventCounter = 1;
                     for (Long ee : best.events) {
                         res.add("INSERT INTO " + SerleenaDatabase.TABLE_TELEM_EVENTS_CHECKP +
                                 "(eventc_timestamp, " +
