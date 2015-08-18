@@ -43,9 +43,12 @@ package com.kyloth.serleena.synchronization.kylothcloud;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonParser;
 import com.kyloth.serleena.BuildConfig;
 import com.kyloth.serleena.common.GeoPoint;
 import com.kyloth.serleena.persistence.WeatherForecastEnum;
+import com.kyloth.serleena.persistence.sqlite.TestFixtures;
 
 import org.junit.Assert;
 import org.junit.Test;
@@ -225,6 +228,25 @@ public class SerializersTest {
 
     @Test
     public void outboundRootSerializerTest() {
-        // TODO
+        Gson gsonSerializer = new GsonBuilder().registerTypeAdapter(OutboundRootEntity.class, new OutboundRootSerializer()).create();
+        OutboundRootEntity ore = new OutboundRootEntity();
+        ore.data = new ArrayList<OutboundDataEntity>();
+        OutboundDataEntity ode = new OutboundDataEntity();
+        ode.experience = TestFixtures.EXPERIENCES_FIXTURE_EXPERIENCE_1_UUID;
+        ode.userPoints = new ArrayList<UserPointEntity>();
+        UserPointEntity up = new UserPointEntity();
+        up.point = new GeoPoint(6.66, 66.6);
+        up.name = "UP";
+        ode.userPoints.add(up);
+        ore.data.add(ode);
+        String root = gsonSerializer.toJson(ore, OutboundRootEntity.class);
+        JsonParser p = new JsonParser();
+        JsonElement e = p.parse(root);
+        String uuid = e.getAsJsonArray().get(0).getAsJsonObject().get("experience").getAsString();
+        assertEquals(uuid, TestFixtures.EXPERIENCES_FIXTURE_EXPERIENCE_1_UUID.toString());
+        double latitude  = e.getAsJsonArray().get(0).getAsJsonObject().get("userPoints").getAsJsonArray().get(0).getAsJsonObject().get("latitude").getAsDouble();
+        double longitude  = e.getAsJsonArray().get(0).getAsJsonObject().get("userPoints").getAsJsonArray().get(0).getAsJsonObject().get("longitude").getAsDouble();
+        assertEquals(latitude, 6.66, 0.0001);
+        assertEquals(longitude, 66.6, 0.0001);
     }
 }
