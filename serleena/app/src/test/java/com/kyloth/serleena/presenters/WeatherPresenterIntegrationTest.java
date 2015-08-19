@@ -80,6 +80,7 @@ import java.util.GregorianCalendar;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Random;
+import java.util.TimeZone;
 import java.util.concurrent.Callable;
 
 import static junit.framework.Assert.assertEquals;
@@ -287,7 +288,7 @@ public class WeatherPresenterIntegrationTest {
             afternoonTemps[i] = rand.nextInt(20) + 10;
             nightTemps[i] = rand.nextInt(20) + 10;
 
-            Calendar calendar = Calendar.getInstance();
+            Calendar calendar = new GregorianCalendar(TimeZone.getTimeZone("GMT"));
             calendar.setTimeInMillis(System.currentTimeMillis());
             calendar.setTimeInMillis(System.currentTimeMillis());
             calendar.set(Calendar.HOUR_OF_DAY, 00);
