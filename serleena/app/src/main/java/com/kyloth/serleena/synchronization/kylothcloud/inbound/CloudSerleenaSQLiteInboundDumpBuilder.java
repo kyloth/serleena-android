@@ -55,6 +55,7 @@ import java.util.Calendar;
 import java.util.Collection;
 import java.util.GregorianCalendar;
 import java.util.Iterator;
+import java.util.TimeZone;
 
 import static java.lang.Math.round;
 
@@ -213,6 +214,7 @@ public class CloudSerleenaSQLiteInboundDumpBuilder implements InboundDumpBuilder
         for (WeatherDataEntity weat : w) {
 
             GregorianCalendar c = new GregorianCalendar();
+            c.setTimeZone(TimeZone.getTimeZone("GMT"));
             c.setTimeInMillis(weat.date);
 
             if(c.get(Calendar.HOUR_OF_DAY) != 0 || c.get(Calendar.MINUTE) != 0 || c.get(Calendar.SECOND) != 0) {
