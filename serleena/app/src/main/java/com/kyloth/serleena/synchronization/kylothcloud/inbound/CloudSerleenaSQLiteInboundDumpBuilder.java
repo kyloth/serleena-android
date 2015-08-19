@@ -168,7 +168,7 @@ public class CloudSerleenaSQLiteInboundDumpBuilder implements InboundDumpBuilder
                             "(telem_id," +
                             "telem_track) " +
                             "VALUES (" +
-                            telemCounter + "," +
+                            (telemCounter--) + "," +
                             "\"" + track.uuid.toString() + "\"" +
                             ")");
 
