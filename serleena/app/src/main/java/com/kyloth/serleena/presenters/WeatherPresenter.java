@@ -43,6 +43,7 @@ import com.kyloth.serleena.sensors.ILocationObserver;
 
 import java.util.Calendar;
 import java.util.Date;
+import java.util.TimeZone;
 
 /**
  * Concretizza IWeatherPresenter.
@@ -129,6 +130,7 @@ public class WeatherPresenter implements IWeatherPresenter, ILocationObserver {
 
     private Date currentDate() {
         Calendar c = Calendar.getInstance();
+        c.setTimeZone(TimeZone.getTimeZone("GMT"));
         c.setTime(new Date());
         c.set(Calendar.HOUR_OF_DAY, 0);
         c.set(Calendar.MINUTE, 0);
