@@ -140,18 +140,18 @@ public class PersistenceModelIntegrationTest {
         db.insertOrThrow(SerleenaDatabase.TABLE_EXPERIENCES, null, values);
         values = TestFixtures.pack(TestFixtures.EXPERIENCES_FIXTURE_EXPERIENCE_1_TRACK_1);
         db.insertOrThrow(SerleenaDatabase.TABLE_TRACKS, null, values);
-        TestDB.telemetryQuery(db, 0, TestFixtures.EXPERIENCES_FIXTURE_EXPERIENCE_1_TRACK_1_UUID);
-        TestDB.checkPointEventQuery(db, 0, 300, 0, 0);
-        TestDB.checkPointEventQuery(db, 1, 300, 1, 0);
+        TestDB.telemetryQuery(db, 1, TestFixtures.EXPERIENCES_FIXTURE_EXPERIENCE_1_TRACK_1_UUID);
+        TestDB.checkPointEventQuery(db, 0, 300, 1, 1);
+        TestDB.checkPointEventQuery(db, 1, 300, 2, 1);
 
         IExperience experience = dataSource.getExperiences().iterator().next();
         ITrack track = experience.getTracks().iterator().next();
         ITelemetry telemetry = track.getTelemetries().iterator().next();
 
         assertTrue(containsEquals(telemetry.getEvents(),
-                new CheckpointReachedTelemetryEvent(300, 0)));
+                new CheckpointReachedTelemetryEvent(300, 1)));
         assertTrue(containsEquals(telemetry.getEvents(),
-                new CheckpointReachedTelemetryEvent(300, 0)));
+                new CheckpointReachedTelemetryEvent(300, 2)));
     }
 
     @Test
@@ -166,17 +166,17 @@ public class PersistenceModelIntegrationTest {
         ITrack track = experience.getTracks().iterator().next();
 
         List<TelemetryEvent> list = new ArrayList<>();
-        list.add(new CheckpointReachedTelemetryEvent(300, 0));
         list.add(new CheckpointReachedTelemetryEvent(300, 1));
+        list.add(new CheckpointReachedTelemetryEvent(300, 2));
 
         track.createTelemetry(list);
 
         ITelemetry telemetry = track.getTelemetries().iterator().next();
 
         assertTrue(containsEquals(telemetry.getEvents(),
-                new CheckpointReachedTelemetryEvent(300, 0)));
-        assertTrue(containsEquals(telemetry.getEvents(),
                 new CheckpointReachedTelemetryEvent(300, 1)));
+        assertTrue(containsEquals(telemetry.getEvents(),
+                new CheckpointReachedTelemetryEvent(300, 2)));
     }
 
 }
