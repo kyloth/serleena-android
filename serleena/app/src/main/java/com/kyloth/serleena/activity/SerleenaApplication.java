@@ -50,7 +50,6 @@ import com.kyloth.serleena.persistence.IPersistenceDataSource;
 import com.kyloth.serleena.persistence.sqlite.SerleenaDatabase;
 import com.kyloth.serleena.persistence.sqlite.SerleenaSQLiteDataSink;
 import com.kyloth.serleena.persistence.sqlite.SerleenaSQLiteDataSource;
-import com.kyloth.serleena.presenters.ISerleenaApplication;
 import com.kyloth.serleena.sensors.ISensorManager;
 import com.kyloth.serleena.sensors.SerleenaSensorManager;
 import com.kyloth.serleena.synchronization.KylothCloudSynchronizer;

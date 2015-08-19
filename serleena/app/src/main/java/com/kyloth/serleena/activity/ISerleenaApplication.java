@@ -39,7 +39,7 @@
  *                            codice e documentazione Javadoc
  */
 
-package com.kyloth.serleena.presenters;
+package com.kyloth.serleena.activity;
 
 import com.kyloth.serleena.model.ISerleenaDataSource;
 import com.kyloth.serleena.persistence.IPersistenceDataSink;
