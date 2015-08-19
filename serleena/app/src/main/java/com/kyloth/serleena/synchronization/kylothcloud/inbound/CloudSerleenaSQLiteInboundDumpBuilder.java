@@ -70,9 +70,10 @@ import static java.lang.Math.round;
 public class CloudSerleenaSQLiteInboundDumpBuilder implements InboundDumpBuilder {
     // TODO: Effettivamente se prende solo la root potrebbe non meritare il nome builder. D'altra parte e' inutile fare diversamente.
     InboundRootEntity root;
-
+    private int telemCounter;
     public CloudSerleenaSQLiteInboundDumpBuilder(InboundRootEntity root) {
         this.root = root;
+        telemCounter = -1;
     }
 
     private SerleenaSQLiteInboundDump flush() {
@@ -92,7 +93,6 @@ public class CloudSerleenaSQLiteInboundDumpBuilder implements InboundDumpBuilder
     private SerleenaSQLiteInboundDump buildExperiences(Collection<ExperienceEntity> e) {
         SerleenaSQLiteInboundDump res =  new SerleenaSQLiteInboundDump();
         //HACK per SHANDROID-372
-        int telemCounter = -1;
         for (ExperienceEntity exp : e) {
             res.add("INSERT INTO " + SerleenaDatabase.TABLE_EXPERIENCES +
                     "(`experience_uuid`," +
