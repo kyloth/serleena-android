@@ -420,7 +420,7 @@ public class SerleenaSQLiteDataSource implements ISerleenaSQLiteDataSource {
         int valueIndex = result.getColumnIndexOrThrow("eventc_value");
 
         while (result.moveToNext()) {
-            int time = result.getInt(timestampIndex);
+            long time = result.getLong(timestampIndex);
             int value = Integer.parseInt(result.getString(valueIndex));
             TelemetryEvent event =
                     new CheckpointReachedTelemetryEvent(time, value);
