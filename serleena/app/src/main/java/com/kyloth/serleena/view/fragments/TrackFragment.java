@@ -54,6 +54,10 @@ import com.kyloth.serleena.common.NoTrackCrossingException;
 import com.kyloth.serleena.sensors.NoActiveTrackException;
 import com.kyloth.serleena.view.widgets.CompassWidget;
 
+import java.util.concurrent.TimeUnit;
+
+import static java.lang.Math.abs;
+
 
 /**
  * Classe che implementa la visuale “Percorso” della schermata “Esperienza”.
@@ -177,7 +181,14 @@ public class TrackFragment extends Fragment implements ITrackView, View.OnClickL
         if (seconds < 0)
             throw new IllegalArgumentException("Illegal negative partial");
 
-        lastPartialText.setText("ULTIMO PARZIALE: " + seconds + " s");
+        int millis = seconds * 1000;
+        String s = String.format("%02d:%02d",
+                TimeUnit.MILLISECONDS.toMinutes(millis),
+                TimeUnit.MILLISECONDS.toSeconds(millis) -
+                TimeUnit.MINUTES.toSeconds(TimeUnit.MILLISECONDS.toMinutes(millis))
+        );
+
+        lastPartialText.setText(s);
     }
 
     /**
@@ -187,7 +198,19 @@ public class TrackFragment extends Fragment implements ITrackView, View.OnClickL
      */
     @Override
     public void setDelta(int seconds) {
-        deltaText.setText("(" + seconds + " s)");
+        String sign = "+";
+        if (seconds < 0) {
+            sign = "-";
+        }
+        seconds = abs(seconds);
+        int millis = seconds * 1000;
+        String s = sign + String.format("%02d:%02d",
+                TimeUnit.MILLISECONDS.toMinutes(millis),
+                TimeUnit.MILLISECONDS.toSeconds(millis) -
+                        TimeUnit.MINUTES.toSeconds(TimeUnit.MILLISECONDS.toMinutes(millis))
+        );
+
+        deltaText.setText(s);
     }
 
     /**

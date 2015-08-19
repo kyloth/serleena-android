@@ -165,9 +165,9 @@ public class TrackFragmentTest {
     @Test
     public void settingDeltaShouldSetViewAccordingly() {
         fragment.setDelta(300);
-        verify(deltaText).setText("(300 s)");
+        verify(deltaText).setText("+05:00");
         fragment.setDelta(-300);
-        verify(deltaText).setText("(-300 s)");
+        verify(deltaText).setText("-05:00");
     }
 
     @Test
@@ -186,13 +186,13 @@ public class TrackFragmentTest {
     @Test
     public void settingLastPartialShouldSetViewAccordingly() {
         fragment.setLastPartial(20);
-        verify(lastPartialText).setText("ULTIMO PARZIALE: 20 s");
+        verify(lastPartialText).setText("00:20");
     }
 
     @Test(expected = IllegalArgumentException.class)
     public void fragmentShouldThrowWhenSettingNegativePartial() {
         fragment.setLastPartial(0);
-        verify(lastPartialText).setText("ULTIMO PARZIALE: 0 s");
+        verify(lastPartialText).setText("00:00");
         fragment.setLastPartial(-1);
     }
 
