@@ -93,7 +93,7 @@ public class CloudJSONOutboundStreamBuilder implements OutboundStreamBuilder {
         OutboundDataEntity e = new OutboundDataEntity();
         e.experience = exp.getUUID();
         int userPointCounter = 0;
-        for (UserPoint p : exp.getUserPoints()) {
+        for (UserPoint p : exp.getUserPoints(true)) { // HACK
             UserPointEntity pe = new UserPointEntity();
             pe.point = p;
             pe.name = "Punto personalizzato #"+userPointCounter++;
