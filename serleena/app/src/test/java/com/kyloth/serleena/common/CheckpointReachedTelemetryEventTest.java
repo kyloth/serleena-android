@@ -60,6 +60,24 @@ import static org.hamcrest.MatcherAssert.assertThat;
 public class CheckpointReachedTelemetryEventTest {
 
     /**
+     * Verifica che il costruttore sollevi un'eccezione se viene passato un
+     * numero di checkpoint nullo.
+     */
+    @Test(expected = IllegalArgumentException.class)
+    public void shouldThrowIfNullOrNegativeCheckpointNumber1() {
+        new CheckpointReachedTelemetryEvent(1000, 0);
+    }
+
+    /**
+     * Verifica che il costruttore sollevi un'eccezione se viene passato un
+     * numero di checkpoint negativo.
+     */
+    @Test(expected = IllegalArgumentException.class)
+    public void shouldThrowIfNullOrNegativeCheckpointNumber2() {
+        new CheckpointReachedTelemetryEvent(1000, -1);
+    }
+
+    /**
      * Testa la correttezza dei metodi "getter" della classe.
      *
      * Vengono testati i valori restituiti dai metodi della classe. In

@@ -66,6 +66,9 @@ public class CheckpointReachedTelemetryEvent extends TelemetryEvent {
     public CheckpointReachedTelemetryEvent(int timestamp,
                                            int checkpointNumber) {
         super(timestamp);
+        if (checkpointNumber <= 0)
+            throw new IllegalArgumentException("Illegal null or negative " +
+                    "checkpoint number");
         this.checkpointNumber = checkpointNumber;
     }
 
