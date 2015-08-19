@@ -48,8 +48,7 @@ class OutboundTelemetryEntitySerializer implements JsonSerializer<OutboundTeleme
         JsonArray events = new JsonArray();
         Iterator<Long> i_events = src.events.iterator();
         while(i_events.hasNext()) {
-            long i = i_events.next() * 1000;
-            // See SHANDROID-370
+            long i = i_events.next();
             JsonPrimitive j = new JsonPrimitive(i);
             events.add(j);
         }

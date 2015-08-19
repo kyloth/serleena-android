@@ -237,7 +237,7 @@ public class CloudSerleenaSQLiteInboundDumpBuilder implements InboundDumpBuilder
                         "weather_se_corner_latitude," +
                         "weather_se_corner_longitude)" +
                         " VALUES " +
-                        "(" + (weat.date / 1000) + "," +
+                        "(" + (weat.date) + "," +
                         weat.morning.forecast.ordinal() + "," +
                         round(weat.morning.temperature) + "," + // In DB la temperature e' int
                         weat.afternoon.forecast.ordinal() + "," +
