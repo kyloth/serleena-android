@@ -62,6 +62,7 @@ import org.robolectric.annotation.Config;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
+import java.util.TimeZone;
 
 import static org.mockito.Mockito.any;
 import static org.mockito.Mockito.mock;
@@ -100,7 +101,7 @@ public class WeatherPresenterTest {
         when(activity.getSensorManager()).thenReturn(sensorManager);
         when(activity.getDataSource()).thenReturn(dataSource);
 
-        Calendar calendar = new GregorianCalendar();
+        Calendar calendar = new GregorianCalendar(TimeZone.getTimeZone("GMT"));
         calendar.setTimeInMillis(System.currentTimeMillis());
         calendar.set(Calendar.HOUR_OF_DAY, 00);
         calendar.set(Calendar.MINUTE, 00);
