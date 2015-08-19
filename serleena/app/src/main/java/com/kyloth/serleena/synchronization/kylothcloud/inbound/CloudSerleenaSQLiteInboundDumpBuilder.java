@@ -178,7 +178,7 @@ public class CloudSerleenaSQLiteInboundDumpBuilder implements InboundDumpBuilder
                                 "eventc_value, " +
                                 "eventc_telem) " +
                                 "VALUES (" +
-                                ee + "," +
+                                ee / 1000 + "," +
                                 eventCounter + "," +
                                 telemCounter + ")");
                         eventCounter++;

@@ -110,7 +110,7 @@ public class CloudJSONOutboundStreamBuilder implements OutboundStreamBuilder {
                 for (TelemetryEvent tsv : ts.getEvents()) {
                     long ee;
                     ee = tsv.timestamp();
-                    tse.events.add(ee);
+                    tse.events.add(ee * 1000);
                 }
                 tse.track = te.uuid;
                 e.telemetryData.add(tse);
