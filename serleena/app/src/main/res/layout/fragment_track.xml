@@ -13,41 +13,54 @@
         android:text="NESSUN PERCORSO ATTIVO"
         android:id="@+id/track_name_text"/>
 
-    <TextView
-        android:layout_width="wrap_content"
+    <LinearLayout
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:textAppearance="?android:attr/textAppearanceMedium"
-        android:text="3/12"
-        android:id="@+id/checkpoint_numbers_text"/>
+        android:layout_gravity="center">
 
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:textAppearance="?android:attr/textAppearanceMedium"
-        android:text="200 m"
-        android:id="@+id/distance_text"
-        android:layout_marginLeft="20dp"/>
+        <com.kyloth.serleena.view.widgets.CompassWidget
+            android:layout_width="121dp"
+            android:layout_height="wrap_content"
+            android:id="@+id/compass_widget_track"
+            android:src="@drawable/compass"/>
 
-    <com.kyloth.serleena.view.widgets.CompassWidget
-        android:layout_width="90px"
-        android:layout_height="90px"
-        android:id="@+id/compass_widget_track"
-        android:layout_gravity="center_horizontal"
-        android:src="@drawable/compass"/>
+        <LinearLayout
+            android:orientation="vertical"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center">
 
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="00:20:00"
-        android:id="@+id/last_partial_text"
-        android:layout_gravity="center_horizontal"/>
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="00:20:00"
+                android:id="@+id/last_partial_text"
+                android:layout_gravity="center_horizontal"/>
 
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="-00:04:00"
-        android:id="@+id/delta_text"
-        android:layout_gravity="center_horizontal"
-        android:layout_marginLeft="20px"/>
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="-00:04:00"
+                android:id="@+id/delta_text"
+                android:layout_gravity="center_horizontal" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textAppearance="?android:attr/textAppearanceMedium"
+                android:text="200 m"
+                android:id="@+id/distance_text"
+                android:layout_gravity="center_horizontal" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textAppearance="?android:attr/textAppearanceMedium"
+                android:text="3/12"
+                android:id="@+id/checkpoint_numbers_text"
+                android:layout_gravity="center_horizontal" />
+        </LinearLayout>
+    </LinearLayout>
 
 </LinearLayout>

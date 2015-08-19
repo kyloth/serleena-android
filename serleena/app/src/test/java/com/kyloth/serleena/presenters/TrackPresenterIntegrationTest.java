@@ -84,6 +84,7 @@ import org.robolectric.shadows.ShadowLocationManager;
 
 import java.util.UUID;
 import java.util.concurrent.Callable;
+import java.util.concurrent.TimeUnit;
 
 import static junit.framework.Assert.assertEquals;
 import static org.mockito.Mockito.mock;
@@ -216,11 +217,14 @@ public class TrackPresenterIntegrationTest {
         for (int i = 0; i < 4; i++) {
             final int index = i;
             orientationWidget.callOnClick();
-            Awaitility.await().until(new Callable<Boolean>() {
+            Awaitility.await().atMost(500, java.util.concurrent.TimeUnit.SECONDS).until(new Callable<Boolean>() {
                 @Override
                 public Boolean call() throws Exception {
-                    int delta = Integer.valueOf(deltaText.getText().subSequence
-                            (1, deltaText.length() - 3).toString());
+                    String minutes = (String) deltaText.getText().subSequence(1, deltaText.length() - 3);
+                    String seconds = (String) deltaText.getText().subSequence(deltaText.length() - 2, deltaText.length());
+                    String sign = (String) deltaText.getText().subSequence(0, 1);
+                    int delta = Integer.valueOf(minutes) * 60 + Integer.valueOf(seconds);
+                    if (sign.equals("-")) delta = -delta;
                     return delta == activity.getSensorManager()
                             .getTrackCrossingManager().getLastCrossed()
                             .partialTime() - partials[index];
