@@ -40,6 +40,7 @@ import java.util.Collections;
 import java.util.GregorianCalendar;
 import java.util.Hashtable;
 import java.util.Map;
+import java.util.TimeZone;
 import java.util.UUID;
 
 public class TestFixtures {
@@ -74,7 +75,20 @@ public class TestFixtures {
     /*****************************
      * Weather fixtures
      ****************************/
-        public static final Calendar WEATHER_FIXTURE_CAL = new GregorianCalendar(2015, GregorianCalendar.JANUARY, 10, 00, 00, 00);
+        public static final Calendar WEATHER_FIXTURE_CAL;
+
+        static {
+            Calendar c = new GregorianCalendar(TimeZone.getTimeZone("GMT"));
+            c.set(Calendar.YEAR, 2015);
+            c.set(Calendar.MONTH, Calendar.JANUARY);
+            c.set(Calendar.DAY_OF_MONTH, 10);
+            c.set(Calendar.HOUR_OF_DAY, 0);
+            c.set(Calendar.MINUTE, 0);
+            c.set(Calendar.SECOND, 0);
+            c.set(Calendar.MILLISECOND, 0);
+            WEATHER_FIXTURE_CAL = c;
+        }
+
         public static final GeoPoint WEATHER_FIXTURE_POINT_INSIDE = new GeoPoint(1.0, 1.0);
         public static final GeoPoint WEATHER_FIXTURE_POINT_OUTSIDE = new GeoPoint(-3.0, 3.0);
         public static final WeatherForecastEnum WEATHER_CONDITION_MORNING = WeatherForecastEnum.Stormy;
