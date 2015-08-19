@@ -71,9 +71,9 @@ public class SyncPresenter implements ISyncPresenter {
 
     private ISyncView view;
     private ISerleenaActivity activity;
-    private IKylothCloudSynchronizer synchronizer;
+    IKylothCloudSynchronizer synchronizer;
     private static final URL KYLOTH_PORTAL_URL;
-    private Thread syncingThread;
+    Thread syncingThread;
 
     static {URL kylothPortalUrl1;
         try {
@@ -84,7 +84,7 @@ public class SyncPresenter implements ISyncPresenter {
         }
         KYLOTH_PORTAL_URL = kylothPortalUrl1;
     }
-    private SyncStatusEnum status;
+    SyncStatusEnum status;
 
     /**
      * Crea un nuovo oggetto SyncPresenter.
