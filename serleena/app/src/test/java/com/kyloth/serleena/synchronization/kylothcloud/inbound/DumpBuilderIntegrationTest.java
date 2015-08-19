@@ -61,6 +61,7 @@ import java.util.Calendar;
 import java.util.GregorianCalendar;
 import java.util.LinkedList;
 import java.util.Date;
+import java.util.TimeZone;
 import java.util.UUID;
 
 import static org.mockito.Mockito.mock;
@@ -130,14 +131,22 @@ public class DumpBuilderIntegrationTest {
         w.night.forecast = WeatherForecastEnum.Sunny;
         w.night.temperature = 2;
         w.boundingRect = new Region(new GeoPoint(2, -20), new GeoPoint(-2, 20));
-        w.date = new GregorianCalendar(2015, Calendar.JANUARY, 10, 0, 0, 0).getTimeInMillis();
+        GregorianCalendar date = new GregorianCalendar(TimeZone.getTimeZone("GMT"));
+        date.set(Calendar.YEAR, 2015);
+        date.set(Calendar.MONTH, Calendar.JANUARY);
+        date.set(Calendar.DAY_OF_YEAR, 10);
+        date.set(Calendar.HOUR, 0);
+        date.set(Calendar.MINUTE, 0);
+        date.set(Calendar.SECOND, 0);
+        date.set(Calendar.MILLISECOND, 0);
+        w.date = date.getTimeInMillis();
         r.weatherData.add(w);
         CloudSerleenaSQLiteInboundDumpBuilder b = new CloudSerleenaSQLiteInboundDumpBuilder(r);
         InboundDump d = b.build();
         Assert.assertTrue(d.toString().length() > 0);
         sink.load(d);
-        IWeatherStorage wea = src.getWeatherInfo(new GeoPoint(0, 0), new Date(new GregorianCalendar(2015, Calendar.JANUARY, 10, 00, 00, 00).getTimeInMillis()));
-        Assert.assertEquals(wea.date(), new Date(new GregorianCalendar(2015, Calendar.JANUARY, 10).getTimeInMillis()));
+        IWeatherStorage wea = src.getWeatherInfo(new GeoPoint(0, 0), new Date(date.getTimeInMillis()));
+        Assert.assertEquals(wea.date(), new Date(date.getTimeInMillis()));
     }
 
 

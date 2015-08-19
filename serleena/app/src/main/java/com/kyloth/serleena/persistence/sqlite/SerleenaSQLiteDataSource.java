@@ -70,6 +70,7 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
+import java.util.TimeZone;
 import java.util.UUID;
 
 /**
@@ -465,7 +466,7 @@ public class SerleenaSQLiteDataSource implements ISerleenaSQLiteDataSource {
         if (location == null)
             throw new IllegalArgumentException("Illegal null location");
 
-        GregorianCalendar c = new GregorianCalendar();
+        GregorianCalendar c = new GregorianCalendar(TimeZone.getTimeZone("GMT"));
         c.setTimeInMillis(date.getTime());
         if (c.get(Calendar.HOUR_OF_DAY) != 00 ||
             c.get(Calendar.MINUTE) != 00 ||

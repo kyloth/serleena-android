@@ -55,6 +55,7 @@ import java.util.Calendar;
 import java.util.Collection;
 import java.util.GregorianCalendar;
 import java.util.Iterator;
+import java.util.TimeZone;
 
 import static java.lang.Math.round;
 
@@ -213,36 +214,37 @@ public class CloudSerleenaSQLiteInboundDumpBuilder implements InboundDumpBuilder
         for (WeatherDataEntity weat : w) {
 
             GregorianCalendar c = new GregorianCalendar();
+            c.setTimeZone(TimeZone.getTimeZone("GMT"));
             c.setTimeInMillis(weat.date);
 
             if(c.get(Calendar.HOUR_OF_DAY) != 0 || c.get(Calendar.MINUTE) != 0 || c.get(Calendar.SECOND) != 0) {
-                throw new IllegalArgumentException("Date "+c.toString()+" is not 00:00:00");
+                // Ignora date non 00:00:00
+            } else {
+                res.add("INSERT INTO " + SerleenaDatabase.TABLE_WEATHER_FORECASTS +
+                        "(weather_date," +
+                        "weather_condition_morning," +
+                        "weather_temperature_morning," +
+                        "weather_condition_afternoon," +
+                        "weather_temperature_afternoon," +
+                        "weather_condition_night," +
+                        "weather_temperature_night," +
+                        "weather_nw_corner_latitude," +
+                        "weather_nw_corner_longitude," +
+                        "weather_se_corner_latitude," +
+                        "weather_se_corner_longitude)" +
+                        " VALUES " +
+                        "(" + (weat.date / 1000) + "," +
+                        weat.morning.forecast.ordinal() + "," +
+                        round(weat.morning.temperature) + "," + // In DB la temperature e' int
+                        weat.afternoon.forecast.ordinal() + "," +
+                        round(weat.afternoon.temperature) + "," +
+                        weat.night.forecast.ordinal() + "," +
+                        round(weat.night.temperature) + "," + // In DB la temperature e' int
+                        weat.boundingRect.getNorthWestPoint().latitude() + "," +
+                        weat.boundingRect.getNorthWestPoint().longitude() + "," +
+                        weat.boundingRect.getSouthEastPoint().latitude() + "," +
+                        weat.boundingRect.getSouthEastPoint().longitude() + ")");
             }
-
-            res.add("INSERT INTO " + SerleenaDatabase.TABLE_WEATHER_FORECASTS +
-            "(weather_date," +
-            "weather_condition_morning," +
-            "weather_temperature_morning," +
-            "weather_condition_afternoon," +
-            "weather_temperature_afternoon," +
-            "weather_condition_night," +
-            "weather_temperature_night," +
-		    "weather_nw_corner_latitude," +
-		    "weather_nw_corner_longitude," +
-		    "weather_se_corner_latitude," +
-		    "weather_se_corner_longitude)" +
-		    " VALUES " +
-		    "(" + (weat.date/1000) + "," +
-		    weat.morning.forecast.ordinal() + "," +
-            round(weat.morning.temperature) + "," + // In DB la temperature e' int
-            weat.afternoon.forecast.ordinal() + "," +
-            round(weat.afternoon.temperature) + "," +
-            weat.night.forecast.ordinal() + "," +
-            round(weat.night.temperature) + "," + // In DB la temperature e' int
-            weat.boundingRect.getNorthWestPoint().latitude() + "," +
-            weat.boundingRect.getNorthWestPoint().longitude() + "," +
-            weat.boundingRect.getSouthEastPoint().latitude() + "," +
-            weat.boundingRect.getSouthEastPoint().longitude() + ")");
         }
         return res;
     }
