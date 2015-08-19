@@ -71,9 +71,13 @@ public class CloudSerleenaSQLiteInboundDumpBuilder implements InboundDumpBuilder
     // TODO: Effettivamente se prende solo la root potrebbe non meritare il nome builder. D'altra parte e' inutile fare diversamente.
     InboundRootEntity root;
     private int telemCounter;
+    private int upointCounter;
+
     public CloudSerleenaSQLiteInboundDumpBuilder(InboundRootEntity root) {
         this.root = root;
-        telemCounter = -1;
+        telemCounter = -1;        //HACK per SHANDROID-372
+        upointCounter = -1;  // HACK per SHANDROID-387
+
     }
 
     private SerleenaSQLiteInboundDump flush() {
@@ -102,11 +106,7 @@ public class CloudSerleenaSQLiteInboundDumpBuilder implements InboundDumpBuilder
                     "  \"" + exp.name + "\")");
             // TODO: Manca la region? SHANDROID-291
 
-            // HACK per SHANDROID-387
-            int i = -1;
-            for (UserPointEntity up : exp.userPoints) {
-                i--;
-            }
+
             for (UserPointEntity up : exp.userPoints) {
                 res.add("INSERT INTO " + SerleenaDatabase.TABLE_USER_POINTS +
                         "(`userpoint_id`, " +
@@ -114,7 +114,7 @@ public class CloudSerleenaSQLiteInboundDumpBuilder implements InboundDumpBuilder
                         " `userpoint_y`, " +
                         " `userpoint_experience`)" +
                         " VALUES " +
-                        "(" + String.valueOf(i++) + "," + // HACK per SHANDROID-387
+                        "(" + String.valueOf(upointCounter--) + "," + // HACK per SHANDROID-387
                         " " + up.point.latitude() +"," +
                         " " + up.point.longitude() + "," +
                         "\"" + exp.uuid.toString() +"\"" +
@@ -176,7 +176,7 @@ public class CloudSerleenaSQLiteInboundDumpBuilder implements InboundDumpBuilder
                             "(telem_id," +
                             "telem_track) " +
                             "VALUES (" +
-                            (telemCounter--) + "," +
+                            String.valueOf(telemCounter) + "," +
                             "\"" + track.uuid.toString() + "\"" +
                             ")");
 
@@ -189,9 +189,10 @@ public class CloudSerleenaSQLiteInboundDumpBuilder implements InboundDumpBuilder
                                 "VALUES (" +
                                 ee / 1000 + "," +
                                 eventCounter + "," +
-                                telemCounter + ")");
+                                String.valueOf(telemCounter) + ")");
                         eventCounter++;
                     }
+                    telemCounter--;
                 }
             }
         }
