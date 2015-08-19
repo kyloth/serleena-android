@@ -134,8 +134,8 @@ public class DumpBuilderIntegrationTest {
         GregorianCalendar date = new GregorianCalendar(TimeZone.getTimeZone("GMT"));
         date.set(Calendar.YEAR, 2015);
         date.set(Calendar.MONTH, Calendar.JANUARY);
-        date.set(Calendar.DAY_OF_YEAR, 10);
-        date.set(Calendar.HOUR, 0);
+        date.set(Calendar.DAY_OF_MONTH, 10);
+        date.set(Calendar.HOUR_OF_DAY, 0);
         date.set(Calendar.MINUTE, 0);
         date.set(Calendar.SECOND, 0);
         date.set(Calendar.MILLISECOND, 0);
