@@ -96,7 +96,7 @@ public class CloudJSONOutboundStreamBuilder implements OutboundStreamBuilder {
         for (UserPoint p : exp.getUserPoints()) {
             UserPointEntity pe = new UserPointEntity();
             pe.point = p;
-            pe.name = "Point "+userPointCounter++;
+            pe.name = "Punto personalizzato #"+userPointCounter++;
             e.userPoints.add(pe);
         }
         for (ITrackStorage t : exp.getTracks()) {
