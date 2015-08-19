@@ -64,6 +64,9 @@ public interface IExperienceStorage {
      */
     Iterable<ITrackStorage> getTracks();
 
+    // HACK per SHANDROID-387
+    Iterable<UserPoint> getUserPoints(boolean localOnly);
+
     /**
      * Restituisce i Punti Utente associati all'Esperienza.
      *

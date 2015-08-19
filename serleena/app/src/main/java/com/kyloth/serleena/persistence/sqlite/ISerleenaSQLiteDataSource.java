@@ -86,6 +86,9 @@ interface ISerleenaSQLiteDataSource extends IPersistenceDataSource {
      */
     Iterable<UserPoint> getUserPoints(SQLiteDAOExperience experience);
 
+    // HACK per SHANDROID-387
+    Iterable<UserPoint> getUserPoints(SQLiteDAOExperience experience, boolean localOnly);
+
     /**
      * Aggiunge un nuovo punto utente al database, associato all'Esperienza
      * specificata.

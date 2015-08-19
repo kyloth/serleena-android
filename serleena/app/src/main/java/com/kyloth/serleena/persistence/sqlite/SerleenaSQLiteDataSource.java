@@ -207,8 +207,18 @@ public class SerleenaSQLiteDataSource implements ISerleenaSQLiteDataSource {
      */
     @Override
     public Iterable<UserPoint> getUserPoints(SQLiteDAOExperience experience) {
+        return getUserPoints(experience, false);
+    }
+
+    // HACK per SHANDROID-387
+    @Override
+    public Iterable<UserPoint> getUserPoints(SQLiteDAOExperience experience, boolean localOnly) {
         SQLiteDatabase db = dbHelper.getReadableDatabase();
         String where = "userpoint_experience = \"" + experience.getUUID() + "\"";
+        if (localOnly) {
+            where = "userpoint_experience = \"" + experience.getUUID() + "\" AND userpoint_id > 0";
+        }
+
         Cursor result = db.query(SerleenaDatabase.TABLE_USER_POINTS,
                 new String[] { "userpoint_x", "userpoint_y" }, where, null,
                 null, null, null);

@@ -95,6 +95,11 @@ class SQLiteDAOExperience implements IExperienceStorage
     }
 
     @Override
+    public Iterable<UserPoint> getUserPoints(boolean localOnly) {
+        return dataSource.getUserPoints(this, localOnly);
+    }
+
+    @Override
     public Iterable<UserPoint> getUserPoints() {
         return dataSource.getUserPoints(this);
     }

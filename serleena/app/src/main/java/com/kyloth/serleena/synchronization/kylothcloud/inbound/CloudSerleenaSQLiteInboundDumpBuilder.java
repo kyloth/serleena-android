@@ -101,13 +101,21 @@ public class CloudSerleenaSQLiteInboundDumpBuilder implements InboundDumpBuilder
                     "(\""+exp.uuid.toString()+"\"," +
                     "  \"" + exp.name + "\")");
             // TODO: Manca la region? SHANDROID-291
+
+            // HACK per SHANDROID-387
+            int i = -1;
+            for (UserPointEntity up : exp.userPoints) {
+                i--;
+            }
             for (UserPointEntity up : exp.userPoints) {
                 res.add("INSERT INTO " + SerleenaDatabase.TABLE_USER_POINTS +
-                        "(`userpoint_x`, " +
+                        "(`userpoint_id`, " +
+                        " `userpoint_x`, " +
                         " `userpoint_y`, " +
                         " `userpoint_experience`)" +
                         " VALUES " +
-                        "(" + up.point.latitude() +"," +
+                        "(" + String.valueOf(i++) + "," + // HACK per SHANDROID-387
+                        " " + up.point.latitude() +"," +
                         " " + up.point.longitude() + "," +
                         "\"" + exp.uuid.toString() +"\"" +
                         ")");
