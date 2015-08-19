@@ -301,6 +301,9 @@ public class SerleenaSQLiteDataSource implements ISerleenaSQLiteDataSource {
         return list;
     }
 
+    /**
+     * Implementa IPersistenceDataSource.getQuadrant().
+     */
     @Override
     public IQuadrant getQuadrant(GeoPoint location, SQLiteDAOExperience exp)
             throws NoSuchQuadrantException {
@@ -427,20 +430,6 @@ public class SerleenaSQLiteDataSource implements ISerleenaSQLiteDataSource {
         result.close();
         return list;
     }
-
-    /**
-     * Restituisce le previsioni, comprensive di condizione metereologica e
-     * temperatura, per una posizione geografica e un intervallo di tempo
-     * specificati.
-     *
-     * @param location Posizione geografica di cui si vogliono ottenere le
-     *                 previsioni.
-     * @param time Punto temporale di cui si vogliono
-     *                  ottenere le previsioni, in UNIX time.
-     * @return Previsioni metereologiche.
-     */
-
-
 
     /**
      * Implementazione di IPersistenceDataStorage.getWeatherInfo().
