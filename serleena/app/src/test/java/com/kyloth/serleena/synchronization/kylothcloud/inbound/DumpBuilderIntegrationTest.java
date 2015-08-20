@@ -28,6 +28,15 @@
 ///////////////////////////////////////////////////////////////////////////////
 
 
+/**
+ * Name: DumpBuilderIntegrationTest.java
+ * Package: com.kyloth.serleena.synchronization.kylothcloud.inbound
+ * Author: Tobia Tesan
+ *
+ * History:
+ * Version  Programmer        Changes
+ * 0.0.1    Tobia Tesan       Creazione file
+ */
 package com.kyloth.serleena.synchronization.kylothcloud.inbound;
 
 import com.kyloth.serleena.BuildConfig;
@@ -67,8 +76,8 @@ import java.util.UUID;
 import static org.mockito.Mockito.mock;
 
 /**
- * Verifica che sia possibile passare delle strutture al dump builder e richiamarle
- * integre dal database in un secondo tempo.
+ * Verifica che sia possibile passare delle strutture al dump builder e, caricato il dump
+ * nel datasink, sia possibile richiamarle integre dal database in un secondo tempo.
  */
 @RunWith(RobolectricGradleTestRunner.class)
 @Config(constants = BuildConfig.class, emulateSdk = 19)
@@ -76,6 +85,9 @@ public class DumpBuilderIntegrationTest {
     SerleenaSQLiteDataSink sink;
     SerleenaSQLiteDataSource src;
 
+    /**
+     * Testa che i contatti di emergenza vengano inseriti e recuperati correttamente.
+     */
     @Test
     public void testBuildEmergencyContacts() {
         InboundRootEntity r = new InboundRootEntity();
@@ -97,6 +109,9 @@ public class DumpBuilderIntegrationTest {
         Assert.assertEquals(a.get(0).value(), "123456789");
     }
 
+    /**
+     * Testa che le esperienze vengano inserite e recuperate correttamente.
+     */
     @Test
     public void testBuildExperiences() {
         InboundRootEntity r = new InboundRootEntity();
@@ -119,7 +134,10 @@ public class DumpBuilderIntegrationTest {
         }
         Assert.assertEquals(i, 1);
     }
-    
+
+    /**
+     * Testa che le informazioni meteo vengano inserite e recuperate correttamente
+     */
     @Test
     public void testBuildWeatherData() throws NoSuchWeatherForecastException {
         InboundRootEntity r = new InboundRootEntity();
