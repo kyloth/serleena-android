@@ -10,7 +10,7 @@
         android:id="@+id/weather_date_text"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:text="20 Settembre, 2015"
+        android:text="@string/weatherDate"
         android:textSize="15sp"
         android:gravity="top"
         android:textStyle="bold"/>
@@ -36,7 +36,7 @@
         <TextView
             android:layout_width="80dp"
             android:layout_height="wrap_content"
-            android:text="Mattino"
+            android:text="@string/morning"
             android:textSize="13sp"
             android:gravity="center_vertical"/>
 
@@ -49,7 +49,7 @@
             android:id="@+id/morning_temp_text"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="25°"
+            android:text="@string/morningTemperature"
             android:textSize="13sp"
             android:gravity="center_vertical"/>
 
@@ -65,7 +65,7 @@
         <TextView
             android:layout_width="80dp"
             android:layout_height="wrap_content"
-            android:text="Pomeriggio"
+            android:text="@string/afternoon"
             android:textSize="13sp"
             android:gravity="center_vertical"/>
 
@@ -78,7 +78,7 @@
             android:id="@+id/afternoon_temp_text"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="25°"
+            android:text="@string/afternoonTemperature"
             android:textSize="13sp"
             android:gravity="center_vertical"/>
 
@@ -94,7 +94,7 @@
         <TextView
             android:layout_width="80dp"
             android:layout_height="wrap_content"
-            android:text="Sera"
+            android:text="@string/evening"
             android:textSize="13sp"
             android:gravity="center_vertical"/>
 
@@ -107,7 +107,7 @@
             android:id="@+id/night_temp_text"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="25°"
+            android:text="@string/eveningTemperature"
             android:textSize="13sp"
             android:gravity="center_vertical"/>
 

@@ -8,18 +8,18 @@
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Sei sicuro di voler uscire?"
+        android:text="@string/confirmquit"
         android:textAlignment="center"
         android:gravity="center_horizontal"/>
     <Button
         android:id="@+id/yes_button"
         android:layout_width="match_parent"
         android:layout_height="40dp"
-        android:text="Sì"/>
+        android:text="@string/quitconfirmed"/>
     <Button
         android:id="@+id/no_button"
         android:layout_width="match_parent"
         android:layout_height="40dp"
-        android:text="No"/>
+        android:text="@string/quitcancelled"/>
 
 </LinearLayout>

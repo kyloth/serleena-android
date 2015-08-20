@@ -18,7 +18,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:textAppearance="?android:attr/textAppearanceSmall"
-        android:text="Contact name"
+        android:text="@string/contactname"
         android:id="@+id/contact_name_text"
         android:layout_gravity="center_horizontal"/>
 
@@ -26,7 +26,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:textAppearance="?android:attr/textAppearanceSmall"
-        android:text="Contact value"
+        android:text="@string/contactvalue"
         android:id="@+id/contact_value_text"
         android:layout_gravity="center_horizontal"/>
 

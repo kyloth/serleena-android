@@ -7,4 +7,22 @@
     <string name="telemetry_status">OFF</string>
     <string name="telemetry_image">Pulsante rosso</string>
     <string name="sync_button_text">Sincronizza</string>
+    <string name="contactvalue">Contact value</string>
+    <string name="contactname">Contact name</string>
+    <string name="confirmquit">Sei sicuro di voler uscire?</string>
+    <string name="quitconfirmed">Sì</string>
+    <string name="quitcancelled">No</string>
+    <string name="synctoken">CF8A53B</string>
+    <string name="trackPartial">00:20:00</string>
+    <string name="trackDelta">-00:04:00</string>
+    <string name="trackDistance">200 m</string>
+    <string name="morning">Mattino</string>
+    <string name="morningTemperature">25°</string>
+    <string name="afternoon">Pomeriggio</string>
+    <string name="afternoonTemperature">25°</string>
+    <string name="evening">Sera</string>
+    <string name="eveningTemperature">25°</string>
+    <string name="weatherDate">20 Settembre, 2015</string>
+    <string name="trackProgress">trackProgress</string>
+    <string name="activeTrack">NESSUN PERCORSO ATTIVO</string>
 </resources>
