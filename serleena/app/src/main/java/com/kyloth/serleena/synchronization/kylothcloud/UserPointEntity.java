@@ -32,6 +32,9 @@ package com.kyloth.serleena.synchronization.kylothcloud;
 
 import com.kyloth.serleena.common.GeoPoint;
 
+/**
+ * Struttura rappresentante un punto utente
+ */
 public class UserPointEntity implements IKylothDataEntity {
     public GeoPoint point;
     public String name;

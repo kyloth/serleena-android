@@ -33,6 +33,9 @@ package com.kyloth.serleena.synchronization.kylothcloud;
 import java.util.ArrayList;
 import java.util.Collection;
 
+/**
+ * Struttura che rappresenta la radice di una gerarchia di dati in ingresso
+ */
 public class InboundRootEntity implements IKylothDataEntity {
     public Collection<ExperienceEntity> experiences;
     public Collection<EmergencyDataEntity> emergencyData;
