@@ -106,7 +106,7 @@ public class Synchronizer implements IKylothCloudSynchronizer {
         if (proxy == null) {
             throw new RuntimeException("No INetProxy?");
         }
-        CloudJSONInboundStream in = (CloudJSONInboundStream) proxy.get();
+        CloudJSONInboundStream in = (CloudJSONInboundStream) proxy.read();
         CloudJSONInboundStreamParser sjisp = new CloudJSONInboundStreamParser(in);
         InboundRootEntity root = sjisp.parse();
         if (root == null) {
@@ -136,7 +136,7 @@ public class Synchronizer implements IKylothCloudSynchronizer {
             b.addExperience(exp);
         }
 
-        OutboundStream s = proxy.send();
+        OutboundStream s = proxy.write();
         try {
             b.stream(s);
         } catch (IllegalArgumentException e) {

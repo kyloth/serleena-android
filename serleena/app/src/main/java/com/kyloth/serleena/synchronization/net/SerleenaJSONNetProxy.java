@@ -182,7 +182,7 @@ public class SerleenaJSONNetProxy implements INetProxy {
     }
 
     @Override
-    public CloudJSONOutboundStream send() throws AuthException, IOException {
+    public CloudJSONOutboundStream write() throws AuthException, IOException {
         if (urlConnection == null) {
             connect();
             urlConnection.setDoInput(true);
@@ -216,7 +216,7 @@ public class SerleenaJSONNetProxy implements INetProxy {
     }
 
     @Override
-    public InboundStream get() throws AuthException, IOException {
+    public InboundStream read() throws AuthException, IOException {
         if (urlConnection == null) {
             connect();
             urlConnection.setDoInput(true);
@@ -248,7 +248,7 @@ public class SerleenaJSONNetProxy implements INetProxy {
         reset();
 
         if (urlConnection != null) {
-            throw new RuntimeException("Existing urlConnection. Looks like send() or get() attempted. preAuth() must be called first.");
+            throw new RuntimeException("Existing urlConnection. Looks like write() or read() attempted. preAuth() must be called first.");
         } else {
             authToken = null;
             HttpURLConnection tempUrlConnection = factory.createURLConnection(getPreAuthUrl());
@@ -283,7 +283,7 @@ public class SerleenaJSONNetProxy implements INetProxy {
         }
 
         if (urlConnection != null) {
-            throw new RuntimeException("Existing urlConnection. Looks like send() or get() attempted. auth() must be called first.");
+            throw new RuntimeException("Existing urlConnection. Looks like write() or read() attempted. auth() must be called first.");
         }
 
         if (tempToken == null) {

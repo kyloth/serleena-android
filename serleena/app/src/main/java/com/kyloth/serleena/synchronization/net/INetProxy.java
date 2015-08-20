@@ -61,7 +61,7 @@ public interface INetProxy {
      *
      * @return Un OutboundStream in cui scrivere i dati per il servizio remoto.
      */
-    OutboundStream send() throws AuthException, IOException;
+    OutboundStream write() throws AuthException, IOException;
 
     /**
      * Richiede i dati di sincronizzazione dal servizio remoto.
@@ -69,7 +69,7 @@ public interface INetProxy {
      * @return Un InboundStream da cui leggere i dati in forma grezza provenienti
      *         dal servizio remoto.
      */
-    InboundStream get() throws IOException, AuthException;
+    InboundStream read() throws IOException, AuthException;
 
     /**
      * Richiede la preautorizzazione con il servizio remoto.
@@ -91,7 +91,7 @@ public interface INetProxy {
     void disconnect() throws NotConnectedException;
 
     /**
-     * Verifica se l'ultima operazione di send() o get() e' andata a buon fine
+     * Verifica se l'ultima operazione di write() o read() e' andata a buon fine
      * @return true se e' andata a buon fine, altrimenti false oppure solleva eccezione
      * @throws IOException
      * @throws AuthException

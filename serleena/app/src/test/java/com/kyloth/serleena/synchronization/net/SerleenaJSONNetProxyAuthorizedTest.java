@@ -162,14 +162,14 @@ public class SerleenaJSONNetProxyAuthorizedTest {
     }
 
     /**
-     * Verifica che i dati vengano scritti correttamente nell'outputstream da send();
+     * Verifica che i dati vengano scritti correttamente nell'outputstream da write();
      *
      * @throws AuthException
      * @throws IOException
      */
     @Test
     public void testSendOk() throws AuthException, IOException, NotConnectedException {
-        CloudJSONOutboundStream s = proxy.send();
+        CloudJSONOutboundStream s = proxy.write();
         s.write('A');
         s.write('B');
         s.write('C');
@@ -182,100 +182,100 @@ public class SerleenaJSONNetProxyAuthorizedTest {
     }
 
     /**
-     * Verifica che uno status 403 risulti in una AuthException nel chiamare success() dopo send
+     * Verifica che uno status 403 risulti in una AuthException nel chiamare success() dopo write
      *
      * @throws AuthException
      * @throws IOException
      */
     @Test(expected = AuthException.class)
     public void testSendAuthExceptionOn403() throws AuthException, IOException, NotConnectedException {
-        CloudJSONOutboundStream s = proxy.send();
+        CloudJSONOutboundStream s = proxy.write();
         when(urlConnectionData.getResponseCode()).thenReturn(HttpURLConnection.HTTP_FORBIDDEN);
         proxy.success();
         proxy.disconnect();
     }
 
     /**
-     * Verifica che uno status 500 risulti in una IOException nel chiamare success() dopo send
+     * Verifica che uno status 500 risulti in una IOException nel chiamare success() dopo write
      *
      * @throws AuthException
      * @throws IOException
      */
     @Test(expected = IOException.class)
     public void testSendIOExceptionOn500() throws AuthException, IOException, NotConnectedException {
-        CloudJSONOutboundStream s = proxy.send();
+        CloudJSONOutboundStream s = proxy.write();
         when(urlConnectionData.getResponseCode()).thenReturn(HttpURLConnection.HTTP_INTERNAL_ERROR);
         proxy.success();
         proxy.disconnect();
     }
 
     /**
-     * Verifica che uno status 403 risulti in una AuthException nel chiamare success() dopo get
+     * Verifica che uno status 403 risulti in una AuthException nel chiamare success() dopo read
      *
      * @throws AuthException
      * @throws IOException
      */
     @Test(expected = AuthException.class)
     public void testGetAuthExceptionOn403() throws AuthException, IOException, NotConnectedException {
-        proxy.get();
+        proxy.read();
         when(urlConnectionData.getResponseCode()).thenReturn(HttpURLConnection.HTTP_FORBIDDEN);
         proxy.success();
         proxy.disconnect();
     }
 
     /**
-     * Verifica che uno status 500 risulti in una IOException nel chiamare success() dopo get
+     * Verifica che uno status 500 risulti in una IOException nel chiamare success() dopo read
      *
      * @throws AuthException
      * @throws IOException
      */
     @Test(expected = IOException.class)
     public void testGetIOExceptionOn500() throws AuthException, IOException, NotConnectedException {
-        proxy.get();
+        proxy.read();
         when(urlConnectionData.getResponseCode()).thenReturn(HttpURLConnection.HTTP_INTERNAL_ERROR);
         proxy.success();
         proxy.disconnect();
     }
 
     /**
-     * Controlla che chiamare get o send senza disconnect() dopo una send risulti in una RuntimeException
+     * Controlla che chiamare read o write senza disconnect() dopo una write risulti in una RuntimeException
      *
      * @throws AuthException
      * @throws IOException
      */
     @Test(expected=RuntimeException.class)
     public void testMustDisconnectAfterSend() throws AuthException, IOException {
-        proxy.send();
-        proxy.get();
+        proxy.write();
+        proxy.read();
     }
 
     /**
-     * Controlla che chiamare get o send senza disconnect() dopo una get risulti in una RuntimeException
+     * Controlla che chiamare read o write senza disconnect() dopo una read risulti in una RuntimeException
      *
      * @throws AuthException
      * @throws IOException
      */
     @Test(expected=RuntimeException.class)
     public void testMustDisconnectAfterGet() throws AuthException, IOException {
-        proxy.send();
-        proxy.get();
+        proxy.write();
+        proxy.read();
     }
 
     /**
-     * Verifica che se error 401 per get il proxy sollevi AuthException
+     * Verifica che se error 401 per read il proxy sollevi AuthException
      */
     @Test(expected = AuthException.class)
     public void testGetAuthExceptionOn401() throws AuthException, IOException {
         when(urlConnectionData.getResponseCode()).thenReturn(HttpURLConnection.HTTP_UNAUTHORIZED);
         String text = "Test401Auth";
         when(urlConnectionData.getInputStream()).thenReturn(new CloudJSONInboundStream(new ByteArrayInputStream(text.getBytes("UTF-8"))));
-        CloudJSONInboundStream in = (CloudJSONInboundStream) proxy.get();
+        CloudJSONInboundStream in = (CloudJSONInboundStream) proxy.read();
         in.close();
         proxy.success();
     }
 
     /**
-     * Verifica che se error 401 per get il proxy non sollevi IOException
+     * Verifica che se error 401 per read il proxy non sollevi IOException
      */
     @Test
     public void testGetNotIOExceptionOn401() throws AuthException, IOException {
@@ -285,7 +285,7 @@ public class SerleenaJSONNetProxyAuthorizedTest {
             ByteArrayOutputStream streamOut = new ByteArrayOutputStream();
             streamOut.write(text.getBytes("UTF-8"));
             when(urlConnectionData.getOutputStream()).thenReturn(new CloudJSONOutboundStream(streamOut));
-            CloudJSONInboundStream in = (CloudJSONInboundStream) proxy.get();
+            CloudJSONInboundStream in = (CloudJSONInboundStream) proxy.read();
             in.close();
             proxy.success();
         } catch (IOException ioe) {
@@ -295,7 +295,7 @@ public class SerleenaJSONNetProxyAuthorizedTest {
 
 
     /**
-     * Verifica che se error 403 per get il proxy non sollevi IOException
+     * Verifica che se error 403 per read il proxy non sollevi IOException
      */
     @Test
     public void testGetNotIOExceptionOn403() throws AuthException, IOException {
@@ -305,7 +305,7 @@ public class SerleenaJSONNetProxyAuthorizedTest {
             ByteArrayOutputStream streamOut = new ByteArrayOutputStream();
             streamOut.write(text.getBytes("UTF-8"));
             when(urlConnectionData.getOutputStream()).thenReturn(new CloudJSONOutboundStream(streamOut));
-            CloudJSONInboundStream in = (CloudJSONInboundStream) proxy.get();
+            CloudJSONInboundStream in = (CloudJSONInboundStream) proxy.read();
             in.close();
             proxy.success();
         } catch (IOException ioe) {
@@ -314,20 +314,20 @@ public class SerleenaJSONNetProxyAuthorizedTest {
     }
 
     /**
-     * Verifica che se error 405 per get il proxy sollevi AuthException
+     * Verifica che se error 405 per read il proxy sollevi AuthException
      */
     @Test(expected = AuthException.class)
     public void testGetAuthExceptionOn405() throws AuthException, IOException {
         when(urlConnectionData.getResponseCode()).thenReturn(HttpURLConnection.HTTP_BAD_METHOD);
         String text = "Test405Auth";
         when(urlConnectionData.getInputStream()).thenReturn(new CloudJSONInboundStream(new ByteArrayInputStream(text.getBytes("UTF-8"))));
-        CloudJSONInboundStream in = (CloudJSONInboundStream) proxy.get();
+        CloudJSONInboundStream in = (CloudJSONInboundStream) proxy.read();
         in.close();
         proxy.success();
     }
 
     /**
-     * Verifica che se error 405 per get il proxy non sollevi IOException
+     * Verifica che se error 405 per read il proxy non sollevi IOException
      */
     @Test
     public void testGetNotIOExceptionOn405() throws AuthException, IOException {
@@ -337,7 +337,7 @@ public class SerleenaJSONNetProxyAuthorizedTest {
             ByteArrayOutputStream streamOut = new ByteArrayOutputStream();
             streamOut.write(text.getBytes("UTF-8"));
             when(urlConnectionData.getOutputStream()).thenReturn(new CloudJSONOutboundStream(streamOut));
-            CloudJSONInboundStream in = (CloudJSONInboundStream) proxy.get();
+            CloudJSONInboundStream in = (CloudJSONInboundStream) proxy.read();
             in.close();
             proxy.success();
         } catch (IOException ioe) {
@@ -346,20 +346,20 @@ public class SerleenaJSONNetProxyAuthorizedTest {
     }
 
     /**
-     * Verifica che se error 401 per send il proxy sollevi AuthException
+     * Verifica che se error 401 per write il proxy sollevi AuthException
      */
     @Test(expected = AuthException.class)
     public void testSendAuthExceptionOn401() throws AuthException, IOException {
         when(urlConnectionData.getResponseCode()).thenReturn(HttpURLConnection.HTTP_UNAUTHORIZED);
         String text = "Test401Auth";
         when(urlConnectionData.getInputStream()).thenReturn(new CloudJSONInboundStream(new ByteArrayInputStream(text.getBytes("UTF-8"))));
-        CloudJSONOutboundStream out = (CloudJSONOutboundStream) proxy.send();
+        CloudJSONOutboundStream out = (CloudJSONOutboundStream) proxy.write();
         out.close();
         proxy.success();
     }
 
     /**
-     * Verifica che se error 401 per send il proxy non sollevi IOException
+     * Verifica che se error 401 per write il proxy non sollevi IOException
      */
     @Test
     public void testSendNotIOExceptionOn401() throws AuthException, IOException {
@@ -369,7 +369,7 @@ public class SerleenaJSONNetProxyAuthorizedTest {
             ByteArrayOutputStream streamOut = new ByteArrayOutputStream();
             streamOut.write(text.getBytes("UTF-8"));
             when(urlConnectionData.getOutputStream()).thenReturn(new CloudJSONOutboundStream(streamOut));
-            CloudJSONOutboundStream out = (CloudJSONOutboundStream) proxy.send();
+            CloudJSONOutboundStream out = (CloudJSONOutboundStream) proxy.write();
             out.close();
             proxy.success();
         } catch (IOException ioe) {
@@ -378,7 +378,7 @@ public class SerleenaJSONNetProxyAuthorizedTest {
     }
 
     /**
-     * Verifica che se error 403 per send il proxy non sollevi IOException
+     * Verifica che se error 403 per write il proxy non sollevi IOException
      */
     @Test
     public void testSendNotIOExceptionOn403() throws AuthException, IOException {
@@ -388,7 +388,7 @@ public class SerleenaJSONNetProxyAuthorizedTest {
             ByteArrayOutputStream streamOut = new ByteArrayOutputStream();
             streamOut.write(text.getBytes("UTF-8"));
             when(urlConnectionData.getOutputStream()).thenReturn(new CloudJSONOutboundStream(streamOut));
-            CloudJSONOutboundStream out = (CloudJSONOutboundStream) proxy.send();
+            CloudJSONOutboundStream out = (CloudJSONOutboundStream) proxy.write();
             out.close();
             proxy.success();
         } catch (IOException ioe) {
@@ -397,20 +397,20 @@ public class SerleenaJSONNetProxyAuthorizedTest {
     }
 
     /**
-     * Verifica che se error 405 per send il proxy sollevi AuthException
+     * Verifica che se error 405 per write il proxy sollevi AuthException
      */
     @Test(expected = AuthException.class)
     public void testSendAuthExceptionOn405() throws AuthException, IOException {
         when(urlConnectionData.getResponseCode()).thenReturn(HttpURLConnection.HTTP_BAD_METHOD);
         String text = "Test405Auth";
         when(urlConnectionData.getInputStream()).thenReturn(new CloudJSONInboundStream(new ByteArrayInputStream(text.getBytes("UTF-8"))));
-        CloudJSONOutboundStream out = (CloudJSONOutboundStream) proxy.send();
+        CloudJSONOutboundStream out = (CloudJSONOutboundStream) proxy.write();
         out.close();
         proxy.success();
     }
 
     /**
-     * Verifica che se error 405 per send il proxy non sollevi IOException
+     * Verifica che se error 405 per write il proxy non sollevi IOException
      */
     @Test
     public void testSendNotIOExceptionOn405() throws AuthException, IOException {
@@ -420,7 +420,7 @@ public class SerleenaJSONNetProxyAuthorizedTest {
             ByteArrayOutputStream streamOut = new ByteArrayOutputStream();
             streamOut.write(text.getBytes("UTF-8"));
             when(urlConnectionData.getOutputStream()).thenReturn(new CloudJSONOutboundStream(streamOut));
-            CloudJSONOutboundStream out = (CloudJSONOutboundStream) proxy.send();
+            CloudJSONOutboundStream out = (CloudJSONOutboundStream) proxy.write();
             out.close();
             proxy.success();
         } catch (IOException ioe) {

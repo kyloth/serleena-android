@@ -43,8 +43,6 @@ package com.kyloth.serleena.synchronization.net;
 import com.kyloth.serleena.BuildConfig;
 import com.kyloth.serleena.synchronization.AuthException;
 import com.kyloth.serleena.synchronization.kylothcloud.IKylothIdSource;
-import com.kyloth.serleena.synchronization.kylothcloud.inbound.CloudJSONInboundStream;
-import com.kyloth.serleena.synchronization.kylothcloud.outbound.CloudJSONOutboundStream;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -166,17 +164,17 @@ public class SerleenaJSONNetProxyNotAuthorizedTest {
         preAuth = proxy.preAuth();
         assertEquals(preAuth, PREAUTH_TOKEN);
         proxy.auth();
-        proxy.send();
+        proxy.write();
     }
 
     /**
-     * Verifica che chiamare send() senza auth risulti in una AuthException.
+     * Verifica che chiamare write() senza auth risulti in una AuthException.
      * @throws AuthException
      * @throws IOException
      */
     @Test(expected = AuthException.class)
     public void testSendWithoutAuthNotAllowed() throws AuthException, IOException {
-        proxy.send();
+        proxy.write();
     }
 
     /**
@@ -206,14 +204,14 @@ public class SerleenaJSONNetProxyNotAuthorizedTest {
     }
 
     /**
-     * Verifica che se urlConnection != null get sollevi RuntimeException
+     * Verifica che se urlConnection != null read sollevi RuntimeException
      */
     @Test(expected = RuntimeException.class)
     public void testGetAuthException() throws IOException, AuthException {
         proxy.preAuth();
         proxy.auth();
-        proxy.get();
-        proxy.get();
+        proxy.read();
+        proxy.read();
     }
 
     /**
@@ -227,26 +225,26 @@ public class SerleenaJSONNetProxyNotAuthorizedTest {
     }
 
     /**
-     * Verifica che non sia possibile autenticarsi dopo una get
+     * Verifica che non sia possibile autenticarsi dopo una read
      */
 
     @Test(expected = RuntimeException.class)
     public void testAuthAfterGet() throws AuthException, IOException {
         proxy.preAuth();
         proxy.auth();
-        proxy.get();
+        proxy.read();
         proxy.auth();
     }
 
     /**
-     * Verifica che non sia possibile autenticarsi dopo una send
+     * Verifica che non sia possibile autenticarsi dopo una write
      */
 
     @Test(expected = RuntimeException.class)
     public void testAuthAfterSend() throws AuthException, IOException {
         proxy.preAuth();
         proxy.auth();
-        proxy.send();
+        proxy.write();
         proxy.auth();
     }
 
