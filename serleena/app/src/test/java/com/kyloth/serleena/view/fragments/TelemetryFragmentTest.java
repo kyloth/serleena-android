@@ -63,6 +63,7 @@ import org.junit.Test;
 import org.junit.Before;
 import org.robolectric.Robolectric;
 import org.robolectric.RobolectricGradleTestRunner;
+import org.robolectric.RuntimeEnvironment;
 import org.robolectric.annotation.Config;
 
 import static org.mockito.Mockito.*;
@@ -77,7 +78,8 @@ import static org.mockito.Mockito.*;
 @RunWith(RobolectricGradleTestRunner.class)
 @Config(constants = BuildConfig.class, emulateSdk = 19, manifest = "src/main/AndroidManifest.xml")
 public class TelemetryFragmentTest {
-
+    final String TELEMETRY_ON = RuntimeEnvironment.application.getResources().getString(R.string.telem_on);
+    final String TELEMETRY_OFF = RuntimeEnvironment.application.getResources().getString(R.string.telem_off);
     private TelemetryFragment fragment;
     private ITelemetryPresenter presenter;
     private ImageButton button;
@@ -138,19 +140,19 @@ public class TelemetryFragmentTest {
     @Test
     public void presenterShouldBeNotifiedWhenUserClicks() throws
             TrackAlreadyStartedException {
-        when(text.getText()).thenReturn("OFF");
+        when(text.getText()).thenReturn(TELEMETRY_OFF);
         listener.onClick(button);
         verify(presenter).enableTelemetry();
 
-        when(text.getText()).thenReturn("ON");
+        when(text.getText()).thenReturn(TELEMETRY_ON);
         listener.onClick(button);
         verify(presenter).disableTelemetry();
 
-        when(text.getText()).thenReturn("OFF");
+        when(text.getText()).thenReturn(TELEMETRY_OFF);
         listener.onClick(button);
         verify(presenter, times(2)).enableTelemetry();
 
-        when(text.getText()).thenReturn("ON");
+        when(text.getText()).thenReturn(TELEMETRY_ON);
         listener.onClick(button);
         verify(presenter, times(2)).disableTelemetry();
     }
@@ -164,7 +166,7 @@ public class TelemetryFragmentTest {
             throws TrackAlreadyStartedException {
         Mockito.doThrow(TrackAlreadyStartedException.class)
                 .when(presenter).enableTelemetry();
-        when(text.getText()).thenReturn("OFF");
+        when(text.getText()).thenReturn(TELEMETRY_OFF);
         listener.onClick(button);
         verify(text).setText(activity.getResources().getText(
                 R.string.telem_alreadyStartedError));
