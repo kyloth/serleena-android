@@ -265,7 +265,8 @@ public class TrackPresenterIntegrationTest {
         orientationWidget.callOnClick();
         assertEquals("4/4", nextCheckpointText.getText());
         orientationWidget.callOnClick();
-        assertEquals("FINE", nextCheckpointText.getText());
+        String trackFinish = RuntimeEnvironment.application.getResources().getString(R.string.track_end);
+        assertEquals(trackFinish, nextCheckpointText.getText());
     }
 
     /**
@@ -317,7 +318,8 @@ public class TrackPresenterIntegrationTest {
         simulateLocation(blm, 0, 5);
         assertEquals("4/4", nextCheckpointText.getText());
         simulateLocation(blm, 3, 7);
-        assertEquals("FINE", nextCheckpointText.getText());
+        String trackFinish = RuntimeEnvironment.application.getResources().getString(R.string.track_end);
+        assertEquals(trackFinish, nextCheckpointText.getText());
     }
 
     /**
