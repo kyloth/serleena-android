@@ -28,12 +28,50 @@
 ///////////////////////////////////////////////////////////////////////////////
 
 
+/**
+ * Name: ISynchronizer.java
+ * Package: com.kyloth.serleena.synchronization
+ * Author: Tobia Tesan
+ *
+ * History:
+ * Version  Programmer        Changes
+ * 0.0.1    Tobia Tesan       Creazione file
+ */
 package com.kyloth.serleena.synchronization;
 
 import java.io.IOException;
 
+/**
+ * Espone un'interfaccia generica per sincronizzare il dispositivo con un servizio remoto.
+ *
+ * @author Tobia Tesan <tobia.tesan@gmail.com>
+ * @version 0.0.1
+ */
 public interface ISynchronizer {
+
+    /**
+     * Esegue la preautorizzazione iniziale ottenendo
+     * un token dal servizio remoto (cfr. ST).
+     *
+     * @return Il token di conferma da fornire manualmente al servizio remoto
+     * @throws AuthException Se il servizio remoto nega il permesso di preautenticare
+     * @throws IOException Se comunicazione impossibile col servizio remoto
+     */
     String preAuth()  throws AuthException, IOException;
+
+    /**
+     * Esegue l'autenticazione col servizio remoto
+     * @throws RuntimeException Se erroneamente chiamato dal programmatore senza prima effettuare con successo preauth()
+     * @throws AuthException Se il servizio remoto nega l'autenticazione
+     * @throws IOException Se comunicazione impossibile col servizio remoto
+     */
     void auth()  throws AuthException, IOException;
+
+    /**
+     * Richiede la sincronizzazione bidirezionale col servizio remoto.
+     *
+     * @throws AuthException Se il servizio remoto nega il permesso di sincronizzare
+     * @throws IOException Se comunicazione impossibile col servizio remoto
+     */
     void sync() throws AuthException, IOException;
 }

@@ -59,8 +59,6 @@ import java.io.IOException;
  *
  * @author Tobia Tesan <tobia.tesan@gmail.com>
  * @version 0.0.1
- * @use Viene usato dall'Activity come unico entry point per le operazioni di sincronizzazione, dopo avergli fornito un dataSource e un dumpLoader (che possono e tipicamente sono la stesso oggetto)e l'URL del servizio remoto. Si faccia riferimento ai diagrammi di sequenza della ST per i dettagli della procedura di sincronizzazione.
- * @field instance la singola istanza
  */
 public class Synchronizer implements ISynchronizer {
     static Synchronizer instance;
@@ -76,6 +74,10 @@ public class Synchronizer implements ISynchronizer {
 
     /**
      * Ritorna l'istanza unica di Synchronizer
+     *
+     * @param proxy L'INetProxy con cui connettersi al servizio remoto
+     * @param sink L'IPersistenceDataSink in cui riversare i dati raccolti
+     * @param source L'IPersistenceDataSource da cui prelevare i dati per l'invio al servizio remoto
      */
     public static Synchronizer getInstance(INetProxy proxy, IPersistenceDataSink sink, IPersistenceDataSource source) {
         if (instance == null) {
@@ -87,12 +89,22 @@ public class Synchronizer implements ISynchronizer {
     /**
      * Esegue la preautorizzazione iniziale ottenendo
      * un token dal servizio remoto (cfr. ST).
+     *
+     * @return Il token di conferma da fornire manualmente al servizio remoto
+     * @throws AuthException Se il servizio remoto nega il permesso di preautenticare
+     * @throws IOException Se comunicazione impossibile col servizio remoto
      */
     @Override
     public String preAuth()  throws AuthException, IOException {
         return proxy.preAuth();
     }
 
+    /**
+     * Esegue l'autenticazione col servizio remoto
+     * @throws RuntimeException Se erroneamente chiamato dal programmatore senza prima effettuare con successo preauth()
+     * @throws AuthException Se il servizio remoto nega l'autenticazione
+     * @throws IOException Se comunicazione impossibile col servizio remoto
+     */
     @Override
     public void auth()  throws AuthException, IOException {
         proxy.auth();
@@ -151,6 +163,9 @@ public class Synchronizer implements ISynchronizer {
 
     /**
      * Richiede la sincronizzazione bidirezionale col servizio remoto.
+     *
+     * @throws AuthException Se il servizio remoto nega il permesso di sincronizzare
+     * @throws IOException Se comunicazione impossibile col servizio remoto
      */
     @Override
     public void sync() throws AuthException, IOException {
