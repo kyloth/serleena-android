@@ -123,6 +123,11 @@ public class SerleenaActivity extends Activity
     @Override
     public boolean onKeyDown(int keyCode, KeyEvent event) {
         if (keyCode == KeyEvent.KEYCODE_MENU) {
+            int i = getFragmentManager().getBackStackEntryCount();
+            while(i != 0) {
+                getFragmentManager().popBackStackImmediate();
+                i--;
+            }
             getFragmentManager().beginTransaction()
                     .replace(R.id.main_container, menuFragment).commit();
             return true;
