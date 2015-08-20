@@ -39,6 +39,9 @@ import java.lang.reflect.Type;
 
 import java.util.Iterator;
 
+/**
+ * Struttura che rappresenta la radice di un albero di dati raccolti sul dispositivo in uscita
+ */
 public class OutboundRootSerializer implements JsonSerializer<OutboundRootEntity> {
     @Override
     public JsonElement serialize(OutboundRootEntity or, Type typeOfOr, JsonSerializationContext context) {

@@ -34,6 +34,9 @@ import java.util.Collection;
 import java.util.LinkedList;
 import java.util.UUID;
 
+/**
+ * Struttura che rapprsenta i dati raccolti sul dispositivo per una data esperienza
+ */
 public class OutboundExperienceDataEntity implements IKylothDataEntity {
     public UUID experience;
     public Collection<UserPointEntity> userPoints;
