@@ -43,6 +43,8 @@ import com.kyloth.serleena.sensors.ILocationObserver;
 
 import java.util.Calendar;
 import java.util.Date;
+import java.util.GregorianCalendar;
+import java.util.Locale;
 import java.util.TimeZone;
 
 /**
@@ -88,7 +90,9 @@ public class WeatherPresenter implements IWeatherPresenter, ILocationObserver {
     @Override
     public synchronized void advanceDate() {
         daysPastNow = (daysPastNow + 1) % 7;
-        view.setDate(currentDate());
+        Calendar localTime = new GregorianCalendar(Locale.getDefault());
+        localTime.setTimeInMillis(currentDate().getTime());
+        view.setDate(localTime.getTime());
         view.clearWeatherInfo();
 
         if (lastKnownLocation != null)
@@ -100,7 +104,9 @@ public class WeatherPresenter implements IWeatherPresenter, ILocationObserver {
      */
     @Override
     public synchronized void resume() {
-        view.setDate(currentDate());
+        Calendar localTime = new GregorianCalendar(Locale.getDefault());
+        localTime.setTimeInMillis(currentDate().getTime());
+        view.setDate(localTime.getTime());
         locMan.attachObserver(this, LOCATION_UPDATE_INTERVAL_SECONDS);
     }
 
