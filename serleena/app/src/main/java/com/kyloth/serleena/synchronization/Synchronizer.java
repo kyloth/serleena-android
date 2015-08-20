@@ -74,9 +74,6 @@ public class Synchronizer implements ISynchronizer {
         this.source = source;
     }
 
-    static void __reset() {
-        instance = null;
-    }
     /**
      * Ritorna l'istanza unica di Synchronizer
      */

@@ -182,7 +182,6 @@ public class DummyServerIntegrationTest {
             }
         };
 
-        Synchronizer.__reset();
         Synchronizer s = Synchronizer.getInstance(
                 new SerleenaJSONNetProxy(iKylothIdSource, url),
                 sink, source);
