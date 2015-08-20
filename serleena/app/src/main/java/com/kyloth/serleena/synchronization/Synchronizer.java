@@ -119,7 +119,7 @@ public class Synchronizer implements ISynchronizer {
         proxy.auth();
     }
 
-    private void get() throws AuthException, IOException {
+    void get() throws AuthException, IOException {
         CloudJSONInboundStream in = (CloudJSONInboundStream) proxy.read();
         CloudJSONInboundStreamParser sjisp = new CloudJSONInboundStreamParser(in);
         InboundRootEntity root = sjisp.parse();
@@ -141,7 +141,7 @@ public class Synchronizer implements ISynchronizer {
 
     }
 
-    private void send() throws AuthException, IOException {
+    void send() throws AuthException, IOException {
         CloudJSONOutboundStreamBuilder b = new CloudJSONOutboundStreamBuilder();
         for (IExperienceStorage exp : source.getExperiences()) {
             b.addExperience(exp);
