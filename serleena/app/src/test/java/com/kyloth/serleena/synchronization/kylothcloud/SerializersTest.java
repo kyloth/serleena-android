@@ -72,7 +72,7 @@ import static org.junit.Assert.assertEquals;
 @RunWith(RobolectricGradleTestRunner.class)
 @Config(constants = BuildConfig.class, emulateSdk = 19)
 public class SerializersTest {
-    final static String SAMPLES_DIR = "../../common/samples/";
+    final static String SAMPLES_DIR = "../fixtures/json/";
     final static float GEO_TOLERANCE = 0.00001f;
     @Test
     public void trackEntitySmokeTest() throws FileNotFoundException {
