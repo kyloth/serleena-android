@@ -99,6 +99,9 @@ public class Synchronizer implements ISynchronizer {
      */
     @Override
     public String preAuth()  throws AuthException, IOException {
+        if (proxy == null) {
+            throw new RuntimeException("No INetProxy?");
+        }
         return proxy.preAuth();
     }
 
@@ -110,13 +113,13 @@ public class Synchronizer implements ISynchronizer {
      */
     @Override
     public void auth()  throws AuthException, IOException {
+        if (proxy == null) {
+            throw new RuntimeException("No INetProxy?");
+        }
         proxy.auth();
     }
 
     private void get() throws AuthException, IOException {
-        if (proxy == null) {
-            throw new RuntimeException("No INetProxy?");
-        }
         CloudJSONInboundStream in = (CloudJSONInboundStream) proxy.read();
         CloudJSONInboundStreamParser sjisp = new CloudJSONInboundStreamParser(in);
         InboundRootEntity root = sjisp.parse();
@@ -139,9 +142,6 @@ public class Synchronizer implements ISynchronizer {
     }
 
     private void send() throws AuthException, IOException {
-        if (proxy == null) {
-            throw new RuntimeException("No INetProxy?");
-        }
         CloudJSONOutboundStreamBuilder b = new CloudJSONOutboundStreamBuilder();
         for (IExperienceStorage exp : source.getExperiences()) {
             b.addExperience(exp);
@@ -172,6 +172,9 @@ public class Synchronizer implements ISynchronizer {
      */
     @Override
     public void sync() throws AuthException, IOException {
+        if (proxy == null) {
+            throw new RuntimeException("No INetProxy?");
+        }
         try {
             send();
             get();
