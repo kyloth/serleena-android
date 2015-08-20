@@ -254,8 +254,8 @@ public class SerializersTest {
     public void outboundRootSerializerTest() {
         Gson gsonSerializer = new GsonBuilder().registerTypeAdapter(OutboundRootEntity.class, new OutboundRootSerializer()).create();
         OutboundRootEntity ore = new OutboundRootEntity();
-        ore.data = new ArrayList<OutboundDataEntity>();
-        OutboundDataEntity ode = new OutboundDataEntity();
+        ore.data = new ArrayList<OutboundExperienceDataEntity>();
+        OutboundExperienceDataEntity ode = new OutboundExperienceDataEntity();
         ode.experience = TestFixtures.EXPERIENCES_FIXTURE_EXPERIENCE_1_UUID;
         ode.userPoints = new ArrayList<UserPointEntity>();
         UserPointEntity up = new UserPointEntity();

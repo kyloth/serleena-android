@@ -41,11 +41,11 @@ import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.UUID;
 
-class OutboundDataDeserializer implements JsonDeserializer<OutboundDataEntity> {
+class OutboundExperienceDataDeserializer implements JsonDeserializer<OutboundExperienceDataEntity> {
 
     @Override
-    public OutboundDataEntity deserialize(JsonElement json, Type typeOfT, JsonDeserializationContext context) throws JsonParseException {
-        OutboundDataEntity ode = new OutboundDataEntity();
+    public OutboundExperienceDataEntity deserialize(JsonElement json, Type typeOfT, JsonDeserializationContext context) throws JsonParseException {
+        OutboundExperienceDataEntity ode = new OutboundExperienceDataEntity();
         ode.experience = UUID.fromString(json.getAsJsonObject().get("experience").getAsString());
         ode.userPoints = new ArrayList<UserPointEntity>();
         JsonArray userPoints = json.getAsJsonObject().get("userPoints").getAsJsonArray();

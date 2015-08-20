@@ -40,9 +40,9 @@ import java.lang.reflect.Type;
 
 import java.util.Iterator;
 
-class OutboundDataSerializer implements JsonSerializer<OutboundDataEntity> {
+class OutboundExperienceDataSerializer implements JsonSerializer<OutboundExperienceDataEntity> {
     @Override
-    public JsonElement serialize(OutboundDataEntity or, Type typeOfOr, JsonSerializationContext context) {
+    public JsonElement serialize(OutboundExperienceDataEntity or, Type typeOfOr, JsonSerializationContext context) {
         JsonObject outboundData = new JsonObject();
         outboundData.addProperty("experience", or.experience.toString());
         JsonArray userPoints = new JsonArray();

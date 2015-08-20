@@ -34,11 +34,11 @@ import java.util.Collection;
 import java.util.LinkedList;
 import java.util.UUID;
 
-public class OutboundDataEntity implements IKylothDataEntity {
+public class OutboundExperienceDataEntity implements IKylothDataEntity {
     public UUID experience;
     public Collection<UserPointEntity> userPoints;
     public Collection<OutboundTelemetryEntity> telemetryData;
-    public OutboundDataEntity() {
+    public OutboundExperienceDataEntity() {
         userPoints = new LinkedList<UserPointEntity>();
         telemetryData = new LinkedList<OutboundTelemetryEntity>();
     }

@@ -33,5 +33,5 @@ package com.kyloth.serleena.synchronization.kylothcloud;
 import java.util.Collection;
 
 public class OutboundRootEntity implements IKylothDataEntity {
-    public Collection<OutboundDataEntity> data;
+    public Collection<OutboundExperienceDataEntity> data;
 }

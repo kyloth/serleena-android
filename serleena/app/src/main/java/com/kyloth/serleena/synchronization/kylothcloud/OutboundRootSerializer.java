@@ -43,9 +43,9 @@ public class OutboundRootSerializer implements JsonSerializer<OutboundRootEntity
     @Override
     public JsonElement serialize(OutboundRootEntity or, Type typeOfOr, JsonSerializationContext context) {
         JsonArray outboundRoot = new JsonArray();
-        Iterator<OutboundDataEntity> i_data = or.data.iterator();
+        Iterator<OutboundExperienceDataEntity> i_data = or.data.iterator();
         while(i_data.hasNext()) {
-            outboundRoot.add(new OutboundDataSerializer().serialize(i_data.next(), OutboundDataEntity.class, context));
+            outboundRoot.add(new OutboundExperienceDataSerializer().serialize(i_data.next(), OutboundExperienceDataEntity.class, context));
         }
 
         return outboundRoot;

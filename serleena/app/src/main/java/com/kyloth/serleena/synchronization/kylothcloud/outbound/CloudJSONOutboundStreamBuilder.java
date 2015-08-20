@@ -50,7 +50,7 @@ import com.kyloth.serleena.persistence.ITrackStorage;
 import com.kyloth.serleena.synchronization.JSONOutboundStream;
 import com.kyloth.serleena.synchronization.OutboundStream;
 import com.kyloth.serleena.synchronization.OutboundStreamBuilder;
-import com.kyloth.serleena.synchronization.kylothcloud.OutboundDataEntity;
+import com.kyloth.serleena.synchronization.kylothcloud.OutboundExperienceDataEntity;
 import com.kyloth.serleena.synchronization.kylothcloud.OutboundRootEntity;
 import com.kyloth.serleena.synchronization.kylothcloud.OutboundTelemetryEntity;
 import com.kyloth.serleena.synchronization.kylothcloud.OutboundRootSerializer;
@@ -77,7 +77,7 @@ public class CloudJSONOutboundStreamBuilder implements OutboundStreamBuilder {
     
     public CloudJSONOutboundStreamBuilder() {
         root = new OutboundRootEntity();
-        root.data = new ArrayList<OutboundDataEntity>();
+        root.data = new ArrayList<OutboundExperienceDataEntity>();
     }
 
     /**
@@ -90,7 +90,7 @@ public class CloudJSONOutboundStreamBuilder implements OutboundStreamBuilder {
      */
     @Override
     public void addExperience(IExperienceStorage exp) {
-        OutboundDataEntity e = new OutboundDataEntity();
+        OutboundExperienceDataEntity e = new OutboundExperienceDataEntity();
         e.experience = exp.getUUID();
         int userPointCounter = 0;
         for (UserPoint p : exp.getUserPoints(true)) { // HACK
