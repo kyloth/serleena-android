@@ -77,11 +77,15 @@ import org.junit.Rule;
 import org.junit.rules.ExpectedException;
 import org.w3c.dom.Text;
 
+import java.text.DateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.GregorianCalendar;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
+import java.util.TimeZone;
 
 import static junit.framework.Assert.assertEquals;
 import static org.mockito.Mockito.*;
@@ -264,12 +268,26 @@ public class WeatherFragmentTest {
                 "Aprile", "Maggio", "Giugno", "Luglio", "Agosto",
                 "Settembre", "Ottobre", "Novembre", "Dicembre" };
 
+        int YEAR = 2015;
+        int DAY = 1;
+
+        GregorianCalendar g = new GregorianCalendar(TimeZone.getTimeZone("GMT"));
+        g.set(Calendar.DAY_OF_MONTH, DAY);
+        g.set(Calendar.YEAR, YEAR);
+        g.set(Calendar.HOUR_OF_DAY, 0);
+        g.set(Calendar.MINUTE, 0);
+        g.set(Calendar.SECOND, 0);
+        g.set(Calendar.MILLISECOND, 0);
+
+        DateFormat df = DateFormat.getDateInstance(DateFormat.MEDIUM, Locale.getDefault());
+
         Calendar calendar = Calendar.getInstance();
 
         for (int i = 0; i < 12; i++) {
-            calendar.set(2015, i, 01);
+            g.set(Calendar.MONTH, i);
+            calendar.set(YEAR, i, DAY);
             fragment.setDate(calendar.getTime());
-            verify(dateText).setText("1 " + months[i] + " 2015");
+                verify(dateText).setText(df.format(g.getTime()));
         }
     }
 

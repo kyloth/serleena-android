@@ -87,6 +87,7 @@ import java.util.concurrent.Callable;
 import java.util.concurrent.TimeUnit;
 
 import static junit.framework.Assert.assertEquals;
+import static junit.framework.Assert.assertTrue;
 import static org.mockito.Mockito.mock;
 
 /**
@@ -179,7 +180,8 @@ public class TrackPresenterIntegrationTest {
     @Test
     public void viewShouldShowNoActiveTrackAtTheBeginning() {
         gotoFragment();
-        assertEquals("NESSUN PERCORSO ATTIVO", trackNameText.getText());
+        String noActiveTrack = RuntimeEnvironment.application.getResources().getString(R.string.track_noActiveTrack);
+        assertEquals(noActiveTrack, trackNameText.getText());
     }
 
     /**

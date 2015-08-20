@@ -41,18 +41,27 @@
 
 package com.kyloth.serleena.view.fragments;
 
+import android.app.Activity;
+import android.app.FragmentManager;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import com.kyloth.serleena.BuildConfig;
 import com.kyloth.serleena.R;
+import com.kyloth.serleena.activity.SerleenaActivity;
 import com.kyloth.serleena.presentation.ITrackPresenter;
 import com.kyloth.serleena.view.widgets.CompassWidget;
 
 import org.junit.Test;
 import org.junit.Before;
+import org.junit.runner.RunWith;
+import org.robolectric.Robolectric;
+import org.robolectric.RobolectricGradleTestRunner;
+import org.robolectric.RuntimeEnvironment;
+import org.robolectric.annotation.Config;
 
 import static junit.framework.Assert.assertTrue;
 import static org.mockito.Mockito.*;
@@ -64,6 +73,9 @@ import static org.mockito.Mockito.*;
  * @version 1.0.0
  * @see com.kyloth.serleena.view.fragments.CompassFragment
  */
+
+@RunWith(RobolectricGradleTestRunner.class)
+@Config(constants = BuildConfig.class, emulateSdk = 19, manifest = "src/main/AndroidManifest.xml")
 public class TrackFragmentTest {
 
     private TrackFragment fragment;
@@ -74,9 +86,16 @@ public class TrackFragmentTest {
     private CompassWidget orientationWidget;
     private TextView deltaText;
     private TextView lastPartialText;
+    private Activity activity;
 
     @Before
     public void initialize() {
+        activity = Robolectric.buildActivity(Activity.class)
+                .create().start().visible().get();
+        fragment = new TrackFragment();
+        FragmentManager fm = activity.getFragmentManager();
+        fm.beginTransaction().add(fragment, "TEST").commit();
+
         trackNameText = mock(TextView.class);
         nextCheckpointText = mock(TextView.class);
         distanceText = mock(TextView.class);
@@ -102,7 +121,6 @@ public class TrackFragmentTest {
         when(v.findViewById(R.id.last_partial_text))
                 .thenReturn(lastPartialText);
 
-        fragment = new TrackFragment();
         fragment.onCreateView(inflater, vg, mock(Bundle.class));
         presenter = mock(ITrackPresenter.class);
         fragment.attachPresenter(presenter);
@@ -132,7 +150,8 @@ public class TrackFragmentTest {
     @Test
     public void settingEndedCheckpointShouldSetViewAccordingly() {
         fragment.displayTrackEnded();
-        verify(nextCheckpointText).setText("FINE");
+        String trackEnd = RuntimeEnvironment.application.getResources().getString(R.string.track_end);
+        verify(nextCheckpointText).setText(trackEnd);
     }
 
     @Test
@@ -218,7 +237,8 @@ public class TrackFragmentTest {
     @Test
     public void clearingViewShouldClearAllOfItsElements() {
         fragment.clearView();
-        verify(trackNameText).setText("NESSUN PERCORSO ATTIVO");
+        String noActiveTrack = RuntimeEnvironment.application.getResources().getString(R.string.track_noActiveTrack);
+        verify(trackNameText).setText(noActiveTrack);
         verify(nextCheckpointText).setText("");
         verify(distanceText).setText("");
         verify(orientationWidget).setOrientation(0);
