@@ -28,23 +28,21 @@
 ///////////////////////////////////////////////////////////////////////////////
 
 
-/**
- * Name: NotConnectedException.java
- * Package: com.kyloth.serleena.synchronization.net
- * Author: Tobia Tesan
- *
- * History:
- * Version  Programmer        Changes
- * 0.0.1    Tobia Tesan       Creazione file
- */
+package com.kyloth.serleena.synchronization.kylothcloud;
 
-package com.kyloth.serleena.synchronization.net;
+import java.util.Collection;
+import java.util.LinkedList;
+import java.util.UUID;
 
 /**
- * Eccezione restituita quando vengono richieste operazioni che presuppongono una connessione, ma il dispositivo non e' connesso.
+ * Struttura che rapprsenta i dati raccolti sul dispositivo per una data esperienza
  */
-public class NotConnectedException extends Exception {
-    public NotConnectedException(String s) {
-        super(s);
+public class OutboundExperienceDataEntity implements IKylothDataEntity {
+    public UUID experience;
+    public Collection<UserPointEntity> userPoints;
+    public Collection<OutboundTelemetryEntity> telemetryData;
+    public OutboundExperienceDataEntity() {
+        userPoints = new LinkedList<UserPointEntity>();
+        telemetryData = new LinkedList<OutboundTelemetryEntity>();
     }
 }

@@ -42,17 +42,11 @@ package com.kyloth.serleena.presenters;
 
 import android.app.Activity;
 import com.kyloth.serleena.common.SyncStatusEnum;
-import com.kyloth.serleena.persistence.IPersistenceDataSink;
-import com.kyloth.serleena.persistence.IPersistenceDataSource;
 import com.kyloth.serleena.presentation.ISyncPresenter;
 import com.kyloth.serleena.presentation.ISyncView;
 import com.kyloth.serleena.synchronization.AuthException;
-import com.kyloth.serleena.synchronization.IKylothCloudSynchronizer;
-import com.kyloth.serleena.synchronization.KylothCloudSynchronizer;
-import com.kyloth.serleena.synchronization.net.INetProxy;
-import com.kyloth.serleena.synchronization.net.SerleenaJSONNetProxy;
-import com.kyloth.serleena.synchronization.kylothcloud.IKylothIdSource;
-import com.kyloth.serleena.synchronization.kylothcloud.LocalEnvKylothIdSource;
+import com.kyloth.serleena.synchronization.ISynchronizer;
+import com.kyloth.serleena.synchronization.Synchronizer;
 
 import java.io.IOException;
 import java.net.MalformedURLException;
@@ -71,7 +65,7 @@ public class SyncPresenter implements ISyncPresenter {
 
     private ISyncView view;
     private ISerleenaActivity activity;
-    IKylothCloudSynchronizer synchronizer;
+    ISynchronizer synchronizer;
     private static final URL KYLOTH_PORTAL_URL;
     Thread syncingThread;
 
@@ -104,7 +98,7 @@ public class SyncPresenter implements ISyncPresenter {
 
         this.view = view;
         this.activity = activity;
-        this.synchronizer = KylothCloudSynchronizer.getInstance(null, null, null);
+        this.synchronizer = Synchronizer.getInstance(null, null, null);
         // Questo arriva gia' inizializzato dall'activity.
         this.status = SyncStatusEnum.NOTPAIRED;
 

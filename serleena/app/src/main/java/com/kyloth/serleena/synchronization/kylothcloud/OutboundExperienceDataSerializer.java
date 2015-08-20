@@ -28,23 +28,37 @@
 ///////////////////////////////////////////////////////////////////////////////
 
 
-/**
- * Name: NotConnectedException.java
- * Package: com.kyloth.serleena.synchronization.net
- * Author: Tobia Tesan
- *
- * History:
- * Version  Programmer        Changes
- * 0.0.1    Tobia Tesan       Creazione file
- */
+package com.kyloth.serleena.synchronization.kylothcloud;
 
-package com.kyloth.serleena.synchronization.net;
+import com.google.gson.JsonArray;
+import com.google.gson.JsonSerializationContext;
+import com.google.gson.JsonSerializer;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
 
-/**
- * Eccezione restituita quando vengono richieste operazioni che presuppongono una connessione, ma il dispositivo non e' connesso.
- */
-public class NotConnectedException extends Exception {
-    public NotConnectedException(String s) {
-        super(s);
+import java.lang.reflect.Type;
+
+import java.util.Iterator;
+
+class OutboundExperienceDataSerializer implements JsonSerializer<OutboundExperienceDataEntity> {
+    @Override
+    public JsonElement serialize(OutboundExperienceDataEntity or, Type typeOfOr, JsonSerializationContext context) {
+        JsonObject outboundData = new JsonObject();
+        outboundData.addProperty("experience", or.experience.toString());
+        JsonArray userPoints = new JsonArray();
+        Iterator<UserPointEntity> i_userpoints = or.userPoints.iterator();
+        while(i_userpoints.hasNext()) {
+            userPoints.add(new UserPointSerializer().serialize(i_userpoints.next(), UserPointEntity.class, context));
+        }
+        outboundData.add("userPoints", userPoints);
+        JsonArray telemetryData = new JsonArray();
+        Iterator<OutboundTelemetryEntity> i_telemetry = or.telemetryData.iterator();
+        while(i_telemetry.hasNext()) {
+            telemetryData.add(new OutboundTelemetryEntitySerializer().serialize(i_telemetry.next(), OutboundTelemetryEntity.class, context));
+        }
+        outboundData.add("telemetryData", telemetryData);
+
+        return outboundData;
     }
+
 }

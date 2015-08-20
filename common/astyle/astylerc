@@ -1,8 +1,0 @@
-indent=tab=4
-style=attach
-pad-oper
-pad-header
-align-pointer=name
-unpad-paren
-indent-preprocessor
-convert-tabs

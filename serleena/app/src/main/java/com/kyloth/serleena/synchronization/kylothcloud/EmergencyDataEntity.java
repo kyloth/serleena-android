@@ -42,7 +42,7 @@ package com.kyloth.serleena.synchronization.kylothcloud;
 import com.kyloth.serleena.common.IRegion;
 
 /**
- * Created by tobia on 21/07/15.
+ * Struttura rappresentante un contatto di emergenza
  */
 public class EmergencyDataEntity implements IKylothDataEntity {
     public IRegion rect;

@@ -31,27 +31,35 @@
 package com.kyloth.serleena.synchronization.kylothcloud;
 
 import com.google.gson.JsonArray;
-import com.google.gson.JsonSerializationContext;
-import com.google.gson.JsonSerializer;
+import com.google.gson.JsonDeserializationContext;
+import com.google.gson.JsonDeserializer;
 import com.google.gson.JsonElement;
+import com.google.gson.JsonParseException;
 
 import java.lang.reflect.Type;
 
-import java.util.Iterator;
+import java.util.ArrayList;
 
-/**
- * Struttura che rappresenta la radice di un albero di dati raccolti sul dispositivo in uscita
- */
-public class OutboundRootSerializer implements JsonSerializer<OutboundRootEntity> {
+public class InboundRootEntityDeserializer implements JsonDeserializer<InboundRootEntity> {
     @Override
-    public JsonElement serialize(OutboundRootEntity or, Type typeOfOr, JsonSerializationContext context) {
-        JsonArray outboundRoot = new JsonArray();
-        Iterator<OutboundExperienceDataEntity> i_data = or.data.iterator();
-        while(i_data.hasNext()) {
-            outboundRoot.add(new OutboundExperienceDataSerializer().serialize(i_data.next(), OutboundExperienceDataEntity.class, context));
+    public InboundRootEntity deserialize(JsonElement json, Type typeOfR, JsonDeserializationContext context) throws JsonParseException {
+        InboundRootEntity re = new InboundRootEntity();
+        re.experiences = new ArrayList<ExperienceEntity>();
+        JsonArray experiences = json.getAsJsonObject().get("experiences").getAsJsonArray();
+        for(JsonElement experience : experiences) {
+            re.experiences.add(new ExperienceEntityDeserializer().deserialize(experience, ExperienceEntity.class, context));
+        }
+        re.emergencyData = new ArrayList<EmergencyDataEntity>();
+        JsonArray emergencyData = json.getAsJsonObject().get("emergencyData").getAsJsonArray();
+        for(JsonElement emergency : emergencyData) {
+            re.emergencyData.add(new EmergencyDataDeserializer().deserialize(emergency, EmergencyDataEntity.class, context));
+        }
+        re.weatherData = new ArrayList<WeatherDataEntity>();
+        JsonArray weatherData = json.getAsJsonObject().get("weatherData").getAsJsonArray();
+        for(JsonElement weather : weatherData) {
+            re.weatherData.add(new WeatherEntityDeserializer().deserialize(weather, WeatherDataEntity.class, context));
         }
 
-        return outboundRoot;
+        return re;
     }
-
 }

@@ -52,7 +52,7 @@ import com.kyloth.serleena.persistence.sqlite.SerleenaSQLiteDataSink;
 import com.kyloth.serleena.persistence.sqlite.SerleenaSQLiteDataSource;
 import com.kyloth.serleena.sensors.ISensorManager;
 import com.kyloth.serleena.sensors.SerleenaSensorManager;
-import com.kyloth.serleena.synchronization.KylothCloudSynchronizer;
+import com.kyloth.serleena.synchronization.Synchronizer;
 import com.kyloth.serleena.synchronization.net.INetProxy;
 import com.kyloth.serleena.synchronization.net.SerleenaJSONNetProxy;
 import com.kyloth.serleena.synchronization.kylothcloud.LocalEnvKylothIdSource;
@@ -102,7 +102,7 @@ public class SerleenaApplication extends Application implements ISerleenaApplica
             INetProxy netProxy = new SerleenaJSONNetProxy(
                     new LocalEnvKylothIdSource(),
                     new URL("http://api.kyloth.info/"));
-            KylothCloudSynchronizer.getInstance(
+            Synchronizer.getInstance(
                     netProxy, dataSink, persistenceDataSource);
         } catch (MalformedURLException e) {
             throw new RuntimeException();

@@ -50,7 +50,7 @@ import com.kyloth.serleena.persistence.ITrackStorage;
 import com.kyloth.serleena.synchronization.JSONOutboundStream;
 import com.kyloth.serleena.synchronization.OutboundStream;
 import com.kyloth.serleena.synchronization.OutboundStreamBuilder;
-import com.kyloth.serleena.synchronization.kylothcloud.OutboundDataEntity;
+import com.kyloth.serleena.synchronization.kylothcloud.OutboundExperienceDataEntity;
 import com.kyloth.serleena.synchronization.kylothcloud.OutboundRootEntity;
 import com.kyloth.serleena.synchronization.kylothcloud.OutboundTelemetryEntity;
 import com.kyloth.serleena.synchronization.kylothcloud.OutboundRootSerializer;
@@ -64,10 +64,10 @@ import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 
 /**
- * Concretizza OutboundStreamBuilder in modo da poter costruire e scrivere stream JSON
+ * Concretizza OutboundStreamBuilder in modo da poter costruire e scrivere su stream JSON
  * nel formato che KylothCloud si attende.
  *
- * @use Viene usato da KylothCloudSynchronizer per costruire un OutboundStream nel formato idoneo ad essere passato a SerleenaJSONNetProxy per l'invio a KylothCloud
+ * @use Viene usato da Synchronizer per scrivere su un OutboundStream nel formato idoneo ad essere passato a SerleenaJSONNetProxy per l'invio a KylothCloud
  * @author Tobia Tesan <tobia.tesan@gmail.com>
  */
 public class CloudJSONOutboundStreamBuilder implements OutboundStreamBuilder {
@@ -77,20 +77,20 @@ public class CloudJSONOutboundStreamBuilder implements OutboundStreamBuilder {
     
     public CloudJSONOutboundStreamBuilder() {
         root = new OutboundRootEntity();
-        root.data = new ArrayList<OutboundDataEntity>();
+        root.data = new ArrayList<OutboundExperienceDataEntity>();
     }
 
     /**
      * Aggiunge un'Esperienza (e di conseguenza i suoi Punti Utente
      * e eventuali altri dati raccolti localmente) all'OutboundStream
-     * da costruire.
+     * da scrivere.
      *
      * @param exp Un'Esperienza le cui componenti raccolte sul dispositivo
      *          si vogliono  inviare al servizio remoto.
      */
     @Override
     public void addExperience(IExperienceStorage exp) {
-        OutboundDataEntity e = new OutboundDataEntity();
+        OutboundExperienceDataEntity e = new OutboundExperienceDataEntity();
         e.experience = exp.getUUID();
         int userPointCounter = 0;
         for (UserPoint p : exp.getUserPoints(true)) { // HACK

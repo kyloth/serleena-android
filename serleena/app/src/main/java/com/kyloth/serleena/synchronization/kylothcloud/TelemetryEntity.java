@@ -42,7 +42,6 @@ package com.kyloth.serleena.synchronization.kylothcloud;
 
 import java.util.Collection;
 import java.util.LinkedList;
-import java.util.UUID;
 
 /**
  * Struct rappresentante una telemetria

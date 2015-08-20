@@ -50,13 +50,12 @@ import java.io.IOException;
  * e produrre un OutboundStream da inviare al servizio remoto attraverso
  * un opportuno proxy.
  *
- * @use Viene usato da KylothCloudSynchronizer, che vi carica le Esperienze e i Tracciamenti raccolti sul dispositivo da inviare al cloud, somministrando l'OutboundStream risultante a un idoneo proxy.
+ * @use Viene usato da Synchronizer, che vi carica le Esperienze con i loro Tracciamenti e Punti Utente raccolti sul dispositivo da inviare al cloud, scrivendo il risultato su un OutboundStream fornito da un un idoneo proxy.
  */
 public interface OutboundStreamBuilder {
 	/**
 	 * Aggiunge un'Esperienza (e di conseguenza i suoi Punti Utente
-	 * e eventuali altri dati raccolti localmente) all'OutboundStream
-	 * da costruire.
+	 * e eventuali altri dati raccolti localmente) all'output,
 	 *
 	 * @param e Un'Esperienza le cui componenti raccolte sul dispositivo
 	 *          si vogliono  inviare al servizio remoto.
@@ -64,8 +63,7 @@ public interface OutboundStreamBuilder {
 	void addExperience(IExperienceStorage e);
 
 	/**
-	 * Restituisce un OutboundStream con i dati da inviare al servizio remoto
-	 * pronti per essere consumati da un idoneo proxy.
+	 * Scrive su un OutboundStream fornito da un idoneo proxy i dati da inviare al servizio remoto.
 	 */
 	void stream(OutboundStream s) throws IOException;
 }

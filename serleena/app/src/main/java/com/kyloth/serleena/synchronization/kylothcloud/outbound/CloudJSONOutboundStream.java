@@ -45,7 +45,7 @@ import java.io.BufferedOutputStream;
 import java.io.OutputStream;
 
 /**
- * Concretizza outboundStream, contiene uno stream JSON idoneo per l'invio a
+ * Concretizza OutboundStream in uno stream JSON idoneo in particolare per l'invio a
  * KylothCloud.
  */
 public class CloudJSONOutboundStream extends BufferedOutputStream implements JSONOutboundStream {

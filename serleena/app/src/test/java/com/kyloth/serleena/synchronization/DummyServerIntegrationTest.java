@@ -33,7 +33,6 @@ package com.kyloth.serleena.synchronization;
 
 import android.content.ContentValues;
 import android.database.sqlite.SQLiteDatabase;
-import android.database.sqlite.SQLiteOpenHelper;
 
 import com.google.gson.JsonElement;
 import com.google.gson.JsonParser;
@@ -43,14 +42,12 @@ import com.kyloth.serleena.persistence.sqlite.SerleenaSQLiteDataSink;
 import com.kyloth.serleena.persistence.sqlite.SerleenaSQLiteDataSource;
 import com.kyloth.serleena.persistence.sqlite.TestFixtures;
 import com.kyloth.serleena.synchronization.net.SerleenaJSONNetProxy;
-import com.kyloth.serleena.synchronization.kylothcloud.CheckpointEntity;
 import com.kyloth.serleena.synchronization.kylothcloud.IKylothIdSource;
 
 import org.eclipse.jetty.server.Request;
 import org.eclipse.jetty.server.Server;
 import org.eclipse.jetty.server.handler.AbstractHandler;
 import org.junit.After;
-import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -61,7 +58,6 @@ import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.io.OutputStreamWriter;
 import java.io.PrintWriter;
 import java.net.URL;
 import java.util.Iterator;
@@ -78,13 +74,12 @@ import static org.mockito.Mockito.mock;
 
 
 /**
- * Crea un server HTTP fittizio per verificare che lo stack di gestione del protocollo
- * funzioni correttamente.
+ * Crea un semplicissimo server HTTP fittizio e effettua una sequenza di chiamate allo stesso per verificare che l'intero stack funzioni correttamente in pratica.
  */
 @RunWith(RobolectricTestRunner.class)
 public class DummyServerIntegrationTest {
 
-    final static String SAMPLES_DIR = "../../common/samples/";
+    final static String SAMPLES_DIR = "../fixtures/json/";
     final String AUTH_TOKEN_NAME = "X-AuthToken";
     final String DATA_TOKEN_NAME = "data";
     String JSON_OUTPUT;
@@ -186,8 +181,7 @@ public class DummyServerIntegrationTest {
             }
         };
 
-        KylothCloudSynchronizer.__reset();
-        KylothCloudSynchronizer s = KylothCloudSynchronizer.getInstance(
+        Synchronizer s = Synchronizer.getInstance(
                 new SerleenaJSONNetProxy(iKylothIdSource, url),
                 sink, source);
         server.setHandler(h);

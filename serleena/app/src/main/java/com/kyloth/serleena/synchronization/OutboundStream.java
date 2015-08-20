@@ -40,8 +40,7 @@
 package com.kyloth.serleena.synchronization;
 
 /**
- * Interfaccia che rappresenta uno stream testuale pronto per essere
- * inviato ad un servizio remoto tramite un idoneo proxy.
+ * Interfaccia che rappresenta uno stream testuale di dati in uscita.
  *
  * @author Tobia Tesan <tobia.tesan@gmail.com>
  */

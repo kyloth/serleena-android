@@ -29,7 +29,7 @@
 
 
 /**
- * Name: DataEntityStructSmokeTest.java
+ * Name: SerializersTest.java
  * Package: com.kyloth.serleena.synchronization.kyloth.inbound;
  * Author: Tobia Tesan
  *
@@ -61,25 +61,25 @@ import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.util.Iterator;
 import java.util.ArrayList;
-import java.util.UUID;
 
 import static org.junit.Assert.assertEquals;
 
 
 /**
- * Smoke test per verificare che i JSON prodotti da Kyloth mappino
- * correttamente sulle struct definite attraverso GSON.
+ * Testa che i serializer e deserializer JSON siano in grado di produrre e ricevere dati nel formato di Serleena Cloud, come da fixture di test
  */
 @RunWith(RobolectricGradleTestRunner.class)
 @Config(constants = BuildConfig.class, emulateSdk = 19)
 public class SerializersTest {
-    final static String SAMPLES_DIR = "../../common/samples/";
+    final static String SAMPLES_DIR = "../fixtures/json/";
     final static float GEO_TOLERANCE = 0.00001f;
-    @Test
-    public void trackEntitySmokeTest() throws FileNotFoundException {
-        Gson gson = new GsonBuilder().registerTypeAdapter(TrackEntity.class, new TrackEntityDeserializer()).create();
 
-        BufferedReader r;
+    /**
+     * Testa che sia possibile deserializzare correttamente una TrackEntity
+     */
+    @Test
+    public void trackEntityTest() throws FileNotFoundException {
+        Gson gson = new GsonBuilder().registerTypeAdapter(TrackEntity.class, new TrackEntityDeserializer()).create();
         FileReader in = new FileReader(SAMPLES_DIR + "partial/track.json");
         BufferedReader br = new BufferedReader(in);
         TrackEntity e = gson.fromJson(br, TrackEntity.class);
@@ -101,8 +101,11 @@ public class SerializersTest {
         assertEquals(ee, 1438441982647L);
     }
 
+    /**
+     * Testa che sia possibile deserializzare correttamente una WeatherEntity
+     */
     @Test
-    public void weatherForecastSmokeTest() throws FileNotFoundException {
+    public void weatherForecastTest() throws FileNotFoundException {
         Gson gson = new GsonBuilder().registerTypeAdapter(WeatherDataEntity.class, new WeatherEntityDeserializer()).create();
         BufferedReader r;
         FileReader in = new FileReader(SAMPLES_DIR + "partial/weatherforecast.json");
@@ -126,8 +129,11 @@ public class SerializersTest {
         assertEquals(e.date, 1437436800000L);
     }
 
+    /**
+     * Testa che sia possibile deserializzare correttamente una WeatherEntity con un set di dati alternativo
+     */
     @Test
-    public void weatherForecastSmokeTestAlternateCondition() throws FileNotFoundException {
+    public void weatherForecastTestAlternateCondition() throws FileNotFoundException {
         Gson gson = new GsonBuilder().registerTypeAdapter(WeatherDataEntity.class, new WeatherEntityDeserializer()).create();
         BufferedReader r;
         FileReader in = new FileReader(SAMPLES_DIR + "partial/weatherforecast_alternate.json");
@@ -151,8 +157,11 @@ public class SerializersTest {
         assertEquals(e.date, 1437436800000L);
     }
 
+    /**
+     * Testa che sia possibile deserializzare correttamente un contatto di emergenza
+     */
     @Test
-    public void emergencyContactSmokeTest() throws FileNotFoundException {
+    public void emergencyContactTest() throws FileNotFoundException {
         Gson gson = new GsonBuilder().registerTypeAdapter(EmergencyDataEntity.class, new EmergencyDataDeserializer()).create();
         BufferedReader r;
         FileReader in = new FileReader(SAMPLES_DIR + "partial/emergencycontact.json");
@@ -166,8 +175,11 @@ public class SerializersTest {
         assertEquals(e.number, "800977354");
     }
 
+    /**
+     * Testa che sia possibile deserializzare correttamente un Checkpoint
+     */
     @Test
-    public void checkpointEntitySmokeTest() throws FileNotFoundException {
+    public void checkpointEntityTest() throws FileNotFoundException {
         Gson gson = new GsonBuilder().registerTypeAdapter(CheckpointEntity.class, new CheckpointEntityDeserializer()).create();
         FileReader in = new FileReader(SAMPLES_DIR + "partial/checkpoint.json");
         BufferedReader br = new BufferedReader(in);
@@ -177,8 +189,11 @@ public class SerializersTest {
         assertEquals(e.id, 0);
     }
 
+    /**
+     * Testa che sia possibile deserializzare correttamente una Experience
+     */
     @Test
-    public void experienceEntitySmokeTest() throws FileNotFoundException {
+    public void experienceEntityTest() throws FileNotFoundException {
         Gson gson = new GsonBuilder().registerTypeAdapter(ExperienceEntity.class, new ExperienceEntityDeserializer()).create();
         FileReader in = new FileReader(SAMPLES_DIR + "partial/experience.json");
         BufferedReader br = new BufferedReader(in);
@@ -200,8 +215,11 @@ public class SerializersTest {
         assertEquals(i_t.next().name, "Track_1");
     }
 
+    /**
+     * Testa che sia possibile deserializzare correttamente una Telemetry
+     */
     @Test
-    public void telemetryEntitySmokeTest() throws FileNotFoundException {
+    public void telemetryEntityTest() throws FileNotFoundException {
         Gson gson = new GsonBuilder().registerTypeAdapter(TelemetryEntity.class, new TelemetryEntityDeserializer()).create();
         FileReader in = new FileReader(SAMPLES_DIR + "partial/telemetry.json");
         BufferedReader br = new BufferedReader(in);
@@ -214,17 +232,23 @@ public class SerializersTest {
         assertEquals(ee, 1438441982647L);
     }
 
+    /**
+     * Testa che sia possibile deserializzare correttamente un intero albero di dati in ingresso
+     */
     @Test
-    public void rootEntitySmokeTest() throws FileNotFoundException {
-        Gson gson = new GsonBuilder().registerTypeAdapter(InboundRootEntity.class, new RootEntityDeserializer()).create();
+    public void rootEntityTest() throws FileNotFoundException {
+        Gson gson = new GsonBuilder().registerTypeAdapter(InboundRootEntity.class, new InboundRootEntityDeserializer()).create();
         FileReader in = new FileReader(SAMPLES_DIR + "kylothCloud-get-data.js");
         BufferedReader br = new BufferedReader(in);
         InboundRootEntity e = gson.fromJson(br, InboundRootEntity.class);
         assertEquals(e.experiences.size(), 1);
     }
 
+    /**
+     * Testa che sia possibile deserializzare correttamente una UserPoint
+     */
     @Test
-    public void userPointEntitySmokeTest() throws FileNotFoundException {
+    public void userPointEntityDeserializeTest() throws FileNotFoundException {
         Gson gson = new GsonBuilder().registerTypeAdapter(UserPointEntity.class, new UserPointDeserializer()).create();
         FileReader in = new FileReader(SAMPLES_DIR + "partial/userPoint.json");
         BufferedReader br = new BufferedReader(in);
@@ -233,8 +257,11 @@ public class SerializersTest {
         assertEquals(up.name, "UP1");
     }
 
+    /**
+     * Testa che sia possibile serializzare correttamente una UserPointEntity
+     */
     @Test
-    public void userPointEntitySerializerTest() {
+    public void userPointEntitySerializeTest() {
         Gson gsonSerializer = new GsonBuilder().registerTypeAdapter(UserPointEntity.class, new UserPointSerializer()).create();
         Gson gsonDeserializer = new GsonBuilder().registerTypeAdapter(UserPointEntity.class, new UserPointDeserializer()).create();
         UserPointEntity up = new UserPointEntity();
@@ -246,17 +273,15 @@ public class SerializersTest {
         assertEquals(up.name, upD.name);
     }
 
-    @Test
-    public void telemetryEntitySerializerTest() {
-        // TODO
-    }
-
+    /**
+     * Testa che sia possibile serializzare correttamente un albero di dati in uscita
+     */
     @Test
     public void outboundRootSerializerTest() {
         Gson gsonSerializer = new GsonBuilder().registerTypeAdapter(OutboundRootEntity.class, new OutboundRootSerializer()).create();
         OutboundRootEntity ore = new OutboundRootEntity();
-        ore.data = new ArrayList<OutboundDataEntity>();
-        OutboundDataEntity ode = new OutboundDataEntity();
+        ore.data = new ArrayList<OutboundExperienceDataEntity>();
+        OutboundExperienceDataEntity ode = new OutboundExperienceDataEntity();
         ode.experience = TestFixtures.EXPERIENCES_FIXTURE_EXPERIENCE_1_UUID;
         ode.userPoints = new ArrayList<UserPointEntity>();
         UserPointEntity up = new UserPointEntity();

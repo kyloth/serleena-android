@@ -46,7 +46,7 @@ import com.google.gson.stream.JsonReader;
 import com.kyloth.serleena.synchronization.InboundStream;
 import com.kyloth.serleena.synchronization.InboundStreamParser;
 import com.kyloth.serleena.synchronization.kylothcloud.InboundRootEntity;
-import com.kyloth.serleena.synchronization.kylothcloud.RootEntityDeserializer;
+import com.kyloth.serleena.synchronization.kylothcloud.InboundRootEntityDeserializer;
 
 import java.io.InputStreamReader;
 
@@ -54,7 +54,7 @@ import java.io.InputStreamReader;
  * Concretizza InboundStreamParser in modo da poter consumare
  * stream JSON in arrivo da KylothCloud.
  *
- * @use Viene usato da KylothCloudSynchronizer per trasformare i dati in arrivo da KylothCloud, raccolti in un InboundStream da un INetProxy, in un formato intermedio somministrabile a un InboundDumpBuilder.
+ * @use Viene usato da Synchronizer per trasformare i dati in arrivo da KylothCloud, raccolti in un InboundStream da un INetProxy, in un formato intermedio somministrabile a un InboundDumpBuilder.
  * @author Tobia Tesan <tobia.tesan@gmail.com>
  */
 public class CloudJSONInboundStreamParser implements InboundStreamParser {
@@ -77,7 +77,7 @@ public class CloudJSONInboundStreamParser implements InboundStreamParser {
     @Override
     public InboundRootEntity parse() {
         if (stream instanceof CloudJSONInboundStream) {
-            Gson gson = new GsonBuilder().registerTypeAdapter(InboundRootEntity.class, new RootEntityDeserializer()).create();
+            Gson gson = new GsonBuilder().registerTypeAdapter(InboundRootEntity.class, new InboundRootEntityDeserializer()).create();
             InputStreamReader reader = new InputStreamReader(stream);
             JsonReader jsr = new JsonReader(reader);
             InboundRootEntity root = gson.fromJson(jsr, InboundRootEntity.class);

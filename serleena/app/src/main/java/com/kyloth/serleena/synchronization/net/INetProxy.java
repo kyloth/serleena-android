@@ -46,10 +46,9 @@ import com.kyloth.serleena.synchronization.OutboundStream;
 import java.io.IOException;
 
 /**
- * Fornisce un'interfaccia ad alto livello verso il
- * servizio remoto.
+ * Fornisce un'interfaccia ad alto livello verso il servizio remoto.
  *
- * @use Viene utilizzato da KylothCloudSynchronizer, che ne usa una istanzia
+ * @use Viene utilizzato da Synchronizer, che ne usa una istanza
  *        per poter dialogare con un servizio remoto utilizzando primitive ad
  *        alto livello.
  * @author Tobia Tesan <tobia.tesan@gmail.com>
@@ -60,41 +59,54 @@ public interface INetProxy {
      * Ritorna un OutboundStream in cui scrivere per inviare dati al servizio remoto.
      *
      * @return Un OutboundStream in cui scrivere i dati per il servizio remoto.
+     * @throws IOException se vi e' un problema di comunicazione con il servizio remoto
+     * @throws AuthException se il servizio remoto ha negato il permesso
      */
-    OutboundStream send() throws AuthException, IOException;
+    OutboundStream write() throws AuthException, IOException;
 
     /**
      * Richiede i dati di sincronizzazione dal servizio remoto.
      *
      * @return Un InboundStream da cui leggere i dati in forma grezza provenienti
      *         dal servizio remoto.
+     *
+     * @throws IOException se vi e' un problema di comunicazione con il servizio remoto
+     * @throws AuthException se il servizio remoto ha negato il permesso     *
      */
-    InboundStream get() throws IOException, AuthException;
+    InboundStream read() throws IOException, AuthException;
 
     /**
      * Richiede la preautorizzazione con il servizio remoto.
      *
      * @return La stringa con il token temporaneo da visualizzare che
-     *         l'utente dovra' poi confermare sull'interfaccia cloud..
+     *         l'utente dovra' poi confermare sull'interfaccia cloud.
+     * @throws IOException se vi e' un problema di comunicazione con il servizio remoto
+     * @throws AuthException se il servizio remoto ha negato il permesso
      */
     String preAuth() throws IOException, AuthException;
 
     /**
      * Richiede di eseguire la procedura di autorizzazione permanente contro
      * il servizio remoto.
+     *
+     * @throws IOException se vi e' un problema di comunicazione con il servizio remoto
+     * @throws AuthException se il servizio remoto ha negato il permesso
      */
     void auth() throws IOException, AuthException;
 
     /**
      * Disconnette dal servizio remoto
+     *
+     * @throws NotConnectedException se non vi e' alcuna connessione aperta
      */
     void disconnect() throws NotConnectedException;
 
     /**
-     * Verifica se l'ultima operazione di send() o get() e' andata a buon fine
+     * Verifica se l'ultima operazione di write() o read() e' andata a buon fine
+     *
      * @return true se e' andata a buon fine, altrimenti false oppure solleva eccezione
-     * @throws IOException
-     * @throws AuthException
+     * @throws IOException se vi e' stato un problema di comunicazione con il servizio remoto
+     * @throws AuthException se il servizio remoto ha negato il permesso
      */
     boolean success() throws IOException, AuthException;
 }
