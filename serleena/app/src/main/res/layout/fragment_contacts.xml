@@ -5,14 +5,14 @@
               tools:context="com.kyloth.serleena.view.fragments.ContactsFragment">
 
     <ImageView
-        android:layout_width="85px"
-        android:layout_height="85px"
+        android:layout_width="85dp"
+        android:layout_height="85dp"
         android:id="@+id/contact_image"
         android:contentDescription="@string/contact_image"
         android:layout_gravity="center_horizontal|top"
         android:src="@drawable/contact"
-        android:layout_marginTop="10px"
-        android:layout_marginBottom="5px"/>
+        android:layout_marginTop="10dp"
+        android:layout_marginBottom="5dp"/>
 
     <TextView
         android:layout_width="wrap_content"

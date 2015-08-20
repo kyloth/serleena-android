@@ -4,7 +4,7 @@
              android:layout_height="match_parent"
               android:orientation="vertical"
              tools:context="com.kyloth.serleena.view.fragments.WeatherFragment"
-              android:padding="5px" >
+              android:padding="5dp" >
 
     <TextView
         android:id="@+id/weather_date_text"
