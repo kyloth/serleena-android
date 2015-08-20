@@ -23,7 +23,8 @@ android {
       unitTests.returnDefaultValues = true
     }
     lintOptions {
-        disable 'GradleDependency', 'OldTargetApi' // API 19 e' prescritta dal capitolato
+        disable 'GradleDependency', 'OldTargetApi', // API 19 e' prescritta dal capitolato
+                'IconMissingDensityFolder' // il dispositivo e' solo MDPI secondo  http://www.kyloth.net/download/Kyloth-Development-SDK.pdf
     }
 }
 
