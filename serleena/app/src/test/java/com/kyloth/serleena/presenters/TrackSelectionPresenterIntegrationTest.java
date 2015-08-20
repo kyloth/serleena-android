@@ -104,6 +104,10 @@ public class TrackSelectionPresenterIntegrationTest {
 
     private TestingActivity activity;
     private SQLiteDatabase db;
+    final String MENU_EXPERIENCE_SEL_LABEL = RuntimeEnvironment.application.getResources().getString(R.string.menu_experienceSelectionFragment);
+    final String MENU_TRACK_SEL_LABEL = RuntimeEnvironment.application.getResources().getString(R.string.menu_trackSelectionFragment);
+    final String MENU_MAP_LABEL = RuntimeEnvironment.application.getResources().getString(R.string.menu_mapFragment);
+    final String MENU_EXPERIENCE_LABEL = RuntimeEnvironment.application.getResources().getString(R.string.menu_experienceFragment);
 
     @Before
     public void initialize() {
@@ -134,7 +138,7 @@ public class TrackSelectionPresenterIntegrationTest {
         ListAdapter adapter = menuFragment.getListAdapter();
         ListFragment expFragment = null;
         for (int i = 0; i < adapter.getCount(); i++)
-            if (adapter.getItem(i).toString().equals("Esperienza"))
+            if (adapter.getItem(i).toString().equals(MENU_EXPERIENCE_LABEL))
                 expFragment = (ListFragment) adapter.getItem(i);
         activity.onObjectSelected(expFragment);
         expFragment.onResume();
@@ -156,7 +160,7 @@ public class TrackSelectionPresenterIntegrationTest {
     public void viewShouldShowTracksOfActiveExperience() {
         ListFragment expFrag =
                 (ListFragment) switchToFragmentInExperienceFragment(
-                        "Imposta Esperienza");
+                        MENU_EXPERIENCE_SEL_LABEL);
         IExperience experience = null;
         for (int i = 0; i < expFrag.getListAdapter().getCount(); i++)
             if (((IExperience)expFrag.getListAdapter().getItem(i))
@@ -167,7 +171,7 @@ public class TrackSelectionPresenterIntegrationTest {
 
         ListFragment trackFragment =
                 (ListFragment) switchToFragmentInExperienceFragment(
-                        "Imposta Percorso");
+                        MENU_TRACK_SEL_LABEL);
         assertFragmentContainsTracks(trackFragment, experience.getTracks());
     }
 
@@ -181,7 +185,7 @@ public class TrackSelectionPresenterIntegrationTest {
             throws NoTrackCrossingException, NoActiveTrackException {
         ListFragment expFrag =
                 (ListFragment) switchToFragmentInExperienceFragment(
-                        "Imposta Esperienza");
+                        MENU_EXPERIENCE_SEL_LABEL);
         for (int i = 0; i < expFrag.getListAdapter().getCount(); i++)
             if (((IExperience)expFrag.getListAdapter().getItem(i))
                     .getName().equals("experience1")) {
@@ -190,7 +194,7 @@ public class TrackSelectionPresenterIntegrationTest {
 
         ListFragment trackFragment =
                 (ListFragment) switchToFragmentInExperienceFragment(
-                        "Imposta Percorso");
+                        MENU_TRACK_SEL_LABEL);
         ITrack track = null;
         for (int i = 0; i < trackFragment.getListAdapter().getCount(); i++)
             if (((ITrack)trackFragment.getListAdapter().getItem(i))

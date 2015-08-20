@@ -112,6 +112,10 @@ public class TrackPresenterIntegrationTest {
     private SQLiteDatabase db;
     private ShadowLocationManager slm;
     private SerleenaDataSource dataSource;
+    final String MENU_EXPERIENCE_SEL_LABEL = RuntimeEnvironment.application.getResources().getString(R.string.menu_experienceSelectionFragment);
+    final String MENU_EXPERIENCE_LABEL = RuntimeEnvironment.application.getResources().getString(R.string.menu_experienceFragment);
+    final String MENU_TRACK_LABEL = RuntimeEnvironment.application.getResources().getString(R.string.menu_trackFragment);
+    final String MENU_TRACK_SEL_LABEL = RuntimeEnvironment.application.getResources().getString(R.string.menu_trackSelectionFragment);
 
     @Before
     public void initialize() {
@@ -155,13 +159,13 @@ public class TrackPresenterIntegrationTest {
 
         activateExperienceByName(
                 (ListFragment) switchToFragmentInExperienceFragment(
-                        "Imposta Esperienza"),
+                        MENU_EXPERIENCE_SEL_LABEL),
                 "experience1");
     }
 
     private void gotoFragment() {
         fragment = (TrackFragment) switchToFragmentInExperienceFragment(
-                "Percorso");
+                MENU_TRACK_LABEL);
 
         View v = fragment.getView();
         orientationWidget =
@@ -192,12 +196,12 @@ public class TrackPresenterIntegrationTest {
     public void fragmentShouldShowNameOfActiveTrack() {
         ListFragment trackSelectionFragment =
                 (ListFragment) switchToFragmentInExperienceFragment(
-                        "Imposta Percorso");
+                        MENU_TRACK_SEL_LABEL);
         activateTrackByName(trackSelectionFragment, "Track 1");
         gotoFragment();
         assertEquals("Track 1", trackNameText.getText());
 
-        switchToFragmentInExperienceFragment("Imposta Percorso");
+        switchToFragmentInExperienceFragment(MENU_TRACK_SEL_LABEL);
         activateTrackByName(trackSelectionFragment, "Track 2");
         gotoFragment();
         assertEquals("Track 2", trackNameText.getText());
@@ -211,7 +215,7 @@ public class TrackPresenterIntegrationTest {
     public void presenterShouldSetViewWithDeltaTime() {
         ListFragment trackSelectionFragment =
                 (ListFragment) switchToFragmentInExperienceFragment(
-                        "Imposta Percorso");
+                        MENU_TRACK_SEL_LABEL);
         activateTrackByName(trackSelectionFragment, "Track 1");
         gotoFragment();
 
@@ -252,7 +256,7 @@ public class TrackPresenterIntegrationTest {
     public void shouldBePossibleToAdvanceManuallyThroughATrack() {
         ListFragment trackSelectionFragment =
                 (ListFragment) switchToFragmentInExperienceFragment(
-                        "Imposta Percorso");
+                        MENU_TRACK_SEL_LABEL);
         activateTrackByName(trackSelectionFragment, "Track 1");
         gotoFragment();
 
@@ -277,7 +281,7 @@ public class TrackPresenterIntegrationTest {
     public void viewShouldShowTitleOfActiveTrackWhenEnded() {
         ListFragment trackSelectionFragment =
                 (ListFragment) switchToFragmentInExperienceFragment(
-                        "Imposta Percorso");
+                        MENU_TRACK_SEL_LABEL);
         activateTrackByName(trackSelectionFragment, "Track 1");
         gotoFragment();
 
@@ -298,7 +302,7 @@ public class TrackPresenterIntegrationTest {
     public void shouldBePossibleToAdvanceThroughATrack() {
         ListFragment trackSelectionFragment =
                 (ListFragment) switchToFragmentInExperienceFragment(
-                        "Imposta Percorso");
+                        MENU_TRACK_SEL_LABEL);
         activateTrackByName(trackSelectionFragment, "Track 1");
         gotoFragment();
 
@@ -330,7 +334,7 @@ public class TrackPresenterIntegrationTest {
     public void viewShoulsShowDistanceToNextCheckpoint() {
         ListFragment trackSelectionFragment =
                 (ListFragment) switchToFragmentInExperienceFragment(
-                        "Imposta Percorso");
+                        MENU_TRACK_SEL_LABEL);
         activateTrackByName(trackSelectionFragment, "Track 1");
         gotoFragment();
 
@@ -365,7 +369,7 @@ public class TrackPresenterIntegrationTest {
     public void viewShouldShowCorrectHeadingTowardsNextCheckpoint() {
         ListFragment trackSelectionFragment =
                 (ListFragment) switchToFragmentInExperienceFragment(
-                        "Imposta Percorso");
+                        MENU_TRACK_SEL_LABEL);
         activateTrackByName(trackSelectionFragment, "Track 1");
         BackgroundLocationManager blm =
                 (BackgroundLocationManager) Shadows.shadowOf(
@@ -446,7 +450,7 @@ public class TrackPresenterIntegrationTest {
         ListAdapter adapter = menuFragment.getListAdapter();
         ListFragment expFragment = null;
         for (int i = 0; i < adapter.getCount(); i++)
-            if (adapter.getItem(i).toString().equals("Esperienza"))
+            if (adapter.getItem(i).toString().equals(MENU_EXPERIENCE_LABEL))
                 expFragment = (ListFragment) adapter.getItem(i);
         activity.onObjectSelected(expFragment);
         expFragment.onResume();

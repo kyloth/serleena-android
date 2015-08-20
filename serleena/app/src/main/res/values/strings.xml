@@ -45,4 +45,15 @@
     <string name="track_end">FINE</string>
     <string name="track_noActiveTrack">No active track</string>
     <string name="weather_noInfo">Nessuna informazione disponibile</string>
+    <string name="menu_trackFragment">Percorso</string>
+    <string name="menu_mapFragment">Mappa</string>
+    <string name="menu_contactsFragment">Contatti</string>
+    <string name="menu_trackSelectionFragment">Selezione Percorso</string>
+    <string name="menu_experienceSelectionFragment">Selezione Esperienza</string>
+    <string name="menu_experienceFragment">Esperienza</string>
+    <string name="menu_syncFragment">Sincronizzazione</string>
+    <string name="menu_compassFragment">Bussola</string>
+    <string name="menu_weatherFragment">Meteo</string>
+    <string name="menu_quitFragment">Esci</string>
+    <string name="menu_telemetryFragment">Tracciamento</string>
 </resources>

@@ -120,6 +120,7 @@ public class WeatherPresenterIntegrationTest {
     private int[] months = new int[7];
     private int[] years = new int[7];
     private int[] timestamps = new int[7];
+    final String MENU_WEATHER_LABEL = RuntimeEnvironment.application.getResources().getString(R.string.menu_weatherFragment);
 
     @Before
     public void initialize() {
@@ -156,7 +157,7 @@ public class WeatherPresenterIntegrationTest {
                 .findFragmentById(R.id.main_container);
         for (int i = 0; i < menu.getListAdapter().getCount(); i++) {
             Fragment f = (Fragment) menu.getListAdapter().getItem(i);
-            if (f.toString().equals("Meteo"))
+            if (f.toString().equals(MENU_WEATHER_LABEL))
                 fragment = (WeatherFragment) f;
         }
 

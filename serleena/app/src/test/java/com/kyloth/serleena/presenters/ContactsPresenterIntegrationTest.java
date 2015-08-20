@@ -100,6 +100,8 @@ public class ContactsPresenterIntegrationTest {
         }
     }
 
+    final String MENU_CONTACTS_LABEL = RuntimeEnvironment.application.getResources().getString(R.string.menu_contactsFragment);
+
     private TestSerleenaActivity activity;
     private ContactsFragment fragment;
     private SQLiteDatabase db;
@@ -129,7 +131,7 @@ public class ContactsPresenterIntegrationTest {
         ListAdapter adapter = menuFragment.getListAdapter();
         fragment = null;
         for (int i = 0; i < adapter.getCount(); i++)
-            if (adapter.getItem(i).toString().equals("Autorità locali"))
+            if (adapter.getItem(i).toString().equals(MENU_CONTACTS_LABEL))
                 fragment = (ContactsFragment) adapter.getItem(i);
         activity.onObjectSelected(fragment);
 
