@@ -32,7 +32,7 @@ package com.kyloth.serleena.synchronization;
 
 import java.io.IOException;
 
-public interface IKylothCloudSynchronizer {
+public interface ISynchronizer {
     String preAuth()  throws AuthException, IOException;
     void auth()  throws AuthException, IOException;
     void sync() throws AuthException, IOException;

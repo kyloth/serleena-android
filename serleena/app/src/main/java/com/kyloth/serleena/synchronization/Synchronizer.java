@@ -62,7 +62,7 @@ import java.io.IOException;
  * @use Viene usato dall'Activity come unico entry point per le operazioni di sincronizzazione, dopo avergli fornito un dataSource e un dumpLoader (che possono e tipicamente sono la stesso oggetto)e l'URL del servizio remoto. Si faccia riferimento ai diagrammi di sequenza della ST per i dettagli della procedura di sincronizzazione.
  * @field instance la singola istanza
  */
-public class Synchronizer implements IKylothCloudSynchronizer {
+public class Synchronizer implements ISynchronizer {
     static Synchronizer instance;
     IPersistenceDataSink sink;
     IPersistenceDataSource source;

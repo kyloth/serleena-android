@@ -45,7 +45,7 @@ import com.kyloth.serleena.common.SyncStatusEnum;
 import com.kyloth.serleena.presentation.ISyncPresenter;
 import com.kyloth.serleena.presentation.ISyncView;
 import com.kyloth.serleena.synchronization.AuthException;
-import com.kyloth.serleena.synchronization.IKylothCloudSynchronizer;
+import com.kyloth.serleena.synchronization.ISynchronizer;
 import com.kyloth.serleena.synchronization.Synchronizer;
 
 import java.io.IOException;
@@ -65,7 +65,7 @@ public class SyncPresenter implements ISyncPresenter {
 
     private ISyncView view;
     private ISerleenaActivity activity;
-    IKylothCloudSynchronizer synchronizer;
+    ISynchronizer synchronizer;
     private static final URL KYLOTH_PORTAL_URL;
     Thread syncingThread;
 

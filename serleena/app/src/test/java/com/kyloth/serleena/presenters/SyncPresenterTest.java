@@ -35,8 +35,6 @@ import org.junit.Before;
 import org.junit.runner.RunWith;
 import static org.junit.Assert.*;
 
-import android.app.Activity;
-
 import java.io.IOException;
 
 import org.robolectric.Robolectric;
@@ -48,7 +46,7 @@ import static org.mockito.Mockito.*;
 import com.kyloth.serleena.BuildConfig;
 import com.kyloth.serleena.common.SyncStatusEnum;
 import com.kyloth.serleena.activity.SerleenaActivity;
-import com.kyloth.serleena.synchronization.IKylothCloudSynchronizer;
+import com.kyloth.serleena.synchronization.ISynchronizer;
 import com.kyloth.serleena.synchronization.AuthException;
 import com.kyloth.serleena.presentation.ISyncView;
 
@@ -60,14 +58,14 @@ public class SyncPresenterTest {
     SerleenaActivity activity;
     ISyncView view;
     SyncPresenter presenter;
-    IKylothCloudSynchronizer synchronizer;
+    ISynchronizer synchronizer;
 
     @Before
     public void initialize() {
         activity = Robolectric.buildActivity(SerleenaActivity.class)
                    .create().start().resume().visible().get();
         view = mock(ISyncView.class);
-        synchronizer = mock(IKylothCloudSynchronizer.class);
+        synchronizer = mock(ISynchronizer.class);
         presenter = new SyncPresenter(view, activity);
         presenter.synchronizer = synchronizer;
     }
