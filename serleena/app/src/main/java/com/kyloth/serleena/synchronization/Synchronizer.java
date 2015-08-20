@@ -72,6 +72,9 @@ public class Synchronizer implements ISynchronizer {
         this.source = source;
     }
 
+    // Metodo di utilita' per poter resettare lo stato del singleton negli unit test del package
+    static void __reset() { instance = null; }
+
     /**
      * Ritorna l'istanza unica di Synchronizer
      *

@@ -28,6 +28,15 @@
 ///////////////////////////////////////////////////////////////////////////////
 
 
+/**
+ * Name: SynchronizerTest.java
+ * Package: com.kyloth.serleena.synchronization
+ * Author: Tobia Tesan
+ *
+ * History:
+ * Version  Programmer        Changes
+ * 0.0.1    Tobia Tesan       Creazione file
+ */
 package com.kyloth.serleena.synchronization;
 
 import org.junit.Test;
@@ -67,8 +76,12 @@ public class SynchronizerTest {
         exps.add(exp_1);
         exps.add(exp_2);
         when(source.getExperiences()).thenReturn(exps);
+        Synchronizer.__reset();
     }
 
+    /**
+     * Testa l'unicita' dell'istanza di Synchronizer
+     */
     @Test
     public void testGetInstance() {
         Synchronizer sync = Synchronizer.getInstance(proxy, sink, source);
@@ -76,28 +89,75 @@ public class SynchronizerTest {
         assertEquals(sync, sync2);
     }
 
+    /**
+     * Testa che il Synchronizer ritorni correttamente il token ottenuto dal proxy
+     */
     @Test
-    public void testPreAuth() throws AuthException, IOException {
-        when(proxy.preAuth()).thenReturn("OK");
+    public void testPreAuthTokenIsHandedOver() throws AuthException, IOException {
+        when(proxy.preAuth()).thenReturn("TOKEN");
         Synchronizer sync = Synchronizer.getInstance(proxy, sink, source);
         String s = sync.preAuth();
-        assertEquals("OK", s);
+        assertEquals("TOKEN", s);
     }
 
+    /**
+     * Testa che il Synchronizer chiami correttamente il proxy quando chiamato auth
+     */
     @Test
-    public void testAuth() throws AuthException, IOException {
-        when(proxy.preAuth()).thenReturn("OK");
+    public void testAuthIsForwarded() throws AuthException, IOException {
+        when(proxy.preAuth()).thenReturn("TOKEN");
         Synchronizer sync = Synchronizer.getInstance(proxy, sink, source);
         sync.auth();
         verify(proxy).auth();
     }
 
-    @Test
-    public void testSyncNullProxy() throws Exception {
-        Synchronizer sync = Synchronizer.getInstance(null, sink, source);
-        exception.expect(RuntimeException.class);
-        exception.expect(NullPointerException.class);
-        sync.sync();
+    /**
+     * Testa che Synchronizer.preAuth rilanci eccezioni causate dal proxy
+     */
+    @Test(expected = AuthException.class)
+    public void testPreAuthExceptionIsRethrown() throws AuthException, IOException {
+        doThrow(AuthException.class).when(proxy).auth();
+        Synchronizer sync = Synchronizer.getInstance(proxy, sink, source);
+        sync.auth();
     }
 
+    /**
+     * Testa che Synchronizer.preAuth ritorni eventuali eccezioni causate dal proxy
+     */
+    @Test(expected = IOException.class)
+    public void testPreAuthIOExceptionIsRethrown() throws AuthException, IOException {
+        doThrow(IOException.class).when(proxy).auth();
+        Synchronizer sync = Synchronizer.getInstance(proxy, sink, source);
+        sync.auth();
+    }
+
+    /**
+     * Testa che Synchronizer.auth rilanci eccezioni causate dal proxy
+     */
+    @Test(expected = AuthException.class)
+    public void testAuthExceptionIsRethrown() throws AuthException, IOException {
+        doThrow(AuthException.class).when(proxy).auth();
+        Synchronizer sync = Synchronizer.getInstance(proxy, sink, source);
+        sync.auth();
+    }
+
+    /**
+     * Testa che Synchronizer.auth ritorni eventuali eccezioni causate dal proxy
+     */
+    @Test(expected = IOException.class)
+    public void testIOExceptionIsRethrown() throws AuthException, IOException {
+        doThrow(IOException.class).when(proxy).auth();
+        Synchronizer sync = Synchronizer.getInstance(proxy, sink, source);
+        sync.auth();
+    }
+
+    /**
+     * Testa che il Synchronizer ritorni una RunTimeException se chiamato senza un proxy
+     * @throws Exception
+     */
+    @Test(expected = RuntimeException.class)
+    public void testSyncNullProxyResultsInRuntimeException() throws Exception {
+        Synchronizer sync = Synchronizer.getInstance(null, sink, source);
+        sync.sync();
+    }
 }
