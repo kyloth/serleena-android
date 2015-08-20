@@ -68,7 +68,6 @@ import static java.lang.Math.round;
  * @version 0.1
  */
 public class CloudSerleenaSQLiteInboundDumpBuilder implements InboundDumpBuilder {
-    // TODO: Effettivamente se prende solo la root potrebbe non meritare il nome builder. D'altra parte e' inutile fare diversamente.
     InboundRootEntity root;
     private int telemCounter;
     private int upointCounter;
