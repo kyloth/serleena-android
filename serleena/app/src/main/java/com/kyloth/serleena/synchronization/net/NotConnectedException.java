@@ -28,10 +28,20 @@
 ///////////////////////////////////////////////////////////////////////////////
 
 
+/**
+ * Name: NotConnectedException.java
+ * Package: com.kyloth.serleena.synchronization.net
+ * Author: Tobia Tesan
+ *
+ * History:
+ * Version  Programmer        Changes
+ * 0.0.1    Tobia Tesan       Creazione file
+ */
+
 package com.kyloth.serleena.synchronization.net;
 
 /**
- * Created by tobia on 18/08/15.
+ * Eccezione restituita quando vengono richieste operazioni che presuppongono una connessione, ma il dispositivo non e' connesso.
  */
 public class NotConnectedException extends Exception {
     public NotConnectedException(String s) {
