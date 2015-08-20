@@ -87,11 +87,11 @@ public class TrackTest {
         when(trackStorage.getCheckpoints()).thenReturn(
                 new ListAdapter<Checkpoint>(checkpointList));
 
-        TelemetryEvent e1 = new CheckpointReachedTelemetryEvent(100, 0);
+        TelemetryEvent e1 = new CheckpointReachedTelemetryEvent(100, 1);
         List<TelemetryEvent> ll = new ArrayList<>(); ll.add(e1);
         when(telStor1.getEvents()).thenReturn(ll);
 
-        TelemetryEvent e2 = new CheckpointReachedTelemetryEvent(200, 0);
+        TelemetryEvent e2 = new CheckpointReachedTelemetryEvent(200, 1);
         List<TelemetryEvent> lll = new ArrayList<>(); lll.add(e2);
         when(telStor2.getEvents()).thenReturn(lll);
 

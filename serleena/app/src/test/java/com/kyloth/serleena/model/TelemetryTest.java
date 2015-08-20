@@ -50,6 +50,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.android.internal.util.Predicate;
+import com.kyloth.serleena.common.CheckpointReachedTelemetryEvent;
 import com.kyloth.serleena.common.TelemetryEvent;
 import com.kyloth.serleena.persistence.ITelemetryStorage;
 
@@ -147,22 +148,23 @@ public class TelemetryTest {
     }
 
     /**
-     * Verifica che il metodo getDuration restituisca il timestamp
-     * maggiore tra quelli degli eventi relativi al tracciamento.
+     * Verifica che il metodo getDuration restituisca il delta dell'ultimo
+     * evento relativi al tracciamento.
      */
     @Test
-    public void getDurationShouldReturnGreatestTimestamp() {
-        TelemetryEvent te1 = mock(TelemetryEvent.class);
-        when(te1.timestamp()).thenReturn(20);
-        TelemetryEvent te2 = mock(TelemetryEvent.class);
-        when(te2.timestamp()).thenReturn(30);
+    public void getDurationShouldReturnLatestTimestamp() {
+        CheckpointReachedTelemetryEvent te1 = new CheckpointReachedTelemetryEvent(20L, 1);
+        CheckpointReachedTelemetryEvent te2 = new CheckpointReachedTelemetryEvent(25L, 2);
+        CheckpointReachedTelemetryEvent te3 = new CheckpointReachedTelemetryEvent(30L, 3);
         ITelemetryStorage ts = mock(ITelemetryStorage.class);
         List<TelemetryEvent> list = new ArrayList<>();
         list.add(te1);
         list.add(te2);
+        list.add(te3);
         when(ts.getEvents()).thenReturn(list);
-
-        assertTrue(new Telemetry(ts).getDuration() == 30);
+        Telemetry telemetry = new Telemetry(ts);
+        assertEquals(telemetry.startTimestamp(), 20L);
+        assertEquals(new Telemetry(ts).getDuration(), 10L);
     }
 
 }

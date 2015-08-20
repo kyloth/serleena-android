@@ -45,13 +45,13 @@ package com.kyloth.serleena.common;
  * Rappresenta un generico evento di tracciamento, individuato dall'istante di campionamento.
  *
  * @use Viene istanziato da sensors.TelemetryManager e restituito al codice client da oggetti di interfaccia ITelemetry, che restituiscono gli eventi di Tracciamento associati ad essi. Viene inoltre utilizzato dai DAO per la persistenza dei Tracciamenti.
- * @field timestamp : int Secondi dall'avvio del Tracciamento all'istante di campionamento dell'evento
+ * @field timestamp : long UNIX timestamp in millisecondi
  * @author  Filippo Sestini <sestini.filippo@gmail.com>
  * @version 1.0
  */
 public abstract class TelemetryEvent {
 
-    private final int timestamp;
+    private final long timestamp;
 
     /**
      * Crea un nuovo oggetto TelemetryEvent.
@@ -59,21 +59,19 @@ public abstract class TelemetryEvent {
      * Poichè la classe è astratta, questo costruttore può essere invocato
      * solamente da sue sottoclassi.
      *
-     * @param timestamp Istante di campionamento dell'evento,
-     *                  espresso in secondi trascorsi dall'avvio del
-     *                  Tracciamento.
+     * @param timestamp UNIX timestamp del campionamento in millisecondi.
      */
-    public TelemetryEvent(int timestamp) {
+    public TelemetryEvent(long timestamp) {
         this.timestamp = timestamp;
     }
 
     /**
      * Restituisce l'istante di tempo in cui l'evento è stato campionato,
-     * espresso in secondi trascorsi dall'avvio del Tracciamento.
+     * espresso in millisecondi in formato UNIX timestamp.
      *
-     * @return Secondi trascorsi dall'avvio del Tracciamento.
+     * @return UNIX timestamp in millisecondi
      */
-    public int timestamp() {
+    public long timestamp() {
         return this.timestamp;
     }
 

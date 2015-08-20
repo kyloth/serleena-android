@@ -56,7 +56,7 @@ import java.util.ArrayList;
  * @field nextCheckpointIndex : int
  * @field observers : ArrayList<ITrackCrossingObserver>
  * @field trackStartTimestamp : long
- * @field lastPartial : int
+ * @field lastTimestamp : long
 
  * @author Filippo Sestini <sestini.filippo@gmail.com>
  * @version 1.0.0
@@ -69,7 +69,7 @@ public final class TrackCrossing implements ITrackCrossing,
     private int nextCheckpointIndex;
     private ArrayList<ITrackCrossingObserver> observers;
     private long trackStartTimestamp;
-    private int lastPartial;
+    private long lastTimestamp;
 
     /**
      * Crea un oggetto TrackCrossing.
@@ -94,7 +94,6 @@ public final class TrackCrossing implements ITrackCrossing,
         if (track == null)
             throw new IllegalArgumentException("Illegal null track");
 
-        lastPartial = 0;
         this.track = track;
         nextCheckpointIndex = -1;
         myAdvanceCheckpoint();
@@ -113,7 +112,8 @@ public final class TrackCrossing implements ITrackCrossing,
 
         return new CheckpointCrossing(
                 nextCheckpointIndex - 1,
-                lastPartial,
+                (int)(lastTimestamp - trackStartTimestamp),
+                lastTimestamp,
                 track);
     }
 
@@ -224,13 +224,9 @@ public final class TrackCrossing implements ITrackCrossing,
     private void myAdvanceCheckpoint() {
         locReachMan.detachObserver(this);
 
-        if (nextCheckpointIndex == 0) {
-            trackStartTimestamp = System.currentTimeMillis() / 1000L;
-            lastPartial = 0;
-        } else if (nextCheckpointIndex > 0) {
-            long now = System.currentTimeMillis() / 1000L;
-            lastPartial = (int) (now - trackStartTimestamp);
-        }
+        lastTimestamp = System.currentTimeMillis() / 1000L;
+        if (nextCheckpointIndex == 0)
+            trackStartTimestamp = lastTimestamp;
 
         if ((nextCheckpointIndex + 1) < track.getCheckpoints().size()) {
             nextCheckpointIndex++;

@@ -59,13 +59,15 @@ public class CheckpointReachedTelemetryEvent extends TelemetryEvent {
     /**
      * Crea un nuovo evento di tracciamento di raggiungimento di un checkpoint.
      *
-     * @param timestamp         Istante di tempo di campionamento,
-     *                          espresso in secondi dall'avvio del Tracciamento.
+     * @param timestamp         UNIX timestamp in millisecondi
      * @param checkpointNumber  Numero del checkpoint raggiunto.
      */
-    public CheckpointReachedTelemetryEvent(int timestamp,
+    public CheckpointReachedTelemetryEvent(long timestamp,
                                            int checkpointNumber) {
         super(timestamp);
+        if (checkpointNumber <= 0)
+            throw new IllegalArgumentException("Illegal null or negative " +
+                    "checkpoint number");
         this.checkpointNumber = checkpointNumber;
     }
 

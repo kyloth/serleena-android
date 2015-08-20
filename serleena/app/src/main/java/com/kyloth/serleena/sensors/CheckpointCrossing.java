@@ -63,9 +63,10 @@ import com.kyloth.serleena.model.NoSuchTelemetryException;
  */
 public class CheckpointCrossing {
 
-    private int index;
-    private int partial;
-    private ITrack track;
+    private final long timestamp;
+    private final int index;
+    private final int partial;
+    private final ITrack track;
 
     /**
      * Crea un nuovo oggetto CheckpointCrossing.
@@ -76,6 +77,7 @@ public class CheckpointCrossing {
      */
     public CheckpointCrossing(int checkpointIndex,
                               int partialTime,
+                              long timestamp,
                               ITrack track) {
         if (checkpointIndex < 0)
             throw new IllegalArgumentException("Illegal checkpoint number");
@@ -83,10 +85,13 @@ public class CheckpointCrossing {
             throw new IllegalArgumentException("Illegal negative time");
         if (track == null)
             throw new IllegalArgumentException("Illegal null track");
+        if (timestamp < 0)
+            throw new IllegalArgumentException("Illegal null timestamp");
 
         this.index = checkpointIndex;
         this.partial = partialTime;
         this.track = track;
+        this.timestamp = timestamp;
     }
 
     /**
@@ -110,6 +115,15 @@ public class CheckpointCrossing {
     }
 
     /**
+     *  Restituisce il timestamp di attraversamento del checkpoint in UNIX time.
+     *
+     * @return Timestamp in millisecondi.
+     */
+    public long timestamp() {
+        return timestamp;
+    }
+
+    /**
      * Restituisce la differenza tra la prestazione migliore per il Percorso
      * e quella rappresentata dall'oggetto, per lo specifico checkpoint.
      *
@@ -130,6 +144,7 @@ public class CheckpointCrossing {
     public int delta()
             throws NoSuchTelemetryException, NoSuchTelemetryEventException {
         ITelemetry best = track.getBestTelemetry();
+        long startTime = best.startTimestamp();
         Predicate<TelemetryEvent> p = new Predicate<TelemetryEvent>() {
             @Override
             public boolean apply(TelemetryEvent telemetryEvent) {
@@ -141,7 +156,7 @@ public class CheckpointCrossing {
         };
         Iterable<TelemetryEvent> events = best.getEvents(p);
         TelemetryEvent event = events.iterator().next();
-        return partial - event.timestamp();
+        return partial - (int)(event.timestamp() - startTime);
     }
 
 }

@@ -73,16 +73,16 @@ public class StreamBuilderTest {
         db.insertOrThrow(SerleenaDatabase.TABLE_TRACKS, null, values);
         values = TestFixtures.pack(TestFixtures.EXPERIENCES_FIXTURE_EXPERIENCE_1_USERPOINT_1);
         db.insertOrThrow(SerleenaDatabase.TABLE_USER_POINTS, null, values);
-        TestDB.telemetryQuery(db, 0, TestFixtures.EXPERIENCES_FIXTURE_EXPERIENCE_1_TRACK_1_UUID);
-        TestDB.checkPointEventQuery(db, 0, 123456, 0, 0);
-        TestDB.checkPointEventQuery(db, 1, 654321, 1, 0);
-
         TestDB.telemetryQuery(db, 1, TestFixtures.EXPERIENCES_FIXTURE_EXPERIENCE_1_TRACK_1_UUID);
-        TestDB.checkPointEventQuery(db, 2, 56789, 0, 1);
-        TestDB.checkPointEventQuery(db, 3, 98765, 1, 1);
+        TestDB.checkPointEventQuery(db, 0, 123456, 1, 1);
+        TestDB.checkPointEventQuery(db, 1, 654321, 2, 1);
+
+        TestDB.telemetryQuery(db, 2, TestFixtures.EXPERIENCES_FIXTURE_EXPERIENCE_1_TRACK_1_UUID);
+        TestDB.checkPointEventQuery(db, 2, 56789, 1, 2);
+        TestDB.checkPointEventQuery(db, 3, 98765, 2, 2);
 
 
-        String JSON_OUTPUT = "[{\"experience\":\"b989daae-9102-409b-abac-e428afe38baf\",\"userPoints\":[{\"latitude\":13.0,\"longitude\":73.0,\"name\":\"Point 0\"}],\"telemetryData\":[{\"events\":[123456000,654321000],\"track\":\"af024d00-e2d5-4fae-8bad-8b16f823a2cc\"}, {\"events\":[56789000,98765000],\"track\":\"af024d00-e2d5-4fae-8bad-8b16f823a2cc\"}]}]";
+        String JSON_OUTPUT = "[{\"experience\":\"b989daae-9102-409b-abac-e428afe38baf\",\"userPoints\":[{\"latitude\":13.0,\"longitude\":73.0,\"name\":\"Punto personalizzato #0\"}],\"telemetryData\":[{\"events\":[123456000,654321000],\"track\":\"af024d00-e2d5-4fae-8bad-8b16f823a2cc\"}, {\"events\":[56789000,98765000],\"track\":\"af024d00-e2d5-4fae-8bad-8b16f823a2cc\"}]}]";
 
         class Foo extends ByteArrayOutputStream implements JSONOutboundStream {
             Foo (int i) { super (i); }

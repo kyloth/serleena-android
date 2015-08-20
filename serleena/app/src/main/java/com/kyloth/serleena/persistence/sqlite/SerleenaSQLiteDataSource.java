@@ -166,8 +166,19 @@ public class SerleenaSQLiteDataSource implements ISerleenaSQLiteDataSource {
      */
     @Override
     public Iterable<SQLiteDAOTelemetry> getTelemetries(SQLiteDAOTrack track) {
+        return getTelemetries(track, true);
+    }
+
+    // HACK per SHANDROID-372
+    @Override
+    public Iterable<SQLiteDAOTelemetry> getTelemetries(SQLiteDAOTrack track, boolean includeGhost) {
         SQLiteDatabase db = dbHelper.getReadableDatabase();
         String where = "telem_track = \"" + track.getUUID() + "\"";
+
+        if (includeGhost == false) {
+            where = "telem_track = \"" + track.getUUID() + "\" AND telem_id != -1";
+        }
+
         Cursor result = db.query(SerleenaDatabase.TABLE_TELEMETRIES,
                 new String[]{"telem_id"}, where, null, null, null, null);
 
@@ -196,8 +207,18 @@ public class SerleenaSQLiteDataSource implements ISerleenaSQLiteDataSource {
      */
     @Override
     public Iterable<UserPoint> getUserPoints(SQLiteDAOExperience experience) {
+        return getUserPoints(experience, false);
+    }
+
+    // HACK per SHANDROID-387
+    @Override
+    public Iterable<UserPoint> getUserPoints(SQLiteDAOExperience experience, boolean localOnly) {
         SQLiteDatabase db = dbHelper.getReadableDatabase();
         String where = "userpoint_experience = \"" + experience.getUUID() + "\"";
+        if (localOnly) {
+            where = "userpoint_experience = \"" + experience.getUUID() + "\" AND userpoint_id > 0";
+        }
+
         Cursor result = db.query(SerleenaDatabase.TABLE_USER_POINTS,
                 new String[] { "userpoint_x", "userpoint_y" }, where, null,
                 null, null, null);
@@ -420,7 +441,7 @@ public class SerleenaSQLiteDataSource implements ISerleenaSQLiteDataSource {
         int valueIndex = result.getColumnIndexOrThrow("eventc_value");
 
         while (result.moveToNext()) {
-            int time = result.getInt(timestampIndex);
+            long time = result.getLong(timestampIndex);
             int value = Integer.parseInt(result.getString(valueIndex));
             TelemetryEvent event =
                     new CheckpointReachedTelemetryEvent(time, value);

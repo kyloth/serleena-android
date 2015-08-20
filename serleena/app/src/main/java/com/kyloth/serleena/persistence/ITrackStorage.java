@@ -72,6 +72,9 @@ public interface ITrackStorage {
      */
     Iterable<ITelemetryStorage> getTelemetries();
 
+    // HACK per SHANDROID-372
+    Iterable<ITelemetryStorage> getTelemetries(boolean includeGhost);
+
     /**
      * Restituisce i Checkpoint che compongono il percorso.
      *

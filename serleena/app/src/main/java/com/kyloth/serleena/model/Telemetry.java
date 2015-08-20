@@ -42,6 +42,7 @@
 package com.kyloth.serleena.model;
 
 import com.android.internal.util.Predicate;
+import com.kyloth.serleena.common.CheckpointReachedTelemetryEvent;
 import com.kyloth.serleena.common.TelemetryEvent;
 import com.kyloth.serleena.persistence.ITelemetryStorage;
 
@@ -119,8 +120,25 @@ class Telemetry implements  ITelemetry {
         Iterable<TelemetryEvent> allEvents = this.getEvents();
         for (TelemetryEvent e : allEvents)
             if (e.timestamp() > duration)
-                duration = e.timestamp();
+                duration = (int)(e.timestamp() - startTimestamp());
         return duration;
+    }
+
+    @Override
+    public long startTimestamp() {
+        Iterable<TelemetryEvent> firstEvent = null;
+        try {
+            firstEvent = getEvents(new Predicate<TelemetryEvent>() {
+                @Override
+                public boolean apply(TelemetryEvent telemetryEvent) {
+                    return ((CheckpointReachedTelemetryEvent) telemetryEvent)
+                            .checkpointNumber() == 1;
+                }
+            });
+        } catch (NoSuchTelemetryEventException e) {
+            throw new RuntimeException("Illegal telemetry without events");
+        }
+        return firstEvent.iterator().next().timestamp();
     }
 
 }

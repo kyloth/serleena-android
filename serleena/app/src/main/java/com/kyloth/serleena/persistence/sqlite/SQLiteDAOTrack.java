@@ -106,7 +106,18 @@ class SQLiteDAOTrack implements ITrackStorage {
      */
     @Override
     public Iterable<ITelemetryStorage> getTelemetries() {
+        return getTelemetries(true);
+    }
+
+    // HACK per SHANDROID-372
+    @Override
+    public Iterable<ITelemetryStorage> getTelemetries(boolean includeGhost) {
         ArrayList<ITelemetryStorage> list = new ArrayList<ITelemetryStorage>();
+        if (includeGhost == false) {
+            for (SQLiteDAOTelemetry t : dataSource.getTelemetries(this, false))
+                list.add(t);
+            return list;
+        }
         for (SQLiteDAOTelemetry t : dataSource.getTelemetries(this))
             list.add(t);
         return list;

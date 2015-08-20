@@ -70,9 +70,14 @@ import static java.lang.Math.round;
 public class CloudSerleenaSQLiteInboundDumpBuilder implements InboundDumpBuilder {
     // TODO: Effettivamente se prende solo la root potrebbe non meritare il nome builder. D'altra parte e' inutile fare diversamente.
     InboundRootEntity root;
+    private int telemCounter;
+    private int upointCounter;
 
     public CloudSerleenaSQLiteInboundDumpBuilder(InboundRootEntity root) {
         this.root = root;
+        telemCounter = -1;        //HACK per SHANDROID-372
+        upointCounter = -1;  // HACK per SHANDROID-387
+
     }
 
     private SerleenaSQLiteInboundDump flush() {
@@ -91,7 +96,7 @@ public class CloudSerleenaSQLiteInboundDumpBuilder implements InboundDumpBuilder
 
     private SerleenaSQLiteInboundDump buildExperiences(Collection<ExperienceEntity> e) {
         SerleenaSQLiteInboundDump res =  new SerleenaSQLiteInboundDump();
-        int telemCounter = 0;
+        //HACK per SHANDROID-372
         for (ExperienceEntity exp : e) {
             res.add("INSERT INTO " + SerleenaDatabase.TABLE_EXPERIENCES +
                     "(`experience_uuid`," +
@@ -100,13 +105,17 @@ public class CloudSerleenaSQLiteInboundDumpBuilder implements InboundDumpBuilder
                     "(\""+exp.uuid.toString()+"\"," +
                     "  \"" + exp.name + "\")");
             // TODO: Manca la region? SHANDROID-291
+
+
             for (UserPointEntity up : exp.userPoints) {
                 res.add("INSERT INTO " + SerleenaDatabase.TABLE_USER_POINTS +
-                        "(`userpoint_x`, " +
+                        "(`userpoint_id`, " +
+                        " `userpoint_x`, " +
                         " `userpoint_y`, " +
                         " `userpoint_experience`)" +
                         " VALUES " +
-                        "(" + up.point.latitude() +"," +
+                        "(" + String.valueOf(upointCounter--) + "," + // HACK per SHANDROID-387
+                        " " + up.point.latitude() +"," +
                         " " + up.point.longitude() + "," +
                         "\"" + exp.uuid.toString() +"\"" +
                         ")");
@@ -167,7 +176,7 @@ public class CloudSerleenaSQLiteInboundDumpBuilder implements InboundDumpBuilder
                             "(telem_id," +
                             "telem_track) " +
                             "VALUES (" +
-                            telemCounter + "," +
+                            String.valueOf(telemCounter) + "," +
                             "\"" + track.uuid.toString() + "\"" +
                             ")");
 
@@ -178,12 +187,12 @@ public class CloudSerleenaSQLiteInboundDumpBuilder implements InboundDumpBuilder
                                 "eventc_value, " +
                                 "eventc_telem) " +
                                 "VALUES (" +
-                                ee + "," +
+                                ee / 1000 + "," +
                                 eventCounter + "," +
-                                telemCounter + ")");
+                                String.valueOf(telemCounter) + ")");
                         eventCounter++;
                     }
-                    telemCounter++;
+                    telemCounter--;
                 }
             }
         }
