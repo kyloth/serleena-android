@@ -44,4 +44,5 @@
     <string name="contacts_noContact">Nessun contatto</string>
     <string name="track_end">FINE</string>
     <string name="track_noActiveTrack">No active track</string>
+    <string name="weather_noInfo">Nessuna informazione disponibile</string>
 </resources>
