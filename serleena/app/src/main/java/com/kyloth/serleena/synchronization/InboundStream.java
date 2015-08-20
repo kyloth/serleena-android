@@ -41,7 +41,7 @@ package com.kyloth.serleena.synchronization;
 
 /**
  * Interfaccia che rappresenta uno stream testuale ricevuto dall'esterno
- * attraverso la mediazione di un idoneo proxy contenente dati grezzi
+ * attraverso la mediazione di un idoneo proxy da cui leggere dati grezzi
  * per la sincronizzazione.
  *
  * @author Tobia Tesan <tobia.tesan@gmail.com>

@@ -49,16 +49,6 @@ import java.io.InputStream;
  * KylothCloud.
  */
 public class CloudJSONInboundStream extends BufferedInputStream implements InboundStream {
-    /**
-     * Constructs a new {@code BufferedInputStream}, providing {@code in} with a buffer
-     * of 8192 bytes.
-     * <p/>
-     * <p><strong>Warning:</strong> passing a null source creates a closed
-     * {@code BufferedInputStream}. All read operations on such a stream will
-     * fail with an IOException.
-     *
-     * @param in the {@code InputStream} the buffer reads from.
-     */
     public CloudJSONInboundStream(InputStream in) {
         super(in);
     }
