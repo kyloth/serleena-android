@@ -31,12 +31,12 @@
 package com.kyloth.serleena.synchronization.kylothcloud;
 
 /**
- * Restituisce il token KylothId che identifica univocamente l'orologio,
+ * Restituisce il token KylothId che identifica univocamente il dispositivo,
  * richiesto dal protocollo di sincronizzazione
  */
 public interface IKylothIdSource {
     /*
-     * @return il KylothId
+     * @restituisce il KylothId
      */
-    public String getKylothId();
+    String getKylothId();
 }
