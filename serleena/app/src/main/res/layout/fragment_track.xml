@@ -10,7 +10,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:textAppearance="?android:attr/textAppearanceMedium"
-        android:text="NESSUN PERCORSO ATTIVO"
+        android:text="@string/activeTrack"
         android:id="@+id/track_name_text"/>
 
     <LinearLayout
@@ -34,14 +34,14 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="00:20:00"
+                android:text="@string/trackPartial"
                 android:id="@+id/last_partial_text"
                 android:layout_gravity="center_horizontal"/>
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="-00:04:00"
+                android:text="@string/trackDelta"
                 android:id="@+id/delta_text"
                 android:layout_gravity="center_horizontal" />
 
@@ -49,7 +49,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:textAppearance="?android:attr/textAppearanceMedium"
-                android:text="200 m"
+                android:text="@string/trackDistance"
                 android:id="@+id/distance_text"
                 android:layout_gravity="center_horizontal" />
 
@@ -57,7 +57,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:textAppearance="?android:attr/textAppearanceMedium"
-                android:text="3/12"
+                android:text="@string/trackProgress"
                 android:id="@+id/checkpoint_numbers_text"
                 android:layout_gravity="center_horizontal" />
         </LinearLayout>

@@ -9,12 +9,12 @@
         android:id="@+id/button_sync"
         android:layout_gravity="center_horizontal|top"
         android:textSize="20sp"
-        android:elegantTextHeight="false"
         android:clickable="true"
         android:layout_marginTop="15dp"
         android:src="@drawable/sync"
         android:background="@null"
-        android:scaleType="fitCenter" />
+        android:scaleType="fitCenter"
+        android:contentDescription="@string/sync_button_text" />
 
     <TextView
         android:layout_width="fill_parent"
@@ -29,7 +29,7 @@
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="New Text"
+        android:text="@string/synctoken"
         android:id="@+id/textview_token"
         android:layout_gravity="center_horizontal|bottom"
         android:textSize="25sp"

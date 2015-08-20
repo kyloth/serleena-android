@@ -375,13 +375,15 @@ public class SerleenaSQLiteDataSource implements ISerleenaSQLiteDataSource {
             double seLon = result.getDouble(seLonIndex);
             byte[] data = Base64.decode(
                     result.getString(base64Index), Base64.DEFAULT);
-
+            result.close();
             return new Quadrant(
                     new GeoPoint(nwLat, nwLon),
                     new GeoPoint(seLat, seLon),
                     BitmapFactory.decodeByteArray(data, 0, data.length));
-        } else
+        } else {
+            result.close();
             throw new NoSuchQuadrantException();
+        }
     }
 
     /**
@@ -517,7 +519,7 @@ public class SerleenaSQLiteDataSource implements ISerleenaSQLiteDataSource {
         int temperatureNightIndex = result.getColumnIndex("weather_temperature_night");
 
         if (result.moveToNext()) {
-            return new SQLiteDAOWeather(
+            SQLiteDAOWeather res = new SQLiteDAOWeather(
                     WeatherForecastEnum.values()[result.getInt(conditionMorningIndex)],
                     WeatherForecastEnum.values()[result.getInt(conditionAfternoonIndex)],
                     WeatherForecastEnum.values()[result.getInt(conditionNightIndex)],
@@ -525,7 +527,10 @@ public class SerleenaSQLiteDataSource implements ISerleenaSQLiteDataSource {
                     result.getInt(temperatureAfternoonIndex),
                     result.getInt(temperatureNightIndex),
                     date);
+            result.close();
+            return res;
         } else {
+            result.close();
             throw new NoSuchWeatherForecastException();
         }
     }

@@ -54,6 +54,7 @@ import com.kyloth.serleena.common.NoTrackCrossingException;
 import com.kyloth.serleena.sensors.NoActiveTrackException;
 import com.kyloth.serleena.view.widgets.CompassWidget;
 
+import java.util.Locale;
 import java.util.concurrent.TimeUnit;
 
 import static java.lang.Math.abs;
@@ -182,7 +183,7 @@ public class TrackFragment extends Fragment implements ITrackView, View.OnClickL
             throw new IllegalArgumentException("Illegal negative partial");
 
         int millis = seconds * 1000;
-        String s = String.format("%02d:%02d",
+        String s = String.format(Locale.US, "%02d:%02d",
                 TimeUnit.MILLISECONDS.toMinutes(millis),
                 TimeUnit.MILLISECONDS.toSeconds(millis) -
                 TimeUnit.MINUTES.toSeconds(TimeUnit.MILLISECONDS.toMinutes(millis))
