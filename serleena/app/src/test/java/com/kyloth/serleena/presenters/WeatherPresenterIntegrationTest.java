@@ -121,6 +121,7 @@ public class WeatherPresenterIntegrationTest {
     private int[] years = new int[7];
     private int[] timestamps = new int[7];
     final String MENU_WEATHER_LABEL = RuntimeEnvironment.application.getResources().getString(R.string.menu_weatherFragment);
+    final String WEATHER_NOINFO = RuntimeEnvironment.application.getResources().getString(R.string.weather_noInfo);
 
     @Before
     public void initialize() {
@@ -246,7 +247,7 @@ public class WeatherPresenterIntegrationTest {
         for (LocationListener listener : slm.getRequestLocationUpdateListeners())
             listener.onLocationChanged(l);
 
-        String last = "Nessuna informazione disponibile";
+        String last = WEATHER_NOINFO;
 
         for (int i = 0; i < 8; i ++) {
             final String lll = last;
