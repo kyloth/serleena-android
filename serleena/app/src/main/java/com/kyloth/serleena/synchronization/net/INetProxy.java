@@ -49,7 +49,7 @@ import java.io.IOException;
  * Fornisce un'interfaccia ad alto livello verso il
  * servizio remoto.
  *
- * @use Viene utilizzato da KylothCloudSynchronizer, che ne usa una istanzia
+ * @use Viene utilizzato da Synchronizer, che ne usa una istanzia
  *        per poter dialogare con un servizio remoto utilizzando primitive ad
  *        alto livello.
  * @author Tobia Tesan <tobia.tesan@gmail.com>

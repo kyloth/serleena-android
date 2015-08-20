@@ -40,7 +40,7 @@
 package com.kyloth.serleena.synchronization;
 
 /**
- * @usa KylothCloudSynchronizer ne usa una istanza per costruire, a partire dalla rappresentazione intermedia fornita da un InboundStreamParser, un dump idoneo ad essere caricato in un dumpLoader fornito dall'Activity (che coincidera' tipicamente con il database dell'applicazione)
+ * @usa Synchronizer ne usa una istanza per costruire, a partire dalla rappresentazione intermedia fornita da un InboundStreamParser, un dump idoneo ad essere caricato in un dumpLoader fornito dall'Activity (che coincidera' tipicamente con il database dell'applicazione)
  * @author Tobia Tesan <tobia.tesan@gmail.com>
  */
 public interface InboundDumpBuilder {

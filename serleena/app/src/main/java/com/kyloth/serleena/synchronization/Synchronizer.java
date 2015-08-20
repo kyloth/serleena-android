@@ -29,7 +29,7 @@
 
 
 /**
- * Name: KylothCloudSynchronizer.java
+ * Name: Synchronizer.java
  * Package: com.kyloth.serleena.synchronization
  * Author: Tobia Tesan
  *
@@ -44,9 +44,7 @@ import com.kyloth.serleena.persistence.IPersistenceDataSink;
 import com.kyloth.serleena.persistence.IPersistenceDataSource;
 import com.kyloth.serleena.synchronization.net.INetProxy;
 import com.kyloth.serleena.synchronization.net.NotConnectedException;
-import com.kyloth.serleena.synchronization.net.SerleenaJSONNetProxy;
 import com.kyloth.serleena.synchronization.kylothcloud.InboundRootEntity;
-import com.kyloth.serleena.synchronization.kylothcloud.LocalEnvKylothIdSource;
 import com.kyloth.serleena.synchronization.kylothcloud.inbound.CloudJSONInboundStream;
 import com.kyloth.serleena.synchronization.kylothcloud.inbound.CloudJSONInboundStreamParser;
 import com.kyloth.serleena.synchronization.kylothcloud.inbound.CloudSerleenaSQLiteInboundDumpBuilder;
@@ -54,8 +52,6 @@ import com.kyloth.serleena.synchronization.kylothcloud.inbound.SerleenaSQLiteInb
 import com.kyloth.serleena.synchronization.kylothcloud.outbound.CloudJSONOutboundStreamBuilder;
 
 import java.io.IOException;
-import java.net.MalformedURLException;
-import java.net.URL;
 
 /**
  * Funge da facade per il sottosistema di sincronizzazione.
@@ -66,14 +62,14 @@ import java.net.URL;
  * @use Viene usato dall'Activity come unico entry point per le operazioni di sincronizzazione, dopo avergli fornito un dataSource e un dumpLoader (che possono e tipicamente sono la stesso oggetto)e l'URL del servizio remoto. Si faccia riferimento ai diagrammi di sequenza della ST per i dettagli della procedura di sincronizzazione.
  * @field instance la singola istanza
  */
-public class KylothCloudSynchronizer implements IKylothCloudSynchronizer {
-    static KylothCloudSynchronizer instance;
+public class Synchronizer implements IKylothCloudSynchronizer {
+    static Synchronizer instance;
     private final static String DEFAULT_URL = "http://localhost:8080";
     IPersistenceDataSink sink;
     IPersistenceDataSource source;
     INetProxy proxy;
 
-    private KylothCloudSynchronizer(INetProxy proxy, IPersistenceDataSink sink, IPersistenceDataSource source) {
+    private Synchronizer(INetProxy proxy, IPersistenceDataSink sink, IPersistenceDataSource source) {
         this.proxy = proxy;
         this.sink = sink;
         this.source = source;
@@ -83,11 +79,11 @@ public class KylothCloudSynchronizer implements IKylothCloudSynchronizer {
         instance = null;
     }
     /**
-     * Ritorna l'istanza unica di KylothCloudSynchronizer
+     * Ritorna l'istanza unica di Synchronizer
      */
-    public static KylothCloudSynchronizer getInstance(INetProxy proxy, IPersistenceDataSink sink, IPersistenceDataSource source) {
+    public static Synchronizer getInstance(INetProxy proxy, IPersistenceDataSink sink, IPersistenceDataSource source) {
         if (instance == null) {
-            instance = new KylothCloudSynchronizer(proxy, sink, source);
+            instance = new Synchronizer(proxy, sink, source);
         }
         return instance;
     }

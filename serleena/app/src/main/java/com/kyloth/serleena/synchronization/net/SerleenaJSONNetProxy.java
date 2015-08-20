@@ -60,7 +60,7 @@ import java.util.Scanner;
  * Concretizza l'interfaccia INetProxy permettendo di dialogare con
  * il servizio KylothCloud.
  *
- * @use Viene utilizzato da KylothCloudSynchronizer, che ne usa una istanzia
+ * @use Viene utilizzato da Synchronizer, che ne usa una istanzia
  *        per poter dialogare con il servizio KylothCloud utilizzando le
  *        primitive ad alto livello prescritte da INetProxy.
  * @author Tobia Tesan <tobia.tesan@gmail.com>

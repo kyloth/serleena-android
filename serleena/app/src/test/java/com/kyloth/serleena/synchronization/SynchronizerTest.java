@@ -42,12 +42,11 @@ import com.kyloth.serleena.persistence.IExperienceStorage;
 import com.kyloth.serleena.persistence.IPersistenceDataSource;
 import com.kyloth.serleena.persistence.IPersistenceDataSink;
 import com.kyloth.serleena.synchronization.net.INetProxy;
-import com.kyloth.serleena.synchronization.net.NotConnectedException;
 
 import java.io.IOException;
 import java.util.ArrayList;
 
-public class KylothCloudSynchronizerTest {
+public class SynchronizerTest {
 
     INetProxy proxy;
     IPersistenceDataSink sink;
@@ -72,15 +71,15 @@ public class KylothCloudSynchronizerTest {
 
     @Test
     public void testGetInstance() {
-        KylothCloudSynchronizer sync = KylothCloudSynchronizer.getInstance(proxy, sink, source);
-        KylothCloudSynchronizer sync2 = KylothCloudSynchronizer.getInstance(proxy, sink, source);
+        Synchronizer sync = Synchronizer.getInstance(proxy, sink, source);
+        Synchronizer sync2 = Synchronizer.getInstance(proxy, sink, source);
         assertEquals(sync, sync2);
     }
 
     @Test
     public void testPreAuth() throws AuthException, IOException {
         when(proxy.preAuth()).thenReturn("OK");
-        KylothCloudSynchronizer sync = KylothCloudSynchronizer.getInstance(proxy, sink, source);
+        Synchronizer sync = Synchronizer.getInstance(proxy, sink, source);
         String s = sync.preAuth();
         assertEquals("OK", s);
     }
@@ -88,14 +87,14 @@ public class KylothCloudSynchronizerTest {
     @Test
     public void testAuth() throws AuthException, IOException {
         when(proxy.preAuth()).thenReturn("OK");
-        KylothCloudSynchronizer sync = KylothCloudSynchronizer.getInstance(proxy, sink, source);
+        Synchronizer sync = Synchronizer.getInstance(proxy, sink, source);
         sync.auth();
         verify(proxy).auth();
     }
 
     @Test
     public void testSyncNullProxy() throws Exception {
-        KylothCloudSynchronizer sync = KylothCloudSynchronizer.getInstance(null, sink, source);
+        Synchronizer sync = Synchronizer.getInstance(null, sink, source);
         exception.expect(RuntimeException.class);
         exception.expect(NullPointerException.class);
         sync.sync();

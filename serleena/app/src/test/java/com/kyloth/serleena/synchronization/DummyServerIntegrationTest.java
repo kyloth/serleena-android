@@ -33,7 +33,6 @@ package com.kyloth.serleena.synchronization;
 
 import android.content.ContentValues;
 import android.database.sqlite.SQLiteDatabase;
-import android.database.sqlite.SQLiteOpenHelper;
 
 import com.google.gson.JsonElement;
 import com.google.gson.JsonParser;
@@ -43,14 +42,12 @@ import com.kyloth.serleena.persistence.sqlite.SerleenaSQLiteDataSink;
 import com.kyloth.serleena.persistence.sqlite.SerleenaSQLiteDataSource;
 import com.kyloth.serleena.persistence.sqlite.TestFixtures;
 import com.kyloth.serleena.synchronization.net.SerleenaJSONNetProxy;
-import com.kyloth.serleena.synchronization.kylothcloud.CheckpointEntity;
 import com.kyloth.serleena.synchronization.kylothcloud.IKylothIdSource;
 
 import org.eclipse.jetty.server.Request;
 import org.eclipse.jetty.server.Server;
 import org.eclipse.jetty.server.handler.AbstractHandler;
 import org.junit.After;
-import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -61,7 +58,6 @@ import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.io.OutputStreamWriter;
 import java.io.PrintWriter;
 import java.net.URL;
 import java.util.Iterator;
@@ -186,8 +182,8 @@ public class DummyServerIntegrationTest {
             }
         };
 
-        KylothCloudSynchronizer.__reset();
-        KylothCloudSynchronizer s = KylothCloudSynchronizer.getInstance(
+        Synchronizer.__reset();
+        Synchronizer s = Synchronizer.getInstance(
                 new SerleenaJSONNetProxy(iKylothIdSource, url),
                 sink, source);
         server.setHandler(h);
