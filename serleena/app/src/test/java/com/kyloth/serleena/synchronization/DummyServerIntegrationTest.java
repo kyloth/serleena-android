@@ -74,8 +74,7 @@ import static org.mockito.Mockito.mock;
 
 
 /**
- * Crea un server HTTP fittizio per verificare che lo stack di gestione del protocollo
- * funzioni correttamente.
+ * Crea un semplicissimo server HTTP fittizio e effettua una sequenza di chiamate allo stesso per verificare che l'intero stack funzioni correttamente in pratica.
  */
 @RunWith(RobolectricTestRunner.class)
 public class DummyServerIntegrationTest {
