@@ -51,8 +51,14 @@ import com.kyloth.serleena.persistence.IExperienceStorage;
 import com.kyloth.serleena.persistence.IPersistenceDataSource;
 import com.kyloth.serleena.persistence.IPersistenceDataSink;
 import com.kyloth.serleena.synchronization.net.INetProxy;
+import com.kyloth.serleena.synchronization.net.NotConnectedException;
+import com.kyloth.serleena.synchronization.kylothcloud.inbound.CloudJSONInboundStream;
+import com.kyloth.serleena.synchronization.kylothcloud.outbound.CloudJSONOutboundStream;
 
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.io.OutputStream;
 import java.util.ArrayList;
 
 public class SynchronizerTest {
@@ -159,5 +165,88 @@ public class SynchronizerTest {
     public void testSyncNullProxyResultsInRuntimeException() throws Exception {
         Synchronizer sync = Synchronizer.getInstance(null, sink, source);
         sync.sync();
+    }
+
+    /**
+     * Testa che Synchronizer.preAuth() risulti in una RuntimeExcpetion se il proxy == null
+     */
+    @Test(expected=RuntimeException.class)
+    public void testRuntimePreauthExceptionIfNullProxy() throws AuthException, IOException {
+        Synchronizer.__reset();
+        Synchronizer sync = Synchronizer.getInstance(null, sink, source);
+        sync.preAuth();
+    }
+
+    /**
+     * Testa che Synchronizer.auth() risulti in una RuntimeExcpetion se il proxy == null
+     */
+    @Test(expected=RuntimeException.class)
+    public void testRuntimeAuthExceptionIfNullProxy() throws AuthException, IOException {
+        Synchronizer.__reset();
+        Synchronizer sync = Synchronizer.getInstance(proxy, sink, source);
+        sync.preAuth();
+        sync.proxy = null;
+        sync.auth();
+    }
+
+    /**
+     * Testa che Synchronizer.sync() risulti in una IOException se proxy !success durante la get
+     */
+    @Test(expected=IOException.class)
+    public void testnotSuccessMeansIOException() throws AuthException, IOException {
+        Synchronizer.__reset();
+        Synchronizer sync = Synchronizer.getInstance(proxy, sink, source);
+        sync.preAuth();
+        sync.auth();
+        ArrayList<IExperienceStorage> emptyList = new ArrayList<IExperienceStorage>();
+        when(source.getExperiences()).thenReturn(emptyList);
+        when(proxy.success()).thenReturn(false);
+        sync.sync();
+    }
+
+    /**
+     * Testa che una NotConnectedException ricevuta dal sync causi il lancio di una IOException
+     */
+    @Test(expected=IOException.class)
+    public void testNotConnectedExceptionMeansIOException() throws AuthException, IOException, NotConnectedException {
+        Synchronizer.__reset();
+        Synchronizer sync = Synchronizer.getInstance(proxy, sink, source);
+        sync.preAuth();
+        sync.auth();
+        ByteArrayOutputStream bos = new ByteArrayOutputStream(100);
+        CloudJSONOutboundStream s = new CloudJSONOutboundStream(bos);
+        ByteArrayInputStream bis = new ByteArrayInputStream("{experiences: [], emergencyData:[], weatherData: []}".getBytes());
+        CloudJSONInboundStream is = new CloudJSONInboundStream(bis);
+        when(proxy.success()).thenReturn(true);
+        when(proxy.write()).thenReturn(s);
+        when(proxy.read()).thenReturn(is);
+        ArrayList<IExperienceStorage> emptyList = new ArrayList<IExperienceStorage>();
+        when(source.getExperiences()).thenReturn(emptyList);
+        sync.sync();
+        doThrow(NotConnectedException.class).when(proxy).disconnect();
+        sync.sync();
+    }
+
+    /**
+     * Testa che Synchronizer tenti di disconnettersi quando incontra un'eccezione durante il sync, ignori una NotConnectedException e la rilanci
+     */
+    @Test(expected=IOException.class)
+    public void testSynchronizerDisconnectsRethrows() throws AuthException, IOException, NotConnectedException {
+        Synchronizer.__reset();
+        Synchronizer sync = Synchronizer.getInstance(proxy, sink, source);
+        sync.preAuth();
+        sync.auth();
+        ByteArrayOutputStream bos = new ByteArrayOutputStream(100);
+        CloudJSONOutboundStream s = new CloudJSONOutboundStream(bos);
+        ByteArrayInputStream bis = new ByteArrayInputStream("{experiences: [], emergencyData:[], weatherData: []}".getBytes());
+        CloudJSONInboundStream is = new CloudJSONInboundStream(bis);
+        when(proxy.write()).thenReturn(s);
+        when(proxy.read()).thenReturn(is);
+        ArrayList<IExperienceStorage> emptyList = new ArrayList<IExperienceStorage>();
+        when(source.getExperiences()).thenReturn(emptyList);
+        when(proxy.success()).thenReturn(false);
+        doThrow(NotConnectedException.class).when(proxy).disconnect();
+        sync.sync();
+        verify(proxy).disconnect();
     }
 }
