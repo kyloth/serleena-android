@@ -72,7 +72,6 @@ import com.kyloth.serleena.view.widgets.CompassWidget;
 import com.jayway.awaitility.Awaitility;
 
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.robolectric.Robolectric;
@@ -84,7 +83,6 @@ import org.robolectric.shadows.ShadowLocationManager;
 
 import java.util.UUID;
 import java.util.concurrent.Callable;
-import java.util.concurrent.TimeUnit;
 
 import static junit.framework.Assert.assertEquals;
 import static junit.framework.Assert.assertTrue;
@@ -269,7 +267,7 @@ public class TrackPresenterIntegrationTest {
         orientationWidget.callOnClick();
         assertEquals("4/4", nextCheckpointText.getText());
         orientationWidget.callOnClick();
-        String trackFinish = RuntimeEnvironment.application.getResources().getString(R.string.track_end);
+        String trackFinish = RuntimeEnvironment.application.getResources().getString(R.string.track_finish);
         assertEquals(trackFinish, nextCheckpointText.getText());
     }
 
@@ -322,7 +320,7 @@ public class TrackPresenterIntegrationTest {
         simulateLocation(blm, 0, 5);
         assertEquals("4/4", nextCheckpointText.getText());
         simulateLocation(blm, 3, 7);
-        String trackFinish = RuntimeEnvironment.application.getResources().getString(R.string.track_end);
+        String trackFinish = RuntimeEnvironment.application.getResources().getString(R.string.track_finish);
         assertEquals(trackFinish, nextCheckpointText.getText());
     }
 

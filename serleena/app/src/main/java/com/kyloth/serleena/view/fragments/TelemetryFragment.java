@@ -137,9 +137,9 @@ public class TelemetryFragment extends Fragment
     public void setTelemetryEnabled(boolean enabled) {
         if (status != null) {
             if (enabled)
-                status.setText((String) getResources().getText(R.string.telem_on));
+                status.setText((String) getResources().getText(R.string.telemetry_on));
             else
-                status.setText((String) getResources().getText(R.string.telem_off));
+                status.setText((String) getResources().getText(R.string.telemetry_off));
         }
     }
 
@@ -148,16 +148,16 @@ public class TelemetryFragment extends Fragment
      */
     @Override
     public void onClick(View v) {
-        if(status.getText().equals((String) getResources().getText(R.string.telem_on))) {
+        if(status.getText().equals((String) getResources().getText(R.string.telemetry_on))) {
             presenter.disableTelemetry();
-            status.setText((String) getResources().getText(R.string.telem_off));
+            status.setText((String) getResources().getText(R.string.telemetry_off));
         }
         else {
             try {
                 presenter.enableTelemetry();
-                status.setText((String) getResources().getText(R.string.telem_on));
+                status.setText((String) getResources().getText(R.string.telemetry_on));
             } catch (TrackAlreadyStartedException e) {
-                status.setText((String) getResources().getText(R.string.telem_alreadyStartedError));
+                status.setText((String) getResources().getText(R.string.telemetry_alreadyStartedError));
             }
         }
     }

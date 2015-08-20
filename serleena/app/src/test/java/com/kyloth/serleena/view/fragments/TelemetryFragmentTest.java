@@ -78,8 +78,8 @@ import static org.mockito.Mockito.*;
 @RunWith(RobolectricGradleTestRunner.class)
 @Config(constants = BuildConfig.class, emulateSdk = 19, manifest = "src/main/AndroidManifest.xml")
 public class TelemetryFragmentTest {
-    final String TELEMETRY_ON = RuntimeEnvironment.application.getResources().getString(R.string.telem_on);
-    final String TELEMETRY_OFF = RuntimeEnvironment.application.getResources().getString(R.string.telem_off);
+    final String TELEMETRY_ON = RuntimeEnvironment.application.getResources().getString(R.string.telemetry_on);
+    final String TELEMETRY_OFF = RuntimeEnvironment.application.getResources().getString(R.string.telemetry_off);
     private TelemetryFragment fragment;
     private ITelemetryPresenter presenter;
     private ImageButton button;
@@ -169,7 +169,7 @@ public class TelemetryFragmentTest {
         when(text.getText()).thenReturn(TELEMETRY_OFF);
         listener.onClick(button);
         verify(text).setText(activity.getResources().getText(
-                R.string.telem_alreadyStartedError));
+                R.string.telemetry_alreadyStartedError));
     }
 
 }

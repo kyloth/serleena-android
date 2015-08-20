@@ -10,7 +10,7 @@
         android:id="@+id/weather_date_text"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:text="@string/weatherDate"
+        android:text="@string/weather_date"
         android:textSize="15sp"
         android:gravity="top"
         android:textStyle="bold"/>
@@ -35,7 +35,7 @@
         <TextView
             android:layout_width="80dp"
             android:layout_height="wrap_content"
-            android:text="@string/morning"
+            android:text="@string/weather_morning"
             android:textSize="13sp"
             android:gravity="center_vertical"/>
 
@@ -48,7 +48,7 @@
             android:id="@+id/morning_temp_text"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/morningTemperature"
+            android:text="@string/weather_morningTemperature"
             android:textSize="13sp"
             android:gravity="center_vertical"/>
 
@@ -64,7 +64,7 @@
         <TextView
             android:layout_width="80dp"
             android:layout_height="wrap_content"
-            android:text="@string/afternoon"
+            android:text="@string/weather_afternoon"
             android:textSize="13sp"
             android:gravity="center_vertical"/>
 
@@ -77,7 +77,7 @@
             android:id="@+id/afternoon_temp_text"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/afternoonTemperature"
+            android:text="@string/weather_afternoonTemperature"
             android:textSize="13sp"
             android:gravity="center_vertical"/>
 
@@ -93,7 +93,7 @@
         <TextView
             android:layout_width="80dp"
             android:layout_height="wrap_content"
-            android:text="@string/evening"
+            android:text="@string/weather_evening"
             android:textSize="13sp"
             android:gravity="center_vertical"/>
 
@@ -106,7 +106,7 @@
             android:id="@+id/night_temp_text"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/eveningTemperature"
+            android:text="@string/weather_eveningTemperature"
             android:textSize="13sp"
             android:gravity="center_vertical"/>
 

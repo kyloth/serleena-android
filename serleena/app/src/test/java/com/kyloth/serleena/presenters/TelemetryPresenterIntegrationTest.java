@@ -148,7 +148,7 @@ public class TelemetryPresenterIntegrationTest {
         tc.startTrack(track);
         tc.advanceCheckpoint();
         button.callOnClick();
-        String alreadyStartedError = RuntimeEnvironment.application.getResources().getString(R.string.telem_alreadyStartedError);
+        String alreadyStartedError = RuntimeEnvironment.application.getResources().getString(R.string.telemetry_alreadyStartedError);
         assertTrue(text.getText().equals(alreadyStartedError));
     }
 

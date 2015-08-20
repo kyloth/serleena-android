@@ -41,7 +41,6 @@ package com.kyloth.serleena.view.fragments;
 
 import android.app.Fragment;
 import android.os.Bundle;
-import android.transition.TransitionValues;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -251,7 +250,7 @@ public class TrackFragment extends Fragment implements ITrackView, View.OnClickL
      */
     @Override
     public void displayTrackEnded() {
-        nextCheckpointText.setText((String) getResources().getText(R.string.track_end));
+        nextCheckpointText.setText((String) getResources().getText(R.string.track_finish));
     }
 
     /**

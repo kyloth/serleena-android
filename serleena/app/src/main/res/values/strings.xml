@@ -1,29 +1,21 @@
 <resources>
     <string name="app_name">serleena</string>
     <string name="title_activity_serleena">serleena</string>
-    <string name="sync_token">Token value</string>
-    <string name="contact_image">Emergency Contacts</string>
-    <string name="telemetry_status">OFF</string>
-    <string name="telemetry_image">Red button</string>
-    <string name="sync_button_text">Sincronizza</string>
-    <string name="contactvalue">Contact value</string>
-    <string name="contactname">Contact name</string>
-    <string name="confirmquit">Do you really want to quit?</string>
-    <string name="quitconfirmed">Sì</string>
-    <string name="quitcancelled">No</string>
-    <string name="synctoken">CF8A53B</string>
-    <string name="trackPartial">00:20:00</string>
-    <string name="trackDelta">-00:04:00</string>
-    <string name="trackDistance">200 m</string>
-    <string name="morning">Morning</string>
-    <string name="morningTemperature">25°</string>
-    <string name="afternoon">Afternoon</string>
-    <string name="afternoonTemperature">25°</string>
-    <string name="evening">Evening</string>
-    <string name="eveningTemperature">25°</string>
-    <string name="weatherDate">Septermber 20th, 2015</string>
-    <string name="trackProgress">trackProgress</string>
-    <string name="activeTrack">No Active Track</string>
+
+    <string name="contacts_image">Emergency Contacts</string>
+    <string name="contacts_noContact">No Contacts</string>
+    <string name="contacts_value">Contact value</string>
+    <string name="contacts_name">Contact name</string>
+
+    <string name="map_noActiveExperience">No active experience</string>
+    <string name="map_cantFix">Can\'t geolocate</string>
+    <string name="map_accept">OK</string>
+
+    <string name="quit_confirmMessage">Do you really want to quit?</string>
+    <string name="quit_confirmed">Sì</string>
+    <string name="quit_cancelled">No</string>
+
+    <string name="sync_token">CF8A53B</string>
     <string name="sync_notPaired">Press to Pair</string>
     <string name="sync_failed">Sync error, press to retry</string>
     <string name="sync_preauthing">Preauthorizing, press to abort</string>
@@ -34,17 +26,30 @@
     <string name="sync_synced">Synced, press to resync</string>
     <string name="sync_rejected">Auth rejected, press to retry</string>
     <string name="sync_authFailed">Auth failed, press to retry</string>
-    <string name="telem_on">ON</string>
-    <string name="telem_off">OFF</string>
-    <string name="telem_alreadyStartedError">Error: track already started</string>
-    <string name="quit_quit">Quit</string>
-    <string name="map_noActiveExperience">No active experience</string>
-    <string name="map_cantFix">Can\'t geolocate</string>
-    <string name="map_accept">OK</string>
-    <string name="contacts_noContact">No Contacts</string>
-    <string name="track_end">FINISH</string>
+
+    <string name="telemetry_status">OFF</string>
+    <string name="telemetry_image">Red button</string>
+    <string name="telemetry_on">ON</string>
+    <string name="telemetry_off">OFF</string>
+    <string name="telemetry_alreadyStartedError">Error: track already started</string>
+
+    <string name="track_finish">FINISH</string>
     <string name="track_noActiveTrack">No active track</string>
+    <string name="track_partial">00:20:00</string>
+    <string name="track_delta">-00:04:00</string>
+    <string name="track_distance">200 m</string>
+    <string name="track_progress">trackProgress</string>
+    <string name="track_activeTrack">No Active Track</string>
+
+    <string name="weather_morning">Morning</string>
+    <string name="weather_morningTemperature">25°</string>
+    <string name="weather_afternoon">Afternoon</string>
+    <string name="weather_afternoonTemperature">25°</string>
+    <string name="weather_evening">Evening</string>
+    <string name="weather_eveningTemperature">25°</string>
     <string name="weather_noInfo">No weather information</string>
+    <string name="weather_date">Septermber 20th, 2015</string>
+
     <string name="menu_trackFragment">Track</string>
     <string name="menu_mapFragment">Map</string>
     <string name="menu_contactsFragment">Contacts</string>

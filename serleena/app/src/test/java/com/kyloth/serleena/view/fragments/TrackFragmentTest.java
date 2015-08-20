@@ -51,7 +51,6 @@ import android.widget.TextView;
 
 import com.kyloth.serleena.BuildConfig;
 import com.kyloth.serleena.R;
-import com.kyloth.serleena.activity.SerleenaActivity;
 import com.kyloth.serleena.presentation.ITrackPresenter;
 import com.kyloth.serleena.view.widgets.CompassWidget;
 
@@ -150,7 +149,7 @@ public class TrackFragmentTest {
     @Test
     public void settingEndedCheckpointShouldSetViewAccordingly() {
         fragment.displayTrackEnded();
-        String trackEnd = RuntimeEnvironment.application.getResources().getString(R.string.track_end);
+        String trackEnd = RuntimeEnvironment.application.getResources().getString(R.string.track_finish);
         verify(nextCheckpointText).setText(trackEnd);
     }
 
