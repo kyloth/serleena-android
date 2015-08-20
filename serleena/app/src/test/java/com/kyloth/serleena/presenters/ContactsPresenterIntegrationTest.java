@@ -254,8 +254,8 @@ public class ContactsPresenterIntegrationTest {
         Awaitility.await().until(new Callable<Boolean>() {
             @Override
             public Boolean call() throws Exception {
-                return "NESSUN CONTATTO".equals(name.getText().toString()) &&
-                        "DA VISUALIZZARE".equals(value.getText().toString());
+                String noContactString = RuntimeEnvironment.application.getResources().getString(R.string.contacts_noContact);
+                return noContactString.equals(name.getText().toString());
             }
         });
     }

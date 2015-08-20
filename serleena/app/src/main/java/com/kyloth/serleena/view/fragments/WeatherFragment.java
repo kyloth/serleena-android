@@ -46,9 +46,12 @@ import com.kyloth.serleena.view.widgets.WeatherWidget;
 
 import org.w3c.dom.Text;
 
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.Locale;
 import java.util.Map;
 
 public class WeatherFragment extends Fragment
@@ -66,23 +69,8 @@ public class WeatherFragment extends Fragment
     private LinearLayout morningLayout;
     private LinearLayout afternoonLayout;
     private LinearLayout nightLayout;
-    private Map<Integer, String> monthNames;
 
     public WeatherFragment() {
-        monthNames = new HashMap<>();
-        monthNames.put(0, "Gennaio");
-        monthNames.put(1, "Febbraio");
-        monthNames.put(2, "Marzo");
-        monthNames.put(3, "Aprile");
-        monthNames.put(4, "Maggio");
-        monthNames.put(5, "Giugno");
-        monthNames.put(6, "Luglio");
-        monthNames.put(7, "Agosto");
-        monthNames.put(8, "Settembre");
-        monthNames.put(9, "Ottobre");
-        monthNames.put(10, "Novembre");
-        monthNames.put(11, "Dicembre");
-
         presenter = new IWeatherPresenter() {
             @Override
             public void advanceDate() { }
@@ -118,9 +106,8 @@ public class WeatherFragment extends Fragment
 
         Calendar calendar = Calendar.getInstance();
         calendar.setTimeInMillis(System.currentTimeMillis());
-        String text = calendar.get(Calendar.DAY_OF_MONTH) + " " + monthNames
-                .get(calendar.get(Calendar.MONTH)) + " " + calendar.get
-                (Calendar.YEAR);
+        DateFormat df = DateFormat.getDateInstance(DateFormat.MEDIUM, Locale.getDefault());
+        String text = df.format(calendar.getTime());
         dateText.setText(text);
 
         return group;
@@ -153,10 +140,9 @@ public class WeatherFragment extends Fragment
     public void setDate(Date date) {
         Calendar calendar = Calendar.getInstance();
         calendar.setTimeInMillis(date.getTime());
-        int year = calendar.get(Calendar.YEAR);
-        int month = calendar.get(Calendar.MONTH);
-        int day = calendar.get(Calendar.DAY_OF_MONTH);
-        dateText.setText(day + " " + monthNames.get(month) + " " + year);
+        DateFormat df = DateFormat.getDateInstance(DateFormat.MEDIUM, Locale.getDefault());
+        String text = df.format(calendar.getTime());
+        dateText.setText(text);
     }
 
     @Override

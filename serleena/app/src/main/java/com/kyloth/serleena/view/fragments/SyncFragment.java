@@ -74,22 +74,22 @@ public class SyncFragment extends Fragment implements ISyncView {
     private ISyncPresenter presenter;
     private TextView info;
     private TextView token;
-    Map<SyncStatusEnum, String> states;
+    Map<SyncStatusEnum, Integer> states;
 
     public SyncFragment() {
         super();
         states = new HashMap<>();
-        states.put(SyncStatusEnum.NOTPAIRED,"Press to pair");
-        states.put(SyncStatusEnum.FAILED,"Sync error, presso to retry");
-        states.put(SyncStatusEnum.PREAUTHING,"Preauthorizing, press to abort");
-        states.put(SyncStatusEnum.PREAUTHED, "Enter token into Kyloth Cloud, press to continue");
-        states.put(SyncStatusEnum.AUTHING, "Authorizing, press to abort");
-        states.put(SyncStatusEnum.AUTHED, "Authorized, press to sync");
-        states.put(SyncStatusEnum.SYNCING, "Syncing, press to abort");
-        states.put(SyncStatusEnum.SYNCED, "Synced, press to resync");
-        states.put(SyncStatusEnum.REJECTED, "Auth rejected, press to retry");
-        states.put(SyncStatusEnum.AUTHFAILED, "Auth failed, press to retry");
-        states.put(SyncStatusEnum.FAILED, "Sync failed, press to retry");
+        states.put(SyncStatusEnum.NOTPAIRED, R.string.sync_notPaired);
+        states.put(SyncStatusEnum.FAILED, R.string.sync_failed);
+        states.put(SyncStatusEnum.PREAUTHING, R.string.sync_preauthing);
+        states.put(SyncStatusEnum.PREAUTHED, R.string.sync_preauthed);
+        states.put(SyncStatusEnum.AUTHING, R.string.sync_authing);
+        states.put(SyncStatusEnum.AUTHED, R.string.sync_authed);
+        states.put(SyncStatusEnum.SYNCING, R.string.sync_syncing);
+        states.put(SyncStatusEnum.SYNCED, R.string.sync_synced);
+        states.put(SyncStatusEnum.REJECTED, R.string.sync_rejected);
+        states.put(SyncStatusEnum.AUTHFAILED, R.string.sync_authFailed);
+        states.put(SyncStatusEnum.FAILED, R.string.sync_failed);
         /* Null object pattern */
         presenter = new ISyncPresenter() {
             @Override public void synchronize() { }
@@ -137,7 +137,7 @@ public class SyncFragment extends Fragment implements ISyncView {
     public void setSyncStatus(SyncStatusEnum status) {
         if(status != SyncStatusEnum.PREAUTHED)
             token.setText("");
-        info.setText(states.get(status));
+        info.setText((String) getResources().getText(states.get(status)));
     }
 
     /**

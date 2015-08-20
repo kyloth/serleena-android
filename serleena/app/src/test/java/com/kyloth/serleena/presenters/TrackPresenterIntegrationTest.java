@@ -87,6 +87,7 @@ import java.util.concurrent.Callable;
 import java.util.concurrent.TimeUnit;
 
 import static junit.framework.Assert.assertEquals;
+import static junit.framework.Assert.assertTrue;
 import static org.mockito.Mockito.mock;
 
 /**
@@ -179,7 +180,8 @@ public class TrackPresenterIntegrationTest {
     @Test
     public void viewShouldShowNoActiveTrackAtTheBeginning() {
         gotoFragment();
-        assertEquals("NESSUN PERCORSO ATTIVO", trackNameText.getText());
+        String noActiveTrack = RuntimeEnvironment.application.getResources().getString(R.string.track_noActiveTrack);
+        assertEquals(noActiveTrack, trackNameText.getText());
     }
 
     /**
@@ -263,7 +265,8 @@ public class TrackPresenterIntegrationTest {
         orientationWidget.callOnClick();
         assertEquals("4/4", nextCheckpointText.getText());
         orientationWidget.callOnClick();
-        assertEquals("FINE", nextCheckpointText.getText());
+        String trackFinish = RuntimeEnvironment.application.getResources().getString(R.string.track_end);
+        assertEquals(trackFinish, nextCheckpointText.getText());
     }
 
     /**
@@ -315,7 +318,8 @@ public class TrackPresenterIntegrationTest {
         simulateLocation(blm, 0, 5);
         assertEquals("4/4", nextCheckpointText.getText());
         simulateLocation(blm, 3, 7);
-        assertEquals("FINE", nextCheckpointText.getText());
+        String trackFinish = RuntimeEnvironment.application.getResources().getString(R.string.track_end);
+        assertEquals(trackFinish, nextCheckpointText.getText());
     }
 
     /**

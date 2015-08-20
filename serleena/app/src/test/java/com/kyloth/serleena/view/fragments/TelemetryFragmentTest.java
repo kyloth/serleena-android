@@ -41,6 +41,8 @@
 
 package com.kyloth.serleena.view.fragments;
 
+import android.app.Activity;
+import android.app.FragmentManager;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -48,15 +50,20 @@ import android.view.ViewGroup;
 import android.widget.ImageButton;
 import android.widget.TextView;
 
+import com.kyloth.serleena.BuildConfig;
 import com.kyloth.serleena.R;
 import com.kyloth.serleena.presentation.ITelemetryPresenter;
 import com.kyloth.serleena.sensors.TrackAlreadyStartedException;
 
+import org.junit.runner.RunWith;
 import org.mockito.ArgumentCaptor;
 import org.mockito.Mockito;
 
 import org.junit.Test;
 import org.junit.Before;
+import org.robolectric.Robolectric;
+import org.robolectric.RobolectricGradleTestRunner;
+import org.robolectric.annotation.Config;
 
 import static org.mockito.Mockito.*;
 
@@ -66,6 +73,9 @@ import static org.mockito.Mockito.*;
  * @author Filippo Sestini <sestini.filippo@gmail.com>
  * @version 1.0.0
  */
+
+@RunWith(RobolectricGradleTestRunner.class)
+@Config(constants = BuildConfig.class, emulateSdk = 19, manifest = "src/main/AndroidManifest.xml")
 public class TelemetryFragmentTest {
 
     private TelemetryFragment fragment;
@@ -73,10 +83,16 @@ public class TelemetryFragmentTest {
     private ImageButton button;
     private TextView text;
     private View.OnClickListener listener;
+    private Activity activity;
 
     @Before
     public void initialize() {
+
+        activity = Robolectric.buildActivity(Activity.class)
+                .create().start().visible().get();
         fragment = new TelemetryFragment();
+        FragmentManager fm = activity.getFragmentManager();
+        fm.beginTransaction().add(fragment, "TEST").commit();
 
         LayoutInflater inflater = mock(LayoutInflater.class);
         ViewGroup vg = mock(ViewGroup.class);
@@ -107,7 +123,7 @@ public class TelemetryFragmentTest {
      * chiamati correttamente.
      */
     @Test
-    public void testAttachCompassPresenter() {
+    public void testAttachPresenter() {
         fragment.onResume();
         verify(presenter).resume();
         fragment.onPause();
@@ -150,7 +166,8 @@ public class TelemetryFragmentTest {
                 .when(presenter).enableTelemetry();
         when(text.getText()).thenReturn("OFF");
         listener.onClick(button);
-        verify(text).setText("ERRORE: Percorso già avviato");
+        verify(text).setText(activity.getResources().getText(
+                R.string.telem_alreadyStartedError));
     }
 
 }

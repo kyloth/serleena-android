@@ -75,9 +75,11 @@ import org.robolectric.Shadows;
 import org.robolectric.annotation.Config;
 import org.robolectric.shadows.ShadowLocationManager;
 
+import java.text.DateFormat;
 import java.util.Calendar;
 import java.util.GregorianCalendar;
 import java.util.HashMap;
+import java.util.Locale;
 import java.util.Map;
 import java.util.Random;
 import java.util.TimeZone;
@@ -318,7 +320,20 @@ public class WeatherPresenterIntegrationTest {
                             WeatherForecastEnum nightCondition,
                             int morningTemperature,
                             int afternoonTemperature, int nightTemperature) {
-        assertEquals(day + " " + monthNames.get(month) + " " + year,
+
+        GregorianCalendar g = new GregorianCalendar(TimeZone.getTimeZone("GMT"));
+        g.set(Calendar.DAY_OF_MONTH, day);
+        g.set(Calendar.MONTH, month);
+        g.set(Calendar.YEAR, year);
+        g.set(Calendar.HOUR_OF_DAY, 0);
+        g.set(Calendar.MINUTE, 0);
+        g.set(Calendar.SECOND, 0);
+        g.set(Calendar.MILLISECOND, 0);
+
+        DateFormat df = DateFormat.getDateInstance(DateFormat.MEDIUM, Locale.getDefault());
+        String text = df.format(g.getTime());
+
+        assertEquals(text,
                 dateText.getText());
         assertEquals(morningCondition, morningWidget.getCondition());
         assertEquals(afternoonCondition, afternoonWidget.getCondition());

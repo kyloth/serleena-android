@@ -137,9 +137,9 @@ public class TelemetryFragment extends Fragment
     public void setTelemetryEnabled(boolean enabled) {
         if (status != null) {
             if (enabled)
-                status.setText("ON");
+                status.setText((String) getResources().getText(R.string.telem_on));
             else
-                status.setText("OFF");
+                status.setText((String) getResources().getText(R.string.telem_off));
         }
     }
 
@@ -148,16 +148,16 @@ public class TelemetryFragment extends Fragment
      */
     @Override
     public void onClick(View v) {
-        if(status.getText().equals("ON")) {
+        if(status.getText().equals((String) getResources().getText(R.string.telem_on))) {
             presenter.disableTelemetry();
-            status.setText("OFF");
+            status.setText((String) getResources().getText(R.string.telem_off));
         }
         else {
             try {
                 presenter.enableTelemetry();
-                status.setText("ON");
+                status.setText((String) getResources().getText(R.string.telem_on));
             } catch (TrackAlreadyStartedException e) {
-                status.setText("ERRORE: Percorso già avviato");
+                status.setText((String) getResources().getText(R.string.telem_alreadyStartedError));
             }
         }
     }

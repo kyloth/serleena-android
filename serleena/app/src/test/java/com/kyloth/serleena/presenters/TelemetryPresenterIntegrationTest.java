@@ -62,6 +62,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.robolectric.Robolectric;
 import org.robolectric.RobolectricGradleTestRunner;
+import org.robolectric.RuntimeEnvironment;
 import org.robolectric.annotation.Config;
 
 import java.util.ArrayList;
@@ -146,7 +147,8 @@ public class TelemetryPresenterIntegrationTest {
         tc.startTrack(track);
         tc.advanceCheckpoint();
         button.callOnClick();
-        assertTrue(text.getText().equals("ERRORE: Percorso già avviato"));
+        String alreadyStartedError = RuntimeEnvironment.application.getResources().getString(R.string.telem_alreadyStartedError);
+        assertTrue(text.getText().equals(alreadyStartedError));
     }
 
 }

@@ -3,7 +3,6 @@
     <string name="title_activity_serleena">serleena</string>
     <string name="sync_token">Token value</string>
     <string name="contact_image">Autorità locali</string>
-
     <string name="telemetry_status">OFF</string>
     <string name="telemetry_image">Pulsante rosso</string>
     <string name="sync_button_text">Sincronizza</string>
@@ -25,4 +24,25 @@
     <string name="weatherDate">20 Settembre, 2015</string>
     <string name="trackProgress">trackProgress</string>
     <string name="activeTrack">NESSUN PERCORSO ATTIVO</string>
+    <string name="sync_notPaired">Press to Pair</string>
+    <string name="sync_failed">Sync error, press to retry</string>
+    <string name="sync_preauthing">Preauthorizing, press to abort</string>
+    <string name="sync_preauthed">Enter token into Kyloth Cloud, press to continue</string>
+    <string name="sync_authing">Authorizing, press to abort</string>
+    <string name="sync_authed">Authorized, press to sync</string>
+    <string name="sync_syncing">Syncing, press to abort</string>
+    <string name="sync_synced">Synced, press to resync</string>
+    <string name="sync_rejected">Auth rejected, press to retry</string>
+    <string name="sync_authFailed">Auth failed, press to retry</string>
+    <string name="telem_on">ON</string>
+    <string name="telem_off">OFF</string>
+    <string name="telem_alreadyStartedError">ERRORE: Percorso gia\' avviato</string>
+    <string name="quit_quit">Esci</string>
+    <string name="map_noActiveExperience">Nessuna esperienza attiva</string>
+    <string name="map_cantFix">Impossibile geolocalizzare</string>
+    <string name="map_accept">OK</string>
+    <string name="contacts_noContact">Nessun contatto</string>
+    <string name="track_end">FINE</string>
+    <string name="track_noActiveTrack">No active track</string>
+    <string name="weather_noInfo">Nessuna informazione disponibile</string>
 </resources>

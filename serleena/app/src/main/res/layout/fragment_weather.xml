@@ -20,7 +20,7 @@
         android:visibility="visible"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:text="Nessuna informazione disponibile"
+        android:text="@string/weather_noInfo"
         android:textSize="15sp"
         android:gravity="top"
         android:textStyle="bold"/>
