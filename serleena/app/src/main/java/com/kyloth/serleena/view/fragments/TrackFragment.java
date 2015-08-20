@@ -141,7 +141,7 @@ public class TrackFragment extends Fragment implements ITrackView, View.OnClickL
      */
     @Override
     public void clearView() {
-        trackNameText.setText("NESSUN PERCORSO ATTIVO");
+        trackNameText.setText((String) getResources().getText(R.string.track_noActiveTrack));
         distanceText.setText("");
         orientationWidget.setOrientation(0);
         clearStats();
@@ -251,7 +251,7 @@ public class TrackFragment extends Fragment implements ITrackView, View.OnClickL
      */
     @Override
     public void displayTrackEnded() {
-        nextCheckpointText.setText("FINE");
+        nextCheckpointText.setText((String) getResources().getText(R.string.track_end));
     }
 
     /**

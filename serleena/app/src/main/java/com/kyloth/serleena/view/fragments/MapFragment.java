@@ -93,8 +93,8 @@ public class MapFragment extends Fragment implements IMapView,
         } catch (NoActiveExperienceException e) {
             AlertDialog.Builder alertBuilder =
                     new AlertDialog.Builder(getActivity());
-            alertBuilder.setMessage("Nessuna esperienza attiva");
-            alertBuilder.setNeutralButton("OK", new DialogInterface.OnClickListener() {
+            alertBuilder.setMessage((String) getResources().getText(R.string.map_noActiveExperience));
+            alertBuilder.setNeutralButton((String) getResources().getText(R.string.map_accept), new DialogInterface.OnClickListener() {
                 @Override
                 public void onClick(DialogInterface dialog, int which) {
                     dialog.cancel();
@@ -104,8 +104,8 @@ public class MapFragment extends Fragment implements IMapView,
         } catch (LocationNotAvailableException ee) {
             AlertDialog.Builder alertBuilder =
                     new AlertDialog.Builder(getActivity());
-            alertBuilder.setMessage("Impossibile geolocalizzare");
-            alertBuilder.setNeutralButton("OK", new DialogInterface.OnClickListener() {
+            alertBuilder.setMessage((String) getResources().getText(R.string.map_cantFix));
+            alertBuilder.setNeutralButton((String) getResources().getText(R.string.map_accept), new DialogInterface.OnClickListener() {
                 @Override
                 public void onClick(DialogInterface dialog, int which) {
                     dialog.cancel();

@@ -132,8 +132,8 @@ public class ContactsFragment extends Fragment
      */
     @Override
     public void clearView() {
-        textName.setText("NESSUN CONTATTO");
-        textValue.setText("DA VISUALIZZARE");
+        textName.setText((String) getResources().getText(R.string.contacts_noContact));
+        textValue.setText(" -- ");
     }
 
     /**
