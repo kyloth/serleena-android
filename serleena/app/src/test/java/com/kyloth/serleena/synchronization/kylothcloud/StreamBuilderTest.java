@@ -82,7 +82,7 @@ public class StreamBuilderTest {
         TestDB.checkPointEventQuery(db, 3, 98765, 2, 2);
 
 
-        String JSON_OUTPUT = "[{\"experience\":\"b989daae-9102-409b-abac-e428afe38baf\",\"userPoints\":[{\"latitude\":13.0,\"longitude\":73.0,\"name\":\"Point 0\"}],\"telemetryData\":[{\"events\":[123456000,654321000],\"track\":\"af024d00-e2d5-4fae-8bad-8b16f823a2cc\"}, {\"events\":[56789000,98765000],\"track\":\"af024d00-e2d5-4fae-8bad-8b16f823a2cc\"}]}]";
+        String JSON_OUTPUT = "[{\"experience\":\"b989daae-9102-409b-abac-e428afe38baf\",\"userPoints\":[{\"latitude\":13.0,\"longitude\":73.0,\"name\":\"Punto personalizzato #0\"}],\"telemetryData\":[{\"events\":[123456000,654321000],\"track\":\"af024d00-e2d5-4fae-8bad-8b16f823a2cc\"}, {\"events\":[56789000,98765000],\"track\":\"af024d00-e2d5-4fae-8bad-8b16f823a2cc\"}]}]";
 
         class Foo extends ByteArrayOutputStream implements JSONOutboundStream {
             Foo (int i) { super (i); }

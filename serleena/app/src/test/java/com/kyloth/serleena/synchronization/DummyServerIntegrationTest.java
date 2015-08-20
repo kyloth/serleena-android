@@ -216,7 +216,7 @@ public class DummyServerIntegrationTest {
         values = TestFixtures.pack(TestFixtures.EXPERIENCES_FIXTURE_EXPERIENCE_1_USERPOINT_1);
         db.insertOrThrow(SerleenaDatabase.TABLE_USER_POINTS, null, values);
 
-        JSON_OUTPUT = "[{\"experience\":\"b989daae-9102-409b-abac-e428afe38baf\",\"userPoints\":[{\"latitude\":13.0,\"longitude\":73.0,\"name\":\"Point 0\"}],\"telemetryData\":[]}]";
+        JSON_OUTPUT = "[{\"experience\":\"b989daae-9102-409b-abac-e428afe38baf\",\"userPoints\":[{\"latitude\":13.0,\"longitude\":73.0,\"name\":\"Punto personalizzato #0\"}],\"telemetryData\":[]}]";
         url = new URL("http://localhost:8081/");
         sink = new SerleenaSQLiteDataSink(RuntimeEnvironment.application, sh);
         source = new SerleenaSQLiteDataSource(sh);
