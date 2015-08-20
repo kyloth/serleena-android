@@ -44,16 +44,4 @@
     <string name="contacts_noContact">Nessun contatto</string>
     <string name="track_end">FINE</string>
     <string name="track_noActiveTrack">No active track</string>
-    <string name="weather_january">Gennaio</string>
-    <string name="weather_february">Febbraio</string>
-    <string name="weather_march">Marzo</string>
-    <string name="weather_april">Aprile</string>
-    <string name="weather_may">Maggio</string>
-    <string name="weather_june">Giugno</string>
-    <string name="weather_july">Luglio</string>
-    <string name="weather_august">Agosto</string>
-    <string name="weather_september">Settembre</string>
-    <string name="weather_october">Ottobre</string>
-    <string name="weather_november">Novembre</string>
-    <string name="weather_december">Dicembre</string>
 </resources>
