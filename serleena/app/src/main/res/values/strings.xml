@@ -7,10 +7,4 @@
     <string name="telemetry_status">OFF</string>
     <string name="telemetry_image">Pulsante rosso</string>
     <string name="sync_button_text">Sincronizza</string>
-    <string name="screen_menu_exp_text">ESPERIENZA</string>
-    <string name="screen_menu_contact_text">CONTATTI</string>
-    <string name="screen_menu_weather_text">METEO</string>
-    <string name="screen_menu_cardio_text">CARDIO</string>
-    <string name="screen_menu_compass_text">BUSSOLA</string>
-    <string name="screen_menu_sync_text">SYNC</string>
 </resources>
