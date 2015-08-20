@@ -40,7 +40,7 @@ import java.lang.reflect.Type;
 
 import java.util.ArrayList;
 
-public class RootEntityDeserializer implements JsonDeserializer<InboundRootEntity> {
+public class InboundRootEntityDeserializer implements JsonDeserializer<InboundRootEntity> {
     @Override
     public InboundRootEntity deserialize(JsonElement json, Type typeOfR, JsonDeserializationContext context) throws JsonParseException {
         InboundRootEntity re = new InboundRootEntity();

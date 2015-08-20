@@ -46,7 +46,7 @@ import com.google.gson.stream.JsonReader;
 import com.kyloth.serleena.synchronization.InboundStream;
 import com.kyloth.serleena.synchronization.InboundStreamParser;
 import com.kyloth.serleena.synchronization.kylothcloud.InboundRootEntity;
-import com.kyloth.serleena.synchronization.kylothcloud.RootEntityDeserializer;
+import com.kyloth.serleena.synchronization.kylothcloud.InboundRootEntityDeserializer;
 
 import java.io.InputStreamReader;
 
@@ -77,7 +77,7 @@ public class CloudJSONInboundStreamParser implements InboundStreamParser {
     @Override
     public InboundRootEntity parse() {
         if (stream instanceof CloudJSONInboundStream) {
-            Gson gson = new GsonBuilder().registerTypeAdapter(InboundRootEntity.class, new RootEntityDeserializer()).create();
+            Gson gson = new GsonBuilder().registerTypeAdapter(InboundRootEntity.class, new InboundRootEntityDeserializer()).create();
             InputStreamReader reader = new InputStreamReader(stream);
             JsonReader jsr = new JsonReader(reader);
             InboundRootEntity root = gson.fromJson(jsr, InboundRootEntity.class);

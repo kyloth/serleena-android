@@ -61,7 +61,6 @@ import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.util.Iterator;
 import java.util.ArrayList;
-import java.util.UUID;
 
 import static org.junit.Assert.assertEquals;
 
@@ -216,7 +215,7 @@ public class SerializersTest {
 
     @Test
     public void rootEntitySmokeTest() throws FileNotFoundException {
-        Gson gson = new GsonBuilder().registerTypeAdapter(InboundRootEntity.class, new RootEntityDeserializer()).create();
+        Gson gson = new GsonBuilder().registerTypeAdapter(InboundRootEntity.class, new InboundRootEntityDeserializer()).create();
         FileReader in = new FileReader(SAMPLES_DIR + "kylothCloud-get-data.js");
         BufferedReader br = new BufferedReader(in);
         InboundRootEntity e = gson.fromJson(br, InboundRootEntity.class);
