@@ -64,7 +64,6 @@ import java.io.IOException;
  */
 public class Synchronizer implements IKylothCloudSynchronizer {
     static Synchronizer instance;
-    private final static String DEFAULT_URL = "http://localhost:8080";
     IPersistenceDataSink sink;
     IPersistenceDataSource source;
     INetProxy proxy;
