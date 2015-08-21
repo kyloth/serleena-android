@@ -72,12 +72,4 @@ public class SerleenaSQLiteDataSink implements ISerleenaSQLiteDataSink {
             throw new IllegalArgumentException();
         }
     }
-
-    /**
-     * Svuota completamente i dati.
-     */
-    @Override
-    public void flush() {
-
-    }
 }

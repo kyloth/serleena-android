@@ -53,9 +53,4 @@ public interface IPersistenceDataSink {
      * @param dump
      */
     void load(InboundDump dump);
-
-    /**
-     * Svuota completamente i dati.
-     */
-    void flush();
 }
