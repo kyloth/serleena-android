@@ -68,7 +68,6 @@ public class SerleenaSQLiteDataSink implements ISerleenaSQLiteDataSink {
             for (String instr : dump) {
                 a.execSQL(instr);
             }
-            // TODO: Esegui il dump riga per riga
         } else {
             throw new IllegalArgumentException();
         }
@@ -79,6 +78,6 @@ public class SerleenaSQLiteDataSink implements ISerleenaSQLiteDataSink {
      */
     @Override
     public void flush() {
-        // TODO: Svuota il database
+
     }
 }

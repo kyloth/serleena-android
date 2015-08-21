@@ -281,10 +281,6 @@ public class TestFixtures {
             };
 
 
-        ////////////////////////////////////////
-        // TODO: this must be improved
-        ///////////////////////////////////////
-
         public static final float raster_nw_corner_latitude = 5;
         public static final float raster_nw_corner_longitude = 0;
         public static final float raster_se_corner_latitude = 0;

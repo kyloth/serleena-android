@@ -189,13 +189,11 @@ public class SyncPresenter implements ISyncPresenter {
     }
 
     private void refreshToken(final String s) {
-        // TODO: Sostituire con un handler
         if (activity instanceof Activity) {
             ((Activity) activity).runOnUiThread(new Runnable() {
                 final String finalS = s;
                 @Override
                 public void run() {
-                    // TODO: Rimuovere
                     System.out.println(finalS);
                     view.setSyncStatus(status);
                     view.displayToken(finalS);
@@ -205,7 +203,6 @@ public class SyncPresenter implements ISyncPresenter {
     }
 
     private void refresh() {
-        // TODO: Sostituire con un handler
         if (activity instanceof Activity) {
             ((Activity) activity).runOnUiThread(new Runnable() {
                 @Override

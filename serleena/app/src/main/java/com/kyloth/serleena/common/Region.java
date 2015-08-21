@@ -41,7 +41,6 @@
 
 package com.kyloth.serleena.common;
 
-//TODO: E' usato dal sync, dove altro? Se ci sono coppie di GeoPoint sfuse si potrebbe volerle rimpiazzare?
 /**
  * Classe che realizza l'interfaccia IRegion
  *
@@ -70,8 +69,6 @@ public class Region implements IRegion {
         }
         // Nord = 90'. Polo sud = -90'.
         if (northWest.latitude() < southEast.latitude()
-               // || northWest.longitude() > southEast.longitude()
-               // TODO: Vale il wraparound?
                 ) {
             throw new IllegalArgumentException();
         }
