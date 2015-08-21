@@ -110,10 +110,9 @@ public class ContactsFragmentTest {
         LayoutInflater inflater = mock(LayoutInflater.class);
         ViewGroup vg = mock(ViewGroup.class);
         ViewGroup v = mock(ViewGroup.class);
-        when(v.getChildCount()).thenReturn(3);
-        when(v.getChildAt(0)).thenReturn(fakeImage);
-        when(v.getChildAt(1)).thenReturn(fakeName);
-        when(v.getChildAt(2)).thenReturn(fakeValue);
+        when(v.findViewById(R.id.contact_image)).thenReturn(fakeImage);
+        when(v.findViewById(R.id.contact_name_text)).thenReturn(fakeName);
+        when(v.findViewById(R.id.contact_value_text)).thenReturn(fakeValue);
 
         when(inflater.inflate(
                         eq(R.layout.fragment_contacts),

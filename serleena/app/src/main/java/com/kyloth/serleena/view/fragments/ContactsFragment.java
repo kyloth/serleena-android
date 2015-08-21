@@ -45,6 +45,7 @@ import android.support.annotation.Nullable;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.kyloth.serleena.R;
@@ -68,7 +69,7 @@ public class ContactsFragment extends Fragment
     private IContactsPresenter presenter;
     private TextView textName;
     private TextView textValue;
-
+    private ImageView contactImage;
     /**
      * Crea un nuovo oggetto ContactsFragment.
      */
@@ -98,9 +99,11 @@ public class ContactsFragment extends Fragment
 
         textName = (TextView) v.findViewById(R.id.contact_name_text);
         textValue = (TextView) v.findViewById(R.id.contact_value_text);
+        contactImage = (ImageView) v.findViewById(R.id.contact_image);
+        textName.setOnClickListener(this);
+        textValue.setOnClickListener(this);
+        contactImage.setOnClickListener(this);
 
-        for (int i = 0; i < v.getChildCount(); i++)
-            v.getChildAt(i).setOnClickListener(this);
         return v;
     }
 

@@ -19,18 +19,18 @@
     <string name="sync_notPaired">Premere per accoppiare</string>
     <string name="sync_failed">Errore sincr., premere per ripr.</string>
     <string name="sync_preauthing">Preautoriz. in corso, premere per annull.</string>
-    <string name="sync_preauthed">Inserire token in Kyloth Cloud, premere per cont.</string>
+    <string name="sync_preauthed">Inserire token, premere per cont.</string>
     <string name="sync_authing">Autorizz., premere per annull.</string>
     <string name="sync_authed">Autorizzato,  premere per sinc.</string>
     <string name="sync_syncing">Sincronizzazione, premere per annull.</string>
     <string name="sync_synced">Sincronizzato, premere per risincr.</string>
-    <string name="sync_rejected">Autenticazione rifiutata, premere per ripr.</string>
-    <string name="sync_authFailed">Aut. fallita,  premere per riprovare.</string>
+    <string name="sync_rejected">Aut. respinta, premere per ripr.</string>
+    <string name="sync_authFailed">Aut. fallita,  premere per ripr..</string>
 
-    <string name="telemetry_status">OFF</string>
+    <string name="telemetry_status">Tracciamento disattivo</string>
     <string name="telemetry_image">Pulsante rosso</string>
-    <string name="telemetry_on">ON</string>
-    <string name="telemetry_off">OFF</string>
+    <string name="telemetry_on">Tracciamento attivo</string>
+    <string name="telemetry_off">Tracciamento disattivo</string>
     <string name="telemetry_alreadyStartedError">Errore: percorso gia\' avviato</string>
 
     <string name="track_finish">FINE</string>

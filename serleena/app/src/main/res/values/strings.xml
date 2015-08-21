@@ -19,7 +19,7 @@
     <string name="sync_notPaired">Press to Pair</string>
     <string name="sync_failed">Sync error, press to retry</string>
     <string name="sync_preauthing">Preauthorizing, press to abort</string>
-    <string name="sync_preauthed">Enter token into Kyloth Cloud, press to continue</string>
+    <string name="sync_preauthed">Enter token, press to cont.</string>
     <string name="sync_authing">Authorizing, press to abort</string>
     <string name="sync_authed">Authorized, press to sync</string>
     <string name="sync_syncing">Syncing, press to abort</string>
@@ -27,10 +27,10 @@
     <string name="sync_rejected">Auth rejected, press to retry</string>
     <string name="sync_authFailed">Auth failed, press to retry</string>
 
-    <string name="telemetry_status">OFF</string>
+    <string name="telemetry_status">Telemetry off</string>
     <string name="telemetry_image">Red button</string>
-    <string name="telemetry_on">ON</string>
-    <string name="telemetry_off">OFF</string>
+    <string name="telemetry_on">Telemetry on</string>
+    <string name="telemetry_off">Telemetry off</string>
     <string name="telemetry_alreadyStartedError">Error: track already started</string>
 
     <string name="track_finish">FINISH</string>
