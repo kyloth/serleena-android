@@ -96,7 +96,9 @@ import static org.mockito.Mockito.mock;
 @Config(constants = BuildConfig.class, emulateSdk = 19,
         manifest = "src/main/AndroidManifest.xml")
 public class ExperienceSelectionPresenterIntegrationTest {
-
+    final String MENU_EXPERIENCE_SEL_LABEL = RuntimeEnvironment.application.getResources().getString(R.string.menu_experienceSelectionFragment);
+    final String MENU_TRACK_SEL_LABEL = RuntimeEnvironment.application.getResources().getString(R.string.menu_trackSelectionFragment);
+    final String MENU_EXPERIENCE_LABEL = RuntimeEnvironment.application.getResources().getString(R.string.menu_experienceFragment);
     /**
      * Activity che permette di fornire un datasource impostato ad hoc per i test.
      */
@@ -139,7 +141,7 @@ public class ExperienceSelectionPresenterIntegrationTest {
         fragment =
                 (ExperienceSelectionFragment)
                         switchToFragmentInExperienceFragment(
-                                "Imposta Esperienza");
+                                MENU_EXPERIENCE_SEL_LABEL);
         experienceListAdapter = fragment.getListAdapter();
     }
 
@@ -152,7 +154,7 @@ public class ExperienceSelectionPresenterIntegrationTest {
         ListAdapter adapter = menuFragment.getListAdapter();
         ListFragment expFragment = null;
         for (int i = 0; i < adapter.getCount(); i++)
-            if (adapter.getItem(i).toString().equals("Esperienza"))
+            if (adapter.getItem(i).toString().equals(MENU_EXPERIENCE_LABEL))
                 expFragment = (ListFragment) adapter.getItem(i);
         activity.onObjectSelected(expFragment);
         expFragment.onResume();
@@ -227,7 +229,7 @@ public class ExperienceSelectionPresenterIntegrationTest {
         setup();
 
         fragment.onListItemClick(null, null, 0, 0);
-        switchToFragmentInExperienceFragment("Imposta Percorso");
+        switchToFragmentInExperienceFragment(MENU_TRACK_SEL_LABEL);
 
         final ListFragment trackFragment = (ListFragment) activity
                 .getFragmentManager().findFragmentById(R.id.main_container);

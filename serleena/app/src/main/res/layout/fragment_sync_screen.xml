@@ -5,7 +5,7 @@
     <ImageButton
         android:layout_width="140sp"
         android:layout_height="140sp"
-        android:text="@string/sync_button_text"
+        android:text="@string/sync_notPaired"
         android:id="@+id/button_sync"
         android:layout_gravity="center_horizontal|top"
         android:textSize="20sp"
@@ -14,7 +14,7 @@
         android:src="@drawable/sync"
         android:background="@null"
         android:scaleType="fitCenter"
-        android:contentDescription="@string/sync_button_text" />
+        android:contentDescription="@string/sync_notPaired" />
 
     <TextView
         android:layout_width="fill_parent"
@@ -29,7 +29,7 @@
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="@string/synctoken"
+        android:text="@string/sync_token"
         android:id="@+id/textview_token"
         android:layout_gravity="center_horizontal|bottom"
         android:textSize="25sp"

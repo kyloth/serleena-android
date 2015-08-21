@@ -132,6 +132,9 @@ public class MapPresenterIntegrationTest {
     private LocationManager lm;
     private ShadowLocationManager slm;
     private SerleenaDataSource dataSource;
+    final String MENU_EXPERIENCE_SEL_LABEL = RuntimeEnvironment.application.getResources().getString(R.string.menu_experienceSelectionFragment);
+    final String MENU_MAP_LABEL = RuntimeEnvironment.application.getResources().getString(R.string.menu_mapFragment);
+    final String MENU_EXPERIENCE_LABEL = RuntimeEnvironment.application.getResources().getString(R.string.menu_experienceFragment);
 
     @Before
     public void initialize() {
@@ -160,7 +163,7 @@ public class MapPresenterIntegrationTest {
         TestDB.quadrantQuery(db, 40, 0, 0, 40, "asd", TestFixtures.EXPERIENCES_FIXTURE_EXPERIENCE_1_UUID);
         activateExperienceByName(
                 (ListFragment) switchToFragmentInExperienceFragment(
-                        "Imposta Esperienza"),
+                        MENU_EXPERIENCE_SEL_LABEL),
                 "experience");
         gotoFragment();
 
@@ -224,7 +227,7 @@ public class MapPresenterIntegrationTest {
 
         activateExperienceByName(
                 (ListFragment) switchToFragmentInExperienceFragment(
-                        "Imposta Esperienza"),
+                        MENU_EXPERIENCE_SEL_LABEL),
                 "experience");
         gotoFragment();
 
@@ -243,7 +246,7 @@ public class MapPresenterIntegrationTest {
 
         activateExperienceByName(
                 (ListFragment) switchToFragmentInExperienceFragment(
-                        "Imposta Esperienza"),
+                        MENU_EXPERIENCE_SEL_LABEL),
                 TestFixtures.EXPERIENCES_FIXTURE_EXPERIENCE_2_NAME);
         gotoFragment();
 
@@ -272,7 +275,7 @@ public class MapPresenterIntegrationTest {
 
         activateExperienceByName(
                 (ListFragment) switchToFragmentInExperienceFragment(
-                        "Imposta Esperienza"),
+                        MENU_EXPERIENCE_SEL_LABEL),
                 "experience");
         gotoFragment();
 
@@ -317,7 +320,7 @@ public class MapPresenterIntegrationTest {
 
         activateExperienceByName(
                 (ListFragment) switchToFragmentInExperienceFragment(
-                        "Imposta Esperienza"),
+                        MENU_EXPERIENCE_SEL_LABEL),
                 "experience");
         gotoFragment();
 
@@ -387,7 +390,7 @@ public class MapPresenterIntegrationTest {
         ListAdapter adapter = menuFragment.getListAdapter();
         ListFragment expFragment = null;
         for (int i = 0; i < adapter.getCount(); i++)
-            if (adapter.getItem(i).toString().equals("Esperienza"))
+            if (adapter.getItem(i).toString().equals(MENU_EXPERIENCE_LABEL))
                 expFragment = (ListFragment) adapter.getItem(i);
         activity.onObjectSelected(expFragment);
         expFragment.onResume();
@@ -402,7 +405,7 @@ public class MapPresenterIntegrationTest {
     }
 
     private void gotoFragment() {
-        fragment = (MapFragment) switchToFragmentInExperienceFragment("Mappa");
+        fragment = (MapFragment) switchToFragmentInExperienceFragment(MENU_MAP_LABEL);
         mapWidget =
                 (MapWidget) fragment.getView().findViewById(R.id.map_widget);
     }

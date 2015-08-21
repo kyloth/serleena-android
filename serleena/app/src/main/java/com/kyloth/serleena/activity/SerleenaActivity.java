@@ -56,6 +56,8 @@ import com.kyloth.serleena.view.fragments.*;
 
 import java.util.ArrayList;
 
+
+
 /**
  * Classe che implementa ISerleenaActivity.
  *
@@ -189,20 +191,72 @@ public class SerleenaActivity extends Activity
      * Inizializza i Fragment.
      */
     private void initFragments() {
-        QuitFragment quitFragment = new QuitFragment();
-        trackFragment = new TrackFragment();
-        compassFragment = new CompassFragment();
-        contactsFragment = new ContactsFragment();
-        experienceSelectionFragment = new ExperienceSelectionFragment();
-        trackSelectionFragment = new TrackSelectionFragment();
-        telemetryFragment = new TelemetryFragment();
-        weatherFragment = new WeatherFragment();
-        mapFragment = new MapFragment();
-        syncFragment = new SyncFragment();
+        final String MENU_TELEMETRY_LABEL = getResources().getString(R.string.menu_telemetryFragment);
+        final String MENU_TRACK_LABEL = getResources().getString(R.string.menu_trackFragment);
+        final String MENU_MAP_LABEL = getResources().getString(R.string.menu_mapFragment);
+        final String MENU_CONTACTS_LABEL = getResources().getString(R.string.menu_contactsFragment);
+        final String MENU_TRACK_SEL_LABEL = getResources().getString(R.string.menu_trackSelectionFragment);
+        final String MENU_EXPERIENCE_SEL_LABEL = getResources().getString(R.string.menu_experienceSelectionFragment);
+        final String MENU_EXPERIENCE_LABEL = getResources().getString(R.string.menu_experienceFragment);
+        final String MENU_SYNC_LABEL = getResources().getString(R.string.menu_syncFragment);
+        final String MENU_COMPASS_LABEL = getResources().getString(R.string.menu_compassFragment);
+        final String MENU_WEATHER_LABEL = getResources().getString(R.string.menu_weatherFragment);
+        final String MENU_QUIT_LABEL = getResources().getString(R.string.menu_quitFragment);
+
+        QuitFragment quitFragment = new QuitFragment() {
+            public String toString() {
+                return MENU_QUIT_LABEL;
+            }
+        };
+        trackFragment = new TrackFragment() {
+            public String toString() {
+                return MENU_TRACK_LABEL;
+            }
+        };
+        compassFragment = new CompassFragment() {
+            public String toString() {
+                return MENU_COMPASS_LABEL;
+            }
+        };
+        contactsFragment = new ContactsFragment() {
+            public String toString() {
+                return MENU_CONTACTS_LABEL;
+            }
+        };
+        experienceSelectionFragment = new ExperienceSelectionFragment() {
+            public String toString() {
+                return MENU_EXPERIENCE_SEL_LABEL;
+            }
+        };
+        trackSelectionFragment = new TrackSelectionFragment() {
+            public String toString() {
+                return MENU_TRACK_SEL_LABEL;
+            }
+        };
+        telemetryFragment = new TelemetryFragment() {
+            public String toString() {
+                return MENU_TELEMETRY_LABEL;
+            }
+        };
+        weatherFragment = new WeatherFragment() {
+            public String toString() {
+                return MENU_WEATHER_LABEL;
+            }
+        };
+        mapFragment = new MapFragment() {
+            public String toString() {
+                return MENU_MAP_LABEL;
+            }
+        };
+        syncFragment = new SyncFragment() {
+            public String toString() {
+                return MENU_SYNC_LABEL;
+            }
+        };
         experienceFragment = new ObjectListFragment() {
             @Override
             public String toString() {
-                return "Esperienza";
+                return MENU_EXPERIENCE_LABEL;
             }
         };
         menuFragment = new ObjectListFragment();

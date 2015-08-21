@@ -66,6 +66,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.robolectric.Robolectric;
 import org.robolectric.RobolectricGradleTestRunner;
+import org.robolectric.RuntimeEnvironment;
 import org.robolectric.annotation.Config;
 
 import java.util.ArrayList;
@@ -77,12 +78,25 @@ import static junit.framework.Assert.assertNotNull;
 import static junit.framework.Assert.assertNull;
 import static junit.framework.Assert.assertTrue;
 
+
+
 @RunWith(RobolectricGradleTestRunner.class)
 @Config(constants = BuildConfig.class, emulateSdk = 19,
         manifest = "src/main/AndroidManifest.xml")
 public class SerleenaActivityTest {
 
     SerleenaActivity activity;
+    static final String MENU_TELEMETRY_LABEL = RuntimeEnvironment.application.getResources().getString(R.string.menu_telemetryFragment);
+    static final String MENU_TRACK_LABEL = RuntimeEnvironment.application.getResources().getString(R.string.menu_trackFragment);
+    static final String MENU_MAP_LABEL = RuntimeEnvironment.application.getResources().getString(R.string.menu_mapFragment);
+    static final String MENU_CONTACTS_LABEL = RuntimeEnvironment.application.getResources().getString(R.string.menu_contactsFragment);
+    static final String MENU_TRACK_SEL_LABEL = RuntimeEnvironment.application.getResources().getString(R.string.menu_trackSelectionFragment);
+    static final String MENU_EXPERIENCE_SEL_LABEL = RuntimeEnvironment.application.getResources().getString(R.string.menu_experienceSelectionFragment);
+    static final String MENU_EXPERIENCE_LABEL = RuntimeEnvironment.application.getResources().getString(R.string.menu_experienceFragment);
+    static final String MENU_SYNC_LABEL = RuntimeEnvironment.application.getResources().getString(R.string.menu_syncFragment);
+    static final String MENU_COMPASS_LABEL = RuntimeEnvironment.application.getResources().getString(R.string.menu_compassFragment);
+    static final String MENU_WEATHER_LABEL = RuntimeEnvironment.application.getResources().getString(R.string.menu_weatherFragment);
+    static final String MENU_QUIT_LABEL = RuntimeEnvironment.application.getResources().getString(R.string.menu_quitFragment);
 
     @Before
     public void initialize() {
@@ -159,7 +173,7 @@ public class SerleenaActivityTest {
         ListAdapter menuAdapter =
                 ((ListFragment) currentFragment()).getListAdapter();
         for (int i = 0; i < menuAdapter.getCount(); i++)
-            if (menuAdapter.getItem(i).toString().equals("Esperienza"))
+            if (menuAdapter.getItem(i).toString().equals(MENU_EXPERIENCE_LABEL))
                 experienceFragment = (ObjectListFragment)menuAdapter.getItem(i);
 
         assertNotNull(experienceFragment);
@@ -187,23 +201,23 @@ public class SerleenaActivityTest {
         return containsFragment(
                         fragmentsInExp,
                         TelemetryFragment.class,
-                        "Tracciamento") &&
+                        MENU_TELEMETRY_LABEL) &&
                 containsFragment(
                         fragmentsInExp,
                         MapFragment.class,
-                        "Mappa") &&
+                        MENU_MAP_LABEL) &&
                 containsFragment(
                         fragmentsInExp,
                         ExperienceSelectionFragment.class,
-                        "Imposta Esperienza") &&
+                        MENU_EXPERIENCE_SEL_LABEL) &&
                 containsFragment(
                         fragmentsInExp,
                         TrackSelectionFragment.class,
-                        "Imposta Percorso") &&
+                        MENU_TRACK_SEL_LABEL) &&
                 containsFragment(
                         fragmentsInExp,
                         TrackFragment.class,
-                        "Percorso");
+                        MENU_TRACK_LABEL);
     }
 
     private static boolean isValidMainMenu(Fragment fragment) {
@@ -221,27 +235,27 @@ public class SerleenaActivityTest {
             return containsFragment(
                             fragmentsInMenu,
                             CompassFragment.class,
-                            "Bussola") &&
+                            MENU_COMPASS_LABEL) &&
                     containsFragment(
                             fragmentsInMenu,
                             ObjectListFragment.class,
-                            "Esperienza") &&
+                            MENU_EXPERIENCE_LABEL) &&
                     containsFragment(
                             fragmentsInMenu,
                             WeatherFragment.class,
-                            "Meteo") &&
+                            MENU_WEATHER_LABEL) &&
                     containsFragment(
                             fragmentsInMenu,
                             SyncFragment.class,
-                            "Sincronizza") &&
+                            MENU_SYNC_LABEL) &&
                     containsFragment(
                             fragmentsInMenu,
                             QuitFragment.class,
-                            "Esci") &&
+                            MENU_QUIT_LABEL) &&
                     containsFragment(
                             fragmentsInMenu,
                             ContactsFragment.class,
-                            "Autorità locali");
+                            MENU_CONTACTS_LABEL);
         } catch (ClassCastException e) {
             return false;
         }

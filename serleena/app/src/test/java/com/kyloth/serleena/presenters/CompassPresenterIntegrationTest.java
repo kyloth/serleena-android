@@ -60,6 +60,7 @@ import junit.framework.Assert;
 
 import org.robolectric.Robolectric;
 import org.robolectric.RobolectricGradleTestRunner;
+import org.robolectric.RuntimeEnvironment;
 import org.robolectric.annotation.Config;
 
 import org.junit.Test;
@@ -90,6 +91,7 @@ public class CompassPresenterIntegrationTest {
     private CompassFragment fragment;
     private TestActivity activity;
     private CompassWidget widget;
+    final String MENU_COMPASS_LABEL = RuntimeEnvironment.application.getResources().getString(R.string.menu_compassFragment);
 
     @Before
     public void initialize() {
@@ -100,7 +102,7 @@ public class CompassPresenterIntegrationTest {
                 findFragmentById(R.id.main_container);
         for (int i = 0; i < menu.getListAdapter().getCount(); i++) {
             Fragment f = (Fragment) menu.getListAdapter().getItem(i);
-            if (f.toString().equals("Bussola"))
+            if (f.toString().equals(MENU_COMPASS_LABEL))
                 fragment = (CompassFragment) f;
         }
 

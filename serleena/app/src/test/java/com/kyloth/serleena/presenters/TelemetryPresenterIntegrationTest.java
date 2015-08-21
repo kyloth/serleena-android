@@ -83,7 +83,8 @@ public class TelemetryPresenterIntegrationTest {
     ImageButton button;
     TextView text;
     SerleenaActivity activity;
-
+    final String MENU_EXPERIENCE_LABEL = RuntimeEnvironment.application.getResources().getString(R.string.menu_experienceFragment);
+    final String MENU_TELEMETRY_LABEL = RuntimeEnvironment.application.getResources().getString(R.string.menu_telemetryFragment);
     @Before
     public void initialize() {
         activity = Robolectric.buildActivity(SerleenaActivity.class)
@@ -97,13 +98,13 @@ public class TelemetryPresenterIntegrationTest {
         ListAdapter adapter = menuFragment.getListAdapter();
         ListFragment expFragment = null;
         for (int i = 0; i < adapter.getCount(); i++)
-            if (adapter.getItem(i).toString().equals("Esperienza"))
+            if (adapter.getItem(i).toString().equals(MENU_EXPERIENCE_LABEL))
                 expFragment = (ListFragment) adapter.getItem(i);
         activity.onObjectSelected(expFragment);
         expFragment.onResume();
         adapter = expFragment.getListAdapter();
         for (int i = 0; i < adapter.getCount(); i++)
-            if (adapter.getItem(i).toString().equals("Tracciamento"))
+            if (adapter.getItem(i).toString().equals(MENU_TELEMETRY_LABEL))
                 fragment = (TelemetryFragment) adapter.getItem(i);
         presenter = new TelemetryPresenter(fragment, activity);
 
@@ -147,7 +148,7 @@ public class TelemetryPresenterIntegrationTest {
         tc.startTrack(track);
         tc.advanceCheckpoint();
         button.callOnClick();
-        String alreadyStartedError = RuntimeEnvironment.application.getResources().getString(R.string.telem_alreadyStartedError);
+        String alreadyStartedError = RuntimeEnvironment.application.getResources().getString(R.string.telemetry_alreadyStartedError);
         assertTrue(text.getText().equals(alreadyStartedError));
     }
 

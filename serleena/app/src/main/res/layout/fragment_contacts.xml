@@ -8,7 +8,7 @@
         android:layout_width="85dp"
         android:layout_height="85dp"
         android:id="@+id/contact_image"
-        android:contentDescription="@string/contact_image"
+        android:contentDescription="@string/contacts_image"
         android:layout_gravity="center_horizontal|top"
         android:src="@drawable/contact"
         android:layout_marginTop="10dp"
@@ -18,7 +18,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:textAppearance="?android:attr/textAppearanceSmall"
-        android:text="@string/contactname"
+        android:text="@string/contacts_name"
         android:id="@+id/contact_name_text"
         android:layout_gravity="center_horizontal"/>
 
@@ -26,7 +26,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:textAppearance="?android:attr/textAppearanceSmall"
-        android:text="@string/contactvalue"
+        android:text="@string/contacts_value"
         android:id="@+id/contact_value_text"
         android:layout_gravity="center_horizontal"/>
 
