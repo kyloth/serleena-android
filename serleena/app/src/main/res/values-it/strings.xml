@@ -11,7 +11,6 @@
     <string name="map_cantFix">Impossibile geolocalizzare</string>
     <string name="map_accept">OK</string>
 
-    <string name="quit_quit">Esci</string>
     <string name="quit_confirmMessage">Sei sicuro di voler uscire?</string>
     <string name="quit_confirmed">Sì</string>
     <string name="quit_cancelled">No</string>
