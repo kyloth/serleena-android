@@ -101,6 +101,7 @@ public class ContactsPresenterIntegrationTest {
     }
 
     final String MENU_CONTACTS_LABEL = RuntimeEnvironment.application.getResources().getString(R.string.menu_contactsFragment);
+    final String CONTACTS_NOCONTACT = RuntimeEnvironment.application.getResources().getString(R.string.contacts_noContact);
 
     private TestSerleenaActivity activity;
     private ContactsFragment fragment;
@@ -166,7 +167,7 @@ public class ContactsPresenterIntegrationTest {
             @Override
             public Boolean call() throws Exception {
                 String name1 = name.getText().toString();
-                return !name1.equals("NESSUN CONTATTO");
+                return !name1.equals(CONTACTS_NOCONTACT);
             }});
 
         name1 = name.getText().toString();
@@ -200,7 +201,7 @@ public class ContactsPresenterIntegrationTest {
             @Override
             public Boolean call() throws Exception {
                 String name1 = name.getText().toString();
-                return !name1.equals("NESSUN CONTATTO");
+                return !name1.equals(CONTACTS_NOCONTACT);
             }});
 
         String name1, name2, value1, value2;
