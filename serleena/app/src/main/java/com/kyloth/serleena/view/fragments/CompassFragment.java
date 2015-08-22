@@ -28,8 +28,18 @@
 ///////////////////////////////////////////////////////////////////////////////
 
 
-package com.kyloth.serleena.view.fragments;
+/**
+ * Name: CompassFragment
+ * Package: com.kyloth.serleena.view.fragments
+ * Author: Sebastiano Valle
+ *
+ * History:
+ * Version   Programmer         Changes
+ * 1.0.0     Sebastiano Valle   Creazione del file, scrittura del codice
+ *                              e di Javadoc
+ */
 
+package com.kyloth.serleena.view.fragments;
 
 import android.os.Bundle;
 import android.app.Fragment;
@@ -44,12 +54,19 @@ import com.kyloth.serleena.presentation.ICompassView;
 import com.kyloth.serleena.view.widgets.CompassWidget;
 
 /**
- * A simple {@link Fragment} subclass.
+ * Realizza la schermata "Bussola", in cui vengono mostrate indicazioni
+ * sull'orientamento rispetto ai punti cardinali.
+ *
+ * @use Viene istanziata e utilizzata dall'Activity per la visualizzazione della schermata. Comunica con il Presenter associato attraverso l'interfaccia ICompassPresenter.
+ * @field presenter : ICompassPresenter presenter collegato alla schermata
+ * @field compass : CompassWidget Componente rappresentante la bussola
+ * @author Sebastiano Valle <valle.sebastiano93@gmail.com>
+ * @version 1.0.0
  */
 public class CompassFragment extends Fragment implements ICompassView {
 
     private ICompassPresenter presenter;
-    CompassWidget compass;
+    private CompassWidget compass;
 
     /**
      * Crea un nuovo oggetto CompassFragment.
@@ -85,27 +102,48 @@ public class CompassFragment extends Fragment implements ICompassView {
         return "Bussola";
     }
 
+    /**
+     * Implementa ICompassView.setHeading().
+     *
+     * Imposta l'orientamento sul widget rappresentante la bussola.
+     */
     @Override
     public void setHeading(double heading) {
         compass.setOrientation((float) heading);
     }
 
+    /**
+     * Implementa ICompassView.attachPresenter().
+     */
     @Override
     public void attachPresenter(ICompassPresenter presenter) {
         this.presenter = presenter;
     }
 
+    /**
+     * Implementa ICompassView.clearView().
+     */
     @Override
     public void clearView() {
         compass.reset();
     }
 
+    /**
+     * Ridefinisce Fragment.onResume().
+     *
+     * Notifica al Presenter che la vista è in primo piano.
+     */
     @Override
     public void onResume() {
         super.onResume();
         presenter.resume();
     }
 
+    /**
+     * Ridefinisce Fragment.onPause().
+     *
+     * Notifica al Presenter che la vista è in background.
+     */
     @Override
     public void onPause() {
         super.onPause();
