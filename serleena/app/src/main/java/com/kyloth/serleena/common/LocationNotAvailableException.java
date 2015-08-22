@@ -28,10 +28,24 @@
 ///////////////////////////////////////////////////////////////////////////////
 
 
+/**
+ * Name: LocationNotAvailableException.java
+ * Package: com.hitchikers.serleena.common
+ * Author: Filippo Sestini
+ *
+ * History:
+ * Version    Programmer       Changes
+ * 1.0        Filippo Sestini      Creazione del file
+ */
+
 package com.kyloth.serleena.common;
 
 /**
- * Created by fsestini on 6/24/15.
+ * Segnala l'impossibilita` di ottenere informazioni sulla posizione del
+ * dispositivo.
+ *
+ * @author Filippo Sestini <sestini.filippo@gmail.com>
+ * @version 1.0.0
  */
 public class LocationNotAvailableException extends Throwable {
 }

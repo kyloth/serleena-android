@@ -28,10 +28,23 @@
 ///////////////////////////////////////////////////////////////////////////////
 
 
+/**
+ * Name: NoSuchRasterException.java
+ * Package: com.hitchikers.serleena.persistence.sqlite
+ * Author: Filippo Sestini
+ *
+ * History:
+ * Version    Programmer       Changes
+ * 1.0        Filippo Sestini      Creazione del file
+ */
+
 package com.kyloth.serleena.persistence.sqlite;
 
 /**
- * Created by fsestini on 8/12/15.
+ * Segnala l'assenza del Quadrante richiesto.
+ *
+ * @author Filippo Sestini <sestini.filippo@gmail.com>
+ * @version 1.0.0
  */
 public class NoSuchRasterException extends RuntimeException {
 }
