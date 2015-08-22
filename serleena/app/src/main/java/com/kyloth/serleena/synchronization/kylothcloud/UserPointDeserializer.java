@@ -28,6 +28,16 @@
 ///////////////////////////////////////////////////////////////////////////////
 
 
+/**
+ * Name: UserPointDeserializer.java
+ * Package: com.hitchikers.serleena.synchronization.kylothcloud
+ * Author: Tobia Tesan
+ *
+ * History:
+ * Version    Programmer       Changes
+ * 1.0        Tobia Tesan      Creazione del file
+ */
+
 package com.kyloth.serleena.synchronization.kylothcloud;
 
 import com.google.gson.JsonDeserializationContext;
@@ -39,6 +49,13 @@ import java.lang.reflect.Type;
 
 import com.kyloth.serleena.common.GeoPoint;
 
+/**
+ * Deserializer custom per deserializzare una UserPointEntity dal JSON passato
+ * da Kyloth in GSON.
+ *
+ * @author Tobia Tesan <tobia.tesan@gmail.com>
+ * @version 1.0
+ */
 class UserPointDeserializer implements JsonDeserializer<UserPointEntity> {
 
     @Override

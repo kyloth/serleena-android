@@ -28,6 +28,16 @@
 ///////////////////////////////////////////////////////////////////////////////
 
 
+/**
+ * Name: RasterDataEntityDeserializer.java
+ * Package: com.hitchikers.serleena.synchronization.kylothcloud
+ * Author: Tobia Tesan
+ *
+ * History:
+ * Version    Programmer       Changes
+ * 1.0        Tobia Tesan      Creazione del file
+ */
+
 package com.kyloth.serleena.synchronization.kylothcloud;
 
 import com.google.gson.JsonArray;
@@ -43,7 +53,11 @@ import java.lang.reflect.Type;
 import java.util.ArrayList;
 
 /**
- * Created by tobia on 13/08/15.
+ * Deserializer custom per deserializzare una RasterDataEntity dal JSON passato
+ * da Kyloth in GSON.
+ *
+ * @author Tobia Tesan <tobia.tesan@gmail.com>
+ * @version 1.0
  */
 public class RasterDataEntityDeserializer implements JsonDeserializer<RasterDataEntity> {
     @Override
