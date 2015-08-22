@@ -28,12 +28,21 @@
 ///////////////////////////////////////////////////////////////////////////////
 
 
+/**
+ * Name: NoSuchCheckpointException.java
+ * Package: com.hitchikers.serleena.sensors
+ * Author: Filippo Sestini <sestini.filippo@gmail.com>
+ *
+ * History:
+ * Version    Programmer       Changes
+ * 1.0        Filippo Sestini  Creazione del file
+ */
+
 package com.kyloth.serleena.sensors;
 
 /**
  * Segnala l'assenza di un Checkpoint secondo i pararmetri richiesti.
  *
- * @use Viene sollevata da TrackCrossing quando si tenta di ottenere dati sull'ultimo checkpoint attraversato durante un Percorso quando non sono ancora stati attraversati checkpoint per quel Percorso.
  * @author Filippo Sestini <sestini.filippo@gmail.com>
  * @version 1.0.0
  */
