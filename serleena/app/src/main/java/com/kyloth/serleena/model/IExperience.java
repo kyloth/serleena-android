@@ -92,8 +92,17 @@ public interface IExperience {
      */
     String getName();
 
-    UUID getUUID();
-
-    IQuadrant getQuadrant(GeoPoint location)
-            throws NoSuchQuadrantException;
+    /**
+     * Restituisce il quadrante contenente la posizione geografica
+     * specificata, tra quelli associati all'Esperienza rappresentata
+     * dall'istanza.
+     *
+     * Se non vi sono quadranti contenenti la posizione specificata, viene
+     * sollevata un'eccezione NosuchQuadrantException.
+     *
+     * @param location Posizione geografica contenuta dal quadrante richiesto.
+     * @return Oggetto IQuadrant rappresentante il quadrante.
+     * @throws NoSuchQuadrantException
+     */
+    IQuadrant getQuadrant(GeoPoint location) throws NoSuchQuadrantException;
 }

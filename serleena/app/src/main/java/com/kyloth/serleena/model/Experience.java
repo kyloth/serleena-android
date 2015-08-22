@@ -119,12 +119,7 @@ final class Experience implements IExperience {
     public String getName() {
         return storage.getName();
     }
-
-    @Override
-    public UUID getUUID() {
-        return storage.getUUID();
-    }
-
+    
     /**
      * Implementa IExperience.getQuadrant().
      *
