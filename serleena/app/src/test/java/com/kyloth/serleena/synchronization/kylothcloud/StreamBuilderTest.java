@@ -28,6 +28,17 @@
 ///////////////////////////////////////////////////////////////////////////////
 
 
+/**
+ * Name: StreamBuilderTest.java
+ * Package: com.kyloth.serleena.synchronization.kyloth.inbound;
+ * Author: Tobia Tesan
+ *
+ * History:
+ * Version  Programmer       Changes
+ * 1.0.0    Tobia Tesan      Creazione file scrittura
+ *                           codice e documentazione Javadoc
+ */
+
 package com.kyloth.serleena.synchronization.kylothcloud;
 
 import android.content.ContentValues;
@@ -59,6 +70,12 @@ import java.net.URLEncoder;
 
 import static org.mockito.Mockito.mock;
 
+/**
+ * Test di unità per classi StreamBuilder
+ *
+ * @author Tobia Tesan <tobia.tesan@gmail.com>
+ * @version 1.0.0
+ */
 @RunWith(RobolectricGradleTestRunner.class)
 @Config(constants = BuildConfig.class, emulateSdk = 19)
 public class StreamBuilderTest {

@@ -28,6 +28,17 @@
 ///////////////////////////////////////////////////////////////////////////////
 
 
+/**
+ * Name: DummyServerIntegrationTest.java
+ * Package: com.kyloth.serleena.synchronization;
+ * Author: Tobia Tesan
+ *
+ * History:
+ * Version  Programmer       Changes
+ * 1.0.0    Tobia Tesan      Creazione file scrittura
+ *                           codice e documentazione Javadoc
+ */
+
 package com.kyloth.serleena.synchronization;
 
 
@@ -74,7 +85,14 @@ import static org.mockito.Mockito.mock;
 
 
 /**
- * Crea un semplicissimo server HTTP fittizio e effettua una sequenza di chiamate allo stesso per verificare che l'intero stack funzioni correttamente in pratica.
+ * Test di integrazione delle classi responsabili della sincronizzazione.
+ *
+ * Crea un semplicissimo server HTTP fittizio e effettua una sequenza di
+ * chiamate allo stesso per verificare che l'intero stack funzioni correttamente
+ * in pratica.
+ *
+ * @author Tobia Tesan <tobia.tesan@gmail.com>
+ * @version 1.0.0
  */
 @RunWith(RobolectricTestRunner.class)
 public class DummyServerIntegrationTest {

@@ -70,6 +70,12 @@ import static org.mockito.Matchers.eq;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
+/**
+ * Test di unità per la classe SerleenaJSONNetProxyAuthorized
+ *
+ * @author Matteo Lisotto
+ * @version 1.0.0
+ */
 @RunWith(RobolectricGradleTestRunner.class)
 @Config(constants = BuildConfig.class, emulateSdk = 19)
 public class SerleenaJSONNetProxyAuthorizedTest {

@@ -61,6 +61,12 @@ import java.io.IOException;
 import java.io.OutputStream;
 import java.util.ArrayList;
 
+/**
+ * Test di unità della clase Synchronizer.
+ *
+ * @author Tobia Tesan <tobia.tesan@gmail.com>
+ * @version 1.0.0
+ */
 public class SynchronizerTest {
 
     INetProxy proxy;

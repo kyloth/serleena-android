@@ -66,7 +66,13 @@ import static org.junit.Assert.assertEquals;
 
 
 /**
- * Testa che i serializer e deserializer JSON siano in grado di produrre e ricevere dati nel formato di Serleena Cloud, come da fixture di test
+ * Test di unità per classi di serializzazione.
+ *
+ * Verifica che i serializer e deserializer JSON siano in grado di produrre e
+ * ricevere dati nel formato di Serleena Cloud, come da fixture di test.
+ *
+ * @author Tobia Tesan <tobia.tesan@gmail.com>
+ * @version 1.0.0
  */
 @RunWith(RobolectricGradleTestRunner.class)
 @Config(constants = BuildConfig.class, emulateSdk = 19)

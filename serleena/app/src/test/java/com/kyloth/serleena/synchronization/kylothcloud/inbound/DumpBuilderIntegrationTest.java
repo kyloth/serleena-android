@@ -76,8 +76,14 @@ import java.util.UUID;
 import static org.mockito.Mockito.mock;
 
 /**
- * Verifica che sia possibile passare delle strutture al dump builder e, caricato il dump
- * nel datasink, sia possibile richiamarle integre dal database in un secondo tempo.
+ * Test di integrazione delle dipendenze di CloudSerleenaSQLiteInboundDumpBuilder
+ *
+ * Verifica che sia possibile passare delle strutture al dump builder e,
+ * caricato il dump nel datasink, sia possibile richiamarle integre dal database
+ * in un secondo tempo.
+ *
+ * @author Tobia Tesan <tobia.tesan@gmail.com>
+ * @version 1.0.0
  */
 @RunWith(RobolectricGradleTestRunner.class)
 @Config(constants = BuildConfig.class, emulateSdk = 19)
