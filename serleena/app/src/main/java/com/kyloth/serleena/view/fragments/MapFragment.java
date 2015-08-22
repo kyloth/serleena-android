@@ -28,8 +28,18 @@
 ///////////////////////////////////////////////////////////////////////////////
 
 
-package com.kyloth.serleena.view.fragments;
+/**
+ * Name: MapFragment
+ * Package: com.kyloth.serleena.view.fragments
+ * Author: Sebastiano Valle
+ *
+ * History:
+ * Version   Programmer         Changes
+ * 1.0.0     Sebastiano Valle   Creazione del file, scrittura del codice
+ *                              e di Javadoc
+ */
 
+package com.kyloth.serleena.view.fragments;
 
 import android.app.AlertDialog;
 import android.content.DialogInterface;
@@ -51,13 +61,19 @@ import com.kyloth.serleena.presentation.IMapView;
 import com.kyloth.serleena.view.widgets.MapWidget;
 
 /**
- * A simple {@link Fragment} subclass.
+ * Classe che implementa la schermata "Mappa".
+ *
+ * @use Viene istanziata e utilizzata dall'Activity per la visualizzazione della schermata. Comunica con il Presenter associato attraverso l'interfaccia IMapPresenter.
+ * @field presenter : IMapPresenter Presenter collegato alla vista
+ * @field map : MapWidget Componente che realizza la mappa
+ * @author Sebastiano Valle <valle.sebastiano93@gmail.com>
+ * @version 1.0.0
  */
 public class MapFragment extends Fragment implements IMapView,
         View.OnClickListener {
 
-    MapWidget map;
-    IMapPresenter presenter;
+    private MapWidget map;
+    private IMapPresenter presenter;
 
     /**
      * Crea un nuovo oggetto MapFragment.
@@ -86,6 +102,14 @@ public class MapFragment extends Fragment implements IMapView,
         return v;
     }
 
+    /**
+     * Implementa OnClickListener.onClick().
+     *
+     * Segnala al Presenter la volontà di aggiungere un Punto Utente per la
+     * posizione geografica attuale.
+     * Se non vi è alcuna Esperienza attiva, o non è possibile geolocalizzare
+     * correttamente il dispositivo, viene mostrato un messaggio di errore.
+     */
     @Override
     public void onClick(View v) {
         try {
@@ -93,8 +117,13 @@ public class MapFragment extends Fragment implements IMapView,
         } catch (NoActiveExperienceException e) {
             AlertDialog.Builder alertBuilder =
                     new AlertDialog.Builder(getActivity());
-            alertBuilder.setMessage((String) getResources().getText(R.string.map_noActiveExperience));
-            alertBuilder.setNeutralButton((String) getResources().getText(R.string.map_accept), new DialogInterface.OnClickListener() {
+            alertBuilder.setMessage(
+                    (String) getResources().getText(
+                            R.string.map_noActiveExperience));
+            alertBuilder.setNeutralButton(
+                    (String) getResources().getText(
+                            R.string.map_accept),
+                    new DialogInterface.OnClickListener() {
                 @Override
                 public void onClick(DialogInterface dialog, int which) {
                     dialog.cancel();
@@ -104,8 +133,13 @@ public class MapFragment extends Fragment implements IMapView,
         } catch (LocationNotAvailableException ee) {
             AlertDialog.Builder alertBuilder =
                     new AlertDialog.Builder(getActivity());
-            alertBuilder.setMessage((String) getResources().getText(R.string.map_cantFix));
-            alertBuilder.setNeutralButton((String) getResources().getText(R.string.map_accept), new DialogInterface.OnClickListener() {
+            alertBuilder.setMessage(
+                    (String) getResources().getText(
+                            R.string.map_cantFix));
+            alertBuilder.setNeutralButton(
+                    (String) getResources().getText(
+                            R.string.map_accept),
+                    new DialogInterface.OnClickListener() {
                 @Override
                 public void onClick(DialogInterface dialog, int which) {
                     dialog.cancel();
@@ -115,11 +149,25 @@ public class MapFragment extends Fragment implements IMapView,
         }
     }
 
+    /**
+     * Implementa IMapView.setUserLocation().
+     *
+     * Imposta la mappa con la posizione utente specificata.
+     *
+     * @param point Posizione utente da visualizzare
+     */
     @Override
     public void setUserLocation(GeoPoint point) {
         map.setUserPosition(point);
     }
 
+    /**
+     * Implementa IMapView.displayQuadrant().
+     *
+     * Imposta la mappa con il quadrante specificato.
+     *
+     * @param q Quadrante da visualizzare
+     */
     @Override
     public void displayQuadrant(IQuadrant q) {
         if (q == null)
@@ -127,6 +175,13 @@ public class MapFragment extends Fragment implements IMapView,
         map.setQuadrant(q);
     }
 
+    /**
+     * Implementa IMapView.displayUP().
+     *
+     * Imposta la mappa con i punti utente specificati.
+     *
+     * @param points Punti Utente da visualizzare
+     */
     @Override
     public void displayUP(Iterable<UserPoint> points) {
         if (points == null)
@@ -134,6 +189,9 @@ public class MapFragment extends Fragment implements IMapView,
         map.setUserPoints(points);
     }
 
+    /**
+     * Implementa IMapView.attachPresenter().
+     */
     @Override
     public void attachPresenter(IMapPresenter presenter) {
         if (presenter == null)
@@ -141,14 +199,18 @@ public class MapFragment extends Fragment implements IMapView,
         this.presenter = presenter;
     }
 
+    /**
+     * Implementa IMapView.clear().
+     */
     @Override
     public void clear() {
         map.clear();
     }
 
     /**
-     * Metodo invocato quando il Fragment viene visualizzato.
+     * Ridefinisce Fragment.onResume().
      *
+     * Notifica il Presenter che la vista si trova in primo piano.
      */
     @Override
     public void onResume() {
@@ -157,8 +219,9 @@ public class MapFragment extends Fragment implements IMapView,
     }
 
     /**
-     * Metodo invocato quando il Fragment smette di essere visualizzato.
+     * Ridefinisce Fragment.onPause().
      *
+     * Notifica il Presenter che la vista si trova in background.
      */
     @Override
     public void onPause() {
