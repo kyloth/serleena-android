@@ -136,7 +136,8 @@ class Telemetry implements  ITelemetry {
                 }
             });
         } catch (NoSuchTelemetryEventException e) {
-            throw new RuntimeException("Illegal telemetry without events");
+            throw new RuntimeException(
+                    "Illegal telemetry without first checkpoint");
         }
         return firstEvent.iterator().next().timestamp();
     }

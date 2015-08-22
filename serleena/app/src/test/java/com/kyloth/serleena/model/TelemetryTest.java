@@ -41,6 +41,7 @@
 
 package com.kyloth.serleena.model;
 
+import org.junit.Before;
 import org.junit.Test;
 
 import static org.mockito.Mockito.*;
@@ -63,12 +64,55 @@ import com.kyloth.serleena.persistence.ITelemetryStorage;
 
 public class TelemetryTest {
 
+    private Telemetry telemetry;
+    private ITelemetryStorage telemetryStorage;
+    private Telemetry faultyTelemetry;
+    private long testTimestamp;
+
     private List<TelemetryEvent> getListFromIterable(Iterable<TelemetryEvent>
                                                              iterable) {
         List<TelemetryEvent> list = new ArrayList<>();
         for (TelemetryEvent e : iterable)
             list.add(e);
         return list;
+    }
+
+    @Before
+    public void initialize() {
+        CheckpointReachedTelemetryEvent event1 =
+                mock(CheckpointReachedTelemetryEvent.class);
+        CheckpointReachedTelemetryEvent event2 =
+                mock(CheckpointReachedTelemetryEvent.class);
+        CheckpointReachedTelemetryEvent event3 =
+                mock(CheckpointReachedTelemetryEvent.class);
+
+        when(event1.checkpointNumber()).thenReturn(1);
+        when(event2.checkpointNumber()).thenReturn(2);
+        when(event3.checkpointNumber()).thenReturn(3);
+
+        testTimestamp = 100;
+
+        when(event1.timestamp()).thenReturn(testTimestamp);
+        when(event2.timestamp()).thenReturn(200L);
+        when(event3.timestamp()).thenReturn(300L);
+
+        ArrayList<TelemetryEvent> events = new ArrayList<>();
+        events.add(event1);
+        events.add(event2);
+        events.add(event3);
+
+        ArrayList<TelemetryEvent> faultyEvents = new ArrayList<>();
+        faultyEvents.add(event2);
+        faultyEvents.add(event3);
+
+        telemetryStorage = mock(ITelemetryStorage.class);
+        when(telemetryStorage.getEvents()).thenReturn(events);
+
+        ITelemetryStorage faultyTelemetryStorage = mock(ITelemetryStorage.class);
+        when(faultyTelemetryStorage.getEvents()).thenReturn(faultyEvents);
+
+        telemetry = new Telemetry(telemetryStorage);
+        faultyTelemetry = new Telemetry(faultyTelemetryStorage);
     }
 
     /**
@@ -153,9 +197,12 @@ public class TelemetryTest {
      */
     @Test
     public void getDurationShouldReturnLatestTimestamp() {
-        CheckpointReachedTelemetryEvent te1 = new CheckpointReachedTelemetryEvent(20L, 1);
-        CheckpointReachedTelemetryEvent te2 = new CheckpointReachedTelemetryEvent(25L, 2);
-        CheckpointReachedTelemetryEvent te3 = new CheckpointReachedTelemetryEvent(30L, 3);
+        CheckpointReachedTelemetryEvent te1 =
+                new CheckpointReachedTelemetryEvent(20L, 1);
+        CheckpointReachedTelemetryEvent te2 =
+                new CheckpointReachedTelemetryEvent(25L, 2);
+        CheckpointReachedTelemetryEvent te3 =
+                new CheckpointReachedTelemetryEvent(30L, 3);
         ITelemetryStorage ts = mock(ITelemetryStorage.class);
         List<TelemetryEvent> list = new ArrayList<>();
         list.add(te1);
@@ -165,6 +212,42 @@ public class TelemetryTest {
         Telemetry telemetry = new Telemetry(ts);
         assertEquals(telemetry.startTimestamp(), 20L);
         assertEquals(new Telemetry(ts).getDuration(), 10L);
+    }
+
+    /**
+     * Verifica che il timestamp di inizio del Tracciamento corrisponda al
+     * timestamp dell'evento campionato all'attraversamento del primo
+     * checkpoint del Percorso.
+     */
+    @Test
+    public void firstTimestampShouldBeTimestampOfFirstCheckpoint()
+            throws NoSuchTelemetryEventException {
+        CheckpointReachedTelemetryEvent firstCheckpointEvent =
+                (CheckpointReachedTelemetryEvent) telemetry.getEvents(
+                        new Predicate<TelemetryEvent>() {
+                    @Override
+                    public boolean apply(TelemetryEvent telemetryEvent) {
+                        if (telemetryEvent instanceof
+                                CheckpointReachedTelemetryEvent) {
+                            CheckpointReachedTelemetryEvent event =
+                                    (CheckpointReachedTelemetryEvent)
+                                            telemetryEvent;
+                            return event.checkpointNumber() == 1;
+                        }
+                        return false;
+                    }
+                }).iterator().next();
+        assertEquals(testTimestamp, firstCheckpointEvent.timestamp());
+    }
+
+    /**
+     * Verifica che il tentativo di ottenere il timestamp di inizio di un
+     * Tracciamento privo di evento relativo al primo checkpoint del Percorso
+     * sollevi un'eccezione a runtime irrecuperabile.
+     */
+    @Test(expected = RuntimeException.class)
+    public void telemetryWithoutCheckpointEventsShouldThrow() {
+        faultyTelemetry.startTimestamp();
     }
 
 }
