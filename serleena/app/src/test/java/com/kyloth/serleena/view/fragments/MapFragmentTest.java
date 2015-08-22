@@ -41,11 +41,15 @@
 
 package com.kyloth.serleena.view.fragments;
 
+import android.app.Activity;
+import android.app.AlertDialog;
+import android.app.FragmentManager;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.kyloth.serleena.BuildConfig;
 import com.kyloth.serleena.R;
 import com.kyloth.serleena.common.GeoPoint;
 import com.kyloth.serleena.common.IQuadrant;
@@ -55,14 +59,20 @@ import com.kyloth.serleena.common.UserPoint;
 import com.kyloth.serleena.presentation.IMapPresenter;
 import com.kyloth.serleena.view.widgets.MapWidget;
 
-import org.robolectric.RobolectricTestRunner;
+import org.mockito.Mockito;
+import org.robolectric.Robolectric;
+import org.robolectric.RobolectricGradleTestRunner;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.Before;
+import org.robolectric.Shadows;
+import org.robolectric.annotation.Config;
+import org.robolectric.shadows.ShadowAlertDialog;
 
 import java.util.ArrayList;
 
+import static junit.framework.Assert.assertEquals;
 import static junit.framework.Assert.assertTrue;
 import static org.mockito.Mockito.*;
 
@@ -72,7 +82,8 @@ import static org.mockito.Mockito.*;
  * @author Filippo Sestini <sestini.filippo@gmail.com>
  * @version 1.0.0
  */
-@RunWith(RobolectricTestRunner.class)
+@RunWith(RobolectricGradleTestRunner.class)
+@Config(constants = BuildConfig.class, emulateSdk = 19)
 public class MapFragmentTest {
 
     private MapFragment fragment;
@@ -81,13 +92,20 @@ public class MapFragmentTest {
     private IQuadrant q;
     private GeoPoint location;
     private Iterable<UserPoint> userPoints;
+    private Activity activity;
 
     @Before
     public void initialize() {
+        activity = Robolectric.buildActivity(Activity.class)
+                .create().start().visible().get();
+
+        fragment = new MapFragment();
+        FragmentManager fm = activity.getFragmentManager();
+        fm.beginTransaction().add(fragment, "TEST").commit();
+
         userPoints = new ArrayList<>();
         q = mock(IQuadrant.class);
         location = mock(GeoPoint.class);
-        fragment = new MapFragment();
         presenter = mock(IMapPresenter.class);
         fragment.attachPresenter(presenter);
 
@@ -198,6 +216,44 @@ public class MapFragmentTest {
     @Test
     public void toStringShouldReturnTheCorrectValue() {
         assertTrue(fragment.toString().equals("Mappa"));
+    }
+
+    /**
+     * Verifica che il click sulla schermata nel tentativo di aggiungere un
+     * Punto Utente mostri un errore in una finestra di dialogo di sistema nel
+     * caso in cui non sia attiva alcuna Esperienza.
+     */
+    @Test
+    public void newUserPointWithNoActiveExperienceShouldShowDialog()
+            throws NoActiveExperienceException, LocationNotAvailableException {
+        Mockito.doThrow(NoActiveExperienceException.class)
+                .when(presenter).newUserPoint();
+        fragment.onClick(mock(View.class));
+        ShadowAlertDialog dialog = Shadows.shadowOf(
+                ShadowAlertDialog.getLatestAlertDialog());
+        assertEquals(
+                activity.getResources().getString(
+                        R.string.map_noActiveExperience),
+                dialog.getMessage());
+    }
+
+    /**
+     * Verifica che il click sulla schermata nel tentativo di aggiungere un
+     * Punto Utente mostri un errore in una finestra di dialogo di sistema nel
+     * caso in cui non sia possibile geolocalizzare il dispositivo.
+     */
+    @Test
+    public void newUserPointWithNoLocationShouldShowDialog()
+            throws NoActiveExperienceException, LocationNotAvailableException {
+        Mockito.doThrow(LocationNotAvailableException.class)
+                .when(presenter).newUserPoint();
+        fragment.onClick(mock(View.class));
+        ShadowAlertDialog dialog = Shadows.shadowOf(
+                ShadowAlertDialog.getLatestAlertDialog());
+        assertEquals(
+                activity.getResources().getString(
+                        R.string.map_cantFix),
+                dialog.getMessage());
     }
 
 }
