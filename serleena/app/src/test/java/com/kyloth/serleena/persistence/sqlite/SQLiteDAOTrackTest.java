@@ -58,12 +58,11 @@ import com.kyloth.serleena.common.TelemetryEvent;
 import com.kyloth.serleena.persistence.ITelemetryStorage;
 
 /**
- * Contiene test per la classe SQLiteDAOExperience.
+ * Test di unità per la classe SQLiteDAOExperience.
  *
  * @author Gabriele Pozzan <gabriele.pozzan@studenti.unipd.it>
  * @version 1.0
  */
-
 public class SQLiteDAOTrackTest {
 
     private SerleenaSQLiteDataSource serleenaSQLDS;

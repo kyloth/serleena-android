@@ -74,7 +74,7 @@ import static junit.framework.Assert.assertTrue;
 import static org.mockito.Mockito.*;
 
 /**
- * Contiene i test di unità per la classe ExperienceSelectionFragment.
+ * Test di unità per la classe ExperienceSelectionFragment.
  *
  * @author Sebastiano Valle <valle.sebastiano93@gmail.com>
  * @version 1.0.0

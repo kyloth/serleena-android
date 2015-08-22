@@ -60,7 +60,7 @@ import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.*;
 
 /**
- * Contiene i test di unità per la classe HeadingManager.
+ * Test di unità per la classe HeadingManager.
  *
  * @author Filippo Sestini <sestini.filippo@gmail.com>
  * @version 1.0.0

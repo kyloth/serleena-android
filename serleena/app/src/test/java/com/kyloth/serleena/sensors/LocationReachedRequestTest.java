@@ -28,6 +28,17 @@
 ///////////////////////////////////////////////////////////////////////////////
 
 
+/**
+ * Name: LocationReachedRequest.java
+ * Package: com.kyloth.serleena.sensors
+ * Author: Gabriele Pozzan
+ *
+ * History:
+ * Version  Programmer        Changes
+ * 1.0.0    Gabriele Pozzan   Creazione file e scrittura
+ *                                         codice e documentazione Javadoc
+ */
+
 package com.kyloth.serleena.sensors;
 
 import com.kyloth.serleena.common.GeoPoint;
@@ -37,6 +48,12 @@ import org.junit.Test;
 import static junit.framework.Assert.assertEquals;
 import static org.mockito.Mockito.mock;
 
+/**
+ * Test di unità per la classe LocationReachedRequest
+ *
+ * @author Gabriele Pozzan <gabriele.pozzan@studenti.unipd.it>
+ * @version 1.0.0
+ */
 public class LocationReachedRequestTest {
 
     @Test

@@ -69,7 +69,7 @@ import org.robolectric.annotation.Config;
 import static org.mockito.Mockito.*;
 
 /**
- * Contiene i test di unità per la classe CompassFragment.
+ * Test di unità per la classe CompassFragment.
  *
  * @author Filippo Sestini <sestini.filippo@gmail.com>
  * @version 1.0.0

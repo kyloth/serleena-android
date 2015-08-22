@@ -29,7 +29,7 @@
 
 
 /**
- * Name: MapPresenterIntegrationTest.java
+ * Name: MapIntegrationTest.java
  * Package: com.kyloth.serleena.presenters;
  * Author: Filippo Sestini
  *
@@ -101,14 +101,20 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
 /**
- * Contiene i test di integrazione per MapPresenter e le sue dipendenze,
- * quali MapFragment, il codice di persistenza e il codice di gestione dei
- * sensori di posizione.
+ * Test di integrazione delle classi che compongono la schermata
+ * Mappa.
+ *
+ * Integra le classi dei package presenters, sensors, activity responsabili del
+ * funzionamento della schermata Mappa.
+ * Tali classi sono aggregate come dipendenze di MapPresenter.
+ *
+ * @author Filippo Sestini <sestini.filippo@gmail.com>
+ * @version 1.0.0
  */
 @RunWith(RobolectricGradleTestRunner.class)
 @Config(constants = BuildConfig.class, emulateSdk = 19,
         manifest = "src/main/AndroidManifest.xml")
-public class MapPresenterIntegrationTest {
+public class MapIntegrationTest {
 
     private SQLiteDatabase db;
 

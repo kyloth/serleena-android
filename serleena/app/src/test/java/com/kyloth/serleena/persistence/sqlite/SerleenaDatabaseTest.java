@@ -68,7 +68,7 @@ import static junit.framework.Assert.assertEquals;
 import static junit.framework.Assert.assertTrue;
 
 /**
- * Contiene i test di unità per la classe SerleenaDatabaseTest
+ * Contiene i test di unità per la classe SerleenaDatabase
  *
  * @author Tobia Tesan <tobia.tesan@gmail.com>
  * @version 1.0

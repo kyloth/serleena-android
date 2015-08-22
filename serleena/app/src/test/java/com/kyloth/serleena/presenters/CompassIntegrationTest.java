@@ -29,7 +29,7 @@
 
 
 /**
- * Name: CompassPresenterIntegrationTest.java
+ * Name: CompassIntegrationTest.java
  * Package: com.kyloth.serleena.view.fragments
  * Author: Sebastiano Valle
  *
@@ -78,7 +78,11 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
 /**
- * Contiene i test di integrazione per la classe ExperienceSelectionFragment.
+ * Test di integrazione delle classi che compongono la schermata Bussola.
+ *
+ * Integra le classi dei package presenters, sensors, activity responsabili del
+ * funzionamento della schermata Bussola.
+ * Tali classi sono aggregate come dipendenze di CompassPresenter.
  *
  * @author Sebastiano Valle <valle.sebastiano93@gmail.com>
  * @version 1.0.0
@@ -86,12 +90,14 @@ import static org.mockito.Mockito.when;
 @RunWith(RobolectricGradleTestRunner.class)
 @Config(constants = BuildConfig.class, emulateSdk = 19,
         manifest = "src/main/AndroidManifest.xml")
-public class CompassPresenterIntegrationTest {
+public class CompassIntegrationTest {
 
     private CompassFragment fragment;
     private TestActivity activity;
     private CompassWidget widget;
-    final String MENU_COMPASS_LABEL = RuntimeEnvironment.application.getResources().getString(R.string.menu_compassFragment);
+    final String MENU_COMPASS_LABEL =
+            RuntimeEnvironment.application.getResources().getString(
+                    R.string.menu_compassFragment);
 
     @Before
     public void initialize() {

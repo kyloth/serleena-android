@@ -28,6 +28,17 @@
 ///////////////////////////////////////////////////////////////////////////////
 
 
+/**
+ * Name: CompassWidget.java
+ * Package: com.kyloth.serleena.view.widgets;
+ * Author: Filippo Sestini
+ *
+ * History:
+ * Version  Programmer       Changes
+ * 1.0.0    Filippo Sestini  Creazione file scrittura
+ *                           codice e documentazione Javadoc
+ */
+
 package com.kyloth.serleena.view.widgets;
 
 import android.annotation.SuppressLint;
@@ -42,6 +53,12 @@ import static org.mockito.Matchers.eq;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 
+/**
+ * Test di unità per la classe CompassWidget
+ *
+ * @author Filippo Sestini <sestini.filippo@gmail.com>
+ * @version 1.0.0
+ */
 public class CompassWidgetTest {
 
     /**

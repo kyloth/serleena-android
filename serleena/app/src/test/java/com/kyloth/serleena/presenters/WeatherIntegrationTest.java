@@ -29,7 +29,7 @@
 
 
 /**
- * Name: WeatherPresenterIntegrationTest.java
+ * Name: WeatherIntegrationTest.java
  * Package: com.kyloth.serleena.presenters
  * Author: Sebastiano Valle
  *
@@ -88,10 +88,21 @@ import java.util.concurrent.Callable;
 import static junit.framework.Assert.assertEquals;
 import static org.mockito.Mockito.mock;
 
+/**
+ * Test di integrazione delle classi che compongono la schermata
+ * Meteo.
+ *
+ * Integra le classi dei package presenters, sensors, activity responsabili del
+ * funzionamento della schermata Meteo.
+ * Tali classi sono aggregate come dipendenze di WeatherPresenter.
+ *
+ * @author Sebastiano Valle <valle.sebastiano93@gmail.com>
+ * @version 1.0.0
+ */
 @RunWith(RobolectricGradleTestRunner.class)
 @Config(constants = BuildConfig.class, emulateSdk = 19,
         manifest = "src/main/AndroidManifest.xml")
-public class WeatherPresenterIntegrationTest {
+public class WeatherIntegrationTest {
 
     private WeatherFragment fragment;
     private TestActivity activity;

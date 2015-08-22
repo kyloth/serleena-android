@@ -67,7 +67,7 @@ import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 
 /**
- * Contiene i test di unità per la classe BackgroundLocationManager.
+ * Test di unità per la classe BackgroundLocationManager.
  *
  * @author Filippo Sestini <sestini.filippo@gmail.com>
  * @version 1.0.0

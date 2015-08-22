@@ -78,7 +78,7 @@ import java.util.ArrayList;
  * @field menuFragment : ObjectListFragment Schermata menu` principale
  * @field experienceFragment : ObjectListFragment Schermata Esperienza
  * @field syncFragment : SyncFragment Schermata Sincronizza
- * @author Filippo Sestini <valle.sebastiano93@gmail.com>
+ * @author Sebastiano Valle <valle.sebastiano93@gmail.com>
  * @version 1.0.0
  * @see android.support.v7.app.AppCompatActivity
  */

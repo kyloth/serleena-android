@@ -29,7 +29,7 @@
 
 
 /**
- * Name: ContactsPresenterIntegrationTest.java
+ * Name: ContactsIntegrationTest.java
  * Package: com.kyloth.serleena.presenters
  * Author: Filippo Sestini
  *
@@ -76,8 +76,12 @@ import com.jayway.awaitility.Awaitility;
 import java.util.concurrent.Callable;
 
 /**
- * Test di integrazione di ContactsPresenter e le due dipendenze, incluse le
- * componenti di persistenza e di presentazione.
+ * Test di integrazione delle classi che compongono la schermata
+ * Autorita` Locali.
+ *
+ * Integra le classi dei package presenters, sensors, activity responsabili del
+ * funzionamento della schermata Autorita` Locali.
+ * Tali classi sono aggregate come dipendenze di ContactsPresenter.
  *
  * @author Filippo Sestini <sestini.filippo@gmail.com>
  * @version 1.0.0
@@ -85,7 +89,7 @@ import java.util.concurrent.Callable;
 @RunWith(RobolectricGradleTestRunner.class)
 @Config(constants = BuildConfig.class, emulateSdk = 19,
         manifest = "src/main/AndroidManifest.xml")
-public class ContactsPresenterIntegrationTest {
+public class ContactsIntegrationTest {
 
     private static class TestSerleenaActivity extends SerleenaActivity {
         private SerleenaDataSource dataSource;
@@ -100,8 +104,12 @@ public class ContactsPresenterIntegrationTest {
         }
     }
 
-    final String MENU_CONTACTS_LABEL = RuntimeEnvironment.application.getResources().getString(R.string.menu_contactsFragment);
-    final String CONTACTS_NOCONTACT = RuntimeEnvironment.application.getResources().getString(R.string.contacts_noContact);
+    final String MENU_CONTACTS_LABEL =
+            RuntimeEnvironment.application.getResources().getString(
+                    R.string.menu_contactsFragment);
+    final String CONTACTS_NOCONTACT =
+            RuntimeEnvironment.application.getResources().getString(
+                    R.string.contacts_noContact);
 
     private TestSerleenaActivity activity;
     private ContactsFragment fragment;

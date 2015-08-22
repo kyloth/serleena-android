@@ -29,7 +29,7 @@
 
 
 /**
- * Name: SerleenaDataSourceIntegrationTest.java
+ * Name: PersistenceIntegrationTest.java
  * Package: com.kyloth.serleena.model;
  * Author: Gabriele Pozzan
  *
@@ -81,22 +81,21 @@ import static org.mockito.Mockito.when;
 /**
  * Contiene test di integrazione per le classi di persistenza.
  *
+ * I test verificano l'integrazione tra le classi responsabili dell'astrazione
+ * del livello di persistenza, la parte concreta relativa a SQLite, e
+ * il database effettivo.
+ *
  * @author Gabriele Pozzan <gabriele.pozzan@studenti.unipd.it>
  * @version 1.0.0
  */
-
 @RunWith(RobolectricGradleTestRunner.class)
 @Config(constants = BuildConfig.class, emulateSdk = 19)
-public class SerleenaDataSourceIntegrationTest {
+public class PersistenceIntegrationTest {
 
     SQLiteDatabase db;
     SerleenaDatabase serleenaDB;
     SerleenaSQLiteDataSource serleenaSQLDS;
     SerleenaDataSource dataSource;
-
-    /**
-     * Inizializza i campi dati necessari alla conduzione dei test.
-     */
 
     @Before
     public void initialize() {
@@ -123,7 +122,6 @@ public class SerleenaDataSourceIntegrationTest {
      * Verifica inoltre che restituisca una lista vuota nel caso non ci fossero
      * contatti nelle vicinanze del punto fornito.
      */
-
     @Test
     public void testGetContacts() {
         Iterable<EmergencyContact> contacts = dataSource.getContacts(
@@ -168,7 +166,7 @@ public class SerleenaDataSourceIntegrationTest {
 
     /**
      * Verifica che il metodo getExperiences restituisca correttamente
-     * la lista delle Esperienze salvate nel db.
+     * la lista delle Esperienze salvate nel database.
      */
     @Test
     public void testGetExperiences() {
@@ -179,7 +177,9 @@ public class SerleenaDataSourceIntegrationTest {
     }
 
     /**
-     * Verifica che il metodo equals() di Track restituisca risultati corretti.
+     * Verifica che il metodo equals() di Track restituisca risultati corretti
+     * quando utilizzato per il confronto di istanze diverse relative però alle
+     * stesse entità del database.
      */
     @Test
     public void testTrackEquals() {

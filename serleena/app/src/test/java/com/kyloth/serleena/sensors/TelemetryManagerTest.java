@@ -63,7 +63,7 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 /**
- * Contiene test di unità per la classe TelemetryManager.
+ * Test di unità per la classe TelemetryManager.
  *
  * @author Filippo Sestini <sestini.filippo@gmail.com>
  * @version 1.0.0

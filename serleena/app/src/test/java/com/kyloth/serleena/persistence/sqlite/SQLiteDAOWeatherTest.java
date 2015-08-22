@@ -50,12 +50,11 @@ import java.util.Date;
 
 import com.kyloth.serleena.persistence.WeatherForecastEnum;
 /**
- * Contiene test per la classe SQLiteDAOWeather.
+ * Test di unità per la classe SQLiteDAOWeather.
  *
  * @author Gabriele Pozzan <gabriele.pozzan@studenti.unipd.it>
  * @version 1.0
  */
-
 public class SQLiteDAOWeatherTest {
 
     /**
@@ -63,7 +62,6 @@ public class SQLiteDAOWeatherTest {
      * dati della classe e che i metodi getter li restituiscano
      * di conseguenza.
      */
-
     @Test
     public void testConstructorAndGetters() {
         SQLiteDAOWeather daoWeath = new SQLiteDAOWeather(

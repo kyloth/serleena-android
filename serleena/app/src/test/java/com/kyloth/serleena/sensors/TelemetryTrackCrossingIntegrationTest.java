@@ -30,7 +30,7 @@
 
 /**
  * Name: TelemetryTrackCrossingIntegrationTest.java
- * Package: com.hitchikers.serleena
+ * Package: com.hitchikers.serleena.sensors
  * Author: Filippo Sestini
  *
  * History:
@@ -74,8 +74,12 @@ import static junit.framework.Assert.assertTrue;
 import static org.mockito.Mockito.mock;
 
 /**
- * Test di integrazione tra le classi TelemetryManager e TrackCrossing, che
- * verifica i risultati delle interazioni tra le due unità.
+ * Test di integrazione tra le classi responsabili dell'attraversamento e del
+ * Tracciamento dei Percorsi.
+ *
+ * In particolare, verifica l'integrazione tra le classi TelemetryManager e
+ * TrackCrossing e la correttezza della loro comunicazione nella realizzazione
+ * degli attraversamenti e dei tracciamenti di un Percorso.
  *
  * @author Filippo Sestini <sestini.filippo@gmail.com>
  * @version 1.0.0

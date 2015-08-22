@@ -63,6 +63,13 @@ import static junit.framework.Assert.assertEquals;
 import static junit.framework.Assert.assertTrue;
 import static org.mockito.Mockito.mock;
 
+/**
+ * Test di integrazione tra le classi del package persistence e quelle del
+ * package model.
+ *
+ * Verifica che gli oggetti del business model vengano correttamente creati in
+ * base al contenuto della parte di persistenza, basata su SQLite.
+ */
 @RunWith(RobolectricGradleTestRunner.class)
 @Config(constants = BuildConfig.class, emulateSdk = 19)
 public class PersistenceModelIntegrationTest {
@@ -90,7 +97,10 @@ public class PersistenceModelIntegrationTest {
         dataSource = new SerleenaDataSource(sqlDataSource);
     }
 
-
+    /**
+     * Verifica che gli oggetti di classe Experience ritornino un nome
+     * corrispondente a quanto presente nel database.
+     */
     @Test
     public void experienceShouldReturnItsName() {
         ContentValues values;
@@ -100,6 +110,11 @@ public class PersistenceModelIntegrationTest {
         assertEquals(TestFixtures.EXPERIENCES_FIXTURE_EXPERIENCE_1_NAME, iterator.next().getName());
     }
 
+    /**
+     * Verifica che gli oggetti di classe Experience ritornino un elenco di
+     * punti utente assiciati ad essi corrispondente a quanto presente nel
+     * database.
+     */
     @Test
     public void experienceShouldReturnItsUserPoints() {
         ContentValues values;
@@ -120,6 +135,11 @@ public class PersistenceModelIntegrationTest {
                         TestFixtures.EXPERIENCES_FIXTURE_EXPERIENCE_1_USERPOINT_2_LON)));
     }
 
+    /**
+     * Verifica che nuovi punti utente vengano correttamente aggiunti ad oggetti
+     * di tipo Experience, e che questi siano reperibili in successive
+     * richieste sullo stesso oggetto.
+     */
     @Test
     public void userPointShouldBeAddedCorrectly() {
         ContentValues values;
@@ -133,6 +153,10 @@ public class PersistenceModelIntegrationTest {
                 new UserPoint(3, 4)));
     }
 
+    /**
+     * Verifica che gli eventi di Tracciamento associati a un particolare
+     * Percorso corrispondano a quanto presente nel database.
+     */
     @Test
     public void trackShouldReturnItsEvents() {
         ContentValues values;
@@ -154,6 +178,11 @@ public class PersistenceModelIntegrationTest {
                 new CheckpointReachedTelemetryEvent(300, 2)));
     }
 
+    /**
+     * Verifica che nuovi Tracciamenti vengano correttamente aggiunti ad oggetti
+     * di tipo Track, e che questi siano reperibili in successive
+     * richieste sullo stesso oggetto.
+     */
     @Test
     public void createTelemetryShouldWorkCorrectly() {
         ContentValues values;

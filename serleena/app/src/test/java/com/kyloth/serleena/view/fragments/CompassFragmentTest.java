@@ -60,7 +60,7 @@ import static junit.framework.Assert.assertTrue;
 import static org.mockito.Mockito.*;
 
 /**
- * Contiene i test di unità per la classe CompassFragment.
+ * Test di unità per la classe CompassFragment.
  *
  * @author Filippo Sestini <sestini.filippo@gmail.com>
  * @version 1.0.0
@@ -92,6 +92,10 @@ public class CompassFragmentTest {
         fragment.onCreateView(inflater, vg, mock(Bundle.class));
     }
 
+    /**
+     * Verifica che gli eventi onResume() e onPause() del Fragment chiamino i
+     * corrispondenti metodi del Presenter associato alla vista.
+     */
     @Test
     public void testAttachCompassPresenter() {
         fragment.onResume();

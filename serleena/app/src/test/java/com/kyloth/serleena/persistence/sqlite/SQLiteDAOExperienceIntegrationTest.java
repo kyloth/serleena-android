@@ -62,15 +62,17 @@ import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.mock;
 
 /**
- * Contiene test per la classe SQLiteDAOExperience.
+ * Test di integrazione per le classi di persistenza delle Esperienze.
+ *
+ * Integra la classe SQLiteDAOExperience e il livello di persistenza basato su
+ * database SQLite rappresentato dal datasouce SerleenaSQLiteDataSource.
  *
  * @author Gabriele Pozzan <gabriele.pozzan@studenti.unipd.it>
  * @version 1.0
  */
-
 @RunWith(RobolectricGradleTestRunner.class)
 @Config(constants = BuildConfig.class, emulateSdk = 19)
-public class SQLiteDAOExperienceTest {
+public class SQLiteDAOExperienceIntegrationTest {
     SQLiteDatabase db;
     SerleenaDatabase serleenaDB;
     SerleenaSQLiteDataSource serleenaSQLDS;
@@ -134,7 +136,6 @@ public class SQLiteDAOExperienceTest {
      * Verifica la correttezza del costruttore e dei metodi getter
      * della classe.
      */
-
     @Test
     public void testConstructorAndGetters() {
         SQLiteDAOExperience daoExp = new SQLiteDAOExperience(
@@ -156,7 +157,6 @@ public class SQLiteDAOExperienceTest {
      * l'insieme dei percorsi collegati all'esperienza il cui getUUID
      * è fornito alla costruzione di SQLiteDAOExperience.
      */
-
     @Test
     public void testGetTracks() {
         SQLiteDAOExperience daoExp = new SQLiteDAOExperience(
@@ -181,7 +181,6 @@ public class SQLiteDAOExperienceTest {
      * i punti utente associati all'esperienza il cui getUUID è fornito
      * alla costruzione di SQLiteDAOExperience.
      */
-
     @Test
     public void testGetUserPoints() {
         SQLiteDAOExperience daoExp = new SQLiteDAOExperience(
@@ -200,7 +199,6 @@ public class SQLiteDAOExperienceTest {
      * un nuovo punto utente associato all'esperienza il cui getUUID
      * è fornito alla costruzione di SQLiteDAOExperience.
      */
-
     @Test
     public void testAddUserPoint() {
         SQLiteDAOExperience daoExp = new SQLiteDAOExperience(

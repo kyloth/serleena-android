@@ -67,7 +67,7 @@ import static junit.framework.Assert.assertEquals;
 import static org.mockito.Mockito.*;
 
 /**
- * Contiene i test di unità per la classe CompassFragment.
+ * Test di unità per la classe CompassFragment.
  *
  * @author Sebastiano Valle <valle.sebastiano93@gmail.com>
  * @version 1.1.0

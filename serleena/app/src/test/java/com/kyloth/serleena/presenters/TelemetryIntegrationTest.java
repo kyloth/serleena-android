@@ -29,7 +29,7 @@
 
 
 /**
- * Name: TelemetryFragmentIntegrationTest.java
+ * Name: TelemetryIntegrationTest.java
  * Package: com.kyloth.serleena.presenters
  * Author: Filippo Sestini
  *
@@ -72,10 +72,21 @@ import static junit.framework.Assert.assertTrue;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
+/**
+ * Test di integrazione delle classi che compongono la schermata
+ * Tracciamento.
+ *
+ * Integra le classi dei package presenters, sensors, activity responsabili del
+ * funzionamento della schermata Tracciamento.
+ * Tali classi sono aggregate come dipendenze di TelemetryPresenter.
+ *
+ * @author Filippo Sestini <sestini.filippo@gmail.com>
+ * @version 1.0.0
+ */
 @RunWith(RobolectricGradleTestRunner.class)
 @Config(constants = BuildConfig.class, emulateSdk = 19,
         manifest = "src/main/AndroidManifest.xml")
-public class TelemetryPresenterIntegrationTest {
+public class TelemetryIntegrationTest {
 
     TelemetryFragment fragment;
     TelemetryPresenter presenter;

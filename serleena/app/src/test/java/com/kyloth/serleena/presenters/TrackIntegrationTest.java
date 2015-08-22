@@ -29,13 +29,13 @@
 
 
 /**
- * Name: TrackPresenterIntegrationTest.java
+ * Name: TrackIntegrationTest.java
  * Package: com.kyloth.serleena.presenters;
- * Author: Gabriele Pozzan
+ * Author: Filippo Sestini
  *
  * History:
  * Version  Programmer       Changes
- * 1.0.0    Gabriele Pozzan  Creazione file scrittura
+ * 1.0.0    Filippo Sestini  Creazione file scrittura
  *                                       codice e documentazione Javadoc
  */
 
@@ -89,16 +89,20 @@ import static junit.framework.Assert.assertTrue;
 import static org.mockito.Mockito.mock;
 
 /**
- * Contiene i test di integrazione per la classe TrackPresenter e sue
- * dipendenze.
+ * Test di integrazione delle classi che compongono la schermata
+ * Percorso.
  *
- * @author Sebastiano Valle <valle.sebastiano93@gmail.com>
+ * Integra le classi dei package presenters, sensors, activity responsabili del
+ * funzionamento della schermata Percorso.
+ * Tali classi sono aggregate come dipendenze di TrackPresenter.
+ *
+ * @author Filippo Sestini <sestini.filippo@gmail.com>
  * @version 1.0.0
  */
 @RunWith(RobolectricGradleTestRunner.class)
 @Config(constants = BuildConfig.class, emulateSdk = 19,
         manifest = "src/main/AndroidManifest.xml")
-public class TrackPresenterIntegrationTest {
+public class TrackIntegrationTest {
 
     private TextView trackNameText;
     private TextView nextCheckpointText;

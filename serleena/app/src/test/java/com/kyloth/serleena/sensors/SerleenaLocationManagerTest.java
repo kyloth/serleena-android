@@ -68,7 +68,7 @@ import static org.mockito.Mockito.when;
 import static org.robolectric.Shadows.shadowOf;
 
 /**
- * Testa le funzionalita' di base di SerleenaLocationManager
+ * Test di unità per la classe SerleenaLocationManager
  *
  * @author Tobia Tesan <tobia.tesan@gmail.com>
  * @version 1.1.0

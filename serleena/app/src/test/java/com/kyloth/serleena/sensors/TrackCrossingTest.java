@@ -316,6 +316,11 @@ public class TrackCrossingTest {
         verify(locReaMan).detachObserver(tc);
     }
 
+    /**
+     * Verifica che un oggetto TrackCrossing si registri al gestore
+     * LocationReachedManager quando viene avviato l'attraversamento di un nuovo
+     * Percorso.
+     */
     @Test
     public void shouldRegisterToSensorWhenNewTrackStarted() {
         tc.startTrack(oneCheckpointTrack);

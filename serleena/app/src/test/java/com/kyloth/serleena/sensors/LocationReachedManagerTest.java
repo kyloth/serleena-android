@@ -62,7 +62,7 @@ import com.kyloth.serleena.BuildConfig;
 import com.kyloth.serleena.common.GeoPoint;
 
 /**
- * Contiene test di unità per la classe LocationReachedManager.
+ * Test di unità per la classe LocationReachedManager.
  *
  * @author Gabriele Pozzan <gabriele.pozzan@studenti.unipd.it>
  * @version 1.0.0

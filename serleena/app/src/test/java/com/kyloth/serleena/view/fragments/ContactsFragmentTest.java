@@ -74,7 +74,7 @@ import static junit.framework.Assert.assertEquals;
 import static org.mockito.Mockito.*;
 
 /**
- * Contiene i test di unità per la classe ContactsFragment.
+ * Test di unità per la classe ContactsFragment.
  *
  * @author Sebastiano Valle <valle.sebastiano93@gmail.com>
  * @version 1.0.0
@@ -95,7 +95,6 @@ public class ContactsFragmentTest {
 
     /**
      * Inizializza il test.
-     *
      */
     @Before
     public void initialize() {

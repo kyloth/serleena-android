@@ -74,14 +74,15 @@ import static junit.framework.Assert.assertTrue;
 import static org.mockito.Mockito.mock;
 
 /**
- * Suite di test per SerleenaSQLiteDataSource
+ * Test di integrazione tra la classe SerleenaSQLiteDataSource e il database
+ * SQLite dell'applicazione, rappresentato dalla classe SerleenaDatabase.
  *
  * @author Tobia Tesan <tobia.tesan@gmail.com>
  * @version 1.0
  */
 @RunWith(RobolectricGradleTestRunner.class)
 @Config(constants = BuildConfig.class, emulateSdk = 19)
-public class SerleenaSQLiteDataSourceTest {
+public class SerleenaSQLiteDataSourceIntegrationTest {
 
     private SerleenaSQLiteDataSource sds;
     private SQLiteDatabase db;

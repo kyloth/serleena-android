@@ -29,7 +29,7 @@
 
 
 /**
- * Name: TrackSelectionPresenterIntegrationTest.java
+ * Name: TrackSelectionIntegrationTest.java
  * Package: com.kyloth.serleena
  * Author: Sebastiano Valle
  *
@@ -78,8 +78,12 @@ import static junit.framework.Assert.assertTrue;
 import static org.mockito.Mockito.mock;
 
 /**
- * Contiene i test di integrazione per la classe TrackSelectionPresenter e le
- * sue dipendenze.
+ * Test di integrazione delle classi che compongono la schermata
+ * Imposta Percorso.
+ *
+ * Integra le classi dei package presenters, sensors, activity responsabili del
+ * funzionamento della schermata Imposta Percorso.
+ * Tali classi sono aggregate come dipendenze di TrackSelectionPresenter.
  *
  * @author Sebastiano Valle <valle.sebastiano93@gmail.com>
  * @version 1.0.0
@@ -87,7 +91,7 @@ import static org.mockito.Mockito.mock;
 @RunWith(RobolectricGradleTestRunner.class)
 @Config(constants = BuildConfig.class, emulateSdk = 19,
         manifest = "src/main/AndroidManifest.xml")
-public class TrackSelectionPresenterIntegrationTest {
+public class TrackSelectionIntegrationTest {
 
     private static class TestingActivity extends SerleenaActivity {
         private ISerleenaDataSource ds;

@@ -29,7 +29,7 @@
 
 
 /**
- * Name: ExperienceSelectionPresenterIntegrationTest.java
+ * Name: ExperienceSelectionIntegrationTest.java
  * Package: com.kyloth.serleena.view.fragments
  * Author: Sebastiano Valle
  *
@@ -86,22 +86,29 @@ import static junit.framework.Assert.assertTrue;
 import static org.mockito.Mockito.mock;
 
 /**
- * Contiene i test di integrazione per la classe ExperienceSelectionFPresenter.
+ * Test di integrazione delle classi che compongono la schermata
+ * Imposta Esperienza.
+ *
+ * Integra le classi dei package presenters, sensors, activity responsabili del
+ * funzionamento della schermata Imposta Esperienza.
+ * Tali classi sono aggregate come dipendenze di ExperienceSelectionPresenter.
  *
  * @author Sebastiano Valle <valle.sebastiano93@gmail.com>
  * @version 1.0.0
- * @see com.kyloth.serleena.view.fragments.ExperienceSelectionFragment
  */
 @RunWith(RobolectricGradleTestRunner.class)
 @Config(constants = BuildConfig.class, emulateSdk = 19,
         manifest = "src/main/AndroidManifest.xml")
-public class ExperienceSelectionPresenterIntegrationTest {
-    final String MENU_EXPERIENCE_SEL_LABEL = RuntimeEnvironment.application.getResources().getString(R.string.menu_experienceSelectionFragment);
-    final String MENU_TRACK_SEL_LABEL = RuntimeEnvironment.application.getResources().getString(R.string.menu_trackSelectionFragment);
-    final String MENU_EXPERIENCE_LABEL = RuntimeEnvironment.application.getResources().getString(R.string.menu_experienceFragment);
-    /**
-     * Activity che permette di fornire un datasource impostato ad hoc per i test.
-     */
+public class ExperienceSelectionIntegrationTest {
+    final String MENU_EXPERIENCE_SEL_LABEL =
+            RuntimeEnvironment.application.getResources().getString(
+                    R.string.menu_experienceSelectionFragment);
+    final String MENU_TRACK_SEL_LABEL =
+            RuntimeEnvironment.application.getResources().getString(
+                    R.string.menu_trackSelectionFragment);
+    final String MENU_EXPERIENCE_LABEL =
+            RuntimeEnvironment.application.getResources().getString(
+                    R.string.menu_experienceFragment);
     private static class CustomDataSourceActivity
             extends SerleenaActivity {
         private SerleenaDataSource ds;
@@ -123,9 +130,6 @@ public class ExperienceSelectionPresenterIntegrationTest {
     private SQLiteDatabase db;
     private ListAdapter experienceListAdapter;
 
-    /**
-     * Inizializza il test.
-     */
     @Before
     public void initialize() {
         SerleenaDatabase serleenaDB = TestDB.getEmptyDatabase();
