@@ -142,7 +142,7 @@ public class TrackPresenter implements ITrackPresenter, ITrackCrossingObserver,
 
     /**
      * Implementa IPresenter.resume().
-     * <p/>
+     *
      * Il Presenter si registra ai sensori utilizzati.
      */
     @Override
@@ -155,7 +155,7 @@ public class TrackPresenter implements ITrackPresenter, ITrackCrossingObserver,
 
     /**
      * Implementa IPresenter.pause().
-     * <p/>
+     *
      * Il Presenter rimuove la registrazione ai sensori utilizzati.
      */
     @Override
@@ -182,7 +182,7 @@ public class TrackPresenter implements ITrackPresenter, ITrackCrossingObserver,
 
     /**
      * Implementa ITrackPresenter.onHeadingUpdate().
-     * <p/>
+     *
      * In base al valore di orientamento ricevuto dal sensore, e alla
      * posizione dell'utente, calcola il valore in gradi che,
      * sommato algebricamente attuale, restituisce la direzione del prossimo
@@ -208,7 +208,7 @@ public class TrackPresenter implements ITrackPresenter, ITrackCrossingObserver,
 
     /**
      * Implementa ITrackCrossingObserver.onCheckpointCrossed().
-     * <p/>
+     *
      * Se il Presenter è attivo, viene programmato un aggiornamento asincrono
      * della vista.
      */
