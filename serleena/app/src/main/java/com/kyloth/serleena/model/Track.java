@@ -150,11 +150,6 @@ class Track implements ITrack {
         return best;
     }
 
-    @Override
-    public UUID getUUID() {
-        return storage.getUUID();
-    }
-
     /**
      * Ridefinisce Object.equals().
      *

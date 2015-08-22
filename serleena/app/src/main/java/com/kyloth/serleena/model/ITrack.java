@@ -98,5 +98,4 @@ public interface ITrack {
      */
     ITelemetry getBestTelemetry() throws NoSuchTelemetryException;
 
-    UUID getUUID();
 }
