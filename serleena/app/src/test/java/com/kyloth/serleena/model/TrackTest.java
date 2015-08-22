@@ -49,6 +49,7 @@ import static org.junit.Assert.*;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
+import java.util.UUID;
 
 import com.kyloth.serleena.common.Checkpoint;
 import com.kyloth.serleena.common.CheckpointReachedTelemetryEvent;
@@ -68,6 +69,9 @@ import com.kyloth.serleena.common.TelemetryEvent;
 public class TrackTest {
     ITrackStorage trackStorage;
     Track track;
+    private ITrackStorage trackStorage1;
+    private ITrackStorage trackStorage2;
+    private int testHashCode;
 
     /**
      * Inizializza i campi dati necessari alla conduzione dei test.
@@ -97,6 +101,20 @@ public class TrackTest {
 
         when(trackStorage.getTelemetries()).thenReturn(list);
         track = new Track(trackStorage);
+
+        testHashCode = 100;
+        trackStorage1 = new ITrackStorage() {
+            public void createTelemetry(Iterable<TelemetryEvent> events) { }
+            public Iterable<ITelemetryStorage> getTelemetries() { return null; }
+            public Iterable<ITelemetryStorage> getTelemetries(boolean ig) {
+                return null;
+            }
+            public DirectAccessList<Checkpoint> getCheckpoints() {return null; }
+            public String name() { return null; }
+            public UUID getUUID() { return null; }
+            public int hashCode() { return testHashCode; }
+        };
+        trackStorage2 = trackStorage1;
     }
 
     /**
@@ -202,6 +220,29 @@ public class TrackTest {
     public void toStringShouldReturnNameOfTheTrack() {
         when(trackStorage.name()).thenReturn("track");
         assertEquals("track", track.toString());
+    }
+
+    /**
+     * Verifica che equals restituisca true se e solo se i rispettivi oggetti
+     * di persistenza sono equivalenti.
+     */
+    @Test
+    public void tracksShouldBeEqualIfStoragesAreEqual() {
+        assertEquals(new Track(trackStorage1), new Track(trackStorage2));
+        assertNotEquals(
+                new Track(trackStorage), new Track(mock(ITrackStorage.class)));
+        assertNotEquals(null, new Track(trackStorage));
+    }
+
+    /**
+     * Verifica che hashCode() restituisca lo stesso codice per oggetti il
+     * cui metodo equals restituisce true.
+     */
+    @Test
+    public void hashCodeShouldBeTheSameForEqualTracks() {
+        assertEquals(
+                new Track(trackStorage1).hashCode(),
+                new Track(trackStorage2).hashCode());
     }
 
 }
