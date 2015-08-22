@@ -30,140 +30,157 @@
 
 /**
  * Name: ExperienceTest.java
- * Package: com.kyloth.serleena.presenters;
- * Author: Gabriele Pozzan
+ * Package: com.hitchikers.serleena.model
+ * Author: Filippo Sestini
  *
  * History:
- * Version  Programmer       Changes
- * 1.0.0    Gabriele Pozzan  Creazione file scrittura
- *                                       codice e documentazione Javadoc
+ * Version    Programmer       Changes
+ * 1.0        Filippo Sestini  Creazione del file e stesura
+ *                             della documentazione Javadoc.
  */
 
 package com.kyloth.serleena.model;
 
-import org.junit.Test;
-import org.junit.runner.RunWith;
-import static org.junit.Assert.*;
-import org.junit.Before;
-import org.junit.After;
-import static org.mockito.Mockito.*;
-import org.robolectric.RobolectricGradleTestRunner;
-import org.robolectric.RuntimeEnvironment;
-import org.robolectric.annotation.Config;
-
-import android.content.ContentValues;
-import android.database.sqlite.SQLiteDatabase;
-
-import java.util.Iterator;
-
-import com.kyloth.serleena.BuildConfig;
-import com.kyloth.serleena.persistence.sqlite.SerleenaSQLiteDataSource;
-import com.kyloth.serleena.persistence.sqlite.SerleenaDatabase;
+import com.kyloth.serleena.common.GeoPoint;
+import com.kyloth.serleena.common.IQuadrant;
 import com.kyloth.serleena.common.UserPoint;
-import com.kyloth.serleena.persistence.sqlite.TestFixtures;
+import com.kyloth.serleena.persistence.IExperienceStorage;
+import com.kyloth.serleena.persistence.ITrackStorage;
+import com.kyloth.serleena.persistence.NoSuchQuadrantException;
+
+import org.junit.Before;
+import org.junit.Test;
+
+import java.util.ArrayList;
+
+import static org.junit.Assert.*;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
 /**
- * Contiene test per la classe Experience.
+ * Test di unità per la classe Experience
  *
- * @author Gabriele Pozzan <gabriele.pozzan@studenti.unipd.it>
+ * @author Filippo Sestini <sestini.filippo@gmail.com>
  * @version 1.0.0
  */
-
-@RunWith(RobolectricGradleTestRunner.class)
-@Config(constants = BuildConfig.class, emulateSdk = 19)
 public class ExperienceTest {
-    SQLiteDatabase db;
-    SerleenaDatabase serleenaDB;
-    SerleenaSQLiteDataSource serleenaSQLDS;
-    SerleenaDataSource dataSource;
 
-    /**
-     * Inizializza i campi dati necessari alla conduzione dei test.
-     */
+    private IExperienceStorage experienceStorage;
+    private Experience experience;
+    private ITrackStorage track1;
+    private ITrackStorage track2;
+    private ITrackStorage track3;
+    private ArrayList<ITrackStorage> trackStorages;
+    private ArrayList<UserPoint> userPoints;
+    private String testName;
+    private GeoPoint testLocation;
+    private IQuadrant testQuadrant;
+
     @Before
-    public void initialize() {
-        serleenaDB = new SerleenaDatabase(RuntimeEnvironment.application, "sample.db", null, 1);
-        db = serleenaDB.getWritableDatabase();
-        serleenaDB.onConfigure(db);
-        serleenaDB.onUpgrade(db, 1, 2);
-        ContentValues values = TestFixtures.pack(TestFixtures.EXPERIENCES_FIXTURE_EXPERIENCE_1);
-        db.insertOrThrow(SerleenaDatabase.TABLE_EXPERIENCES, null, values);
-        values = TestFixtures.pack(TestFixtures.EXPERIENCES_FIXTURE_EXPERIENCE_2);
-        db.insertOrThrow(SerleenaDatabase.TABLE_EXPERIENCES, null, values);
-        serleenaSQLDS = new SerleenaSQLiteDataSource(serleenaDB);
-        dataSource = new SerleenaDataSource(serleenaSQLDS);
+    public void initialize() throws Exception {
+        experienceStorage = mock(IExperienceStorage.class);
+        experience = new Experience(experienceStorage);
+
+        track1 = mock(ITrackStorage.class);
+        track2 = mock(ITrackStorage.class);
+        track3 = mock(ITrackStorage.class);
+        trackStorages = new ArrayList<ITrackStorage>();
+        trackStorages.add(track1);
+        trackStorages.add(track2);
+        trackStorages.add(track3);
+
+        when(track1.name()).thenReturn("track1");
+        when(track2.name()).thenReturn("track2");
+        when(track3.name()).thenReturn("track3");
+
+        when(experienceStorage.getTracks()).thenReturn(trackStorages);
+
+        userPoints = new ArrayList<UserPoint>();
+        userPoints.add(mock(UserPoint.class));
+        userPoints.add(mock(UserPoint.class));
+
+        when(experienceStorage.getUserPoints()).thenReturn(userPoints);
+
+        testName = "Experience Name";
+        when(experienceStorage.getName()).thenReturn(testName);
+
+        testLocation = mock(GeoPoint.class);
+        testQuadrant = mock(IQuadrant.class);
+        when(experienceStorage.getQuadrant(testLocation))
+                .thenReturn(testQuadrant);
     }
 
     /**
-     * Chiude il database per permettere il funzionamento dei test successivi.
-     */
-    @After
-    public void cleanUp() {
-        serleenaDB.close();
-    }
-
-    /**
-     * Verifica che il metodo getName restituisca il nome effettivo
-     * delle Esperienze salvate nel db.
-     */
-    @Test
-    public void testGetName() {
-        Iterable<IExperience> experiences = dataSource.getExperiences();
-        Iterator<IExperience> i_experiences = experiences.iterator();
-        String name = i_experiences.next().getName();
-        assertTrue(
-                name.equals(TestFixtures.EXPERIENCES_FIXTURE_EXPERIENCE_1_NAME) ||
-                name.equals(TestFixtures.EXPERIENCES_FIXTURE_EXPERIENCE_2_NAME)
-        );
-    }
-
-    /**
-     * Verifica che il metodo getUserPoints restituisca i corretti
-     * Punti Utente per le diverse Esperienze.
+     * Verifica che vengano correttamente restituiti i Percorsi di
+     * un'Esperienza in base a quanto restituito dall'oggetto di persistenza.
      */
     @Test
-    public void testGetUserPoints() {
-        String insertUserPoints_1 = "INSERT INTO user_points " +
-                "(userpoint_id, userpoint_x, userpoint_y, userpoint_experience) " +
-                "VALUES (1, 2, 2, \"" + TestFixtures.EXPERIENCES_FIXTURE_EXPERIENCE_1_UUID + "\")";
-        String insertUserPoints_2 = "INSERT INTO user_points " +
-                "(userpoint_id, userpoint_x, userpoint_y, userpoint_experience) " +
-                "VALUES (2, 3, 3, \""  + TestFixtures.EXPERIENCES_FIXTURE_EXPERIENCE_1_UUID + "\")";
-        db.execSQL(insertUserPoints_1);
-        db.execSQL(insertUserPoints_2);
-        Iterable<IExperience> experiences = dataSource.getExperiences();
-        Iterator<IExperience> i_experiences = experiences.iterator();
-        Experience exp_1 = (Experience) i_experiences.next();
-        Experience exp_2 = (Experience) i_experiences.next();
-        Iterable<UserPoint> up_1 = exp_1.getUserPoints();
-        Iterable<UserPoint> up_2 = exp_2.getUserPoints();
-        Iterator<UserPoint> i_1 = up_1.iterator();
-        Iterator<UserPoint> i_2 = up_2.iterator();
-        assertFalse(i_2.hasNext());
-        assertTrue(i_1.next().latitude() == 2);
-        assertTrue(i_1.next().latitude() == 3);
+    public void testGetTracks() throws Exception {
+        Iterable<ITrack> tracks = experience.getTracks();
+        for (ITrackStorage ts : trackStorages) {
+            boolean contains = false;
+            for (ITrack t : tracks)
+                contains = contains || t.name().equals(ts.name());
+            assertTrue(contains);
+        }
     }
 
     /**
-     * Verifica che il metodo addUserPoints aggiunga un Punto
-     * Utente per l'Esperienza sul quale è chiamato.
+     * Verifica che vengano correttamente restituiti i Punti Utente di
+     * un'Esperienza in base a quanto restituito dall'oggetto di persistenza.
      */
     @Test
-    public void testAddUserPoints() {
-        UserPoint up = new UserPoint(5, 5);
-        Iterable<IExperience> experiences = dataSource.getExperiences();
-        Experience exp = (Experience) experiences.iterator().next();
-        exp.addUserPoints(up);
-        Iterable<UserPoint> ups = exp.getUserPoints();
-        assertTrue(up.equals(ups.iterator().next()));
+    public void testGetUserPoints() throws Exception {
+        assertEquals(userPoints, experience.getUserPoints());
     }
 
     /**
-     * Verifica che il metodo getTracks restituisca correttamente
-     * i Percorsi in base all'Esperienza sul quale è chiamato.
+     * Verifica che l'aggiunta di un Punto Utente inoltri la richiesta
+     * all'oggetto di persistenza.
      */
     @Test
-    public void testGetTracks() {
-        // TODO
+    public void testAddUserPoints() throws Exception {
+        UserPoint up = mock(UserPoint.class);
+        experience.addUserPoints(up);
+        verify(experienceStorage).addUserPoint(up);
     }
+
+    /**
+     * Verifica che venga correttamente restituito il nome di
+     * un'Esperienza in base a quanto restituito dall'oggetto di persistenza.
+     */
+    @Test
+    public void testGetName() throws Exception {
+        assertEquals(testName, experience.getName());
+    }
+
+    /**
+     * Verifica che la richiesta di un quadrante associato all'Esperienza
+     * venga inoltrata all'oggetto di persistenza.
+     */
+    @Test
+    public void testGetQuadrantQueriesStorage() throws Exception {
+        experience.getQuadrant(testLocation);
+        verify(experienceStorage).getQuadrant(testLocation);
+    }
+
+    /**
+     * Verifica che venga correttamente restituito il quadrante di
+     * un'Esperienza in base a quanto restituito dall'oggetto di persistenza.
+     */
+    @Test
+    public void testGetQuadrant() throws NoSuchQuadrantException {
+        assertEquals(testQuadrant, experience.getQuadrant(testLocation));
+    }
+
+    /**
+     * Verifica che il metodo toString() restituisca il nome dell'Esperienza
+     * rappresentata dall'istanza.
+     */
+    @Test
+    public void testToString() throws Exception {
+        assertEquals(testName, experience.toString());
+    }
+
 }
