@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="kyloth_url">http://api.kyloth.info/</string>
+    <string name="app_name">serleena</string>
+    <string name="title_activity_serleena">serleena</string>
+</resources>

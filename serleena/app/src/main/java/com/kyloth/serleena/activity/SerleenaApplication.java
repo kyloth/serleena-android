@@ -43,6 +43,7 @@ package com.kyloth.serleena.activity;
 
 import android.app.Application;
 
+import com.kyloth.serleena.R;
 import com.kyloth.serleena.model.ISerleenaDataSource;
 import com.kyloth.serleena.model.SerleenaDataSource;
 import com.kyloth.serleena.persistence.IPersistenceDataSink;
@@ -101,7 +102,7 @@ public class SerleenaApplication extends Application implements ISerleenaApplica
         try {
             INetProxy netProxy = new SerleenaJSONNetProxy(
                     new LocalEnvKylothIdSource(),
-                    new URL("http://api.kyloth.info/"));
+                    new URL(getResources().getString(R.string.kyloth_url)));
             Synchronizer.getInstance(
                     netProxy, dataSink, persistenceDataSource);
         } catch (MalformedURLException e) {

@@ -1,7 +1,4 @@
 <resources>
-    <string name="app_name">serleena</string>
-    <string name="title_activity_serleena">serleena</string>
-
     <string name="contacts_value">Contact value</string>
     <string name="contacts_name">Nome contatto</string>
     <string name="contacts_image">Contatti Emergenza</string>
