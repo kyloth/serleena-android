@@ -76,6 +76,9 @@ public class SyncFragment extends Fragment implements ISyncView {
     private TextView token;
     Map<SyncStatusEnum, Integer> states;
 
+    /**
+     * Crea un nuovo oggetto SyncFragment.
+     */
     public SyncFragment() {
         super();
         states = new HashMap<>();
@@ -98,6 +101,9 @@ public class SyncFragment extends Fragment implements ISyncView {
         };
     }
 
+    /**
+     * Ridefinisce Fragment.onCreateView().
+     */
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {

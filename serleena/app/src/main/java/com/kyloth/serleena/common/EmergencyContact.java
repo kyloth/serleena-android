@@ -104,8 +104,6 @@ public class EmergencyContact {
 
     /**
      * Overriding di Object.hashCode().
-     *
-     * @return Hash dell'oggetto.
      */
     @Override
     public int hashCode() {

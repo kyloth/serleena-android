@@ -73,6 +73,7 @@ public class TrackSelectionPresenter implements ITrackSelectionPresenter {
      * @param activity Activity che rappresenta l'applicazione in corso e al
      *                 quale il presenter appartiene. Se null,
      *                 viene sollevata un'eccezione IllegalArgumentException.
+     * @param source Oggetto da cui è possibile ottenere l'Esperienza attiva.
      * @throws java.lang.IllegalArgumentException
      */
     public TrackSelectionPresenter(ITrackSelectionView view,
@@ -119,6 +120,9 @@ public class TrackSelectionPresenter implements ITrackSelectionPresenter {
 
     }
 
+    /**
+     * Implementa ITrackSelectionPresenter.activateTrack().
+     */
     @Override
     public void activateTrack(ITrack track) throws IllegalArgumentException {
         if (track == null)

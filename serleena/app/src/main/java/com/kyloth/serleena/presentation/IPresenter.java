@@ -32,8 +32,8 @@
  * Name: IPresenter
  * Package: com.hitchikers.serleena.presentation
  * Author: Tobia Tesan <tobia.tesan@gmail.com>
- * 
- * History: 
+ *
+ * History:
  * Version    Programmer   Changes
  * 1.0        Tobia Tesan  Creazione del file
  */
@@ -49,18 +49,16 @@ package com.kyloth.serleena.presentation;
  * @since 1.0
  */
 public interface IPresenter {
-	/**
-	 * Riprende tutte le attivita' del Presenter
-         *
-	 * @since 1.0
-	 */
-	void resume();
 
-	/**
-	 * Mette in pausa alcune attivita' del Presenter in modo da non consumare
-	 * inutilmente risorse quando la sua vista non e' a schermo.
-	 *
-	 * @since 1.0
-	 */
-	void pause();
+    /**
+     * Riprende tutte le attivita' del Presenter
+     */
+    void resume();
+
+    /**
+     * Mette in pausa alcune attivita' del Presenter in modo da non consumare
+     * inutilmente risorse quando la sua vista non e' a schermo.
+     */
+    void pause();
+
 }

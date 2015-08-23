@@ -57,14 +57,23 @@ public class ServiceResultReceiver extends ResultReceiver {
 
     private Receiver mReceiver;
 
+    /**
+     * Crea un nuovo oggetto ServiceResultReceiver.
+     */
     public ServiceResultReceiver(Handler handler) {
         super(handler);
     }
 
+    /**
+     * Imposta l'oggetto Receiver associato all'istanza.
+     */
     public void setReceiver(Receiver receiver) {
         mReceiver = receiver;
     }
 
+    /**
+     * Implementa ResultReceiver.onReceiveResult().
+     */
     @Override
     protected void onReceiveResult(int resultCode, Bundle resultData) {
         if (mReceiver != null) {
@@ -72,6 +81,9 @@ public class ServiceResultReceiver extends ResultReceiver {
         }
     }
 
+    /**
+     * Interfaccia Receiver al quale comunicare i risultati.
+     */
     public interface Receiver {
         void onReceiveResult(int resultCode, Bundle resultData);
     }

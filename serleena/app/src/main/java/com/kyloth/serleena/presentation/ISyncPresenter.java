@@ -32,8 +32,8 @@
  * Name: ISyncPresenter
  * Package: com.hitchikers.serleena.presentation
  * Author: Tobia Tesan <tobia.tesan@gmail.com>
- * 
- * History: 
+ *
+ * History:
  * Version    Programmer   Changes
  * 1.0        Tobia Tesan  Creazione del file
  */
@@ -50,12 +50,10 @@ package com.kyloth.serleena.presentation;
  */
 
 public interface ISyncPresenter extends IPresenter {
-	/**
-	 * Lancia il processo di sincronizzazione tra orologio e portale cloud.
-	 * Non solleva eccezioni. In caso di errore sara' eventualmente il Presenter stesso
-	 * a provvedere a che la vista le segnali.
-	 *
-	 * @since 1.0
-	 */
-	void synchronize();
+    /**
+     * Lancia il processo di sincronizzazione tra orologio e portale cloud.
+     * Non solleva eccezioni. In caso di errore sara' eventualmente il Presenter stesso
+     * a provvedere a che la vista le segnali.
+     */
+    void synchronize();
 }

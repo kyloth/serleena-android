@@ -73,6 +73,7 @@ public class CheckpointCrossing {
      *
      * @param checkpointIndex Indice del checkpoint attraversato.
      * @param partialTime Tempo parziale.
+     * @param timestamp UNIX timestamp di attraversamento del checkpoint.
      * @param track Percorso a cui si riferisce il checkpoint.
      */
     public CheckpointCrossing(int checkpointIndex,

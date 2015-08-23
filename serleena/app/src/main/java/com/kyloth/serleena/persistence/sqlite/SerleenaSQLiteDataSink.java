@@ -51,10 +51,23 @@ import com.kyloth.serleena.synchronization.kylothcloud.inbound.SerleenaSQLiteInb
  * Concretizza IPersistenceDataSink
  */
 public class SerleenaSQLiteDataSink implements ISerleenaSQLiteDataSink {
+
     private SerleenaDatabase dbHelper;
     private Context context;
 
+    /**
+     * Crea un oggetto SerleenaSQLiteDataSink.
+     *
+     * @param context Contesto dell'applicazione.
+     * @param dbHelper Classe helper associata al database SQLite
+     *                 dell'applicazione.
+     */
     public SerleenaSQLiteDataSink(Context context, SerleenaDatabase dbHelper) {
+        if (context == null)
+            throw new IllegalArgumentException();
+        if (dbHelper == null)
+            throw new IllegalArgumentException();
+
         this.dbHelper = dbHelper;
         this.context = context;
     }
@@ -62,17 +75,15 @@ public class SerleenaSQLiteDataSink implements ISerleenaSQLiteDataSink {
     /**
      * Carica un dump di dati proveniente dall'esterno.
      *
-     * @param dump
+     * @param dump Dump da caricare.
      */
     @Override
     public void load(InboundDump dump) {
         if (dump instanceof SerleenaSQLiteInboundDump) {
             SQLiteDatabase a = dbHelper.getWritableDatabase();
-            for (String instr : dump) {
+            for (String instr : dump)
                 a.execSQL(instr);
-            }
-        } else {
+        } else
             throw new IllegalArgumentException();
-        }
     }
 }

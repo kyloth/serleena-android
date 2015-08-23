@@ -70,6 +70,12 @@ public class WeatherPresenter implements IWeatherPresenter, ILocationObserver {
     private ISerleenaDataSource ds;
     private GeoPoint lastKnownLocation;
 
+    /**
+     * Crea un nuovo oggetto WeatherPresenter.
+     *
+     * @param view Vista da associare al Presenter.
+     * @param activity Activity a cui il Presenter fa riferimento.
+     */
     public WeatherPresenter(IWeatherView view, ISerleenaActivity activity)
             throws IllegalArgumentException {
         if (view == null)

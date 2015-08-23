@@ -99,6 +99,9 @@ class SQLiteDAOExperience implements IExperienceStorage
         return dataSource.getUserPoints(this, localOnly);
     }
 
+    /**
+     * Implementa IExperienceStorage.getUserPoints().
+     */
     @Override
     public Iterable<UserPoint> getUserPoints() {
         return dataSource.getUserPoints(this);
@@ -106,8 +109,6 @@ class SQLiteDAOExperience implements IExperienceStorage
 
     /**
      * Implementazione di IExperienceStorage.addUserPoint().
-     *
-     * @param p     Punto geografico associato al punto utente.
      */
     @Override
     public void addUserPoint(UserPoint p) {
@@ -116,22 +117,14 @@ class SQLiteDAOExperience implements IExperienceStorage
 
     /**
      * Implementa IExperienceStorage.getName().
-     *
-     * @return Nome dell'Esperienza.
      */
     @Override
     public String getName() {
         return name;
     }
 
-
-
     /**
      * Implementa IExperienceStorage.getQuadrant().
-     *
-     * @param location Posizione geografica contenente il quadrante.
-     * @return Oggetto IQuadrant
-     * @throws NoSuchQuadrantException
      */
     @Override
     public IQuadrant getQuadrant(GeoPoint location)

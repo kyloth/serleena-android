@@ -32,8 +32,8 @@
  * Name: ITrackView
  * Package: com.hitchikers.serleena.presentation
  * Author: Tobia Tesan <tobia.tesan@gmail.com>
- * 
- * History: 
+ *
+ * History:
  * Version    Programmer   Changes
  * 1.0        Tobia Tesan  Creazione del file
  */
@@ -55,14 +55,12 @@ public interface ITrackView {
     /**
      * Lega un Presenter alla vista.
      *
-     * @since 1.0
+     * @param presenter Presenter da associare alla vista.
      */
     void attachPresenter(ITrackPresenter presenter);
 
     /**
      * Pulisce la vista.
-     *
-     * @since 1.0
      */
     void clearView();
 
@@ -72,15 +70,13 @@ public interface ITrackView {
      *
      * @param heading Orientamento espresso in gradi (0.0 ... 360.0),
      *                modulo 360.0.
-     * @since 1.0
      */
     void setDirection(float heading);
 
     /**
      * Imposta la distanza dal successivo checkpoint.
      *
-     * @param distance distanza espressa in metri
-     * @since 1.0
+     * @param distance Distanza espressa in metri.
      */
     void setDistance(int distance);
 
@@ -90,29 +86,28 @@ public interface ITrackView {
      *
      * @param seconds Secondi trascorsi dall'inizio del Percorso all'ultimo
      *                checkpoint attraversato.
-     *
-     * @since 1.0
      */
     void setLastPartial(int seconds);
 
     /**
      * Imposta il guadagno netto sul ghost rilevato all'ultimo checkpoint.
+     * Una differenza negativa indica un miglioramento della prestazione.
      *
-     * @since 1.0
+     * @param seconds Secondi di differenza.
      */
     void setDelta(int seconds);
 
     /**
      * Imposta il numero del prossimo checkpoint per la visualizzazione a video.
      *
-     * @since 1.0
+     * @param n Numero del prossimo checkpoint da raggiungere.
      */
     void setCheckpointNo(int n);
 
     /**
      * Imposta il numero complessivo dei checkpoint del percorso.
      *
-     * @since 1.0
+     * @param n Numero totale di checkpoint del Percorso.
      */
     void setTotalCheckpoints(int n);
 

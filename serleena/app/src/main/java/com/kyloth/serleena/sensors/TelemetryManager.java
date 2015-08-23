@@ -134,6 +134,11 @@ class TelemetryManager
 
     /**
      * Implementa ITrackCrossedObserver.onCheckpointCrossed().
+     *
+     * All'attraversamento di un checkpoint, viene creato un evento di
+     * Tracciamento relativo, di tipo CheckpointReachedTelemetryEvent, in base
+     * ai dati e ai tempi di attraversamento restituiti dal gestore
+     * ITrackCrossing.
      */
     @Override
     public void onCheckpointCrossed() {

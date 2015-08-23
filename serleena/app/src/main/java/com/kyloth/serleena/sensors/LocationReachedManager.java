@@ -106,11 +106,8 @@ class LocationReachedManager
     }
 
     /**
-     * Implementa ILocationReachedManager.detachObserver().
-     *
-     * @param observer Oggetto da deregistrare ILocationReachedManager. Se null,
-     *                 viene sollevata un'eccezione IllegalArgumentException.
-     * @throws IllegalArgumentException
+     * Implementa ILocationReachedManager.detachObserver() nella versione a due
+     * parametri.
      */
     @Override
     public synchronized void detachObserver(ILocationReachedObserver observer,
@@ -130,6 +127,10 @@ class LocationReachedManager
         }
     }
 
+    /**
+     * Implementa ILocationReachedManager.detachObserver() nella versione a un
+     * parametro.
+     */
     @Override
     public synchronized void detachObserver(ILocationReachedObserver observer) {
         if (observer == null)

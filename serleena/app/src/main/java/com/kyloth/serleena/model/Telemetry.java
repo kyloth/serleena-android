@@ -88,9 +88,6 @@ class Telemetry implements  ITelemetry {
 
     /**
      * Implementa ITelemetry.getEvents().
-     *
-     * @param predicate Predicato.
-     * @return Insieme enumerabile di eventi che soddisfano il predicato.
      */
     @Override
     public Iterable<TelemetryEvent> getEvents(
@@ -111,8 +108,6 @@ class Telemetry implements  ITelemetry {
 
     /**
      * Implementa ITelemetry.getDuration().
-     *
-     * @return Durata del Tracciamento, in secondi.
      */
     @Override
     public int getDuration() {
@@ -124,6 +119,9 @@ class Telemetry implements  ITelemetry {
         return duration;
     }
 
+    /**
+     * Implementa ITelemetry.startTimestamp().
+     */
     @Override
     public long startTimestamp() {
         Iterable<TelemetryEvent> firstEvent = null;

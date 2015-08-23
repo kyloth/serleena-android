@@ -32,8 +32,8 @@
  * Name: ITelemetryView
  * Package: com.hitchikers.serleena.presentation
  * Author: Tobia Tesan <tobia.tesan@gmail.com>
- * 
- * History: 
+ *
+ * History:
  * Version    Programmer   Changes
  * 1.0        Tobia Tesan  Creazione del file
  */
@@ -54,12 +54,15 @@ public interface ITelemetryView {
     /**
      * Lega un Presenter alla vista.
      *
-     * @since 1.0
+     * @param presenter Presenter da associare alla vista.
      */
     void attachPresenter(ITelemetryPresenter presenter);
 
     /**
      * Imposta lo stato del Tracciamento sulla vista.
+     *
+     * @param enabled Stato di tracciamento da visualizzare. Un valore true indica un
+     *                Tracciamento abilitato, false uno disabilitato.
      */
     void setTelemetryEnabled(boolean enabled);
 }

@@ -65,11 +65,10 @@ public interface ITelemetry {
     /**
      * Restituisce gli eventi che soddisfano il predicato specificato.
      *
-     * @param predicate Predicato.
+     * @param predicate Predicato da applicare agli eventi per selezionarli.
      * @return Insieme enumerabile di eventi che soddisfano il predicato.
      */
-    Iterable<TelemetryEvent> getEvents(Predicate<TelemetryEvent>
-                                               predicate)
+    Iterable<TelemetryEvent> getEvents(Predicate<TelemetryEvent> predicate)
             throws NoSuchTelemetryEventException;
 
     /**

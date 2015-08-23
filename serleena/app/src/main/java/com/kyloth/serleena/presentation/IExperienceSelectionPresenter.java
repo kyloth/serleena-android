@@ -32,8 +32,8 @@
  * Name: IExperienceSelectionPresenter
  * Package: com.hitchikers.serleena.presentation
  * Author: Tobia Tesan <tobia.tesan@gmail.com>
- * 
- * History: 
+ *
+ * History:
  * Version    Programmer   Changes
  * 1.0        Tobia Tesan  Creazione del file
  */
@@ -49,13 +49,12 @@ import com.kyloth.serleena.model.IExperience;
  * @use Interfaccia utilizzata dalla vista ExperienceSelectionFragment per mantenere un riferimento al Presenter associato, e comunicare con esso.
  * @author Tobia Tesan <tobia.tesan@gmail.com>
  * @version 1.0
- * @since 1.0
  */
 public interface IExperienceSelectionPresenter extends IPresenter {
 
     /**
-	 * Attiva un'esperienza identificata per numero tra quelle mostrati dalla
-	 * vista di selezione.
+     * Attiva un'esperienza identificata per numero tra quelle mostrati dalla
+     * vista di selezione.
      *
      * @param experience Esperienza selezionata dall'utente e che deve essere
      *                   attivata. Se null, viene sollevata un'eccezione

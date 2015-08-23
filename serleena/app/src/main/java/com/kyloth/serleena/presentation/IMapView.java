@@ -32,8 +32,8 @@
  * Name: IMapView
  * Package: com.hitchikers.serleena.presentation
  * Author: Tobia Tesan <tobia.tesan@gmail.com>
- * 
- * History: 
+ *
+ * History:
  * Version    Programmer   Changes
  * 1.0        Tobia Tesan  Creazione del file
  */
@@ -55,36 +55,36 @@ import com.kyloth.serleena.common.UserPoint;
  * @since 1.0
  */
 public interface IMapView {
-	/**
-	 * Imposta la posizione dell'utente per la visualizzazione.
-	 *
-	 * @since 1.0
-	 */
-	void setUserLocation(GeoPoint point);
+    /**
+     * Imposta la posizione dell'utente per la visualizzazione.
+     *
+     * @param point Posizione geografica da visualizzare.
+     */
+    void setUserLocation(GeoPoint point);
 
-	/**
-	 * Imposta il quadrante di mappa da visualizzare.
-	 *
-	 * @since 1.0
-	 */
-	void displayQuadrant(IQuadrant q);
+    /**
+     * Imposta il quadrante di mappa da visualizzare.
+     *
+     * @param Quadrante da visualizzare.
+     */
+    void displayQuadrant(IQuadrant q);
 
-	/**
-	 * Mostra una serie di Punti Utente.
-	 *
-	 * @since 1.0
-	 */
-	void displayUP(Iterable<UserPoint> points);
+    /**
+     * Mostra una serie di Punti Utente.
+     *
+     * @param Punti utente da visualizzare.
+     */
+    void displayUP(Iterable<UserPoint> points);
 
-	/**
-	 * Lega un Presenter alla vista.
-	 *
-	 * @since 1.0
-	 */
-	void attachPresenter(IMapPresenter presenter);
+    /**
+     * Lega un Presenter alla vista.
+     *
+     * @param Presenter da associare alla vista.
+     */
+    void attachPresenter(IMapPresenter presenter);
 
     /**
      * Pulisce la vista.
      */
-	void clear();
+    void clear();
 }

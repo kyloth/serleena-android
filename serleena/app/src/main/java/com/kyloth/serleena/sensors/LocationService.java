@@ -76,9 +76,13 @@ public class LocationService extends Service implements LocationListener {
     private PowerManager.WakeLock wl;
     private Handler timeout;
     private Runnable runnable;
+    private boolean received = false;
 
     /**
      * Ridefinisce Service.onCreate().
+     *
+     * Acquisisce le risorse necessarie, registrandosi agli aggiornamenti del
+     * GPS e impostando un lock al processore.
      */
     @Override
     public void onCreate() {
@@ -118,7 +122,6 @@ public class LocationService extends Service implements LocationListener {
         return super.onStartCommand(intent, flags, startId);
     }
 
-    private boolean received = false;
     /**
      * Implementa LocationListener.onLocationChanged().
      *

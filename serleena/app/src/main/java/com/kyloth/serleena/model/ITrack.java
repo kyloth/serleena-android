@@ -69,14 +69,13 @@ public interface ITrack {
      *
      * @return  Un Iterable che contiene tutti i Tracciamenti disponibili
      *          per il Percorso rappresentato dall'oggetto.
-     * @version 1.0
      */
     Iterable<ITelemetry> getTelemetries();
 
     /**
      * Crea e aggiunge un Tracciamento al Percorso.
      *
-     * @version 1.0
+     * @param events Insieme di eventi che costituiscono il nuovo Tracciamento.
      */
     void createTelemetry(Iterable<TelemetryEvent> events);
 

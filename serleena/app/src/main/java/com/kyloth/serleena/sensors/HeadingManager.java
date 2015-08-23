@@ -120,6 +120,9 @@ public class HeadingManager implements IHeadingManager, SensorEventListener {
     /**
      * Implementazione di SensorEventListener.onAccuracyChanged().
      *
+     * Non vengono volte operazioni, poichè il cambiamento di precisione dei
+     * sensori non è significativo per il funzionamento dell'applicazione.
+     *
      * @param sensor Sensore la cui precisione è variata.
      * @param accuracy Nuovo valore di precisione del sensore.
      * @see android.hardware.SensorEventListener

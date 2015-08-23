@@ -56,6 +56,11 @@ public class AzimuthMagneticNorth {
     /**
      * Crea un nuovo oggetto AzimuthMagneticNorth. Un valore pari a 0 indica un
      * orientamento esatto verso il nord magnetico.
+     *
+     * @param accelerometerValues Valori di accelerazione del dispositivo
+     *                            rispetto agli assi x, y e z.
+     * @param magnetometerValues Valori del campo magnetico attorno il
+     *                           dispositivo rispetto agli assi x, y e z.
      */
     public AzimuthMagneticNorth(float[] accelerometerValues,
                                 float[] magnetometerValues) {
@@ -109,6 +114,7 @@ public class AzimuthMagneticNorth {
     /**
      * Ridefinisce Object.equals().
      *
+     * @param other Oggetto da confrontare con l'istanza.
      * @return True se entrambi gli oggetti sono non null, di tipo
      * AzimuthMagneticNorth, e rappresentano un valore di orientamento uguale.
      * False altrimenti.

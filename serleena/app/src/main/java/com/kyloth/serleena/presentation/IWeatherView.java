@@ -51,19 +51,19 @@ import java.util.Date;
  * @since 1.0
  */
 public interface IWeatherView {
-	/**
-	 * Lega un Presenter alla vista.
-	 *
-	 * @since 1.0
-	 */
-	void attachPresenter(IWeatherPresenter presenter);
+    /**
+     * Lega un Presenter alla vista.
+     *
+     * @param presenter Presenter associato alla vista.
+     */
+    void attachPresenter(IWeatherPresenter presenter);
 
-	/**
-	 * Imposta le previsioni da visualizzare.
-	 *
-	 * @since 1.0
-	 */
-	void setWeatherInfo(IWeatherForecast forecast);
+    /**
+     * Imposta le previsioni da visualizzare.
+     *
+     * @param forecast Previsioni da visualizzare.
+     */
+    void setWeatherInfo(IWeatherForecast forecast);
 
     /**
      * Imposta la data da visualizzare sulla vista.
@@ -73,13 +73,11 @@ public interface IWeatherView {
      *
      * @param date Data da visualizzare
      */
-	void setDate(Date date);
+    void setDate(Date date);
 
-	/**
-	 * Pulisce le informazioni metereologiche della vista.
-	 *
-	 * @since 1.0
-	 */
-	void clearWeatherInfo();
+    /**
+     * Pulisce le informazioni metereologiche della vista.
+     */
+    void clearWeatherInfo();
 
 }

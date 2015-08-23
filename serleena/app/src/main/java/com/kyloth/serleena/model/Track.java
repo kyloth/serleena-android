@@ -79,8 +79,6 @@ class Track implements ITrack {
 
     /**
      * Implementa ITrack.name()
-     *
-     * @return Nome del Percorso.
      */
     @Override
     public String name() {
@@ -89,8 +87,6 @@ class Track implements ITrack {
 
     /**
      * Implementa ITrack.getTelemetries().
-     *
-     * @return Insieme enumerabile di Tracciamenti.
      */
     @Override
     public Iterable<ITelemetry> getTelemetries() {
@@ -105,8 +101,6 @@ class Track implements ITrack {
 
     /**
      * Implementa ITrack.createTelemetry().
-     *
-     * @param events Eventi da cui creare il Tracciamento.
      */
     @Override
     public void createTelemetry(Iterable<TelemetryEvent> events) {
@@ -118,8 +112,6 @@ class Track implements ITrack {
 
     /**
      * Implementa ITrack.getCheckpoints().
-     *
-     * @return Lista di Checkpoint che rappresentano il Percorso.
      */
     @Override
     public DirectAccessList<Checkpoint> getCheckpoints() {
@@ -128,9 +120,6 @@ class Track implements ITrack {
 
     /**
      * Implementa ITrack.getBestTelemetry().
-     *
-     * @return Tracciamento migliore per il Percorso.
-     * @throws NoSuchTelemetryException
      */
     @Override
     public ITelemetry getBestTelemetry() throws NoSuchTelemetryException {

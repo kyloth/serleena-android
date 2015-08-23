@@ -69,6 +69,15 @@ class SQLiteDAOTrack implements ITrackStorage {
     private ISerleenaSQLiteDataSource dataSource;
     private DirectAccessList<Checkpoint> checkpoints;
 
+    /**
+     * Crea un nuovo oggetto SQLiteDAOTrack.
+     *
+     * @param checkpoints Lista di Checkpoint che costituiscono il Percorso
+     * @param uuid UUID che identifica l'entità di persistenza associata al
+     *             Percorso.
+     * @param name Nome del Percorso.
+     * @param dataSource Sorgente di dati da cui proviene l'entità.
+     */
     public SQLiteDAOTrack(DirectAccessList<Checkpoint> checkpoints,
                           UUID uuid,
                           String name,
@@ -109,7 +118,6 @@ class SQLiteDAOTrack implements ITrackStorage {
         return getTelemetries(true);
     }
 
-    // HACK per SHANDROID-372
     @Override
     public Iterable<ITelemetryStorage> getTelemetries(boolean includeGhost) {
         ArrayList<ITelemetryStorage> list = new ArrayList<ITelemetryStorage>();
@@ -123,6 +131,9 @@ class SQLiteDAOTrack implements ITrackStorage {
         return list;
     }
 
+    /**
+     * Implementa ITrackStorage.getCheckpoints().
+     */
     @Override
     public DirectAccessList<Checkpoint> getCheckpoints() {
         return checkpoints;
@@ -151,6 +162,7 @@ class SQLiteDAOTrack implements ITrackStorage {
     /**
      * Ridefinisce Object.equals()
      *
+     * @param other Oggetto da confrontare
      * @return Restituisce true se e solo se i due oggetti sono non null, di
      * tipo SQLiteDAOTrack, e il metodo equals restituisce true per gli getUUID,
      * l'elenco di checkpoint e il nome degli oggetti. False altrimenti.

@@ -95,6 +95,7 @@ public class LocationReachedRequest {
     /**
      * Ridefinisce Object.equals().
      *
+     * @param o Oggetto da confrontare
      * @return True se entrambi gli oggetti sono non null, di tipo
      * LocationReachedRequest, e gli oggetti ILocationObserver e
      * GeoPoint incapsulati sono uguali secondo i loro rispettivi metodi

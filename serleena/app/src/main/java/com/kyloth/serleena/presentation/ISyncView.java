@@ -32,8 +32,8 @@
  * Name: ISyncView
  * Package: com.hitchikers.serleena.presentation
  * Author: Tobia Tesan <tobia.tesan@gmail.com>
- * 
- * History: 
+ *
+ * History:
  * Version    Programmer   Changes
  * 1.0        Tobia Tesan  Creazione del file
  */
@@ -50,24 +50,24 @@ import com.kyloth.serleena.common.SyncStatusEnum;
  * @since 1.0
  */
 public interface ISyncView {
-	/**
-	 * Mostra il token per l'accoppiamento da inserire su serleena Cloud
-	 *
-	 * @since 1.0
-	 */
-	void displayToken(String token);
+    /**
+     * Mostra il token per l'accoppiamento da inserire su serleena Cloud.
+     *
+     * @param token Token da visualizzare sulla vista.
+     */
+    void displayToken(String token);
 
-	/**
-	 * Imposta lo stato della sincronizzazione per la visualizzazione
-	 *
-	 * @since 1.0
-	 */
-	void setSyncStatus(SyncStatusEnum status);
+    /**
+     * Imposta lo stato della sincronizzazione per la visualizzazione
+     *
+     * @param status Stato della sincronizzazione da visualizzare.
+     */
+    void setSyncStatus(SyncStatusEnum status);
 
-	/**
-	 * Lega un Presenter alla vista.
-	 *
-	 * @since 1.0
-	 */
-	void attachPresenter(ISyncPresenter presenter);
+    /**
+     * Lega un Presenter alla vista.
+     *
+     * @param presenter Presenter da associare alla vista.
+     */
+    void attachPresenter(ISyncPresenter presenter);
 }

@@ -217,10 +217,6 @@ public final class TrackCrossing implements ITrackCrossing,
                 o.onCheckpointCrossed();
     }
 
-    /**
-     * Viene sempre chiamato quando vi è un Percorso in corso, ed è quindi
-     * possibile passare a un checkpoint successivo.
-     */
     private void myAdvanceCheckpoint() {
         locReachMan.detachObserver(this);
 

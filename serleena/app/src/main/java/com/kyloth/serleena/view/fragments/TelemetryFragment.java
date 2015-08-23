@@ -73,6 +73,9 @@ public class TelemetryFragment extends Fragment
     private ITelemetryPresenter presenter;
     private TextView status;
 
+    /**
+     * Crea un nuovo oggetto TelemetryFragment.
+     */
     public TelemetryFragment() {
         /* Null object pattern */
         presenter = new ITelemetryPresenter() {

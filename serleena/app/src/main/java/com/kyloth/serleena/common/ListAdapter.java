@@ -84,8 +84,6 @@ public class ListAdapter<T> implements DirectAccessList<T> {
 
     /**
      * Implementa Iterable.iterator().
-     *
-     * @return Iteratore.
      */
     @Override
     public Iterator<T> iterator() {
@@ -95,6 +93,7 @@ public class ListAdapter<T> implements DirectAccessList<T> {
     /**
      * Ridefinisce Object.equals()
      *
+     * @param other Oggetto da confrontare
      * @return True se entrambi gli oggetti sono non null, entrambi di tipo
      * ListAdapter<T> e le liste incapsulate sono uguali secondo i rispettivi
      * metodi equals(). False altrimenti.

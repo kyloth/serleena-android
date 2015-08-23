@@ -59,11 +59,9 @@ public interface IExperience {
 
     /**
      * Restituisce i Percorsi dell'Esperienza.
-     * 
+     *
      * @return  Ritorna un Iterable che contiene tutti i percorsi
      *          dell'Esperienza.
-     * @version 1.0
-     * @since   1.0
      */
     Iterable<ITrack> getTracks();
 
@@ -72,16 +70,11 @@ public interface IExperience {
      *
      * @return  Ritorna un Iterable che contiene tutti i Punti Utente
      *          propri dell'Esperienza, compresi quelli creati sull'orologio..
-     * @version 1.0
-     * @since   1.0
      */
     Iterable<UserPoint> getUserPoints();
 
     /**
      * Aggiunge un punto utente dato all'Esperienza.
-     *
-     * @version 1.0
-     * @since   1.0
      */
     void addUserPoints(UserPoint point);
 

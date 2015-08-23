@@ -84,8 +84,8 @@ public class CheckpointReachedTelemetryEvent extends TelemetryEvent {
     /**
      * Overriding del metodo equals() della superclasse Object.
      *
-     * @param o Oggetto da comparare.
-     * @return  True se l'oggetto da comparare è false, entrambi gli oggetti
+     * @param o Oggetto da confrontare.
+     * @return  True se l'oggetto da confrontare è false, entrambi gli oggetti
      *          hanno tipo CheckpointReachedTelemetryEvent e si riferiscono al
      *          medesimo evento, quindi con uguale timestamp e numero di
      *          checkpoint superato. False altrimenti.
@@ -115,5 +115,5 @@ public class CheckpointReachedTelemetryEvent extends TelemetryEvent {
     public TelemetryEventType getType() {
         return TelemetryEventType.CheckpointReached;
     }
-    
+
 }

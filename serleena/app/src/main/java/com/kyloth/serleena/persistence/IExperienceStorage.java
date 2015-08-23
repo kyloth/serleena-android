@@ -64,9 +64,6 @@ public interface IExperienceStorage {
      */
     Iterable<ITrackStorage> getTracks();
 
-    // HACK per SHANDROID-387
-    Iterable<UserPoint> getUserPoints(boolean localOnly);
-
     /**
      * Restituisce i Punti Utente associati all'Esperienza.
      *
@@ -87,8 +84,29 @@ public interface IExperienceStorage {
      */
     String getName();
 
+    /**
+     * Restituisce l'UUID che identifica l'entità di persistenza associata
+     * all'istanza.
+     *
+     * @return UUID.
+     */
     UUID getUUID();
 
+    /**
+     * Restituisce il quadrante contenente la posizione geografica
+     * specificata, tra quelli associati all'Esperienza rappresentata
+     * dall'istanza.
+     *
+     * Se non vi sono quadranti contenenti la posizione specificata, viene
+     * sollevata un'eccezione NosuchQuadrantException.
+     *
+     * @param location Posizione geografica contenuta dal quadrante richiesto.
+     * @return Oggetto IQuadrant rappresentante il quadrante.
+     * @throws NoSuchQuadrantException
+     */
     IQuadrant getQuadrant(GeoPoint location)
             throws NoSuchQuadrantException;
+
+    Iterable<UserPoint> getUserPoints(boolean localOnly);
+
 }

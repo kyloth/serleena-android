@@ -64,13 +64,13 @@ import java.util.Date;
  */
 class SQLiteDAOWeather implements IWeatherStorage {
 
-    WeatherForecastEnum morningForecast;
-    WeatherForecastEnum afternoonForecast;
-    WeatherForecastEnum nightForecast;
-    int morningTemperature;
-    int afternoonTemperature;
-    int nightTemperature;
-    Date date;
+    private WeatherForecastEnum morningForecast;
+    private WeatherForecastEnum afternoonForecast;
+    private WeatherForecastEnum nightForecast;
+    private int morningTemperature;
+    private int afternoonTemperature;
+    private int nightTemperature;
+    private Date date;
 
     /**
      * Crea un nuovo oggetto SQLiteDAOWeather.

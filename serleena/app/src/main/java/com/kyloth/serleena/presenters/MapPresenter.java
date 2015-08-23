@@ -93,6 +93,8 @@ public class MapPresenter implements IMapPresenter, ILocationObserver {
      * @param activity Activity che rappresenta l'applicazione in corso e al
      *                 quale il presenter appartiene. Se null,
      *                 viene sollevata un'eccezione IllegalArgumentException.
+     * @param experienceActivationSource Oggetto da cui è possibile ottenere
+     *                                   l'Esperienza attiva.
      * @throws java.lang.IllegalArgumentException
      */
     public MapPresenter(IMapView view, ISerleenaActivity activity,

@@ -191,17 +191,28 @@ public class SerleenaActivity extends Activity
      * Inizializza i Fragment.
      */
     private void initFragments() {
-        final String MENU_TELEMETRY_LABEL = getResources().getString(R.string.menu_telemetryFragment);
-        final String MENU_TRACK_LABEL = getResources().getString(R.string.menu_trackFragment);
-        final String MENU_MAP_LABEL = getResources().getString(R.string.menu_mapFragment);
-        final String MENU_CONTACTS_LABEL = getResources().getString(R.string.menu_contactsFragment);
-        final String MENU_TRACK_SEL_LABEL = getResources().getString(R.string.menu_trackSelectionFragment);
-        final String MENU_EXPERIENCE_SEL_LABEL = getResources().getString(R.string.menu_experienceSelectionFragment);
-        final String MENU_EXPERIENCE_LABEL = getResources().getString(R.string.menu_experienceFragment);
-        final String MENU_SYNC_LABEL = getResources().getString(R.string.menu_syncFragment);
-        final String MENU_COMPASS_LABEL = getResources().getString(R.string.menu_compassFragment);
-        final String MENU_WEATHER_LABEL = getResources().getString(R.string.menu_weatherFragment);
-        final String MENU_QUIT_LABEL = getResources().getString(R.string.menu_quitFragment);
+        final String MENU_TELEMETRY_LABEL = getResources().getString(
+                R.string.menu_telemetryFragment);
+        final String MENU_TRACK_LABEL = getResources().getString(
+                R.string.menu_trackFragment);
+        final String MENU_MAP_LABEL = getResources().getString(
+                R.string.menu_mapFragment);
+        final String MENU_CONTACTS_LABEL = getResources().getString(
+                R.string.menu_contactsFragment);
+        final String MENU_TRACK_SEL_LABEL = getResources().getString(
+                R.string.menu_trackSelectionFragment);
+        final String MENU_EXPERIENCE_SEL_LABEL = getResources().getString(
+                R.string.menu_experienceSelectionFragment);
+        final String MENU_EXPERIENCE_LABEL = getResources().getString(
+                R.string.menu_experienceFragment);
+        final String MENU_SYNC_LABEL = getResources().getString(
+                R.string.menu_syncFragment);
+        final String MENU_COMPASS_LABEL = getResources().getString(
+                R.string.menu_compassFragment);
+        final String MENU_WEATHER_LABEL = getResources().getString(
+                R.string.menu_weatherFragment);
+        final String MENU_QUIT_LABEL = getResources().getString(
+                R.string.menu_quitFragment);
 
         QuitFragment quitFragment = new QuitFragment() {
             public String toString() {

@@ -45,12 +45,17 @@ import com.kyloth.serleena.synchronization.InboundDump;
  * Interfaccia implementata da un oggetto in grado di prendere un
  * InboundDump e salvarlo nella memoria permanente del dispositivo,
  * e.g. un database.
+ *
+ * @author Tobia Tesan <tobia.tesan@gmail.com>
+ * @version 1.0.0
  */
 public interface IPersistenceDataSink {
+
     /**
      * Carica un dump di dati proveniente dall'esterno.
      *
-     * @param dump
+     * @param dump Dump da caricare.
      */
     void load(InboundDump dump);
+
 }

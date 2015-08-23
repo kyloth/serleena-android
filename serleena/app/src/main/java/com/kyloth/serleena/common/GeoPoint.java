@@ -80,10 +80,10 @@ public class GeoPoint
      * @param latitude     Latitudine del punto geografico, -90 < x < 90.
      * @param longitude    Longitudine del punto geografico, -180 < x < 180.
      */
-    public GeoPoint(double latitude, double longitude) throws IllegalArgumentException {
+    public GeoPoint(double latitude, double longitude)
+            throws IllegalArgumentException {
         if ( latitude < MIN_LATITUDE   || latitude > MAX_LATITUDE ||
             longitude < MIN_LONGITUDE  || longitude >= MAX_LONGITUDE ) {
-            // Si: [0, 2pi) No: [0, 2pi]. 2pi mod 2pi == 0.
             throw new IllegalArgumentException();
         }
         this.latitude = latitude;
@@ -140,13 +140,18 @@ public class GeoPoint
 
     /**
      * Overriding di Object.hashCode()
-     *
-     * @return Hash dell'oggetto.
      */
     public int hashCode() {
         return (int)(latitude + longitude);
     }
 
+    /**
+     * Restituisce la traiettoria in gradi a ovest del nord quando ci si muove
+     * dalla posizione rappresentata dall'istanza alla posizione specificata.
+     *
+     * @param other Posizione di destinazione.
+     * @return Traiettoria in gradi a ovest rispetto ai polo nord.
+     */
     public float bearingTo(GeoPoint other) {
         Location location = new Location("");
         location.setLatitude(latitude);

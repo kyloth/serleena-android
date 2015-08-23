@@ -92,8 +92,6 @@ public class TrackFragment extends Fragment implements ITrackView, View.OnClickL
             @Override
             public void advanceCheckpoint() throws NoTrackCrossingException { }
             @Override
-            public void abortTrack() { }
-            @Override
             public void resume() { }
             @Override
             public void pause() { }
@@ -123,10 +121,7 @@ public class TrackFragment extends Fragment implements ITrackView, View.OnClickL
     }
 
     /**
-     * Aggancia un presenter alla vista.
-     *
-     * @param presenter Presenter da agganciare. Se null, viene sollevata
-     *                  un'eccezione IllegalArgumentException.
+     * Implementa ITrackView.attachPresenter().
      */
     @Override
     public void attachPresenter(ITrackPresenter presenter) {
@@ -136,7 +131,7 @@ public class TrackFragment extends Fragment implements ITrackView, View.OnClickL
     }
 
     /**
-     * Pulisce la vista.
+     * Implementa ITrackView.clearView().
      */
     @Override
     public void clearView() {
@@ -148,10 +143,7 @@ public class TrackFragment extends Fragment implements ITrackView, View.OnClickL
     }
 
     /**
-     * Imposta l'orientamento necessario all'utente a raggiungere il prossimo
-     * checkpoint.
-     *
-     * @param heading Direzione del prossimo checkpoint in gradi.
+     * Implementa ITrackView.setDirection().
      */
     @Override
     public void setDirection(float heading) {
@@ -159,9 +151,7 @@ public class TrackFragment extends Fragment implements ITrackView, View.OnClickL
     }
 
     /**
-     * Metodo per impostare la distanza dal prossimo checkpoint.
-     *
-     * @param distance Distanza dal prossimo checkpoint
+     * Implementa ITrackView.setDistance().
      */
     @Override
     public void setDistance(int distance) {
@@ -172,9 +162,7 @@ public class TrackFragment extends Fragment implements ITrackView, View.OnClickL
     }
 
     /**
-     * Metodo per impostare il tempo di attraversamento dell'ultimo checkpoint.
-     *
-     * @param seconds Secondi impiegati per raggiungere l'ultimo checkpoint attraversato
+     * Implementa ITrackView.setLastPartial().
      */
     @Override
     public void setLastPartial(int seconds) {
@@ -192,9 +180,7 @@ public class TrackFragment extends Fragment implements ITrackView, View.OnClickL
     }
 
     /**
-     * Metodo per impostare il vantaggio rispetto alla miglior prestazione.
-     *
-     * @param seconds Secondi di scarto dalla miglior prestazione
+     * Implementa ITrackView.setDelta().
      */
     @Override
     public void setDelta(int seconds) {
@@ -214,9 +200,7 @@ public class TrackFragment extends Fragment implements ITrackView, View.OnClickL
     }
 
     /**
-     * Metodo per impostare l'ultimo checkpoint attraversato.
-     *
-     * @param n Numero che rappresenta quale checkpoint è stato attraversato
+     * Implementa ITrackView.setCheckpointNo().
      */
     @Override
     public void setCheckpointNo(int n) {
@@ -230,9 +214,7 @@ public class TrackFragment extends Fragment implements ITrackView, View.OnClickL
     }
 
     /**
-     * Metodo per impostare il numero totale di checkpoint.
-     *
-     * @param n Numero totale di checkpoint
+     * Implementa ITrackView.setTotalCheckpoints().
      */
     @Override
     public void setTotalCheckpoints(int n) {
@@ -246,7 +228,7 @@ public class TrackFragment extends Fragment implements ITrackView, View.OnClickL
     }
 
     /**
-     * ITrackView.displayTrackEnded().
+     * Implementa ITrackView.displayTrackEnded().
      */
     @Override
     public void displayTrackEnded() {
@@ -255,8 +237,6 @@ public class TrackFragment extends Fragment implements ITrackView, View.OnClickL
 
     /**
      * Implementa ITrackView.setTrackName()
-     *
-     * @param name Nome del Percorso.
      */
     @Override
     public void setTrackName(String name) {
@@ -266,7 +246,7 @@ public class TrackFragment extends Fragment implements ITrackView, View.OnClickL
     }
 
     /**
-     * Pulisci informazioni sulla vista riguardanti i checkpoint.
+     * Implementa ITrackView.clearCheckpoints().
      */
     @Override
     public void clearCheckpoints() {
@@ -276,7 +256,7 @@ public class TrackFragment extends Fragment implements ITrackView, View.OnClickL
     }
 
     /**
-     * Pulisci informazioni riguardanti i tempi di attraversamento del Percorso.
+     * Implementa ITrackView.clearStats().
      */
     @Override
     public void clearStats() {
@@ -285,7 +265,9 @@ public class TrackFragment extends Fragment implements ITrackView, View.OnClickL
     }
 
     /**
-     * Metodo invocato quando il Fragment viene visualizzato.
+     * Ridefinisce Fragment.onResume().
+     *
+     * Chiama il rispettivo metodo resume() per Presenter.
      */
     @Override
     public void onResume() {
@@ -294,7 +276,9 @@ public class TrackFragment extends Fragment implements ITrackView, View.OnClickL
     }
 
     /**
-     * Metodo invocato quando il Fragment smette di essere visualizzato.
+     * Ridefinisce Fragment.onPause().
+     *
+     * Chiama il rispettivo metodo pause() per Presenter.
      */
     @Override
     public void onPause() {
@@ -304,12 +288,19 @@ public class TrackFragment extends Fragment implements ITrackView, View.OnClickL
 
     /**
      * Ridefinisce Object.toString().
+     *
+     * Restituisce il nome del Fragment.
      */
     @Override
     public String toString() {
         return "Percorso";
     }
 
+    /**
+     * Ridefinisce OnClickListener.onClick().
+     *
+     * Comunica al Presenter la volontà di avanzare di checkpoint.
+     */
     @Override
     public void onClick(View v) {
         try {

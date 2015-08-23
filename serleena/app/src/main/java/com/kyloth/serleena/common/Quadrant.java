@@ -58,9 +58,11 @@ public class Quadrant extends Region implements IQuadrant {
     /**
      * Crea un oggetto Quadrant.
      *
-     * @param northWest
-     * @param southEast
-     * @param raster L'immagine raster della mappa per il quadrante.
+     * @param northWest Punto geografico indicante l'angolo nord-ovest del
+     *                  quadrante.
+     * @param southEast Punto geografico individua l'angolo sud-est del
+     *                  quadrante.
+     * @param raster    L'immagine raster della mappa associata al quadrante.
      */
     public Quadrant(GeoPoint northWest, GeoPoint southEast, Bitmap raster) {
         super(northWest, southEast);

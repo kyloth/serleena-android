@@ -169,7 +169,6 @@ public class SerleenaSQLiteDataSource implements ISerleenaSQLiteDataSource {
         return getTelemetries(track, true);
     }
 
-    // HACK per SHANDROID-372
     @Override
     public Iterable<SQLiteDAOTelemetry> getTelemetries(SQLiteDAOTrack track, boolean includeGhost) {
         SQLiteDatabase db = dbHelper.getReadableDatabase();
@@ -210,7 +209,6 @@ public class SerleenaSQLiteDataSource implements ISerleenaSQLiteDataSource {
         return getUserPoints(experience, false);
     }
 
-    // HACK per SHANDROID-387
     @Override
     public Iterable<UserPoint> getUserPoints(SQLiteDAOExperience experience, boolean localOnly) {
         SQLiteDatabase db = dbHelper.getReadableDatabase();
@@ -323,7 +321,16 @@ public class SerleenaSQLiteDataSource implements ISerleenaSQLiteDataSource {
     }
 
     /**
-     * Implementa IPersistenceDataSource.getQuadrant().
+     * Restituisce il quadrante contenente la posizione geografica
+     * specificata, tra quelli associati all'Esperienza indicata.
+     *
+     * Se non vi sono quadranti contenenti la posizione specificata, viene
+     * sollevata un'eccezione NosuchQuadrantException.
+     *
+     * @param location Posizione geografica contenuta dal quadrante richiesto.
+     * @param exp Esperienza a cui il quadrante è associato.
+     * @return Oggetto IQuadrant rappresentante il quadrante.
+     * @throws NoSuchQuadrantException
      */
     @Override
     public IQuadrant getQuadrant(GeoPoint location, SQLiteDAOExperience exp)

@@ -32,8 +32,8 @@
  * Name: ICompassView
  * Package: com.hitchikers.serleena.presentation
  * Author: Tobia Tesan <tobia.tesan@gmail.com>
- * 
- * History: 
+ *
+ * History:
  * Version    Programmer   Changes
  * 1.0        Tobia Tesan  Creazione del file
  */
@@ -52,29 +52,28 @@ package com.kyloth.serleena.presentation;
  */
 public interface ICompassView {
 
-	/**
-	 * Cambia l'orientamento mostrato dalla vista.
-	 *
-	 * @param heading Orientamento espresso in gradi (0.0 ... 360.0),
-	 *                modulo 360.0.
-	 * @since 1.0
-	 */
-	void setHeading(double heading);
+    /**
+     * Cambia l'orientamento mostrato dalla vista.
+     *
+     * @param heading Orientamento espresso in gradi (0.0 ... 360.0),
+     *                modulo 360.0.
+     */
+    void setHeading(double heading);
 
-	/**
-	 * Lega un presenter alla vista.
-	 *
-	 * @since 1.0
-	 */
-	void attachPresenter(ICompassPresenter presenter);
+    /**
+     * Lega un presenter alla vista.
+     *
+     * @param presenter Presenter da associare alla vista.
+     */
+    void attachPresenter(ICompassPresenter presenter);
 
-	/**
-	 * Pulisce la vista.
-	 *
-	 * Viene chiamato sulla vista dalla fonte di dati di orientamento, nel caso
-	 * tali dati non siano reperibili o non sia possibile comunicare con il
-	 * sensore di orientamento.
-	 */
-	void clearView();
+    /**
+     * Pulisce la vista.
+     *
+     * Viene chiamato sulla vista dalla fonte di dati di orientamento, nel caso
+     * tali dati non siano reperibili o non sia possibile comunicare con il
+     * sensore di orientamento.
+     */
+    void clearView();
 
 }

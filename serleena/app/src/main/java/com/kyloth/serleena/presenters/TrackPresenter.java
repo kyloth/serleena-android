@@ -217,11 +217,6 @@ public class TrackPresenter implements ITrackPresenter, ITrackCrossingObserver,
         updateView();
     }
 
-    @Override
-    public synchronized void abortTrack() {
-        tc.abort();
-    }
-
     private void updateView() {
         view.clearView();
         try {

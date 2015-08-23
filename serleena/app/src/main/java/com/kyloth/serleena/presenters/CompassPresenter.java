@@ -85,8 +85,6 @@ public class CompassPresenter implements ICompassPresenter, IHeadingObserver {
 
     /**
      * Implementa IPresenter.resume().
-     *
-     * @see com.kyloth.serleena.presentation.IPresenter
      */
     @Override
     public void resume() {
@@ -101,8 +99,6 @@ public class CompassPresenter implements ICompassPresenter, IHeadingObserver {
 
     /**
      * Implementa IPresenter.pause().
-     *
-     * @see com.kyloth.serleena.presentation.IPresenter
      */
     @Override
     public void pause() {
@@ -120,7 +116,6 @@ public class CompassPresenter implements ICompassPresenter, IHeadingObserver {
      *
      * @param heading Valore di tipo double che indica la direzione
      *                dell'Escursionista rispetto ai punti cardinali.
-     * @see com.kyloth.serleena.sensors.IHeadingObserver
      */
     @Override
     public void onHeadingUpdate(AzimuthMagneticNorth heading) {

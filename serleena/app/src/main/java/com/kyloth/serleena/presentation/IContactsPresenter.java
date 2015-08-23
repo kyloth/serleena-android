@@ -32,8 +32,8 @@
  * Name: IContactsPresenter
  * Package: com.hitchikers.serleena.presentation
  * Author: Tobia Tesan <tobia.tesan@gmail.com>
- * 
- * History: 
+ *
+ * History:
  * Version    Programmer   Changes
  * 1.0        Tobia Tesan  Creazione del file
  */
@@ -47,13 +47,12 @@ package com.kyloth.serleena.presentation;
  * @use Interfaccia utilizzata dalla vista ContactsFragment per mantenere un riferimento al Presenter associato, e comunicare con esso.
  * @author Tobia Tesan <tobia.tesan@gmail.com>
  * @version 1.0
- * @since 1.0
  */
 public interface IContactsPresenter extends IPresenter {
-	/**
-	 * Richiede la visualizzazione del contatto successivo nella lista.
-	 *
-	 * @since 1.0
-	 */
-	void nextContact();
+
+    /**
+     * Richiede la visualizzazione del contatto successivo nella lista.
+     */
+    void nextContact();
+
 }

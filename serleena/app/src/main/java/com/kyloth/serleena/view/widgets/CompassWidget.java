@@ -48,14 +48,28 @@ public class CompassWidget extends ImageView {
         super(context);
     }
 
+    /**
+     * Crea un nuovo oggetto CompassWidget.
+     */
     public CompassWidget(Context context, AttributeSet attrs) {
         super(context, attrs);
     }
 
+    /**
+     * Crea un nuovo oggetto CompassWidget.
+     */
     public CompassWidget(Context context, AttributeSet attrs, int defStyle) {
         super(context, attrs, defStyle);
     }
 
+    /**
+     * Ridefinisce View.onDraw().
+     *
+     * Disegna la vista applicando una rotazione all'immagine di una bussola in
+     * base al valore impostato con setOrientation().
+     *
+     * @param canvas Oggetto Canvas sul quale effettuare le operazioni grafiche.
+     */
     @Override
     public void onDraw(Canvas canvas) {
         int height = this.getHeight();
@@ -65,6 +79,11 @@ public class CompassWidget extends ImageView {
         super.onDraw(canvas);
     }
 
+    /**
+     * Imposta l'orientamento della bussola.
+     *
+     * @param direction Orientamento della bussola in gradi.
+     */
     public void setOrientation(float direction) {
         this.direction = direction;
         this.setImageResource(R.drawable.compass);
@@ -79,8 +98,12 @@ public class CompassWidget extends ImageView {
         return this.direction;
     }
 
+    /**
+     * Reimposta la bussola.
+     */
     public void reset() {
         this.setImageResource(android.R.color.transparent);
         invalidate();
     }
+
 }

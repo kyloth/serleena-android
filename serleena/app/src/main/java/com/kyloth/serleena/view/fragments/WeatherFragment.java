@@ -70,6 +70,9 @@ public class WeatherFragment extends Fragment
     private LinearLayout afternoonLayout;
     private LinearLayout nightLayout;
 
+    /**
+     * Crea un nuovo oggetto WeatherFragment.
+     */
     public WeatherFragment() {
         presenter = new IWeatherPresenter() {
             @Override
@@ -81,6 +84,9 @@ public class WeatherFragment extends Fragment
         };
     }
 
+    /**
+     * Ridefinisce Fragment.onCreateView().
+     */
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -113,11 +119,17 @@ public class WeatherFragment extends Fragment
         return group;
     }
 
+    /**
+     * Implementa IWeatherView.attachPresenter().
+     */
     @Override
     public void attachPresenter(IWeatherPresenter presenter) {
         this.presenter = presenter;
     }
 
+    /**
+     * Implementa IWeatherView.setWeatherInfo().
+     */
     @Override
     public void setWeatherInfo(IWeatherForecast forecast) {
         if (forecast == null)
@@ -136,6 +148,9 @@ public class WeatherFragment extends Fragment
         nightTempText.setText(forecast.getNightTemperature() + " °C");
     }
 
+    /**
+     * Implementa IWeatherView.setDate().
+     */
     @Override
     public void setDate(Date date) {
         Calendar calendar = Calendar.getInstance();
@@ -145,6 +160,9 @@ public class WeatherFragment extends Fragment
         dateText.setText(text);
     }
 
+    /**
+     * Implementa IWeatherView.clearWeatherInfo().
+     */
     @Override
     public void clearWeatherInfo() {
         noInfoText.setVisibility(View.VISIBLE);
@@ -153,12 +171,22 @@ public class WeatherFragment extends Fragment
         nightLayout.setVisibility(View.INVISIBLE);
     }
 
+    /**
+     * Ridefinisce Fragment.onResume().
+     *
+     * Chiama il rispettivo metodo resume() del Presenter.
+     */
     @Override
     public void onResume() {
         super.onResume();
         presenter.resume();
     }
 
+    /**
+     * Ridefinisce Fragment.onPause().
+     *
+     * Chiama il rispettivo metodo pause() del Presenter.
+     */
     @Override
     public void onPause() {
         super.onPause();
@@ -177,6 +205,8 @@ public class WeatherFragment extends Fragment
 
     /**
      * Ridefinisce Object.toString().
+     *
+     * Restituisce il nome della vista.
      */
     @Override
     public String toString() {

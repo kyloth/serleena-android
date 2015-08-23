@@ -32,8 +32,8 @@
  * Name: ITelemetryPrSyncPresenter
  * Package: com.hitchikers.serleena.presentation
  * Author: Tobia Tesan <tobia.tesan@gmail.com>
- * 
- * History: 
+ *
+ * History:
  * Version    Programmer   Changes
  * 1.0        Tobia Tesan  Creazione del file
  */
@@ -52,15 +52,15 @@ import com.kyloth.serleena.sensors.TrackAlreadyStartedException;
  * @since 1.0
  */
 public interface ITelemetryPresenter extends IPresenter {
-	/**
-	 * Richiede al presenter di abilitare il tracciamento per il percorso
-	 * corrente presso il Model.
-	 */
-	void enableTelemetry() throws TrackAlreadyStartedException;
+    /**
+     * Richiede al presenter di abilitare il tracciamento per il percorso
+     * corrente presso il Model.
+     */
+    void enableTelemetry() throws TrackAlreadyStartedException;
 
-	/**
-	 * Richiede al presenter di disabilitare il tracciamento per il percorso
-	 * corrente presso il Model.
-	 */
-	void disableTelemetry();
+    /**
+     * Richiede al presenter di disabilitare il tracciamento per il percorso
+     * corrente presso il Model.
+     */
+    void disableTelemetry();
 }

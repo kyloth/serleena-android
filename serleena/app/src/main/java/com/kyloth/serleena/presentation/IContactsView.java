@@ -32,8 +32,8 @@
  * Name: IContactsView
  * Package: com.hitchikers.serleena.presentation
  * Author: Tobia Tesan <tobia.tesan@gmail.com>
- * 
- * History: 
+ *
+ * History:
  * Version    Programmer   Changes
  * 1.0        Tobia Tesan  Creazione del file
  */
@@ -47,7 +47,6 @@ package com.kyloth.serleena.presentation;
  * @use Viene utilizzato dal Presenter ContactsPresenter per mantenere un riferimento alla vista associata, e comunicare con essa.
  * @author Tobia Tesan <tobia.tesan@gmail.com>
  * @version 1.0
- * @since 1.0
  */
 public interface IContactsView {
 
@@ -61,15 +60,15 @@ public interface IContactsView {
     void attachPresenter(IContactsPresenter presenter)
             throws IllegalArgumentException;
 
-	/**
-	 * Mostra a schermo un contatto di emergenza.
-	 *
-	 * @param name Il nome o identificativo del contatto da mostrare
-	 *             (es. "Stazione Carabinieri Terni")
-	 * @param contact Il contatto in formato leggibile dall'uomo
-	 *                (es. "0744 885546")
-	 */
-	void displayContact(String name, String contact);
+    /**
+     * Mostra a schermo un contatto di emergenza.
+     *
+     * @param name Il nome o identificativo del contatto da mostrare
+     *             (es. "Stazione Carabinieri Terni")
+     * @param contact Il contatto in formato leggibile dall'uomo
+     *                (es. "0744 885546")
+     */
+    void displayContact(String name, String contact);
 
     /**
      * Pulisce la vista.

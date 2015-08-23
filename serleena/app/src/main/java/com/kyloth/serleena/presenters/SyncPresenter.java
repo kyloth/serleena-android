@@ -262,10 +262,12 @@ public class SyncPresenter implements ISyncPresenter {
 
     /**
      * Implementa ISyncPresenter.pause().
+     *
+     * Non viene eseguita alcuna operazione.
      */
     @Override
     public void pause() {
-        // NOOP?
+
     }
 
 }

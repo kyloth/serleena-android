@@ -94,6 +94,7 @@ class SQLiteDAOTelemetry implements ITelemetryStorage {
     /**
      * Ridefinisce Object.equals()
      *
+     * @param other Oggetto da confrontare.
      * @return True se e solo se entrambi gli oggetti sono non null,
      * di tipo SQLiteDAOTelemetry, e se il metodo equals() restituisce true per
      * gli getUUID e l'elenco di eventi TelemetryEvent degli oggetti. False

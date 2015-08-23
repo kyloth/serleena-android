@@ -53,8 +53,8 @@ public class UserPoint extends GeoPoint {
     /**
      * Crea un oggetto UserPoint.
      *
-     * @param latitude      Latitudine del punto utente.
-     * @param longitude     Longitudine del punto utente.
+     * @param latitude      Latitudine in gradi del punto utente.
+     * @param longitude     Longitudine in gradi del punto utente.
      */
     public UserPoint(double latitude, double longitude) {
         super(latitude, longitude);

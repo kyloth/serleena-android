@@ -108,7 +108,7 @@ public class ContactsFragment extends Fragment
     }
 
     /**
-     * Imposta un presenter per la vista.
+     * Implementa IContactsView.attachPresenter().
      */
     @Override
     public void attachPresenter(IContactsPresenter presenter)
@@ -119,7 +119,7 @@ public class ContactsFragment extends Fragment
     }
 
     /**
-     * Visualizza il contatto specificato sulla vista.
+     * Implementa IContactsView.displayContact().
      */
     @Override
     public void displayContact(String name, String contact) {
@@ -131,7 +131,7 @@ public class ContactsFragment extends Fragment
     }
 
     /**
-     * Pulisce la vista.
+     * Implementa IContactsView.clearView().
      */
     @Override
     public void clearView() {

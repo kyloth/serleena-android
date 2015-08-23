@@ -32,8 +32,8 @@
  * Name: ITrackSelectionPresenter
  * Package: com.hitchikers.serleena.presentation
  * Author: Tobia Tesan <tobia.tesan@gmail.com>
- * 
- * History: 
+ *
+ * History:
  * Version    Programmer   Changes
  * 1.0        Tobia Tesan  Creazione del file
  */
@@ -59,6 +59,6 @@ public interface ITrackSelectionPresenter extends IPresenter {
      *
      * @param track Percorso selezionato dall'utente, che deve essere attivato.
      */
-	void activateTrack(ITrack track) throws IllegalArgumentException;
+    void activateTrack(ITrack track) throws IllegalArgumentException;
 
 }

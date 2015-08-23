@@ -32,8 +32,8 @@
  * Name: IExperienceSelectionView
  * Package: com.hitchikers.serleena.presentation
  * Author: Tobia Tesan <tobia.tesan@gmail.com>
- * 
- * History: 
+ *
+ * History:
  * Version    Programmer   Changes
  * 1.0        Tobia Tesan  Creazione del file
  */
@@ -52,17 +52,19 @@ import com.kyloth.serleena.model.IExperience;
  * @since 1.0
  */
 public interface IExperienceSelectionView {
-	/**
-	 * Visualizza una lista di nomi di esperienze tra cui scegliere.
-	 *
-	 * @since 1.0
-	 */
-	void setExperiences(Iterable<IExperience> experiences);
 
-	/**
-	 * Lega un Presenter alla vista.
-	 *
-	 * @since 1.0
-	 */
-	void attachPresenter(IExperienceSelectionPresenter presenter);
+    /**
+     * Visualizza una lista di nomi di esperienze tra cui scegliere.
+     *
+     * @param experiences Esperienze da visualizzare sulla vista.
+     */
+    void setExperiences(Iterable<IExperience> experiences);
+
+    /**
+     * Lega un Presenter alla vista.
+     *
+     * @param presenter Presenter da associare alla vista.
+     */
+    void attachPresenter(IExperienceSelectionPresenter presenter);
+
 }

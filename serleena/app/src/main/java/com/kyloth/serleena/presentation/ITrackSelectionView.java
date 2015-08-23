@@ -32,8 +32,8 @@
  * Name: ITrackSelectionView
  * Package: com.hitchikers.serleena.presentation
  * Author: Tobia Tesan <tobia.tesan@gmail.com>
- * 
- * History: 
+ *
+ * History:
  * Version    Programmer   Changes
  * 1.0        Tobia Tesan  Creazione del file
  */
@@ -52,17 +52,17 @@ import com.kyloth.serleena.model.ITrack;
  * @since 1.0
  */
 public interface ITrackSelectionView {
-	/**
-	 * Visualizza una lista di nomi di percorsi tra cui scegliere.
-	 *
-	 * @since 1.0
-	 */
-	void setTracks(Iterable<ITrack> tracks);
+    /**
+     * Visualizza una lista di nomi di percorsi tra cui scegliere.
+     *
+     * @param tracks Percorso da mostrare sulla vista.
+     */
+    void setTracks(Iterable<ITrack> tracks);
 
-	/**
-	 * Lega un Presenter alla vista.
-	 *
-	 * @since 1.0
-	 */
-	void attachPresenter(ITrackSelectionPresenter presenter);
+    /**
+     * Lega un Presenter alla vista.
+     *
+     * @param presenter Presenter da associare alla vista.
+     */
+    void attachPresenter(ITrackSelectionPresenter presenter);
 }

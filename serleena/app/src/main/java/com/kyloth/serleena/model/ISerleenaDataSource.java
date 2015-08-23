@@ -83,6 +83,8 @@ public interface ISerleenaDataSource {
      * Restituisce i contatti di emergenza che hanno giurisdizione su un dato
      * punto geografico.
      *
+     * @param loc Punto geografico di cui si vuole ottenere informazione.
+     *
      * @version 1.0
      */
     DirectAccessList<EmergencyContact> getContacts(GeoPoint loc);

@@ -75,9 +75,6 @@ interface ISerleenaSQLiteDataSource extends IPersistenceDataSource {
      */
     Iterable<SQLiteDAOTelemetry> getTelemetries(SQLiteDAOTrack track);
 
-    // HACK per SHANDROID-372
-    Iterable<SQLiteDAOTelemetry> getTelemetries(SQLiteDAOTrack track, boolean includeGhost);
-
     /**
      * Restituisce i Punti Utente associati a una specifica Esperienza.
      *
@@ -86,8 +83,6 @@ interface ISerleenaSQLiteDataSource extends IPersistenceDataSource {
      */
     Iterable<UserPoint> getUserPoints(SQLiteDAOExperience experience);
 
-    // HACK per SHANDROID-387
-    Iterable<UserPoint> getUserPoints(SQLiteDAOExperience experience, boolean localOnly);
 
     /**
      * Aggiunge un nuovo punto utente al database, associato all'Esperienza
@@ -105,8 +100,7 @@ interface ISerleenaSQLiteDataSource extends IPersistenceDataSource {
      * @param events Eventi di tracciamento da cui costruire il Tracciamento.
      * @param track Percorso a cui associare il Tracciamento.
      */
-    void createTelemetry(Iterable<TelemetryEvent> events,
-                         SQLiteDAOTrack track);
+    void createTelemetry(Iterable<TelemetryEvent> events, SQLiteDAOTrack track);
 
     /**
      * Restituisce uno dei quadranti presenti nel database per una specifica
@@ -122,4 +116,8 @@ interface ISerleenaSQLiteDataSource extends IPersistenceDataSource {
      */
     IQuadrant getQuadrant(GeoPoint location, SQLiteDAOExperience experience)
             throws NoSuchQuadrantException;
+
+    Iterable<UserPoint> getUserPoints(SQLiteDAOExperience experience, boolean localOnly);
+    Iterable<SQLiteDAOTelemetry> getTelemetries(SQLiteDAOTrack track, boolean includeGhost);
+
 }

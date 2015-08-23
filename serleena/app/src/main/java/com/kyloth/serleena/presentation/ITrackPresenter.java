@@ -32,8 +32,8 @@
  * Name: ITrackPresenter
  * Package: com.hitchikers.serleena.presentation
  * Author: Tobia Tesan <tobia.tesan@gmail.com>
- * 
- * History: 
+ *
+ * History:
  * Version    Programmer   Changes
  * 1.0        Tobia Tesan  Creazione del file
  */
@@ -54,13 +54,10 @@ import com.kyloth.serleena.sensors.NoActiveTrackException;
  */
 public interface ITrackPresenter extends IPresenter {
 
-	/**
-	 * Richiede al Model di avanzare al prossimo checkpoint in seguito a
-	 * segnalazione manuale da parte dell'utente.
-	 *
-	 * @since 1.0
-	 */
-	void advanceCheckpoint() throws NoTrackCrossingException, NoActiveTrackException;
+    /**
+     * Richiede al Model di avanzare al prossimo checkpoint in seguito a
+     * segnalazione manuale da parte dell'utente.
+     */
+    void advanceCheckpoint() throws NoTrackCrossingException, NoActiveTrackException;
 
-	void abortTrack();
 }

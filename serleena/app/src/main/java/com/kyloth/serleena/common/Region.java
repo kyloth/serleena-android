@@ -56,12 +56,12 @@ public class Region implements IRegion {
     private GeoPoint southEast;
 
     /**
-     * Crea un oggetto Region
+     * Crea un oggetto Region.
      *
-     * @param northWest
-     * @param southEast
-     * @throws IllegalArgumentException E' lanciata quando northWest o
-     *               southEast sono null
+     * @param northWest Punto geografico indicante l'angolo nord-ovest della
+     *                  regione.
+     * @param southEast Punto geografico individua l'angolo sud-est della
+     *                  regione.
      */
     public Region(GeoPoint northWest, GeoPoint southEast) throws IllegalArgumentException {
         if (northWest == null || southEast == null) {
@@ -77,9 +77,9 @@ public class Region implements IRegion {
     }
 
     /**
-     * Restituisce il punto a nord-est dell'area geografica.
+     * Restituisce l'estremo nord-ovest dell'area geografica.
      *
-     * @return Primo punto geografico.
+     * @return Estremo nord-ovest dell'area geografica.
      */
     @Override
     public GeoPoint getNorthWestPoint() {
@@ -87,9 +87,9 @@ public class Region implements IRegion {
     }
 
     /**
-     * Restituisce il punto a sud-ovest dell'area geografica.
+     * Restituisce l'estremo sud-est dell'area geografica.
      *
-     * @return Secondo punto geografico
+     * @return Estremo sud-est dell'area geografica.
      */
     @Override
     public GeoPoint getSouthEastPoint() {
@@ -101,16 +101,14 @@ public class Region implements IRegion {
      *
      * @param p Punto geografico. Se null, viene sollevata un'eccezione
      *          IllegalArgumentException.
-     * @return True se p e' contenuto nella regione
-     * @throws IllegalArgumentException se p e' null
+     * @return True se il punto specificato e' contenuto nella regione. False
+     *         altrimenti.
      */
     @Override
     public boolean contains(GeoPoint p) throws IllegalArgumentException {
-        if (p == null) {
+        if (p == null)
             throw new IllegalArgumentException();
-        }
         return (
-                // 0,0 e' contenuto in (-10,10), (10,-10).
                 northWest.latitude() >= p.latitude() &&
                         p.latitude() >= southEast.latitude() &&
                         northWest.longitude() <= p.longitude() &&

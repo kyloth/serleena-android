@@ -32,8 +32,8 @@
  * Name: IMapPresenter
  * Package: com.hitchikers.serleena.presentation
  * Author: Tobia Tesan <tobia.tesan@gmail.com>
- * 
- * History: 
+ *
+ * History:
  * Version    Programmer   Changes
  * 1.0        Tobia Tesan  Creazione del file
  */
@@ -54,16 +54,16 @@ import com.kyloth.serleena.common.NoActiveExperienceException;
 public interface IMapPresenter extends IPresenter {
 
     /**
-	 * Richiede l'aggiunta di un nuovo punto utente corrispondente alla
-	 * posizione corrente.
+     * Richiede l'aggiunta di un nuovo punto utente corrispondente alla
+     * posizione corrente.
      *
-	 * Se non è vi sono esperienze attive, viene sollevata un'eccezione
+     * Se non è vi sono esperienze attive, viene sollevata un'eccezione
      * NoActiveExperienceException.
      *
      * Se non è disponibile la posizione dell'utente, necessaria alla creazione
      * del punto utente, viene sollevata un'eccezione
      * LocationNotAvailableException.
-	 */
+     */
     void newUserPoint()
         throws NoActiveExperienceException, LocationNotAvailableException;
 
