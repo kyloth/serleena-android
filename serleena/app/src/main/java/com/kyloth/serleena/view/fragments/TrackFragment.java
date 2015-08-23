@@ -260,9 +260,14 @@ public class TrackFragment extends Fragment implements ITrackView, View.OnClickL
      */
     @Override
     public void setTrackName(String name) {
+        if (name == null)
+            throw new IllegalArgumentException();
         trackNameText.setText(name);
     }
 
+    /**
+     * Pulisci informazioni sulla vista riguardanti i checkpoint.
+     */
     @Override
     public void clearCheckpoints() {
         totalCheckpoints = 0;
@@ -270,6 +275,9 @@ public class TrackFragment extends Fragment implements ITrackView, View.OnClickL
         nextCheckpointText.setText("");
     }
 
+    /**
+     * Pulisci informazioni riguardanti i tempi di attraversamento del Percorso.
+     */
     @Override
     public void clearStats() {
         lastPartialText.setText("");
