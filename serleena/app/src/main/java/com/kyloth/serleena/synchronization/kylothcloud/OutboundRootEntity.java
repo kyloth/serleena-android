@@ -29,8 +29,24 @@
 
 
 package com.kyloth.serleena.synchronization.kylothcloud;
+/**
+ * Name: OutboundRootEntity.java
+ * Package: com.hitchikers.serleena.synchronization.kylothcloud
+ * Author: Tobia Tesan <tobia.tesan@gmail.com>
+ *
+ * History:
+ * Version    Programmer   Changes
+ * 1.0.0      Tobia Tesan  Creazione del file
+ */
 
 import java.util.Collection;
+
+/**
+ * Struttura che rappresenta la radice di un albero di dati raccolti sul dispositivo in uscita
+ * @field data : Collection<OutboundExperienceDataEntity> Collezione di esperienze in uscita
+ * @author Tobia Tesan <tobia.tesan@gmail.com>
+ * @version 1.0.0
+ */
 
 public class OutboundRootEntity implements IKylothDataEntity {
     public Collection<OutboundExperienceDataEntity> data;

@@ -30,12 +30,12 @@
 
 /**
  * Name: ExperienceEntity.java
- * Package: com.hitchikers.serleena.synchronization
+ * Package: com.hitchikers.serleena.synchronization.kylothcloud
  * Author: Tobia Tesan <tobia.tesan@gmail.com>
  *
  * History:
  * Version    Programmer   Changes
- * 1.0        Tobia Tesan  Creazione del file
+ * 1.0.0      Tobia Tesan  Creazione del file
  */
 
 package com.kyloth.serleena.synchronization.kylothcloud;
@@ -47,7 +47,15 @@ import java.util.LinkedList;
 import java.util.UUID;
 
 /**
- * Struct rappresentante un'esperienza
+ * Struttura rappresentante un'esperienza
+ * @field uuid : UUID Id univoco dell'esperienza
+ * @field tracks : Collection<TrackEntity> Collezione di tracce dell'espereienza
+ * @field userPoints : Collection<TrackEntity> Collezione di punti utente dell'espereienza
+ * @field rasterData : Collection<RasterDataEntity> Collezione di quadranti raster
+ * @field name : String Nome dell'esperienza
+ * @field rect : IRegion Oggetto rappresentante l'area geografica relativa all'esperienza
+ * @author Tobia Tesan <tobia.tesan@gmail.com>
+ * @version 1.0.0
  */
 public class ExperienceEntity implements IKylothDataEntity {
     public UUID uuid;

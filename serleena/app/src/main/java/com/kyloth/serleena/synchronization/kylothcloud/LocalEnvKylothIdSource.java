@@ -29,6 +29,15 @@
 
 
 package com.kyloth.serleena.synchronization.kylothcloud;
+/**
+ * Name: LocalEnvKylothIdSource.java
+ * Package: com.hitchikers.serleena.synchronization.kylothcloud
+ * Author: Tobia Tesan <tobia.tesan@gmail.com>
+ *
+ * History:
+ * Version    Programmer   Changes
+ * 1.0.0      Tobia Tesan  Creazione del file
+ */
 
 import java.math.BigInteger;
 import java.security.MessageDigest;
@@ -39,10 +48,12 @@ import java.security.NoSuchAlgorithmException;
  * "sufficientemente" univoco.
  *
  * Ricava un getUUID dall'hash di
- * (user.name + user.home + user.dir + 
+ * (user.name + user.home + user.dir +
  *  os.name + os.arch + os.version).
  * In produzione deve essere sostituito con un opportuna chiamata all'hardware.
- * 
+ *
+ * @author Tobia Tesan <tobia.tesan@gmail.com>
+ * @version 1.0.0
  */
 public class LocalEnvKylothIdSource implements IKylothIdSource {
     @Override

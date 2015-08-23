@@ -35,7 +35,7 @@
  *
  * History:
  * Version  Programmer        Changes
- * 0.0.1    Matteo Lisotto    Creazione file
+ * 1.0.0    Matteo Lisotto    Creazione file
  */
 
 package com.kyloth.serleena.synchronization.net;
@@ -44,6 +44,22 @@ import java.io.IOException;
 import java.net.HttpURLConnection;
 import java.net.URL;
 
+/**
+ * Interfaccia factory per la creazione di una HttpURLConnection a partire da un URL
+ *
+ * @use Viene usata da SerleenaJSONNetProxy
+ * @author Matteo Lisotto
+ * @version 1.0.0
+ */
+
 public interface SerleenaConnectionFactory {
+
+    /**
+     * Crea una HttpURLConnection da un URL
+     *
+     * @param url L'URL da cui creare una HttpURLConnection
+     * @throws IOException
+     */
+
     HttpURLConnection createURLConnection (URL url) throws IOException;
 }

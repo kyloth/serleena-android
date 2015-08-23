@@ -29,6 +29,15 @@
 
 
 package com.kyloth.serleena.synchronization.kylothcloud;
+/**
+ * Name: OutboundRootSerializer.java
+ * Package: com.hitchikers.serleena.synchronization.kylothcloud
+ * Author: Tobia Tesan <tobia.tesan@gmail.com>
+ *
+ * History:
+ * Version    Programmer   Changes
+ * 1.0.0      Tobia Tesan  Creazione del file
+ */
 
 import com.google.gson.JsonArray;
 import com.google.gson.JsonSerializationContext;
@@ -40,8 +49,12 @@ import java.lang.reflect.Type;
 import java.util.Iterator;
 
 /**
- * Struttura che rappresenta la radice di un albero di dati raccolti sul dispositivo in uscita
+ * Serializer custom per serializzare una OutboundRoot in JSON
+ *
+ * @author Tobia Tesan <tobia.tesan@gmail.com>
+ * @version 1.0
  */
+
 public class OutboundRootSerializer implements JsonSerializer<OutboundRootEntity> {
     @Override
     public JsonElement serialize(OutboundRootEntity or, Type typeOfOr, JsonSerializationContext context) {

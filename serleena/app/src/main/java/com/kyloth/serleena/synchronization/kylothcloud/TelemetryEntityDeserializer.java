@@ -29,6 +29,15 @@
 
 
 package com.kyloth.serleena.synchronization.kylothcloud;
+/**
+ * Name: TelemetryEntityDeserializer.java
+ * Package: com.hitchikers.serleena.synchronization.kylothcloud
+ * Author: Tobia Tesan <tobia.tesan@gmail.com>
+ *
+ * History:
+ * Version    Programmer   Changes
+ * 1.0        Tobia Tesan  Creazione del file
+ */
 
 import com.google.gson.JsonArray;
 import com.google.gson.JsonDeserializationContext;
@@ -39,6 +48,14 @@ import com.google.gson.JsonParseException;
 import java.lang.reflect.Type;
 
 import java.util.ArrayList;
+
+/**
+ * Deserializer custom per deserializzare una TelemetryEntity dal JSON passato
+ * da Kyloth in GSON.
+ *
+ * @author Tobia Tesan <tobia.tesan@gmail.com>
+ * @version 1.0
+ */
 
 class TelemetryEntityDeserializer implements JsonDeserializer<TelemetryEntity> {
     @Override

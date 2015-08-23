@@ -29,12 +29,27 @@
 
 
 package com.kyloth.serleena.synchronization.kylothcloud;
+/**
+ * Name: InboundRootEntity.java
+ * Package: com.hitchikers.serleena.synchronization.kylothcloud
+ * Author: Tobia Tesan <tobia.tesan@gmail.com>
+ *
+ * History:
+ * Version    Programmer   Changes
+ * 1.0.0      Tobia Tesan  Creazione del file
+ */
 
 import java.util.ArrayList;
 import java.util.Collection;
 
 /**
  * Struttura che rappresenta la radice di una gerarchia di dati in ingresso
+ *
+ * @field experiences : Collection<ExperienceEntity> Collezione di esperienze
+ * @field emergencyData : Collection<EmergencyDataEntity> Collezione di informazioni d'emergenza
+ * @field weatherData : Collection<weatherDataEntity> Collezione di informazioni meteo
+ * @author Tobia Tesan <tobia.tesan@gmail.com>
+ * @version 1.0.0
  */
 public class InboundRootEntity implements IKylothDataEntity {
     public Collection<ExperienceEntity> experiences;

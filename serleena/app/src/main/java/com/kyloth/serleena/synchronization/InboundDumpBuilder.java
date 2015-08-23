@@ -35,18 +35,20 @@
  *
  * History:
  * Version  Programmer        Changes
- * 0.0.1    Tobia Tesan       Creazione file
+ * 1.0.0    Tobia Tesan       Creazione file
  */
 package com.kyloth.serleena.synchronization;
 
 /**
- * @usa Synchronizer ne usa una istanza per costruire, a partire dalla rappresentazione intermedia fornita da un InboundStreamParser, un dump idoneo ad essere caricato in un DataSink fornito dall'Activity (che coincidera' tipicamente con il database dell'applicazione)
+ * @use Synchronizer ne usa una istanza per costruire, a partire dalla rappresentazione intermedia fornita da un InboundStreamParser, un dump idoneo ad essere caricato in un DataSink fornito dall'Activity (che coincidera' tipicamente con il database dell'applicazione)
  * @author Tobia Tesan <tobia.tesan@gmail.com>
+ * @version 1.0.0
  */
 public interface InboundDumpBuilder {
     /**
      * Restituisce un InboundDump idoneo a essere caricato nel database
      * con i dati finora inseriti.
+     * @return un InboundDump
      */
     InboundDump build();
 }

@@ -35,7 +35,7 @@
  *
  * History:
  * Version    Programmer   Changes
- * 1.0        Tobia Tesan  Creazione del file
+ * 1.0.0        Tobia Tesan  Creazione del file
  */
 
 package com.kyloth.serleena.synchronization.kylothcloud;
@@ -45,8 +45,24 @@ import com.kyloth.serleena.persistence.WeatherForecastEnum;
 
 /**
  * Struct rappresentante una previsione metereologica
+ * @field boundingRect : Region Oggetto rappresentante l'area geografica relativa alla previsione meteo
+ * @field date : long Timestamp associato alla previsione meteo
+ * @field morning : ForecastTuple Previsione associata la mattino
+ * @field afternoon : ForecastTuple Previsione associata al pomeriggio
+ * @field night : ForecastTuple Previsione associata alla notte
+ * @author Tobia Tesan <tobia.tesan@gmail.com>
+ * @version 1.0.0
  */
 public class WeatherDataEntity implements IKylothDataEntity {
+
+    /**
+     * Classe che rappresenta una condizione meteo nei suoi aspetti di
+     * temperatura e tempo atmosferico.
+     *
+     * @field forecast : WeatherForecastEnumn Rappresenta la condizione meteo prevista
+     * @field temperature : float Rappresenta la temperatura prevista
+     */
+
     public static class ForecastTuple {
         public WeatherForecastEnum forecast;
         public float temperature;

@@ -35,7 +35,7 @@
  *
  * History:
  * Version  Programmer        Changes
- * 0.0.1    Tobia Tesan       Creazione file
+ * 1.0.0    Tobia Tesan       Creazione file
  */
 package com.kyloth.serleena.synchronization;
 
@@ -43,6 +43,7 @@ package com.kyloth.serleena.synchronization;
  * Interfaccia che rappresenta uno stream testuale di dati in uscita.
  *
  * @author Tobia Tesan <tobia.tesan@gmail.com>
+ * @version 1.0.0
  */
 public interface OutboundStream {
 }

@@ -35,7 +35,7 @@
  *
  * History:
  * Version  Programmer        Changes
- * 0.0.1    Tobia Tesan       Creazione file
+ * 1.0.0    Tobia Tesan       Creazione file
  */
 
 package com.kyloth.serleena.synchronization.net;
@@ -44,6 +44,15 @@ package com.kyloth.serleena.synchronization.net;
  * Eccezione restituita quando vengono richieste operazioni che presuppongono una connessione, ma il dispositivo non e' connesso.
  */
 public class NotConnectedException extends Exception {
+
+    /**
+     * Costruisce una nuova NotConnectedException con messaggio s
+     *
+     * @param s Il messaggio d'errore
+     * @author Tobia Tesan <tobia.tesan@gmail.com>
+     * @version 1.0.0
+     */
+
     public NotConnectedException(String s) {
         super(s);
     }

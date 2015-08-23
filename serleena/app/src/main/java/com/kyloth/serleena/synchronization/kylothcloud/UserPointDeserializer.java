@@ -35,7 +35,7 @@
  *
  * History:
  * Version    Programmer       Changes
- * 1.0        Tobia Tesan      Creazione del file
+ * 1.0.0      Tobia Tesan      Creazione del file
  */
 
 package com.kyloth.serleena.synchronization.kylothcloud;
@@ -54,7 +54,7 @@ import com.kyloth.serleena.common.GeoPoint;
  * da Kyloth in GSON.
  *
  * @author Tobia Tesan <tobia.tesan@gmail.com>
- * @version 1.0
+ * @version 1.0.0
  */
 class UserPointDeserializer implements JsonDeserializer<UserPointEntity> {
 

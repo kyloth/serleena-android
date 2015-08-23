@@ -30,12 +30,12 @@
 
 /**
  * Name: CloudJSONInboundStreamParser.java
- * Package: com.kyloth.serleena.synchronization
+ * Package: com.kyloth.serleena.synchronization.kylothcloud.inbound
  * Author: Tobia Tesan
  *
  * History:
  * Version  Programmer        Changes
- * 0.0.1    Tobia Tesan       Creazione file
+ * 1.0.0    Tobia Tesan       Creazione file
  */
 package com.kyloth.serleena.synchronization.kylothcloud.inbound;
 
@@ -54,11 +54,21 @@ import java.io.InputStreamReader;
  * Concretizza InboundStreamParser in modo da poter consumare
  * stream JSON in arrivo da KylothCloud.
  *
+ * @field stream : CloudJSONInboundStream Lo stream da parsare
+ *
  * @use Viene usato da Synchronizer per trasformare i dati in arrivo da KylothCloud, raccolti in un InboundStream da un INetProxy, in un formato intermedio somministrabile a un InboundDumpBuilder.
  * @author Tobia Tesan <tobia.tesan@gmail.com>
+ * @version 1.0.0
+ *
  */
 public class CloudJSONInboundStreamParser implements InboundStreamParser {
     CloudJSONInboundStream stream;
+
+    /**
+     * Costruisce un nuovo CloudJSONInboundStreamParser da un InboundStream
+     *
+     * @param strea Lo stream da parsare
+     */
     public CloudJSONInboundStreamParser(InboundStream stream) {
         if (stream instanceof CloudJSONInboundStream) {
             this.stream = (CloudJSONInboundStream) stream;

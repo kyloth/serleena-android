@@ -30,7 +30,7 @@
 
 /**
  * Name: URLEncodedWriter.java
- * Package: com.kyloth.serleena.synchronization
+ * Package: com.kyloth.serleena.synchronization.kylothcloud.outbound
  * Author: Tobia Tesan
  *
  * History:
@@ -49,13 +49,16 @@ import java.net.URLEncoder;
  * Writer che implmenta FilterWriter filtrando i dati che vengono scritti applicando URL encoding prima di scriverli sul writer inferiore.
  */
 class URLEncodedWriter extends FilterWriter {
+
     /**
+     * Costruisce un nuovo URLEncodedWriter
      * @param out Il writer inferiore su cui scrivere i dati filtrati
      */
     protected URLEncodedWriter(Writer out) {
         super(out);
     }
 
+    @Override
     public void write(int c) throws IOException {
         out.write(URLEncoder.encode(String.valueOf((char)c), "UTF-8"));
     }

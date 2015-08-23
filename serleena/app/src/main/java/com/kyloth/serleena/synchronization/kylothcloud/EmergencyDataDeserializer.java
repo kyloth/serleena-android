@@ -29,6 +29,15 @@
 
 
 package com.kyloth.serleena.synchronization.kylothcloud;
+/**
+ * Name: EmergencyDataDeserializer.java
+ * Package: com.hitchikers.serleena.synchronization
+ * Author: Tobia Tesan <tobia.tesan@gmail.com>
+ *
+ * History:
+ * Version    Programmer   Changes
+ * 1.0.0      Tobia Tesan  Creazione del file
+ */
 
 import com.google.gson.JsonDeserializationContext;
 import com.google.gson.JsonDeserializer;
@@ -40,6 +49,14 @@ import com.kyloth.serleena.common.Quadrant;
 import com.kyloth.serleena.common.Region;
 
 import java.lang.reflect.Type;
+
+/**
+ * Deserializer custom per deserializzare una EmergencyDataEntity dal JSON passato
+ * da Kyloth in GSON.
+ *
+ * @author Tobia Tesan <tobia.tesan@gmail.com>
+ * @version 1.0.0
+ */
 
 public class EmergencyDataDeserializer implements JsonDeserializer<EmergencyDataEntity> {
     @Override

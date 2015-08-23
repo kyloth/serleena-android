@@ -30,12 +30,12 @@
 
 /**
  * Name: SerleenaSQLiteInboundDumpBuilder.java
- * Package: com.kyloth.serleena.synchronization
+ * Package: com.kyloth.serleena.synchronization.kylothcloud.inbound
  * Author: Tobia Tesan
  *
  * History:
  * Version  Programmer        Changes
- * 0.0.1    Tobia Tesan       Creazione file
+ * 1.0.0    Tobia Tesan       Creazione file
  */
 package com.kyloth.serleena.synchronization.kylothcloud.inbound;
 
@@ -63,15 +63,23 @@ import static java.lang.Math.round;
  * Concretizza InboundDumpBuilder in modo da restituire un InboundDump
  * compatibile con il formato del database interno dell'orologio.
  *
+ * @field root : InboundRootEntity Radice della gerarchia di dati in ingresso
+ * @field telemCounter : int Contatore per le telemetrie in ingresso
+ * @field upointCounter: int Contatore per i punti utente in ingresso
  * @use Viene usato da Synchronizer per trasformare una collezione di IDataEntity provenienti da un InboundStreamParser in un dump idoneo a essere caricato nel database dell'orologio.
  * @author Tobia Tesan <tobia.tesan@gmail.com>
- * @version 0.1
+ * @version 1.0.0
  */
 public class CloudSerleenaSQLiteInboundDumpBuilder implements InboundDumpBuilder {
     InboundRootEntity root;
     private int telemCounter;
     private int upointCounter;
 
+    /**
+     * Costruisce un nuovo CloudSerleenaSQLiteInboundDumpBuilder
+     *
+     * @param root Radice della gerarchia di dati in ingresso
+     */
     public CloudSerleenaSQLiteInboundDumpBuilder(InboundRootEntity root) {
         this.root = root;
         telemCounter = -1;        //HACK per SHANDROID-372

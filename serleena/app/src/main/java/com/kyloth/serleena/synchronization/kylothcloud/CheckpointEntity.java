@@ -28,22 +28,26 @@
 ///////////////////////////////////////////////////////////////////////////////
 
 
+package com.kyloth.serleena.synchronization.kylothcloud;
+
 /**
  * Name: CheckPointEntity.java
- * Package: com.hitchikers.serleena.synchronization
+ * Package: com.hitchikers.serleena.synchronization.kylothcloud
  * Author: Tobia Tesan <tobia.tesan@gmail.com>
  *
  * History:
  * Version    Programmer   Changes
- * 1.0        Tobia Tesan  Creazione del file
+ * 1.0.0      Tobia Tesan  Creazione del file
  */
-
-package com.kyloth.serleena.synchronization.kylothcloud;
 
 import com.kyloth.serleena.common.GeoPoint;
 
 /**
- * Struct rappresentante un checkpoint
+ * Struttura rappresentante un checkpoint
+ * @field point : GeoPoint Posizione del checkpoint
+ * @field id : intId univoco per il checkpoint
+ * @author Tobia Tesan <tobia.tesan@gmail.com>
+ * @version 1.0.0
  */
 public class CheckpointEntity implements IKylothDataEntity {
     public GeoPoint point;

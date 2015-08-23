@@ -30,7 +30,7 @@
 
 /**
  * Name: TelemetryEntity.java
- * Package: com.hitchikers.serleena.synchronization
+ * Package: com.hitchikers.serleena.synchronization.kylothcloud
  * Author: Tobia Tesan <tobia.tesan@gmail.com>
  *
  * History:
@@ -43,9 +43,14 @@ package com.kyloth.serleena.synchronization.kylothcloud;
 import java.util.Collection;
 import java.util.LinkedList;
 
+
 /**
- * Struct rappresentante una telemetria
+ * Struttura rappresentante una telemetria
+ * @field events : Collection<Long> Collezione di timestamp
+ * @author Tobia Tesan <tobia.tesan@gmail.com>
+ * @version 1.0.0
  */
+
 public class TelemetryEntity implements IKylothDataEntity {
     public Collection<Long> events;
     public TelemetryEntity() {

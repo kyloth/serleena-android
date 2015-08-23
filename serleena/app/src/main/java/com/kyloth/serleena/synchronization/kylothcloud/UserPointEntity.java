@@ -29,11 +29,24 @@
 
 
 package com.kyloth.serleena.synchronization.kylothcloud;
+/**
+ * Name: UserPointEntity.java
+ * Package: com.hitchikers.serleena.synchronization.kylothcloud
+ * Author: Tobia Tesan <tobia.tesan@gmail.com>
+ *
+ * History:
+ * Version    Programmer   Changes
+ * 1.0.0      Tobia Tesan  Creazione del file
+ */
 
 import com.kyloth.serleena.common.GeoPoint;
 
 /**
  * Struttura rappresentante un punto utente
+ * @field point : GeoPoint Posizione del punto utente
+ * @field name : String Nome del punto utente
+ * @author Tobia Tesan <tobia.tesan@gmail.com>
+ * @version 1.0.0
  */
 public class UserPointEntity implements IKylothDataEntity {
     public GeoPoint point;

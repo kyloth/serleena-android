@@ -35,7 +35,7 @@
  *
  * History:
  * Version  Programmer        Changes
- * 0.0.1    Tobia Tesan       Creazione file
+ * 1.0.0    Tobia Tesan       Creazione file
  */
 package com.kyloth.serleena.synchronization;
 
@@ -57,8 +57,12 @@ import java.io.IOException;
  * Funge da facade per il sottosistema di sincronizzazione.
  * Realizza il pattern Singleton.
  *
+ * @field dataSource : ISerleenaDataSource Datasource dell'applicazione.
+ * @field dataSink : IPersistenceDataSink Datasink dell'applicazione
+ * @field source : INetProxy Proxy per la comunicazione con il servizio remoto
+ *
  * @author Tobia Tesan <tobia.tesan@gmail.com>
- * @version 0.0.1
+ * @version 1.0.0
  */
 public class Synchronizer implements ISynchronizer {
     static Synchronizer instance;
@@ -66,13 +70,24 @@ public class Synchronizer implements ISynchronizer {
     IPersistenceDataSource source;
     INetProxy proxy;
 
+    /**
+     * Costruisce un Synchronizer
+     *
+     * @param proxy Proxy per la comunicazione con il servizio remoto
+     * @param sink Datasink dell'appliczione
+     * @param source Datasource dell'applicazion
+     */
+
     private Synchronizer(INetProxy proxy, IPersistenceDataSink sink, IPersistenceDataSource source) {
         this.proxy = proxy;
         this.sink = sink;
         this.source = source;
     }
 
-    // Metodo di utilita' per poter resettare lo stato del singleton negli unit test del package
+    /**
+     * Metodo di utilita' per poter resettare lo stato del singleton negli unit test del package
+     */
+
     static void __reset() { instance = null; }
 
     /**
@@ -119,6 +134,13 @@ public class Synchronizer implements ISynchronizer {
         proxy.auth();
     }
 
+    /**
+     * Riceve i dati dal servizio remoto
+     *
+     * @throws AuthException Se il servizio remoto nega il permesso di sincronizzare
+     * @throws IOException Se comunicazione impossibile col servizio remoto
+     */
+
     void get() throws AuthException, IOException {
         CloudJSONInboundStream in = (CloudJSONInboundStream) proxy.read();
         CloudJSONInboundStreamParser sjisp = new CloudJSONInboundStreamParser(in);
@@ -140,6 +162,13 @@ public class Synchronizer implements ISynchronizer {
         }
 
     }
+
+    /**
+     * Invia i dati locali al servizio remoto
+     *
+     * @throws AuthException Se il servizio remoto nega il permesso di sincronizzare
+     * @throws IOException Se comunicazione impossibile col servizio remoto
+     */
 
     void send() throws AuthException, IOException {
         CloudJSONOutboundStreamBuilder b = new CloudJSONOutboundStreamBuilder();

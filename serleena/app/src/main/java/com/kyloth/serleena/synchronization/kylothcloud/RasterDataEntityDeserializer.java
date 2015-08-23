@@ -35,7 +35,7 @@
  *
  * History:
  * Version    Programmer       Changes
- * 1.0        Tobia Tesan      Creazione del file
+ * 1.0.0      Tobia Tesan      Creazione del file
  */
 
 package com.kyloth.serleena.synchronization.kylothcloud;

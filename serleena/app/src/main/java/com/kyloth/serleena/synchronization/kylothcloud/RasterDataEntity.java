@@ -30,12 +30,12 @@
 
 /**
  * Name: RasterDataEntity.java
- * Package: com.hitchikers.serleena.synchronization
+ * Package: com.hitchikers.serleena.synchronization.kylothcloud
  * Author: Tobia Tesan <tobia.tesan@gmail.com>
  *
  * History:
  * Version    Programmer   Changes
- * 1.0        Tobia Tesan  Creazione del file
+ * 1.0.0      Tobia Tesan  Creazione del file
  */
 
 package com.kyloth.serleena.synchronization.kylothcloud;
@@ -43,7 +43,12 @@ package com.kyloth.serleena.synchronization.kylothcloud;
 import com.kyloth.serleena.common.IRegion;
 
 /**
- * Struct rappresentante ua mappa raster
+ * Struttura rappresentante ua mappa raster
+ *
+ * @field rect : IRegion Oggetto rappresentante l'area geografica relativa al quadrante raster
+ * @base64Raster : String rappresentazione base64 di un'immagine png per il quadrante
+ * @author Tobia Tesan <tobia.tesan@gmail.com>
+ * @version 1.0.0
  */
 public class RasterDataEntity implements IKylothDataEntity {
     public IRegion boundingRect;

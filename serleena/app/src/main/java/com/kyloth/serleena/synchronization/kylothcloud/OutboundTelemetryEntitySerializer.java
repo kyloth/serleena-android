@@ -29,6 +29,15 @@
 
 
 package com.kyloth.serleena.synchronization.kylothcloud;
+/**
+ * Name: OutboundTelemetryEntitySerializer.java
+ * Package: com.hitchikers.serleena.synchronization.kylothcloud
+ * Author: Tobia Tesan <tobia.tesan@gmail.com>
+ *
+ * History:
+ * Version    Programmer   Changes
+ * 1.0.0      Tobia Tesan  Creazione del file
+ */
 
 import com.google.gson.JsonArray;
 import com.google.gson.JsonPrimitive;
@@ -40,6 +49,12 @@ import com.google.gson.JsonObject;
 import java.lang.reflect.Type;
 
 import java.util.Iterator;
+
+/**
+ * Struttura rappresentante una telemetria in entrata
+ * @author Tobia Tesan <tobia.tesan@gmail.com>
+ * @version 1.0.0
+ */
 
 class OutboundTelemetryEntitySerializer implements JsonSerializer<OutboundTelemetryEntity> {
     @Override

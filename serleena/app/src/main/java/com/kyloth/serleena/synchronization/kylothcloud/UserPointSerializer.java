@@ -29,6 +29,15 @@
 
 
 package com.kyloth.serleena.synchronization.kylothcloud;
+/**
+ * Name: UserPointSerializer.java
+ * Package: com.hitchikers.serleena.synchronization.kylothcloud
+ * Author: Tobia Tesan <tobia.tesan@gmail.com>
+ *
+ * History:
+ * Version    Programmer   Changes
+ * 1.0.0      Tobia Tesan  Creazione del file
+ */
 
 import com.google.gson.JsonSerializationContext;
 import com.google.gson.JsonSerializer;
@@ -38,6 +47,13 @@ import com.google.gson.JsonObject;
 import java.lang.reflect.Type;
 
 import com.kyloth.serleena.common.GeoPoint;
+
+/**
+ * Serializer custom per serializzare un UserPoint in JSON
+ *
+ * @author Tobia Tesan <tobia.tesan@gmail.com>
+ * @version 1.0.0
+ */
 
 class UserPointSerializer implements JsonSerializer<UserPointEntity> {
     @Override

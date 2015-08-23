@@ -30,12 +30,12 @@
 
 /**
  * Name: CloudJSONOutboundStreamBuilder.java
- * Package: com.kyloth.serleena.synchronization
+ * Package: com.kyloth.serleena.synchronization.kylothcloud.outbound
  * Author: Tobia Tesan
  *
  * History:
  * Version  Programmer        Changes
- * 0.0.1    Tobia Tesan       Creazione file
+ * 1.0.0    Tobia Tesan       Creazione file
  */
 package com.kyloth.serleena.synchronization.kylothcloud.outbound;
 
@@ -66,15 +66,19 @@ import java.util.ArrayList;
 /**
  * Concretizza OutboundStreamBuilder in modo da poter costruire e scrivere su stream JSON
  * nel formato che KylothCloud si attende.
- *
+ * @field radice per la gerarchia di dati in uscita
  * @use Viene usato da Synchronizer per scrivere su un OutboundStream nel formato idoneo ad essere passato a SerleenaJSONNetProxy per l'invio a KylothCloud
  * @author Tobia Tesan <tobia.tesan@gmail.com>
+ * @version 1.0.0
  */
 public class CloudJSONOutboundStreamBuilder implements OutboundStreamBuilder {
     OutboundRootEntity root;
     final Gson gson = new GsonBuilder().registerTypeAdapter(OutboundRootEntity.class,
                                                                  new OutboundRootSerializer()).create();
-    
+
+    /**
+     * Costruisce un nuovo CloudJSONOutboundStreamBuilder
+     */
     public CloudJSONOutboundStreamBuilder() {
         root = new OutboundRootEntity();
         root.data = new ArrayList<OutboundExperienceDataEntity>();
@@ -119,11 +123,18 @@ public class CloudJSONOutboundStreamBuilder implements OutboundStreamBuilder {
         root.data.add(e);
     }
 
+    /**
+     * Costruisce il json per i dati
+     *
+     * @return String Il json dei dati
+     */
     public String build() {
         return gson.toJson(root, OutboundRootEntity.class);
     }
+
     /**
      * Scrive nell'OutboundStream fornito i dati preaprati in formato JSON
+     * @param s OutputStream su cui scrivere
      */
     @Override
     public void stream(OutboundStream s) throws IOException {

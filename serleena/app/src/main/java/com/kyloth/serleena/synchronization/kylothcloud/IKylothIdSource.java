@@ -29,14 +29,27 @@
 
 
 package com.kyloth.serleena.synchronization.kylothcloud;
+/**
+ * Name: IKylothIdSource.java
+ * Package: com.hitchikers.serleena.synchronization.kylothcloud
+ * Author: Tobia Tesan <tobia.tesan@gmail.com>
+ *
+ * History:
+ * Version    Programmer   Changes
+ * 1.0.0      Tobia Tesan  Creazione del file
+ */
 
 /**
  * Restituisce il token KylothId che identifica univocamente il dispositivo,
  * richiesto dal protocollo di sincronizzazione
+ *
+ * @author Tobia Tesan <tobia.tesan@gmail.com>
+ * @version 1.0.0
  */
 public interface IKylothIdSource {
-    /*
-     * @restituisce il KylothId
+    /**
+     * Restituisce il token KylothId che identifica univocamente il dispositivo.
+     * @return Il KylothId
      */
     String getKylothId();
 }

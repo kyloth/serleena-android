@@ -30,18 +30,20 @@
 
 /**
  * Name: IDataEntity
- * Package: com.hitchikers.serleena.presentation
+ * Package: com.hitchikers.serleena.synchronization
  * Author: Tobia Tesan <tobia.tesan@gmail.com>
  *
  * History:
  * Version    Programmer   Changes
- * 1.0        Tobia Tesan  Creazione del file
+ * 1.0.0      Tobia Tesan  Creazione del file
  */
 
 package com.kyloth.serleena.synchronization;
 
 /**
  * Interfaccia per formato di scambio intermedio e agnostico tra Builder.
+ * @author Tobia Tesan <tobia.tesan@gmail.com>
+ * @version 1.0.0
  */
 public interface IDataEntity {
 }

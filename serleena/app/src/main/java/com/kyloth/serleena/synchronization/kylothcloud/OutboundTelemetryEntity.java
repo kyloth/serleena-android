@@ -29,8 +29,24 @@
 
 
 package com.kyloth.serleena.synchronization.kylothcloud;
+/**
+ * Name: OutboundTelemetryEntity.java
+ * Package: com.hitchikers.serleena.synchronization.kylothcloud
+ * Author: Tobia Tesan <tobia.tesan@gmail.com>
+ *
+ * History:
+ * Version    Programmer   Changes
+ * 1.0.0      Tobia Tesan  Creazione del file
+ */
 
 import java.util.UUID;
+
+/**
+ * Struttura rappresentante una telemetria in uscita
+ * @field track : UUID Id univoco del percorso a cui la telemetria e` associata
+ * @author Tobia Tesan <tobia.tesan@gmail.com>
+ * @version 1.0.0
+ */
 
 public class OutboundTelemetryEntity extends TelemetryEntity {
     public UUID track; // Used ONLY when sending

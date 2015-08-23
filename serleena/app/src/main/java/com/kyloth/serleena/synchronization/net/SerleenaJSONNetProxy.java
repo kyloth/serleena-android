@@ -35,7 +35,7 @@
  *
  * History:
  * Version  Programmer        Changes
- * 0.0.1    Tobia Tesan       Creazione file
+ * 1.0.0    Tobia Tesan       Creazione file
  */
 package com.kyloth.serleena.synchronization.net;
 
@@ -64,10 +64,15 @@ import java.util.Scanner;
  *        per poter dialogare con il servizio KylothCloud utilizzando le
  *        primitive ad alto livello prescritte da INetProxy.
  * @author Tobia Tesan <tobia.tesan@gmail.com>
+ * @version 1.0.0
  * @field baseUrl L'URL del servizio remoto
- * @field auth_token Il token di autorizzazione ricevuto dal servizio remoto al termine
+ * @field authToken Il token di autorizzazione ricevuto dal servizio remoto al termine
  *                   della procedura di handshaking, valido per l'intera vita
  *                   dell'oggetto.
+ * @field tempToken Il token temporaneo ricevuto dal servizio remoto all'inizio della procedura di handshaking.
+ * @field urlConnection Connessione con il servizio remoto
+ * @field kylothIdSource Source di KylothId per il dispositivo
+ * @field factory Factory per la connessione al servizio remoto
  */
 public class SerleenaJSONNetProxy implements INetProxy {
     URL baseUrl;
@@ -80,16 +85,32 @@ public class SerleenaJSONNetProxy implements INetProxy {
     final String AUTH_TOKEN_NAME = "X-AuthToken";
     final String DATA_TOKEN_NAME = "data";
     final String CHARSET = "UTF-8";
-    
+
+    /**
+     * Restituisce il token temporaneo
+     *
+     * @return Token temporaneo
+     */
+
     private String getTempToken() {
         return tempToken;
     }
+
+    /**
+     * Resetta lo stato del Proxy
+     */
 
     private void reset() {
         authToken = null;
         tempToken = null;
         urlConnection = null;
     }
+
+    /**
+     * Restituisce l'URL per l'autenticazione con il servizio KylothCloud
+     *
+     * @return URL per l'autenticazione con il servizio KylothCloud
+     */
 
     private URL getAuthUrl() {
         URL authUrl = null;
@@ -103,12 +124,16 @@ public class SerleenaJSONNetProxy implements INetProxy {
         return authUrl;
     }
 
+    /**
+     * Restituisce l'URL per la sincronizzazione con il servizio KylothCloud
+     *
+     * @return URL per la sincronizzazione con il servizio KylothCloud
+     */
+
     private URL getSyncUrl() {
         URL syncUrl = null;
 
         try {
-            // syncUrl = new URL(baseUrl.toString()+"/users/sync/"+kylothIdSource.getKylothId());
-            // TODO: Qual'e' il vero URL? ST o quello che dice Bronsa? Vedi SHCLOUD-34
             syncUrl = new URL(baseUrl.toString()+"data/");
         } catch (MalformedURLException e) {
             e.printStackTrace();
@@ -116,6 +141,12 @@ public class SerleenaJSONNetProxy implements INetProxy {
 
         return syncUrl;
     }
+
+    /**
+     * Restituisce l'URL per la pre-autenticazione con il servizio KylothCloud
+     *
+     * @return URL per la pre-autenticazione con il servizio KylothCloud
+     */
 
     private URL getPreAuthUrl() {
 
@@ -131,6 +162,13 @@ public class SerleenaJSONNetProxy implements INetProxy {
     }
 
 
+    /**
+     * Tenta la connessione con il servizio KylothCloud
+     *
+     * @throws AuthException
+     * @throws IOException
+     */
+
     private void connect() throws AuthException, IOException {
         if (authToken == null) {
             throw new AuthException("Not paired yet?");
@@ -139,6 +177,12 @@ public class SerleenaJSONNetProxy implements INetProxy {
             urlConnection.addRequestProperty(AUTH_TOKEN_NAME, authToken);
         }
     }
+
+    /**
+     * Effettua la disconnessione con il servizio KylothCloud
+     *
+     * @throws NotConnectedException
+     */
 
     @Override
     public void disconnect() throws NotConnectedException {
@@ -154,6 +198,7 @@ public class SerleenaJSONNetProxy implements INetProxy {
     }
     /**
      * Costruisce un'istanza di SerleenaJSONNetProxy
+     * @param kylothIdSource
      * @param baseUrl L'URL del servizio remoto
      */
     public SerleenaJSONNetProxy(IKylothIdSource kylothIdSource, URL baseUrl) {
@@ -178,6 +223,14 @@ public class SerleenaJSONNetProxy implements INetProxy {
         this.kylothIdSource = kylothIdSource;
     }
 
+    /**
+     * Ritorna un OutboundStream in cui scrivere per inviare dati al servizio remoto.
+     *
+     * @return Un OutboundStream in cui scrivere i dati per il servizio remoto.
+     * @throws IOException se vi e' un problema di comunicazione con il servizio remoto
+     * @throws AuthException se il servizio remoto ha negato il permesso
+     */
+
     @Override
     public CloudJSONOutboundStream write() throws AuthException, IOException {
         if (urlConnection == null) {
@@ -196,6 +249,15 @@ public class SerleenaJSONNetProxy implements INetProxy {
         }
     }
 
+
+    /**
+     * Verifica se l'ultima operazione di write() o read() e' andata a buon fine
+     *
+     * @return true se e' andata a buon fine, altrimenti false oppure solleva eccezione
+     * @throws IOException se vi e' stato un problema di comunicazione con il servizio remoto
+     * @throws AuthException se il servizio remoto ha negato il permesso
+     */
+    @Override
     public boolean success() throws IOException, AuthException {
         if (urlConnection == null) {
             throw new RuntimeException("No connection?");
@@ -211,6 +273,16 @@ public class SerleenaJSONNetProxy implements INetProxy {
             }
         }
     }
+
+    /**
+     * Richiede i dati di sincronizzazione dal servizio remoto.
+     *
+     * @return Un InboundStream da cui leggere i dati in forma grezza provenienti
+     *         dal servizio remoto.
+     *
+     * @throws IOException se vi e' un problema di comunicazione con il servizio remoto
+     * @throws AuthException se il servizio remoto ha negato il permesso     *
+     */
 
     @Override
     public InboundStream read() throws AuthException, IOException {
@@ -239,6 +311,16 @@ public class SerleenaJSONNetProxy implements INetProxy {
             throw new RuntimeException("Existing URL connection? disconnect() first");
         }
     }
+
+
+    /**
+     * Richiede la preautorizzazione con il servizio remoto.
+     *
+     * @return La stringa con il token temporaneo da visualizzare che
+     *         l'utente dovra' poi confermare sull'interfaccia cloud.
+     * @throws IOException se vi e' un problema di comunicazione con il servizio remoto
+     * @throws AuthException se il servizio remoto ha negato il permesso
+     */
 
     @Override
     public String preAuth() throws AuthException, IOException {

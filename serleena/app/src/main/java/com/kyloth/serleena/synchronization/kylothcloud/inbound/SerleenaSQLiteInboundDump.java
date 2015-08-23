@@ -30,12 +30,12 @@
 
 /**
  * Name: SerleenaSQLiteInboundDump.java
- * Package: com.kyloth.serleena.synchronization
+ * Package: com.kyloth.serleena.synchronization.kylothcloud.inbound
  * Author: Tobia Tesan
  *
  * History:
  * Version  Programmer        Changes
- * 0.0.1    Tobia Tesan       Creazione file
+ * 1.0.0    Tobia Tesan       Creazione file
  */
 package com.kyloth.serleena.synchronization.kylothcloud.inbound;
 
@@ -46,6 +46,9 @@ import java.util.LinkedList;
 /**
  * Concretizza InboundDump, contiene un dump SQLite leggibile da
  * SerleenaSQLiteDataSink
+ *
+ * @author Tobia Tesan <tobia.tesan@gmail.com>
+ * @version 1.0.0
  */
 public class SerleenaSQLiteInboundDump extends LinkedList<String> implements InboundDump {
     // TODO

@@ -29,6 +29,15 @@
 
 
 package com.kyloth.serleena.synchronization.kylothcloud;
+/**
+ * Name: OutboundExperienceDataSerializer.java
+ * Package: com.hitchikers.serleena.synchronization.kylothcloud
+ * Author: Tobia Tesan <tobia.tesan@gmail.com>
+ *
+ * History:
+ * Version    Programmer   Changes
+ * 1.0.0      Tobia Tesan  Creazione del file
+ */
 
 import com.google.gson.JsonArray;
 import com.google.gson.JsonSerializationContext;
@@ -39,6 +48,13 @@ import com.google.gson.JsonObject;
 import java.lang.reflect.Type;
 
 import java.util.Iterator;
+
+/**
+ * Serializer custom per serializzare una OutboundExperienceData in JSON
+ *
+ * @author Tobia Tesan <tobia.tesan@gmail.com>
+ * @version 1.0.0
+ */
 
 class OutboundExperienceDataSerializer implements JsonSerializer<OutboundExperienceDataEntity> {
     @Override

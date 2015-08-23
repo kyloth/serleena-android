@@ -29,6 +29,15 @@
 
 
 package com.kyloth.serleena.synchronization.kylothcloud;
+/**
+ * Name: OutboundExperienceDataEntity.java
+ * Package: com.hitchikers.serleena.synchronization.kylothcloud
+ * Author: Tobia Tesan <tobia.tesan@gmail.com>
+ *
+ * History:
+ * Version    Programmer   Changes
+ * 1.0.0      Tobia Tesan  Creazione del file
+ */
 
 import java.util.Collection;
 import java.util.LinkedList;
@@ -36,6 +45,11 @@ import java.util.UUID;
 
 /**
  * Struttura che rapprsenta i dati raccolti sul dispositivo per una data esperienza
+ * @field experience : UUID  Id esperienza
+ * @field userPoints : Collection<UserPointEntity> Collezione dei punti utente
+ * @field telemetryData : Collection<OutboundTelemetryEntity> Collezione delle telemetrie
+ * @author Tobia Tesan <tobia.tesan@gmail.com>
+ * @version 1.0.0
  */
 public class OutboundExperienceDataEntity implements IKylothDataEntity {
     public UUID experience;

@@ -30,12 +30,12 @@
 
 /**
  * Name: EmergencyDataEntity.java
- * Package: com.hitchikers.serleena.presentation
+ * Package: com.hitchikers.serleena.synchronization.kylothcloud
  * Author: Tobia Tesan <tobia.tesan@gmail.com>
  *
  * History:
  * Version    Programmer   Changes
- * 1.0        Tobia Tesan  Creazione del file
+ * 1.0.0      Tobia Tesan  Creazione del file
  */
 package com.kyloth.serleena.synchronization.kylothcloud;
 
@@ -43,6 +43,11 @@ import com.kyloth.serleena.common.IRegion;
 
 /**
  * Struttura rappresentante un contatto di emergenza
+ * @field rect : IRegion Oggetto rappresentante l'area geografica relativa al contatto di emergenza
+ * @field name : String Nome del contatto di emergenza
+ * @field number : String Numero per contattare il contatto di emergenza
+ * @author Tobia Tesan <tobia.tesan@gmail.com>
+ * @version 1.0.0
  */
 public class EmergencyDataEntity implements IKylothDataEntity {
     public IRegion rect;

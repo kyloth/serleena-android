@@ -30,12 +30,12 @@
 
 /**
  * Name: CloudJSONInboundStream.java
- * Package: com.kyloth.serleena.synchronization
+ * Package: com.kyloth.serleena.synchronization.kylothcloud.inbound
  * Author: Tobia Tesan
  *
  * History:
  * Version  Programmer        Changes
- * 0.0.1    Tobia Tesan       Creazione file
+ * 1.0.0    Tobia Tesan       Creazione file
  */
 package com.kyloth.serleena.synchronization.kylothcloud.inbound;
 
@@ -47,8 +47,19 @@ import java.io.InputStream;
 /**
  * Concretizza InboundStream, contiene uno stream JSON proveniente da
  * KylothCloud.
+ *
+ * @author Tobia Tesan <tobia.tesan@gmail.com>
+ * @version 1.0.0
+ *
  */
+
 public class CloudJSONInboundStream extends BufferedInputStream implements InboundStream {
+
+    /**
+     * Costruisce un CloudJSONInboundStream da un InputStream
+     *
+     * @param in L'InputStream da cui creare il CloudJSONInboundStream
+     */
     public CloudJSONInboundStream(InputStream in) {
         super(in);
     }

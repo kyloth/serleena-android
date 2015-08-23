@@ -35,16 +35,23 @@
  *
  * History:
  * Version    Programmer   Changes
- * 1.0        Tobia Tesan  Creazione del file
+ * 1.0.0      Tobia Tesan  Creazione del file
  */
 package com.kyloth.serleena.synchronization;
 
 /**
  * Eccezione che segnala un problema in fase di autenticazione
+ * @author Tobia Tesan <tobia.tesan@gmail.com>
+ * @version 1.0.0
  */
 public class AuthException extends Exception {
+
+    /**
+     * Costruisce una nuova AuthException con messaggio s
+     *
+     * @param s Il messaggio d'errore
+     */
     public AuthException(String s) {
         super(s);
     }
-    // TODO
 }

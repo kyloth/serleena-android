@@ -29,8 +29,23 @@
 
 
 package com.kyloth.serleena.synchronization.kylothcloud;
+/**
+ * Name: IKylothDataEntity.java
+ * Package: com.hitchikers.serleena.synchronization.kylothcloud
+ * Author: Tobia Tesan <tobia.tesan@gmail.com>
+ *
+ * History:
+ * Version    Programmer   Changes
+ * 1.0.0      Tobia Tesan  Creazione del file
+ */
 
 import com.kyloth.serleena.synchronization.IDataEntity;
+
+/**
+ * Interfaccia per formato di scambio intermedio e agnostico di oggetti Kyloth.
+ * @author Tobia Tesan <tobia.tesan@gmail.com>
+ * @version 1.0.0
+ */
 
 public interface IKylothDataEntity extends IDataEntity {
 }

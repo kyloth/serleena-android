@@ -35,7 +35,7 @@
  *
  * History:
  * Version  Programmer        Changes
- * 0.0.1    Tobia Tesan       Creazione file
+ * 1.0.0    Tobia Tesan       Creazione file
  */
 package com.kyloth.serleena.synchronization;
 
@@ -51,6 +51,8 @@ import java.io.IOException;
  * un opportuno proxy.
  *
  * @use Viene usato da Synchronizer, che vi carica le Esperienze con i loro Tracciamenti e Punti Utente raccolti sul dispositivo da inviare al cloud, scrivendo il risultato su un OutboundStream fornito da un un idoneo proxy.
+ * @author Tobia Tesan <tobia.tesan@gmail.com>
+ * @version 1.0.0
  */
 public interface OutboundStreamBuilder {
 	/**
@@ -64,6 +66,8 @@ public interface OutboundStreamBuilder {
 
 	/**
 	 * Scrive su un OutboundStream fornito da un idoneo proxy i dati da inviare al servizio remoto.
+     *
+     * @param s l'OutputStream su cui scrivere i dati
 	 */
 	void stream(OutboundStream s) throws IOException;
 }

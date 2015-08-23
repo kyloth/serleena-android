@@ -30,7 +30,7 @@
 
 /**
  * Name: TrackEntity.java
- * Package: com.hitchikers.serleena.synchronization
+ * Package: com.hitchikers.serleena.synchronization.kylothcloud
  * Author: Tobia Tesan <tobia.tesan@gmail.com>
  *
  * History:
@@ -44,7 +44,13 @@ import java.util.Collection;
 import java.util.UUID;
 
 /**
- * Struct rappresentante un percorso
+ * Struttura rappresentante un percorso
+ * @field uuid : UUID Id univoco del percorso
+ * @field name : String Nome del percorso
+ * @field checkpoints : Collection<CheckpointEntity> Collezione di checkpoint che costituiscono il percorso
+ * @field telemetries : Collection<TelemetryEntity> Collezione di telemetrie riguardanti il percorso
+ * @author Tobia Tesan <tobia.tesan@gmail.com>
+ * @version 1.0.0
  */
 public class TrackEntity implements IKylothDataEntity {
     public UUID uuid;
