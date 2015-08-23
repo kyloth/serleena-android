@@ -79,8 +79,15 @@ import static org.mockito.Mockito.mock;
 @RunWith(RobolectricGradleTestRunner.class)
 @Config(constants = BuildConfig.class, emulateSdk = 19)
 public class StreamBuilderTest {
+
+    /**
+     * Verifica che oggetti CloudJSONOutboundStreamBuilder costruiscano
+     * correttamente una codifica JSON del contenuto presente nel livello di
+     * persistenza.
+     */
     @Test
-    public void streamBuilderSanityTest() throws IOException {
+    public void streamBuilderSanityTest()
+            throws IOException, UnsupportedEncodingException {
         SerleenaDatabase sh = new SerleenaDatabase(RuntimeEnvironment.application, "sample.db", null, 1);
         SQLiteDatabase db = sh.getWritableDatabase();
         ContentValues values = TestFixtures.pack(TestFixtures.EXPERIENCES_FIXTURE_EXPERIENCE_1);
@@ -115,19 +122,15 @@ public class StreamBuilderTest {
         b.stream(f);
         JsonParser parser = new JsonParser();
 
-        try {
-            String res = new String(f.toByteArray(),"UTF-8");
-            res = URLDecoder.decode(res,"UTF-8");
-            JsonElement o1 = parser.parse(res);
-            JsonElement o2 = parser.parse(JSON_OUTPUT);
-            Assert.assertEquals(o1, o2);
-        } catch (UnsupportedEncodingException e) {
-            e.printStackTrace();
-            Assert.assertFalse(true);
-        }
         String res = new String(f.toByteArray(),"UTF-8");
-        JsonElement o1 = parser.parse(b.build());
+        res = URLDecoder.decode(res,"UTF-8");
+        JsonElement o1 = parser.parse(res);
         JsonElement o2 = parser.parse(JSON_OUTPUT);
+        Assert.assertEquals(o1, o2);
+
+        res = new String(f.toByteArray(),"UTF-8");
+        o1 = parser.parse(b.build());
+        o2 = parser.parse(JSON_OUTPUT);
         Assert.assertEquals(o1, o2);
     }
 }
