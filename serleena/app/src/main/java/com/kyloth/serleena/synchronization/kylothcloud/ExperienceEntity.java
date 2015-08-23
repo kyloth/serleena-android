@@ -69,6 +69,4 @@ public class ExperienceEntity implements IKylothDataEntity {
         userPoints = new LinkedList<UserPointEntity>();
         rasterData = new LinkedList<RasterDataEntity>();
     }
-    // TODO: Il nostro UserPoint non ha un ID, il loro si'. Chi vince?
-    // TODO: Loro ci passano PointsOfInterest. Continuiamo a ignorarli? Cfr. SHANDROID-288
 }

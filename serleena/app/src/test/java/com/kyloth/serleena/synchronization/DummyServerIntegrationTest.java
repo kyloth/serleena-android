@@ -127,7 +127,6 @@ public class DummyServerIntegrationTest {
      */
     @Test(timeout=5000)
     public void syncSanityTest() throws Exception {
-        // TODO: Fare altri test, in particolare gli edge case
         FileReader in = new FileReader(SAMPLES_DIR + "partial/track.json");
         BufferedReader r = new BufferedReader(in);
         final Pattern preauthP = Pattern.compile("/tokens/([\\w|::]+)");

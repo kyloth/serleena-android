@@ -97,7 +97,7 @@ public class CloudJSONOutboundStreamBuilder implements OutboundStreamBuilder {
         OutboundExperienceDataEntity e = new OutboundExperienceDataEntity();
         e.experience = exp.getUUID();
         int userPointCounter = 0;
-        for (UserPoint p : exp.getUserPoints(true)) { // HACK
+        for (UserPoint p : exp.getUserPoints(true)) {
             UserPointEntity pe = new UserPointEntity();
             pe.point = p;
             pe.name = "Punto personalizzato #"+userPointCounter++;
@@ -106,9 +106,7 @@ public class CloudJSONOutboundStreamBuilder implements OutboundStreamBuilder {
         for (ITrackStorage t : exp.getTracks()) {
             TrackEntity te = new TrackEntity();
             te.name = "";
-            // TODO: Noi non ce l'abbiamo?
             te.uuid = t.getUUID();
-            // HACK per SHANDROID-372
             for (ITelemetryStorage ts : t.getTelemetries(false)) {
                 OutboundTelemetryEntity tse = new OutboundTelemetryEntity();
                 for (TelemetryEvent tsv : ts.getEvents()) {

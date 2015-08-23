@@ -51,7 +51,6 @@ import java.util.LinkedList;
  * @version 1.0.0
  */
 public class SerleenaSQLiteInboundDump extends LinkedList<String> implements InboundDump {
-    // TODO
     public String toString () {
         String out = "";
         for (String s : this) {
