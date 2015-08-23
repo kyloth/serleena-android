@@ -251,6 +251,11 @@ public class TrackCrossingTest {
         tc.getNextCheckpoint();
     }
 
+    /**
+     * Verifica che un tentativo di ottenere il Percorso attualmente attivo o in
+     * attraversamento sollevi un'eccezione NoActiveTrackException nel caso non
+     * vi siano Percorsi attivi.
+     */
     @Test(expected = NoActiveTrackException.class)
     public void testThatGetTrackWithNoActiveTrackThrows()
             throws NoActiveTrackException {
@@ -258,6 +263,10 @@ public class TrackCrossingTest {
         tc.getTrack();
     }
 
+    /**
+     * Verifica che gli oggetti restituiscano correttamente l'istanza relativa
+     * al Percorso attivo o in attraversamento.
+     */
     @Test
     public void testGetTrack() throws NoActiveTrackException {
         TrackCrossing tc = new TrackCrossing(locReaMan);
