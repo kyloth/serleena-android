@@ -47,6 +47,9 @@ import android.database.sqlite.SQLiteDatabase;
 import com.kyloth.serleena.synchronization.InboundDump;
 import com.kyloth.serleena.synchronization.kylothcloud.inbound.SerleenaSQLiteInboundDump;
 
+/**
+ * Concretizza IPersistenceDataSink
+ */
 public class SerleenaSQLiteDataSink implements ISerleenaSQLiteDataSink {
     private SerleenaDatabase dbHelper;
     private Context context;

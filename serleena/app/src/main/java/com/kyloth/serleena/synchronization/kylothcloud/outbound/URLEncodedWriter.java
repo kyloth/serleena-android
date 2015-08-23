@@ -46,7 +46,7 @@ import java.io.Writer;
 import java.net.URLEncoder;
 
 /**
- * Writer che filtra i dati che vengono scritti applicando URL encoding prima di scriverli sul writer inferiore.
+ * Writer che implmenta FilterWriter filtrando i dati che vengono scritti applicando URL encoding prima di scriverli sul writer inferiore.
  */
 class URLEncodedWriter extends FilterWriter {
     /**

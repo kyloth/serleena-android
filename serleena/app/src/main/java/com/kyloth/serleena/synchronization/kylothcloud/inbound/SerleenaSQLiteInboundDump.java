@@ -45,7 +45,7 @@ import java.util.LinkedList;
 
 /**
  * Concretizza InboundDump, contiene un dump SQLite leggibile da
- * IPersistenceDataSink
+ * SerleenaSQLiteDataSink
  */
 public class SerleenaSQLiteInboundDump extends LinkedList<String> implements InboundDump {
     // TODO

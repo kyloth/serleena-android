@@ -40,12 +40,12 @@
 package com.kyloth.serleena.synchronization;
 
 /**
- * Interfaccia per un oggetto in grado di raccogliere un InboundStream ricevuto
+ * Interfaccia per un oggetto in grado di leggere un InboundStream ricevuto
  * dal servizio remoto attraverso un opportuno proxy e restituire una
  * collezione di IDataEntity indipendenti dal formato di rappresentazione
  * originario.
  *
- * @use E' usato da KylothCloudSynchronizerk che gli fornisce un InboundStream prodotto da un idoneo proxy e ne raccoglie l'output per passarlo a un InboundDumpBuilder.
+ * @use E' usato da KylothCloudSynchronizer che fornisce un InboundStream prodotto da un idoneo proxy e ne raccoglie l'output per passarlo a un InboundDumpBuilder.
  *
  * @author Tobia Tesan <tobia.tesan@gmail.com>
  */
