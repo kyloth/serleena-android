@@ -42,6 +42,7 @@
 package com.kyloth.serleena.view.fragments;
 
 import android.app.Activity;
+import android.app.Application;
 import android.app.FragmentManager;
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -86,9 +87,12 @@ public class TrackFragmentTest {
     private TextView deltaText;
     private TextView lastPartialText;
     private Activity activity;
+    private Application app;
 
     @Before
     public void initialize() {
+        app = RuntimeEnvironment.application;
+
         activity = Robolectric.buildActivity(Activity.class)
                 .create().start().visible().get();
         fragment = new TrackFragment();
@@ -146,13 +150,21 @@ public class TrackFragmentTest {
         verify(presenter).pause();
     }
 
+    /**
+     * Verifica che la richiesta di mostrare il termine del Percorso imposti
+     * correttamente il testo sulla vista.
+     */
     @Test
     public void settingEndedCheckpointShouldSetViewAccordingly() {
+        String trackEnd = app.getResources().getString(R.string.track_finish);
         fragment.displayTrackEnded();
-        String trackEnd = RuntimeEnvironment.application.getResources().getString(R.string.track_finish);
         verify(nextCheckpointText).setText(trackEnd);
     }
 
+    /**
+     * Verifica che la richiesta di mostrare informazioni sui checkpoint del
+     * Percorso imposti correttamente il testo sulla vista.
+     */
     @Test
     public void settingCheckpointNumbersShouldSetViewAccordingly() {
         fragment.setTotalCheckpoints(5);
@@ -161,6 +173,10 @@ public class TrackFragmentTest {
         verify(nextCheckpointText).setText("3/5");
     }
 
+    /**
+     * Verifica che venga sollevata un'eccezione IllegalArgumentException se
+     * si tenta di visualizzare un numero di checkpoint negativo o nullo.
+     */
     @Test
     public void fragmentShouldThrowWhenCheckpointNumberIsNullOrNegative() {
         boolean ex1 = false;
@@ -180,6 +196,10 @@ public class TrackFragmentTest {
         assertTrue(ex1 && ex2);
     }
 
+    /**
+     * Verifica che la richiesta di mostrare informazioni sul ghost relativo al
+     * Percorso in attraversamento imposti correttamente il testo sulla vista.
+     */
     @Test
     public void settingDeltaShouldSetViewAccordingly() {
         fragment.setDelta(300);
@@ -188,12 +208,21 @@ public class TrackFragmentTest {
         verify(deltaText).setText("-05:00");
     }
 
+    /**
+     * Verifica che la richiesta di mostrare informazioni sulla distanza dal
+     * prossimo checkpoint del Percorso imposti correttamente il testo sulla
+     * vista.
+     */
     @Test
     public void settingDistanceShouldSetViewAccordingly() {
         fragment.setDistance(300);
         verify(distanceText).setText("300 m");
     }
 
+    /**
+     * Verifica che venga sollevata un'eccezione IllegalArgumentException se
+     * si tenta di visualizzare una distanza negativa.
+     */
     @Test(expected = IllegalArgumentException.class)
     public void fragmentShouldThrowWhenSettingNegativeDistance() {
         fragment.setDistance(0);
@@ -201,12 +230,21 @@ public class TrackFragmentTest {
         fragment.setDistance(-1);
     }
 
+    /**
+     * Verifica che la richiesta di mostrare informazioni sul tempo parziale
+     * dell'ultimo checkpoint attraversato nel Percorso imposti correttamente
+     * il testo sulla vista.
+     */
     @Test
     public void settingLastPartialShouldSetViewAccordingly() {
         fragment.setLastPartial(20);
         verify(lastPartialText).setText("00:20");
     }
 
+    /**
+     * Verifica che venga sollevata un'eccezione IllegalArgumentException se
+     * si tenta di visualizzare un tempo parziale negativo.
+     */
     @Test(expected = IllegalArgumentException.class)
     public void fragmentShouldThrowWhenSettingNegativePartial() {
         fragment.setLastPartial(0);
@@ -214,18 +252,41 @@ public class TrackFragmentTest {
         fragment.setLastPartial(-1);
     }
 
+    /**
+     * Verifica che la richiesta di mostrare informazioni sulla direzione del
+     * prossimo checkpoint da attraversare nel Percorso imposti correttamente
+     * il testo sulla vista.
+     */
     @Test
     public void settingHeadingShouldSetViewAccordingly() {
         fragment.setDirection(45);
         verify(orientationWidget).setOrientation(45);
     }
 
+    /**
+     * Verifica che la richiesta di mostrare informazioni sul nome del
+     * Percorso imposti correttamente il testo sulla vista.
+     */
     @Test
     public void settingTrackNameShouldSetViewAccordingly() {
         fragment.setTrackName("Track1");
         verify(trackNameText).setText("Track1");
     }
 
+    /**
+     * Verifica che venga sollevata un'eccezione IllegalArgumentException se
+     * si tenta di visualizzare un nome di Percorso null.
+     */
+    @Test(expected = IllegalArgumentException.class)
+    public void settingTrackNameShouldThrowIfNullTrack() {
+        fragment.setTrackName(null);
+    }
+
+    /**
+     * Verifica che una richiesta di pulire le statistiche sul Percorso rimuova
+     * correttamente le informazioni visualizzate dalla vista riguardo tempo
+     * parziale e ghost.
+     */
     @Test
     public void clearingDeltaShouldClearItsElementInTheView() {
         fragment.clearStats();
@@ -233,10 +294,15 @@ public class TrackFragmentTest {
         verify(deltaText).setText("");
     }
 
+    /**
+     * Verifica che una richiesta di pulire la vista rimuova correttamente le
+     * informazioni visualizzate.
+     */
     @Test
     public void clearingViewShouldClearAllOfItsElements() {
         fragment.clearView();
-        String noActiveTrack = RuntimeEnvironment.application.getResources().getString(R.string.track_noActiveTrack);
+        String noActiveTrack = app.getResources().getString(
+                R.string.track_noActiveTrack);
         verify(trackNameText).setText(noActiveTrack);
         verify(nextCheckpointText).setText("");
         verify(distanceText).setText("");
