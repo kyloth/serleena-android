@@ -28,6 +28,17 @@
 ///////////////////////////////////////////////////////////////////////////////
 
 
+/**
+ * Name: SyncPresenterTest.java
+ * Package: com.kyloth.serleena.presenters;
+ * Author: Gabriele Pozzan
+ *
+ * History:
+ * Version  Programmer       Changes
+ * 1.0.0    Gabriele Pozzan  Creazione file, scrittura
+ *                           codice e documentazione Javadoc
+ */
+
 package com.kyloth.serleena.presenters;
 
 import org.junit.Test;
@@ -50,15 +61,21 @@ import com.kyloth.serleena.synchronization.ISynchronizer;
 import com.kyloth.serleena.synchronization.AuthException;
 import com.kyloth.serleena.presentation.ISyncView;
 
+/**
+ * Test di unità per la classe SyncPresenter.
+ *
+ * @author Gabriele Pozzan <gabriele.pozzan@studenti.unipd.it>
+ * @version 1.0.0
+ */
 @RunWith(RobolectricGradleTestRunner.class)
 @Config(constants = BuildConfig.class, emulateSdk = 19,
         manifest = "src/main/AndroidManifest.xml")
 public class SyncPresenterTest {
 
-    SerleenaActivity activity;
-    ISyncView view;
-    SyncPresenter presenter;
-    ISynchronizer synchronizer;
+    private SerleenaActivity activity;
+    private ISyncView view;
+    private SyncPresenter presenter;
+    private ISynchronizer synchronizer;
 
     @Before
     public void initialize() {
@@ -70,6 +87,10 @@ public class SyncPresenterTest {
         presenter.synchronizer = synchronizer;
     }
 
+    /**
+     * Verifica che una prima richiesta di sincronizzazione andata a buon fine
+     * termini in uno stato preautenticato.
+     */
     @Test
     public void testSynchronizeNotPaired() throws AuthException, IOException {
         presenter.synchronize();
@@ -79,6 +100,10 @@ public class SyncPresenterTest {
         assertEquals(SyncStatusEnum.PREAUTHED, presenter.status);
     }
 
+    /**
+     * Verifica che due chiamate consecutive e sequenziali a synchronize()
+     * risultino in uno stato autenticato.
+     */
     @Test
     public void testSynchronizedPreAuthed() throws AuthException, IOException {
         presenter.synchronize();
@@ -92,6 +117,11 @@ public class SyncPresenterTest {
         assertEquals(SyncStatusEnum.AUTHED, presenter.status);
     }
 
+    /**
+     * Verifica che un'eccezione AuthException in fase di preautenticazione
+     * risulti in uno stato del presenter che indichi che la richiesta
+     * è stata respinta dal server.
+     */
     @Test
     public void testSynchronizedPreAuthRejected() throws AuthException, IOException {
         when(synchronizer.preAuth()).thenThrow(AuthException.class);
@@ -102,6 +132,11 @@ public class SyncPresenterTest {
         assertEquals(SyncStatusEnum.REJECTED, presenter.status);
     }
 
+    /**
+     * Verifica che un'eccezione IOException in fase di preautenticazione
+     * risulti in uno stato del presenter che indichi il fallimento
+     * dell'autenticazione.
+     */
     @Test
     public void testSynchronizedPreAuthAuthfailedPreAuth() throws AuthException, IOException {
         when(synchronizer.preAuth()).thenThrow(IOException.class);
@@ -112,6 +147,12 @@ public class SyncPresenterTest {
         assertEquals(SyncStatusEnum.AUTHFAILED, presenter.status);
     }
 
+    /**
+     * Verifica che, in seguito ad una preautenticazione andata a buon fine,
+     * un'eccezione AuthException in fase di autenticazione
+     * risulti in uno stato del presenter che indichi che la richiesta
+     * è stata respinta dal server.
+     */
     @Test
     public void testSynchronizedAuthRejected() throws AuthException, IOException {
         doThrow(AuthException.class).when(synchronizer).auth();
@@ -126,8 +167,15 @@ public class SyncPresenterTest {
         assertEquals(SyncStatusEnum.REJECTED, presenter.status);
     }
 
+    /**
+     * Verifica che, in seguito ad una preautenticazione andata a buon fine,
+     * un'eccezione IOException in fase di autenticazione
+     * risulti in uno stato del presenter che indichi l'errore di
+     * autenticazione.
+     */
     @Test
-    public void testSynchronizedAuthAuthFailed() throws AuthException, IOException {
+    public void testSynchronizedAuthAuthFailed()
+            throws AuthException, IOException {
         doThrow(IOException.class).when(synchronizer).auth();
         presenter.synchronize();
         try {
@@ -140,6 +188,11 @@ public class SyncPresenterTest {
         assertEquals(SyncStatusEnum.AUTHFAILED, presenter.status);
     }
 
+    /**
+     * Verifica che, a seguito di preautenticazione e autenticazione andate a
+     * buon fine, una terza chiamata a synchronize() risulti in uno stato che
+     * indichi la sincronizzazione avvenuta correttamente.
+     */
     @Test
     public void testSynchronizedSync() throws AuthException, IOException {
         presenter.synchronize();
@@ -159,6 +212,12 @@ public class SyncPresenterTest {
         assertEquals(SyncStatusEnum.SYNCED, presenter.status);
     }
 
+    /**
+     * Verifica che, in seguito a preautenticazione e autenticazione andate a
+     * buon fine, un'eccezione AuthException in fase di sincronizzazione
+     * risulti in uno stato del presenter che indichi che la richiesta
+     * è stata respinta dal server.
+     */
     @Test
     public void testSynchronizedSyncRejected() throws AuthException, IOException {
         doThrow(AuthException.class).when(synchronizer).sync();
@@ -179,6 +238,12 @@ public class SyncPresenterTest {
         assertEquals(SyncStatusEnum.REJECTED, presenter.status);
     }
 
+    /**
+     * Verifica che, in seguito a preautenticazione e autenticazione andate a
+     * buon fine, un'eccezione IOException in fase di sincronizzazione
+     * risulti in uno stato del presenter che indichi impossibilità di
+     * comunicare correttamente col server.
+     */
     @Test
     public void testSynchronizedSyncFailed() throws AuthException, IOException {
         doThrow(IOException.class).when(synchronizer).sync();
@@ -199,6 +264,11 @@ public class SyncPresenterTest {
         assertEquals(SyncStatusEnum.FAILED, presenter.status);
     }
 
+    /**
+     * Verifica che il presenter segnali correttamente lo stato della
+     * sincronizzazione nel caso in cui si riesca ad effettuare con successo
+     * la preautenticazione a seguito di un primo tentativo fallito.
+     */
     @Test
     public void testSynchronizedSyncAfterRejected() throws AuthException, IOException {
         when(synchronizer.preAuth()).thenThrow(AuthException.class).thenReturn("OK");
@@ -214,8 +284,15 @@ public class SyncPresenterTest {
         assertEquals(SyncStatusEnum.PREAUTHED, presenter.status);
     }
 
+    /**
+     * Verifica che il presenter segnali correttamente lo stato della
+     * sincronizzazione nel caso in cui si riesca ad effettuare con successo
+     * la preautenticazione dopo una preautenticazione terminata con successo,
+     * ma seguita da un fallimento nella autenticazione.
+     */
     @Test
-    public void testSynchronizedSyncAfterAuthFailed() throws AuthException, IOException {
+    public void testSynchronizedSyncAfterAuthFailed()
+            throws AuthException, IOException {
         when(synchronizer.preAuth()).thenThrow(IOException.class).thenReturn("OK");
         presenter.synchronize();
         try {
@@ -229,6 +306,12 @@ public class SyncPresenterTest {
         assertEquals(SyncStatusEnum.PREAUTHED, presenter.status);
     }
 
+    /**
+     * Verifica che, effettuate con successo preautenticazione e autenticazione,
+     * il presenter segnali correttamente lo stato della
+     * sincronizzazione nel caso in cui si riesca ad effettuare correttamente
+     * una sincronizzazione dopo un primo tentativo fallito.
+     */
     @Test
     public void testSynchronizedSyncAfterFailed() throws AuthException, IOException {
         doThrow(IOException.class).doNothing().when(synchronizer).sync();
