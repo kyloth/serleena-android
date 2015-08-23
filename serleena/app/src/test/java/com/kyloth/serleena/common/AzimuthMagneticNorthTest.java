@@ -28,6 +28,17 @@
 ///////////////////////////////////////////////////////////////////////////////
 
 
+/**
+ * Name: AzimuthMagneticNorthTest.java
+ * Package: com.kyloth.serleena.common;
+ * Author: Filippo Sestini
+ *
+ * History:
+ * Version  Programmer       Changes
+ * 1.0.0    Filippo Sestini  Creazione file, scrittura
+ *                           codice e documentazione Javadoc
+ */
+
 package com.kyloth.serleena.common;
 
 import android.hardware.SensorManager;
@@ -58,6 +69,10 @@ public class AzimuthMagneticNorthTest {
         az.toTrueNorth(null);
     }
 
+    /**
+     * Verifica che vengano restituiti valori corretti di orientamento in base a
+     * valori di campo magnetico e accelerazione noti.
+     */
     @Test
     public void objectShouldReturnCorrectValues() {
         final float[] accelerometerValues = new float[] { 11, 22, 33 };
@@ -78,6 +93,9 @@ public class AzimuthMagneticNorthTest {
         assertEquals(expected + 12, result, 0.5);
     }
 
+    /**
+     * Verifica che il metodo equals() rispetti la specifica.
+     */
     @Test
     public void twoEqualInstancesShouldBeEqual() {
         final float[] accelerometerValues = new float[] { 11, 22, 33 };
@@ -97,6 +115,10 @@ public class AzimuthMagneticNorthTest {
         )));
     }
 
+    /**
+     * Verifica che istanze considerate equivalenti dal metodo equals() abbiano
+     * un hash code uguale, secondo il contratto imposto da Object.
+     */
     @Test
     public void equalsShouldHaveSameHashCode() {
         final float[] accelerometerValues = new float[] { 11, 22, 33 };
