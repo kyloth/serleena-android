@@ -56,6 +56,10 @@ import static org.mockito.Mockito.mock;
  */
 public class LocationReachedRequestTest {
 
+    /**
+     * Verifica che il metodo equals() restituisca true o false correttamente in
+     * base alla specifica.
+     */
     @Test
     public void equalsShouldWork() {
         ILocationReachedObserver o = mock(ILocationReachedObserver.class);
