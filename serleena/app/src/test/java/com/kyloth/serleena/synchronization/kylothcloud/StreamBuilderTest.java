@@ -81,7 +81,6 @@ import static org.mockito.Mockito.mock;
 public class StreamBuilderTest {
     @Test
     public void streamBuilderSanityTest() throws IOException {
-        // TODO: Fare altri test
         SerleenaDatabase sh = new SerleenaDatabase(RuntimeEnvironment.application, "sample.db", null, 1);
         SQLiteDatabase db = sh.getWritableDatabase();
         ContentValues values = TestFixtures.pack(TestFixtures.EXPERIENCES_FIXTURE_EXPERIENCE_1);
