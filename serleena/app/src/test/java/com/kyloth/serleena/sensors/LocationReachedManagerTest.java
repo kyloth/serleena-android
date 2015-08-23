@@ -148,6 +148,12 @@ public class LocationReachedManagerTest {
         verify(observer).onLocationReached();
     }
 
+    /**
+     * Verifica che gli oggetti LocationReachedManager si registrino agli
+     * aggiornamenti del gestore IBackgroundLocationManager solamente alla
+     * registrazione del primo observer, e cancellino tale registrazione quando
+     * l'ultimo observer viene rimosso.
+     */
     @Test
     public void shouldRegisterToBackgroundLocationManagercorrectly() {
         ILocationReachedObserver o1 = mock(ILocationReachedObserver.class);
