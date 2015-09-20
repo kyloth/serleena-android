@@ -44,7 +44,7 @@ package com.kyloth.serleena.common;
 /**
  * Classe che realizza l'interfaccia IRegion
  *
- * @use Quadrant eredita da Region per il calcolo e la gestione delle coordinate dell'area geografica rappresentata.
+ * @use TODO
  * @field northWest : GeoPoint Punto a nord-est del rettangolo che individua l'area del quadrante
  * @field southEast : GeoPoint Punto a sud-ovest del rettangolo che individua l'area del quadrante
  * @author Tobia Tesan <tobia.tesan@gmail.com>

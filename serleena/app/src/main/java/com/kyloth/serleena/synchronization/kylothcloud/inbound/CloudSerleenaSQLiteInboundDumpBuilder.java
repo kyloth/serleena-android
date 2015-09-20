@@ -82,8 +82,8 @@ public class CloudSerleenaSQLiteInboundDumpBuilder implements InboundDumpBuilder
      */
     public CloudSerleenaSQLiteInboundDumpBuilder(InboundRootEntity root) {
         this.root = root;
-        telemCounter = -1;
-        upointCounter = -1;
+        telemCounter = -1;        //HACK per SHANDROID-372
+        upointCounter = -1;  // HACK per SHANDROID-387
 
     }
 
@@ -103,6 +103,7 @@ public class CloudSerleenaSQLiteInboundDumpBuilder implements InboundDumpBuilder
 
     private SerleenaSQLiteInboundDump buildExperiences(Collection<ExperienceEntity> e) {
         SerleenaSQLiteInboundDump res =  new SerleenaSQLiteInboundDump();
+        //HACK per SHANDROID-372
         for (ExperienceEntity exp : e) {
             res.add("INSERT INTO " + SerleenaDatabase.TABLE_EXPERIENCES +
                     "(`experience_uuid`," +
@@ -110,6 +111,8 @@ public class CloudSerleenaSQLiteInboundDumpBuilder implements InboundDumpBuilder
                     " VALUES " +
                     "(\""+exp.uuid.toString()+"\"," +
                     "  \"" + exp.name + "\")");
+            // TODO: Manca la region? SHANDROID-291
+
 
             for (UserPointEntity up : exp.userPoints) {
                 res.add("INSERT INTO " + SerleenaDatabase.TABLE_USER_POINTS +
@@ -118,7 +121,7 @@ public class CloudSerleenaSQLiteInboundDumpBuilder implements InboundDumpBuilder
                         " `userpoint_y`, " +
                         " `userpoint_experience`)" +
                         " VALUES " +
-                        "(" + String.valueOf(upointCounter--) + "," +
+                        "(" + String.valueOf(upointCounter--) + "," + // HACK per SHANDROID-387
                         " " + up.point.latitude() +"," +
                         " " + up.point.longitude() + "," +
                         "\"" + exp.uuid.toString() +"\"" +
@@ -170,6 +173,7 @@ public class CloudSerleenaSQLiteInboundDumpBuilder implements InboundDumpBuilder
                 if(track.telemetries.size() != 0) {
                     if (track.telemetries.size() != 1) {
                         throw new IllegalArgumentException();
+                        // TODO: Ce n'e' una migliore?
                     }
 
                     Iterator<TelemetryEntity> it = track.telemetries.iterator();
@@ -225,6 +229,7 @@ public class CloudSerleenaSQLiteInboundDumpBuilder implements InboundDumpBuilder
     }
 
     private SerleenaSQLiteInboundDump buildWeatherData(Collection<WeatherDataEntity> w) {
+        // TODO: Controllare la data
         SerleenaSQLiteInboundDump res =  new SerleenaSQLiteInboundDump();
         for (WeatherDataEntity weat : w) {
 
